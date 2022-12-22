@@ -3,15 +3,10 @@
   description = "NixOS system configurations";
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-22.11";
-    # Unclear why it doesn't accept this format
     home-manager = {
-      url = "github:nix-community/home-manager";
-      # url = "github:nix-community/home-manager/release-22.05";
+      url = "github:nix-community/home-manager/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # home-manger.url = "github:nix-community/home-manager/release-22.05";
-    # home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    # nixos-wsl.url = "github:nix-community/nixos-wsl/22.05-5c211b47";
   };
   outputs = { self, nixpkgs, home-manager, ... } :
   let
