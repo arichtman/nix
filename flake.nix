@@ -12,7 +12,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.url = "github:nix-community/nixos-wsl/22.05-5c211b47";
   };
-  outputs = { self, nixpkgs, home-manger, nixos-wsl, ... } :
+  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... } :
   let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
