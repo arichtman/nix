@@ -2,7 +2,10 @@
   # These come out-the-box on the AMI
   imports = [
     "${modulesPath}/virtualisation/amazon-image.nix"
-    (fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master")
+    (fetchTarball {
+      url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
+      sha256 = "1qga1cmpavyw90xap5kfz8i6yz85b0blkkwvl00sbaxqcgib2rvv";
+ })
   ];
   ec2.hvm = true;
   # Ensures new versions are aware what state we came from
