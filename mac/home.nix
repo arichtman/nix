@@ -4,28 +4,22 @@
   programs.home-manager.enable = true;
 
   home.username = "arichtman";
-  home.homeDirectory = "/Users/arichtman";
 
   home.stateVersion = "22.11";
 
   home.packages = with pkgs; [
-    wget
+    vscode
+    firefox-bin
   ];
+
   home.sessionVariables = {
-    EDITOR = "nano";
+    AWS_PAGER = "";
   };
-  home.file = {
-  ".config/foo".text = ''
-    sometext
-  '';
+
+  home.file.".zshrc" = {
+    source = ./.zshrc;
   };
-  home.file.".config/bar" = {
-    source = ./bar.txt;
-  };
-  home.file.".config/baz.d" = {
-    source = ./baz.d;
-    recursive = true;
-  };
+
   programs.git = {
     enable = true;
     userEmail = "10679234+arichtman@users.noreply.github.com";

@@ -5,7 +5,7 @@
 # Update the system
 softwareupdate —install —all
 
-# Disable fancy graphics and dock
+# Disable fancy graphics
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write com.apple.Mail DisableReplyAnimations -bool YES
 defaults write com.apple.Mail DisableSendAnimations -bool YES
@@ -14,25 +14,32 @@ defaults write com.apple.dock springboard-show-duration -int 0 defaults write 
 defaults write com.apple.dock no-bouncing -bool TRUE
 killall Dock
 
-# Update root certificates
-curl -LkO https://curl.se/ca/cacert.pem
-sudo ./trustroot cacert.pem 
-
-# Change to new shell
-chsh -s /bin/zsh
-
-# Install nix and home-manager
-sh <(curl -L https://nixos.org/nix/install) --daemon
-
-nix-channel --add https://github.com/nix-community/home-manager/archive/release-22.11.tar.gz home-manager
-nix-channel --update
-export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-nix-shell '<home-manager>' -A install
+# Install nix
+curl -L https://nixos.org/nix/install | sh
 
 # Deploy our config and use
-mkdir —parent $HOME/.config/nixpkgs
-cp ./*.nix $HOME/.config/nixpkgs
-cp —force ./nix.conf /etc/nix/
+CONFIG_DIR=$HOME/.config/nix
+
+mkdir -p $CONFIG_DIR
+cp ./*nix* $CONFIG_DIR
+
+pushd $CONFIG_DIR
+
+#region workarounds
+
+# Until this is addressed https://github.com/LnL7/nix-darwin/issues/149
+sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
+
+# Something about a missing /run and symlinking, idk
+printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
+/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+
+#endregion
+
+nix build .#darwinConfigurations.macbookpro.system
+
+./result/sw/bin/darwin-rebuild switch --flake .#macbookpro
 
 home-manager switch
 
+popd
