@@ -11,6 +11,21 @@
   home.packages = with pkgs; [
     wget
   ];
+  home.sessionVariables = {
+    EDITOR = "nano";
+  };
+  home.file = {
+  ".config/foo".text = ''
+    sometext
+  '';
+  };
+  home.file.".config/bar" = {
+    source = ./bar.txt;
+  };
+  home.file.".config/baz.d" = {
+    source = ./baz.d;
+    recursive = true;
+  };
   programs.git = {
     enable = true;
     userEmail = "10679234+arichtman@users.noreply.github.com";
