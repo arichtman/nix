@@ -24,7 +24,7 @@
             system = "x86_64-darwin";
             modules = [
                 { nixpkgs.overlays = [ inputs.nixpkgs-firefox-darwin.overlay ]; }
-                ./configuration.nix
+                ./darwin-configuration.nix
                 home-manager.darwinModule {
                   home-manager = {
                     useGlobalPkgs = true;

@@ -15,9 +15,15 @@
   environment.variables = {
     AWS_PAGER = "";
   };
+
   environment.systemPackages = with pkgs; [
     wget
   ];
+
+  environment.shellAliases = {
+    ll = "ls -hAlLrt";
+  };
+
   nix.package = pkgs.nixUnstable;
 
 }
