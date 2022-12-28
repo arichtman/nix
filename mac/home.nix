@@ -10,6 +10,7 @@
   home.packages = with pkgs; [
     vscode
     firefox-bin
+    discord
   ];
 
   home.sessionVariables = {
