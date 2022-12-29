@@ -11,10 +11,15 @@
     vscode
     firefox-bin
     discord
+    element-desktop
   ];
 
   home.sessionVariables = {
     AWS_PAGER = "";
+  };
+
+  home.file.".config/skhd/skhdrc" = {
+    source = ./skhdrc;
   };
 
   home.file.".config/yabai/yabairc" = {
