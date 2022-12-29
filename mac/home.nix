@@ -17,6 +17,10 @@
     AWS_PAGER = "";
   };
 
+  home.file.".config/yabai/yabairc" = {
+    source = ./yabairc;
+  };
+
   home.file.".zshrc" = {
     source = ./.zshrc;
   };
