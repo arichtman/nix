@@ -1,64 +1,41 @@
 {
-  # inputs.nixpkgs.url = "github:nixos/nixpkgs";
-  description = "NixOS system configurations";
+  description = "Nix system configurations";
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-22.11";
-      # Since we've pinned both our releases we can override the nixpkgs that home-manager pulls, thus reducing waste.
+      url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # nixos-wsl = {
+    #   url = "github:nix-community/nixos-wsl";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
-  # Outputs is actually a function that takes in the input flakes/modules
-  outputs = { self, nixpkgs, home-manager, ... } :
+  outputs = { self, nixpkgs, home-manager, ... }@inputs :
   let
-    system = "x86_64-linux";
-    # inherit modulesPath;
-    pkgs = import nixpkgs {
-      inherit system;
-      config = {
-        allowUnfree = true;
-      };
-    };
     lib = nixpkgs.lib;
-    home-manager = home-manager;
   in {
-    # inherit modulesPath;
-    packages.${system} = {
-      default = [ pkgs.terragrunt ];
-      nixosConfigurations = {
-        dev-machine = lib.nixosSystem {
-          inherit system;
-          modules = [
-            # "${builtins.modulesPath}/virtualisation/amazon-image.nix"
-            # "${modulesPath}/virtualisation/amazon-image.nix"
-            home-manager.nixosModules.home-manager
-          ];
-        };
-      };
-    };
-
-  nixosConfigurations.ec2 = lib.nixosSystem {
-    inherit system;
-    modules = [
-      ./configuration.nix
-    ];
-  };
-
-    # homeManagerConfigurations = {  };
-    homeConfigurations = {
-      nixos = home-manager.lib.homeManagerConfiguration {
+    nixosConfigurations = {
+      temp-machine = lib.nixosSystem{
         system = "x86_64-linux";
-        homeDirectory = "/home/nixos";
-        username = "nixos";
-        stateVersion = "22.11";
+        modules = [
+          ./systems/x86_64-linux/temp-system/default.nix
+        ];
+      };
+      main-laptop = lib.nixosSystem{
+        system = "x86_64-linux";
+        modules = [
+          ./systems/x86_64-linux/main-laptop/default.nix
+        ];
       };
     };
-    devShells.${system} = {
-      default = pkgs.mkShell {
-          packages = [ pkgs.terragrunt ];
-        };
-      imported = import ./shell.nix { inherit pkgs; };
+
+    homeConfigurations = {
+      main-laptop = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./homes/main-laptop.nix ];
+      };
     };
+
   };
 }

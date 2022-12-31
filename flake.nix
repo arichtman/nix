@@ -1,44 +1,42 @@
 {
-  description = "NixOS system configurations";
+  description = "Ariel's machine configs";
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.05";
-    # Unclear why it doesn't accept this format
-    # home-manager = {
-    #   url = "github:nix-community/home-manager";
-    #   # url = "github:nix-community/home-manager/release-22.05";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    home-manger.url = "github:nix-community/home-manager/release-22.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-wsl.url = "github:nix-community/nixos-wsl/22.05-5c211b47";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
+    home-manager = {
+      url = github:nix-community/home-manager;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-wsl = {
+      url = "github:nix-community/nixos-wsl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-vscode-server = {
+      url = "github:msteen/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, home-manager, nixos-wsl, ... } :
+  # TODO: What's this @inputs thing anyways?
+  outputs = { self, nixpkgs, ... }@inputs :
   let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-      config = {
-        allowUnfree = true;
-      };
-    };
-    lib = nixpkgs.lib;
-    home-manager = home-manager;
+
   in {
-    homeManagerConfigurations = {
-      bruce-banner = home-manager.lib.homeManagerConfigurations {
-        inherit system pkgs;
-        username = "nixos";
-        homeDirectory = "/home/nixos";
-        configuration = {
-          imports = [];
-        };
+    nixosConfigurations = {
+      bruce-banner = nixpkgs.lib.nixosSystem{
+        system = "x86_64-linux";
+        modules = with inputs;[
+          nixos-wsl.nixosModules.wsl
+          nixos-vscode-server.nixosModules.default
+          ./configuration.nix
+        ];
       };
     };
-    nixosConfigurations = {
-      bruce-banner = lib.nixosSystem{
-        inherit system;
-        modules = [];
-      };
+    homeConfigurations."nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
+      # TODO: Should this be legacy packages?
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [ ./home.nix ];
     };
   };
 }
