@@ -24,8 +24,7 @@
     ];
 
     shellAliases = {
-      # clashes with Exa
-      # ll = "ls -hAlLrt";
+      ll = "ls -hAlLrt";
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
@@ -58,10 +57,6 @@
       enable = true;
       enableBashIntegration = true;
       nix-direnv.enable = true;
-    };
-    exa = {
-      enable = true;
-      enableAliases = true;
     };
     fzf = {
       enable = true;
