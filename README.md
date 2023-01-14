@@ -2,51 +2,54 @@
 
 A home for my system configurations using Nix Flakes
 
-Yes, I'm aware they're supposed to be in one mega-flake with imports.
-For now I'm still learning and experimenting.
+Upcoming: Moving multiple machine configurations into a central Flake.
 
-## Developing
+Be warned, I'm still learning and experimenting.
+Nothing here should be construed as a model of good work!
+... yet.
+
+## Use
 
 ### WSL
 
+So 22.05 is out of support but no release on GitHub yet, luckily they give instructions and building 22.11 tarball is pretty easy + quick.
+Follow that and do the import shuffle.
+Make sure to backup anything valuable.
+
+```powershell
+wsl --unregister NixOS
+wsl --import nix --version 2 D:\wsl\NixOS\ .\nixos-wsl-installer.tar.gz
+wsl --set-default NixOS
+wsl
+```
+
+In our shiny new install we can set up direct from GitHub!
+
 ```Bash
 # Apply directly from git
-sudo nixos-rebuild switch --flake github:arichtman/nix/temp#bruce-banner
-# Check status
-systemctl status "home-manager-$USER.service"
-home-manager switch
-# TODO: Work out how the heck to Nixify this?
-systemctl --user start auto-fix-vscode-server.service
+sudo nixos-rebuild switch --flake github:arichtman/nix#bruce-banner
+home-manager switch --flake github:arichtman/nix/
+# Remove config that might interfere
+sudo mv /etc/nixos /etc/nixos.bak
+
+#region Misc.
 
 # Erase history (be sure current config is good)
 nix profile wipe-history
 # Clean up store
 sudo nix store gc
+#endregion
 ```
 
 ## Notes
 
-TODO: Try setting the system up directly from GitHub `sudo nixos-rebuild build --flake github:arichtman/nix/temp#bruce-banner`
+The VSCode server used to need to be enabled and either a reboot or manually started.
+However on my 22.11 install just now it was working fine.
+If I need to revisit it, go check the Git history.
 
-I can't locate a "good" way of ensuring that VSCode service is *started* when we switch configurations.
-It's _enabled_, so it _should_ start on next boot.
-I figure since we're still running imperative commands during bootstrap it'll have to do.
-Maybe we use this `serviceConfig` oneshot thing? https://github.com/nix-community/NixOS-WSL/issues/185#issuecomment-1360337884
-
-I tried convenience symlinking the system configuration files to our cloned repo.
-In theory it would be fine for a multi-user system that practically only has one user.
-That's most of my use-cases anyhow.
-It looks like the context of the link is interfering with pathing and it catches it breaking hermeticity.
-
-```Bash
-sudo ln -s $(realpath flake.nix) $(realpath configuration.nix) /etc/nixos/
-  error: 'flake.nix' file of flake 'path:/etc/nixos?lastModified=1672461843&narHash=sha256-lwXGTor+un0g9zRXt73NcNHW9SEkLhy1Y4l0nKTDhLM=' escapes from '/nix/store/v0siba5pd9gxqhxlnmmhha4v3dsy0gxr-source'
-```
-
-Sometimes for WSL, it won't match config on hostname for initial setup.
-Run `sudo hostname bruce-banner` to temporarily adjust the host name.
-It will now match and from there on Nix will manage it.
-If installing directly from GitHub just use the # qualifier and it should be good.
+I'm still not sure the best way to do system config.
+If I git clone into `/etc/nixos` and replicate ownership then I can't push any changes, since root user doesn't (and shouldn't) have my `gitconfig` or SSH keys.
+Symlinking files in was fiddlier and caused issues with the build context, cause it followed the links.
 
 ## References
 
@@ -54,7 +57,9 @@ If installing directly from GitHub just use the # qualifier and it should be goo
 - [Opinionated flake structure](https://github.com/snowfallorg/lib)
 - [Home-manager configuration options](https://nix-community.github.io/home-manager/options.html)
 - [Misterio77's starter configs](https://github.com/Misterio77/nix-starter-configs)
+- Just generally sucking at it, spelunking `nixpkgs` and `NixOS-WSL` source Nix files
 
-## WSL/SystemD Errors
-
+We had some pretty gnarly WSL/SystemD errors before.
+I started diving on them but didn't get deep enough to find an answer.
+Anyways, seems like it's resolved now but they're pretty filthy about having to do this workaround for WSL.
 https://github.com/nix-community/NixOS-WSL/issues/185
