@@ -34,6 +34,7 @@
   environment.systemPackages = with pkgs; [
     wget
     git
+    home-manager
   ];
   users.users.nixos = {
     extraGroups = [ "docker" "wheel" ];
