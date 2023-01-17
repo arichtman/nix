@@ -15,7 +15,7 @@ in
 
   wsl = {
     enable = true;
-    automountPath = "/mnt";
+    wslConf.automount.root = "/mnt";
     defaultUser = "nixos";
     startMenuLaunchers = true;
 

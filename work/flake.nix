@@ -6,10 +6,10 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nixos-wsl = {
-    #   url = "github:nix-community/nixos-wsl";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nixos-wsl = {
+      url = "github:nix-community/nixos-wsl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = { self, nixpkgs, home-manager, ... }@inputs :
   let
@@ -24,7 +24,8 @@
       };
       main-laptop = lib.nixosSystem{
         system = "x86_64-linux";
-        modules = [
+        modules = with inputs; [
+          nixos-wsl.nixosModules.wsl
           ./systems/x86_64-linux/main-laptop/default.nix
         ];
       };
