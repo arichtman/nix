@@ -92,6 +92,6 @@ in
   nix.settings.auto-optimise-store = true;
   # TODO: Should we set this both here _and_ in home-manager?
   # TODO: Will using unstable/master nixpkgs/h-m have any affects with this?
-  system.stateVersion = "22.05";
+  system.stateVersion = "22.11";
 
 }
