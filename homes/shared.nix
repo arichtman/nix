@@ -30,6 +30,11 @@
       "..." = "cd ../..";
       "...." = "cd ../../..";
       cls = "clear";
+      gs = "git status";
+      fuggit = "git add . && git commit --amend --no-edit && git push --force";
+      gc = "git checkout";
+      gS = "git switch";
+      gp = "git pull";
     };
     enableNixpkgsReleaseCheck = true;
   };
@@ -67,6 +72,11 @@
     less.enable = true;
     git = {
       enable = true;
+      aliases = {
+        c = "commit";
+        co = "checkout";
+        s = "status";
+      };
       extraConfig = {
         pull = {
           rebase = true;
