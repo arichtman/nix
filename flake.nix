@@ -28,17 +28,13 @@
       sys-config-file-path = sys: (name: ./systems/${sys}/${name}/default.nix);
       wsl-modules = with inputs; [ nixos-wsl.nixosModules.wsl
           nixos-vscode-server.nixosModules.default
+          ./systems/${system}/shared.nix
           ];
     in
     {
       bruce-banner = nixpkgs.lib.nixosSystem{
         inherit system;
-        modules = with inputs;[
-          nixos-wsl.nixosModules.wsl
-          nixos-vscode-server.nixosModules.default
-          (sys-config-file-path system "bruce-banner")
-          # ./systems/${system}/bruce-banner/default.nix
-        ];
+        modules = wsl-modules ++ [ (sys-config-file-path system "bruce-banner") ];
       };
       work-laptop = nixpkgs.lib.nixosSystem{
         inherit system;

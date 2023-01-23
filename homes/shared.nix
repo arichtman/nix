@@ -33,10 +33,19 @@
     };
     enableNixpkgsReleaseCheck = true;
   };
+  # Enable unfree packages (for vscode stuff)
+  nixpkgs.config.allowUnfree = true;
 
   xdg.systemDirs.data = [ "$HOME/.nix-profile/share" ];
 
   programs = {
+    # Temporarily disabled because allowUnfree doesn't seem to be working??
+    # vscode = {
+    #   enable = true;
+    #   extensions = with pkgs.vscode-extensions; [
+    #     rust-lang.rust-analyzer
+    #   ];
+    # };
     bash = {
       enable = true;
       enableCompletion = true;
@@ -56,6 +65,18 @@
     htop.enable = true;
     jq.enable = true;
     less.enable = true;
+    git = {
+      enable = true;
+      extraConfig = {
+        pull = {
+          rebase = true;
+        };
+        push = {
+          autoSetupRemote = true;
+          default = "current";
+        };
+      };
+    };
   };
   editorconfig = {
     enable = true;
@@ -63,19 +84,6 @@
       "*" = {
         indent_size = 2;
         indent_style = "space";
-      };
-    };
-  };
-
-  programs.git = {
-    enable = true;
-    extraConfig = {
-      pull = {
-        rebase = true;
-      };
-      push = {
-        autoSetupRemote = true;
-        default = "current";
       };
     };
   };
