@@ -41,8 +41,16 @@
       direnv
       home-manager
     ];
+    shellAliases = {
+      pls = "please";
+    };
   };
-
+  security = {
+    please = {
+      enable = true;
+      wheelNeedsPassword = false;
+    };
+  };
   # Enable VSCode server fixer service
   # TODO: Isn't this dependent on the module being imported?
   #   Is this coupling safe? Isn't it some implicit stuff?
