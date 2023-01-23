@@ -25,5 +25,14 @@
     enable = true;
     userName  = "Richtman, Ariel";
     userEmail = "ariel.richtman@silverrailtech.com";
+    extraConfig = {
+      pull = {
+        rebase = true;
+      };
+      push = {
+        autoSetupRemote = true;
+        default = "current";
+      };
+    };
   };
 }
