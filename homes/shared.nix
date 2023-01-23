@@ -20,6 +20,7 @@
 
     packages = with pkgs; [
       vscode-extensions.mkhl.direnv
+      vscode-extensions.rust-lang.rust-analyzer
       nix-direnv
     ];
 
