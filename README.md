@@ -1,12 +1,11 @@
 # Nix
 
 A home for my system configurations using Nix Flakes
-
-Upcoming: Moving multiple machine configurations into a central Flake.
-
 Be warned, I'm still learning and experimenting.
 Nothing here should be construed as a model of good work!
 ... yet.
+
+Upcoming: incorporating the mac configuration into the central flake.
 
 ## Use
 
@@ -14,7 +13,7 @@ Nothing here should be construed as a model of good work!
 
 So 22.05 is out of support but no release on GitHub yet, luckily they give instructions and building 22.11 tarball is pretty easy + quick.
 Follow that and do the import shuffle.
-Make sure to backup anything valuable.
+Make sure to back up anything valuable.
 
 ```powershell
 wsl --unregister NixOS
@@ -28,7 +27,7 @@ In our shiny new install we can set up direct from GitHub!
 ```Bash
 # Apply directly from git
 sudo nixos-rebuild switch --flake github:arichtman/nix#bruce-banner
-home-manager switch --flake github:arichtman/nix/
+home-manager switch --flake github:arichtman/nix
 # Remove config that might interfere
 sudo mv /etc/nixos /etc/nixos.bak
 
