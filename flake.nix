@@ -23,20 +23,38 @@
   let
 
   in {
-    nixosConfigurations = {
+    nixosConfigurations = let
+      system = "x86_64-linux";
+      sys-config-file-path = sys: (name: ./systems/${sys}/${name}/default.nix);
+      wsl-modules = with inputs; [ nixos-wsl.nixosModules.wsl
+          nixos-vscode-server.nixosModules.default
+          ];
+    in
+    {
       bruce-banner = nixpkgs.lib.nixosSystem{
-        system = "x86_64-linux";
+        inherit system;
         modules = with inputs;[
           nixos-wsl.nixosModules.wsl
           nixos-vscode-server.nixosModules.default
-          ./configuration.nix
+          (sys-config-file-path system "bruce-banner")
+          # ./systems/${system}/bruce-banner/default.nix
         ];
       };
+      work-laptop = nixpkgs.lib.nixosSystem{
+        inherit system;
+        modules = wsl-modules ++ [ (sys-config-file-path system "work-laptop") ];
+      };
     };
-    homeConfigurations."nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
-      # TODO: Should this be legacy packages?
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [ ./home.nix ];
+    homeConfigurations = {
+      "nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
+        # TODO: Should this be legacy packages?
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./homes/bruce-banner.nix ];
+      };
+      "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./homes/work-laptop.nix ./homes/shared.nix ];
+      };
     };
   };
 }

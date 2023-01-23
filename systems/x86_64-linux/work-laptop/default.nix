@@ -1,17 +1,9 @@
 { lib, pkgs, ... }:
 
 with lib;
-let
-  # nixos-wsl = import ./nixos-wsl;
-in
 {
-  imports = [
-    (fetchTarball {
-      url = "https://github.com/msteen/nixos-vscode-server/tarball/master";
-      sha256 = "1qga1cmpavyw90xap5kfz8i6yz85b0blkkwvl00sbaxqcgib2rvv";
-    })
-  ];
-  networking.hostName = "main-laptop";
+
+  networking.hostName = "work-laptop";
 
   wsl = {
     enable = true;
@@ -25,6 +17,7 @@ in
 
   services.yubikey-agent.enable = true;
 
+  # https://github.com/nix-community/NixOS-WSL/issues/185
   systemd.services.nixs-wsl-systemd-fix = {
     description = "Fix the /dev/shm symlink to be a mount";
     unitConfig = {
