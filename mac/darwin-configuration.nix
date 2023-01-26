@@ -1,7 +1,7 @@
 { pkgs, lib, ...}:
 {
   nixpkgs.config.allowUnfree = true;
-
+  networking.hostName = "macbookpro";
   nix.settings.trusted-users = [
     "@admin"
   ];
@@ -17,6 +17,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    home-manager
     wget
     curl
     direnv

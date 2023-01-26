@@ -2,7 +2,7 @@
 
 {
   programs.home-manager.enable = true;
-
+  programs.zsh.enable = true;
   home.username = "arichtman";
 
   home.stateVersion = "22.11";
