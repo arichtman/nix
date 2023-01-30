@@ -27,6 +27,7 @@
   } @ inputs: let
   in {
     nixosConfigurations = let
+      # TODO: DRY this up
       system = "x86_64-linux";
       sys-config-file-path = sys: (name: ./systems/${sys}/${name}/default.nix);
       wsl-modules = with inputs; [
@@ -50,8 +51,12 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [./homes/bruce-banner.nix];
       };
+      # https://github.com/nix-community/home-manager/issues/2942#issuecomment-1378627909
       "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
         modules = [./homes/work-laptop.nix ./homes/shared.nix];
       };
     };
