@@ -19,37 +19,40 @@
     };
   };
   # TODO: What's this @inputs thing anyways?
-  outputs = { self, nixpkgs, home-manager, ... }@inputs :
-  let
-
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
   in {
     nixosConfigurations = let
       system = "x86_64-linux";
       sys-config-file-path = sys: (name: ./systems/${sys}/${name}/default.nix);
-      wsl-modules = with inputs; [ nixos-wsl.nixosModules.wsl
-          nixos-vscode-server.nixosModules.default
-          ./systems/${system}/shared.nix
-          ];
-    in
-    {
-      bruce-banner = nixpkgs.lib.nixosSystem{
+      wsl-modules = with inputs; [
+        nixos-wsl.nixosModules.wsl
+        nixos-vscode-server.nixosModules.default
+        ./systems/${system}/shared.nix
+      ];
+    in {
+      bruce-banner = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = wsl-modules ++ [ (sys-config-file-path system "bruce-banner") ];
+        modules = wsl-modules ++ [(sys-config-file-path system "bruce-banner")];
       };
-      work-laptop = nixpkgs.lib.nixosSystem{
+      work-laptop = nixpkgs.lib.nixosSystem {
         inherit system;
-        modules = wsl-modules ++ [ (sys-config-file-path system "work-laptop") ];
+        modules = wsl-modules ++ [(sys-config-file-path system "work-laptop")];
       };
     };
     homeConfigurations = {
       "nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
         # TODO: Should this be legacy packages?
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./homes/bruce-banner.nix ];
+        modules = [./homes/bruce-banner.nix];
       };
       "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./homes/work-laptop.nix ./homes/shared.nix ];
+        modules = [./homes/work-laptop.nix ./homes/shared.nix];
       };
     };
   };

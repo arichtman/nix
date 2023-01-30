@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
   home = {
@@ -22,6 +25,7 @@
       vscode-extensions.mkhl.direnv
       vscode-extensions.rust-lang.rust-analyzer
       nix-direnv
+      alejandra
     ];
 
     shellAliases = {
@@ -39,18 +43,25 @@
     enableNixpkgsReleaseCheck = true;
   };
   # Enable unfree packages (for vscode stuff)
-  nixpkgs.config.allowUnfree = true;
-
-  xdg.systemDirs.data = [ "$HOME/.nix-profile/share" ];
+  nixpkgs = {
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+      # Workaround for https://github.com/nix-community/home-manager/issues/2942
+      allowUnfreePredicate = _: true;
+    };
+  };
+  xdg.systemDirs.data = ["$HOME/.nix-profile/share"];
 
   programs = {
-    # Temporarily disabled because allowUnfree doesn't seem to be working??
-    # vscode = {
-    #   enable = true;
-    #   extensions = with pkgs.vscode-extensions; [
-    #     rust-lang.rust-analyzer
-    #   ];
-    # };
+    vscode = {
+      enable = true;
+      extensions = with pkgs.vscode-extensions; [
+        rust-lang.rust-analyzer
+        kamadorueda.alejandra
+      ];
+    };
     bash = {
       enable = true;
       enableCompletion = true;
