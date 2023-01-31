@@ -46,13 +46,6 @@
   xdg.systemDirs.data = ["$HOME/.nix-profile/share"];
 
   programs = {
-    vscode = {
-      enable = true;
-      extensions = with pkgs.vscode-extensions; [
-        rust-lang.rust-analyzer
-        kamadorueda.alejandra
-      ];
-    };
     bash = {
       enable = true;
       enableCompletion = true;
@@ -83,6 +76,7 @@
         pull = {
           rebase = true;
         };
+        credential.helper = "store";
         push = {
           autoSetupRemote = true;
           default = "current";
