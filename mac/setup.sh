@@ -36,10 +36,10 @@ printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 
 #endregion
 
-nix build .#darwinConfigurations.macbookpro.system
+nix build .#darwinConfigurations.macbookpro.system # --fallback may be necessary sometimes
 
 ./result/sw/bin/darwin-rebuild switch --flake .#macbookpro
 
-home-manager switch
+# home-manager switch
 
 popd
