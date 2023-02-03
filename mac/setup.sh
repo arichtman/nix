@@ -10,7 +10,7 @@ defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write com.apple.Mail DisableReplyAnimations -bool YES
 defaults write com.apple.Mail DisableSendAnimations -bool YES
 defaults write com.apple.dock expose-animation-duration -int 0
-defaults write com.apple.dock springboard-show-duration -int 0 defaults write com.apple.dock springboard-hide-duration -int 0
+defaults write com.apple.dock springboard-show-duration -int 0defaults write com.apple.dock springboard-hide-duration -int 0
 defaults write com.apple.dock no-bouncing -bool TRUE
 killall Dock
 
