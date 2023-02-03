@@ -42,6 +42,7 @@
       wget
       git
       direnv
+      nix-direnv
       home-manager
     ];
     shellAliases = {
