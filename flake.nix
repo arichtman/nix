@@ -25,6 +25,10 @@
     home-manager,
     ...
   } @ inputs: let
+    forAllSystems = nixpkgs.lib.genAttrs [
+      "x86_64-linux"
+      "x86_64-darwin"
+    ];
   in {
     nixosConfigurations = let
       # TODO: DRY this up
@@ -60,5 +64,12 @@
         modules = [./homes/work-laptop.nix ./homes/shared.nix];
       };
     };
+
+    devShells = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+        import ./shell.nix {inherit pkgs;}
+    );
   };
 }
