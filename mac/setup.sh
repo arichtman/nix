@@ -39,7 +39,8 @@ cp ./nix.conf $CONFIG_DIR
 # Until this is addressed https://github.com/LnL7/nix-darwin/issues/149
 sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
 
-# Something about a missing /run and symlinking, idk
+# Need to symlink /run directory
+# These are copied from the error message directly
 printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 

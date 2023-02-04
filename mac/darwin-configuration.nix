@@ -12,9 +12,6 @@
   '';
 
   services.nix-daemon.enable = true;
-  environment.variables = {
-    AWS_PAGER = "";
-  };
 
   environment.systemPackages = with pkgs; [
     home-manager
@@ -27,11 +24,6 @@
     btop
    #vlc
   ];
-
-  services.yabai.enable = true;
-  services.yabai.package = pkgs.yabai;
-  services.skhd.enable = true;
-
   environment.shellAliases = {
     ll = "ls -hAlLrt";
   };

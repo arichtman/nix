@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Script to update root certificates on Mac
 # Shamelessly copied from SO
+# Only required if you can't upgrade MacOS version and certs are expired.
 
 DIR=${TMPDIR}/trustroot.$$
 mkdir -p ${DIR}
