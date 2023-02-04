@@ -3,27 +3,36 @@
 
 
 # Update the system
-softwareupdate —install —all
+softwareupdate --install --all
 
 # Disable fancy graphics
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 defaults write com.apple.Mail DisableReplyAnimations -bool YES
 defaults write com.apple.Mail DisableSendAnimations -bool YES
 defaults write com.apple.dock expose-animation-duration -int 0
-defaults write com.apple.dock springboard-show-duration -int 0defaults write com.apple.dock springboard-hide-duration -int 0
+defaults write com.apple.dock springboard-show-duration -int 0
+defaults write com.apple.dock springboard-hide-duration -int 0
+# Hide Dock
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 1000
 defaults write com.apple.dock no-bouncing -bool TRUE
 killall Dock
 
 # Install nix
 curl -L https://nixos.org/nix/install | sh
 
+# Need to reopen terminal
+exit 0
+
+# New terminal
+
+nix-shell -p git
+
 # Deploy our config and use
 CONFIG_DIR=$HOME/.config/nix
 
 mkdir -p $CONFIG_DIR
-cp ./*nix* $CONFIG_DIR
-
-pushd $CONFIG_DIR
+cp ./nix.conf $CONFIG_DIR
 
 #region workarounds
 
@@ -36,7 +45,10 @@ printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 
 #endregion
 
-nix build .#darwinConfigurations.macbookpro.system # --fallback may be necessary sometimes
+# Optional, but recommended
+nix flake update
+
+nix build .#darwinConfigurations.macbookpro.system
 
 ./result/sw/bin/darwin-rebuild switch --flake .#macbookpro
 
