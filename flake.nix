@@ -53,7 +53,7 @@
       "nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
         # TODO: Should this be legacy packages?
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [./homes/bruce-banner.nix];
+        modules = [./homes/bruce-banner.nix ./homes/shared.nix];
       };
       # https://github.com/nix-community/home-manager/issues/2942#issuecomment-1378627909
       "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {

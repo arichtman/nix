@@ -3,8 +3,6 @@
   pkgs,
   ...
 }: {
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
   home = {
     # Home Manager needs a bit of information about you and the
     # paths it should manage.
@@ -20,7 +18,6 @@
     # the Home Manager release notes for a list of state version
     # changes in each release.
     stateVersion = "22.11";
-
     packages = with pkgs; [
       vscode-extensions.mkhl.direnv
       vscode-extensions.rust-lang.rust-analyzer
@@ -45,6 +42,8 @@
   xdg.systemDirs.data = ["$HOME/.nix-profile/share"];
 
   programs = {
+      # Let Home Manager install and manage itself.
+    home-manager.enable = true;
     bash = {
       enable = true;
       enableCompletion = true;

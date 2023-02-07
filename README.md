@@ -7,7 +7,12 @@ Be warned, I'm still learning and experimenting.
 Nothing here should be construed as a model of good work!
 ... yet.
 
-Upcoming: incorporating the mac configuration into the central flake.
+
+## Known issues/TODO
+
+- Recurring WSL2 systemd issue, we have a fix but it's ugly.
+- homes/shared.nix not being incorporated suddenly???
+- Incorporating the mac configuration into the central flake.
 
 ## Use
 
