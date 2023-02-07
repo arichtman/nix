@@ -1,5 +1,8 @@
-{ pkgs, lib, ...}:
 {
+  pkgs,
+  lib,
+  ...
+}: {
   nixpkgs.config.allowUnfree = true;
   networking.hostName = "macbookpro";
   nix.settings.trusted-users = [
@@ -22,7 +25,7 @@
     git
     htop
     btop
-   #vlc
+    #vlc
   ];
   environment.shellAliases = {
     ll = "ls -hAlLrt";
@@ -53,5 +56,4 @@
 
   system.keyboard.enableKeyMapping = true;
   system.stateVersion = 4;
-
 }

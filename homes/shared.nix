@@ -42,7 +42,7 @@
   xdg.systemDirs.data = ["$HOME/.nix-profile/share"];
 
   programs = {
-      # Let Home Manager install and manage itself.
+    # Let Home Manager install and manage itself.
     home-manager.enable = true;
     bash = {
       enable = true;

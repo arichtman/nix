@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   programs.home-manager.enable = true;
   programs.zsh.enable = true;
   home.username = "arichtman";
@@ -22,7 +25,7 @@
     enable = true;
     userEmail = "10679234+arichtman@users.noreply.github.com";
     userName = "Richtman, Ariel";
-    ignores = [ "*~" ".DS_Store" ];
+    ignores = ["*~" ".DS_Store"];
     extraConfig = {
       pull = {
         rebase = true;

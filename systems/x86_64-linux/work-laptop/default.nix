@@ -1,10 +1,10 @@
-{ lib, pkgs, ... }:
-
-with lib;
 {
-
+  lib,
+  pkgs,
+  ...
+}:
+with lib; {
   networking.hostName = "work-laptop";
-
 
   services.yubikey-agent.enable = true;
 
@@ -25,7 +25,6 @@ with lib;
         "/run/wrappers/bin/mount --bind -o X-mount.mkdir /run/shm /dev/shm"
       ];
     };
-    wantedBy = [ "sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service" ];
+    wantedBy = ["sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service"];
   };
-
 }

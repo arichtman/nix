@@ -1,8 +1,6 @@
-{ modulesPath, ... }:
-let
+{modulesPath, ...}: let
   # nixos-wsl = import ./nixos-wsl;
-in
-{
+in {
   imports = [
     nixos-wsl.nixosModules.wsl
   ];
