@@ -44,6 +44,7 @@
       direnv
       nix-direnv
       home-manager
+      helix
     ];
     shellAliases = {
       pls = "please";
