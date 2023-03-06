@@ -5,7 +5,6 @@
   ...
 }: {
   programs.home-manager.enable = true;
-  programs.zsh.enable = true;
   home.username = "arichtman";
 
   home.stateVersion = "22.11";
@@ -15,6 +14,9 @@
     firefox-bin
     discord
     element-desktop
+    direnv
+    nix-direnv
+    neovim
   ];
 
   home.file.".zshrc" = {

@@ -16,6 +16,9 @@
 
   services.nix-daemon.enable = true;
 
+  # Required or /run/current-system/sw isn't put on PATH
+  programs.zsh.enable = true;
+
   environment.systemPackages = with pkgs; [
     home-manager
     wget

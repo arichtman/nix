@@ -1,58 +1,51 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 # Setup script for Mac
-
 
 # Update the system
 softwareupdate --install --all
 
-# Disable fancy graphics
-defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
-defaults write com.apple.Mail DisableReplyAnimations -bool YES
-defaults write com.apple.Mail DisableSendAnimations -bool YES
-defaults write com.apple.dock expose-animation-duration -int 0
-defaults write com.apple.dock springboard-show-duration -int 0
-defaults write com.apple.dock springboard-hide-duration -int 0
-# Hide Dock
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 1000
-defaults write com.apple.dock no-bouncing -bool TRUE
-killall Dock
-
 # Install nix
-curl -L https://nixos.org/nix/install | sh
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
-# Need to reopen terminal
-exit 0
+# Pickup changes so we can use nix commands
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-# New terminal
+# Whatever workaround
 
-nix-shell -p git
+printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
+sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 
-# Deploy our config and use
-CONFIG_DIR=$HOME/.config/nix
+# Install nix-darwin
 
-mkdir -p $CONFIG_DIR
-cp ./nix.conf $CONFIG_DIR
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+# Accept the option to manage nix-darwin using nix-channel or else it bombs
+sudo ./result/bin/darwin-installer
 
 #region workarounds
+
+# PATH is still borked so system "git" keeps running, prompting xcode-tools install
+nix shell nixpkgs#git
 
 # Until this is addressed https://github.com/LnL7/nix-darwin/issues/149
 sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
 
-# Need to symlink /run directory
-# These are copied from the error message directly
-printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
-/System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+# nix-darwin will whinge if this exists
+#  but the file n-d generates doesn't source the daemon stuff
+#  however it does source (if exists) a .local variant
+sudo mv /etc/zshenv /etc/zshenv.local
 
 #endregion
 
 # Optional, but recommended
 nix flake update
 
+#region Bootstrap
+# this has to be run once to install nix-darwin and configure stuff
+#  afterwards can run darwin-rebuild switch --flake . directly
+
 nix build .#darwinConfigurations.macbookpro.system
 
 ./result/sw/bin/darwin-rebuild switch --flake .#macbookpro
 
-# home-manager switch
+#endregion
 
-popd
