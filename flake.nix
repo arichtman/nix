@@ -53,7 +53,7 @@
       "nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
         # TODO: Should this be legacy packages?
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [./homes/bruce-banner.nix ./homes/shared.nix];
+        modules = [./homes/bruce-banner.nix ./homes/shared/default.nix];
       };
       # https://github.com/nix-community/home-manager/issues/2942#issuecomment-1378627909
       "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {
@@ -61,7 +61,7 @@
           system = "x86_64-linux";
           config.allowUnfree = true;
         };
-        modules = [./homes/work-laptop.nix ./homes/shared.nix];
+        modules = [./homes/work-laptop.nix ./homes/shared/default.nix];
       };
     };
 
