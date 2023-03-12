@@ -23,7 +23,7 @@
       vscode-extensions.rust-lang.rust-analyzer
       alejandra
     ];
-
+    file.".config/helix/config.toml".source = ./helix.toml;
     shellAliases = {
       ll = "ls -hAlLrt";
       ".." = "cd ..";
