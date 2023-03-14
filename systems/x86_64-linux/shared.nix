@@ -45,6 +45,7 @@
       nix-direnv
       home-manager
       helix
+      ripgrep
     ];
     shellAliases = {
       pls = "please";
