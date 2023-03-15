@@ -46,11 +46,17 @@
       home-manager
       helix
       ripgrep
+      zoxide
     ];
     shellAliases = {
       pls = "please";
     };
   };
+  # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
+  # There's probably a Nix context value I can use but I don't know it
+  programs.bash.loginShellInit = ''
+    eval "$(zoxide init bash)"
+  '';
   security = {
     please = {
       enable = true;

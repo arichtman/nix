@@ -30,12 +30,15 @@
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
+      "....." = "cd ../../../..";
       cls = "clear";
       gs = "git status";
       fuggit = "git add . && git commit --amend --no-edit && git push --force";
       gc = "git checkout";
       gS = "git switch";
       gp = "git pull";
+      gP = "git push";
+      nfu = "nix flake update";
     };
     enableNixpkgsReleaseCheck = true;
   };
