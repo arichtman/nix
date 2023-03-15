@@ -47,9 +47,13 @@
       helix
       ripgrep
       zoxide
+      nnn
     ];
     shellAliases = {
       pls = "please";
+    };
+    variables = {
+      EDITOR = "hx";
     };
   };
   # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
