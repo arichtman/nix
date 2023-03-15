@@ -26,7 +26,7 @@
     file.".config/helix/config.toml".source = helix/config.toml;
     file.".config/helix/languages.toml".source = helix/languages.toml;
     shellAliases = {
-      ll = "ls -hAlLrt";
+      ll = "ls -thrALl";
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
