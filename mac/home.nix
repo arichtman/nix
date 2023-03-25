@@ -19,10 +19,19 @@
     neovim
   ];
 
-  home.file.".zshrc" = {
-    source = ./.zshrc;
-  };
+  home.file = {
 
+    ".zshrc" = {
+      source = ./.zshrc;
+    };
+    ".cargo/config".text = ''
+      [target.x86_64-apple-darwin]
+      rustflags = [
+        "-C", "link-arg=-undefined",
+        "-C", "link-arg=dynamic_lookup",
+      ]
+      '';
+  };
   programs.git = {
     enable = true;
     userEmail = "10679234+arichtman@users.noreply.github.com";

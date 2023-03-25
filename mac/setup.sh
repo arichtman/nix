@@ -36,6 +36,9 @@ sudo mv /etc/zshenv /etc/zshenv.local
 
 #endregion
 
+# Required to provide libraries for Rust to link against or something
+./xcode-install.sh
+
 # Optional, but recommended
 nix flake update
 

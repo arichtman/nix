@@ -29,6 +29,8 @@
     htop
     btop
     #vlc
+    darwin.apple_sdk.frameworks.CoreServices
+    helix
   ];
   environment.shellAliases = {
     ll = "ls -hAlLrt";
