@@ -81,6 +81,10 @@
         pull = {
           rebase = true;
         };
+        protocol = {
+          http.allow = "never";
+          git.allow = "never";
+        };
         credential.helper = "store";
         push = {
           autoSetupRemote = true;
