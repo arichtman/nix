@@ -7,3 +7,5 @@ line-number = "relative"
 [editor.file-picker]
 hidden = false
 
+[editor.statusline]
+center = [ "version-control" ]
