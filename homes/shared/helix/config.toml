@@ -9,3 +9,7 @@ hidden = false
 
 [editor.statusline]
 center = [ "version-control" ]
+
+[keys.normal]
+l = { e = [ "select_mode", "goto_line_end", "normal_mode" ] }
+
