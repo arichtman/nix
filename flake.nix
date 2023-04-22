@@ -36,7 +36,6 @@
     wsl-modules = with inputs; [
       nixos-wsl.nixosModules.wsl
       nixos-vscode-server.nixosModules.default
-      ./systems/x86_64-linux/shared.nix
     ];
   in
     lib.mkFlake {
@@ -56,7 +55,6 @@
       };
       systems.modules = with inputs; [
         home-manager.nixosModules.home-manager
-    
       ];
       systems.hosts.bruce-banner.modules = wsl-modules;
       #TODO: This might not work without deploy-rs

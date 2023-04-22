@@ -1,10 +1,38 @@
 { options, config, lib, pkgs, ... }:
-let cfg = config.arichtman.wsl;
+let
+  cfg = config.arichtman.wsl;
+in
+#TODO: Revisit the use of lib
+with lib;
+# with lib.internal;
 {
   options.arichtman.wsl = with types; {
-    enable = lib.mkBoolOpt false "Apply WSL configuration.";
+    enable = mkOption { 
+      type = bool;
+      default = false;
+      description = "Apply WSL configuration.";
+    };
   };
   config = mkIf cfg.enable {
+    systemd.services.nixs-wsl-systemd-fix = {
+      description = "Fix the /dev/shm symlink to be a mount";
+      unitConfig = {
+        DefaultDependencies = "no";
+        Before = "sysinit.target";
+        ConditionPathExists = "/dev/shm";
+        ConditionPathIsSymbolicLink = "/dev/shm";
+        ConditionPathIsMountPoint = "/run/shm";
+      };
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = [
+          "${pkgs.coreutils-full}/bin/rm /dev/shm"
+          "/run/wrappers/bin/mount --bind -o X-mount.mkdir /run/shm /dev/shm"
+        ];
+      };
+      wantedBy = ["sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service"];
+    };
+    #TODO: factor this stuff into a common module
    time.timeZone = "Australia/Brisbane";
 
     services.ntp = {
@@ -90,5 +118,5 @@ let cfg = config.arichtman.wsl;
     # TODO: Should we set this both here _and_ in home-manager?
     # TODO: Will using unstable/master nixpkgs/h-m have any affects with this?
     system.stateVersion = "22.11";
-    }
+    };
 }
