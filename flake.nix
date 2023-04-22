@@ -3,6 +3,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,59 +22,44 @@
       url = "github:msteen/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
-  # TODO: What's this @inputs thing anyways?
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
-    forAllSystems = nixpkgs.lib.genAttrs [
-      "x86_64-linux"
-      "x86_64-darwin"
-    ];
-  in {
-    nixosConfigurations = let
-      # TODO: DRY this up
-      system = "x86_64-linux";
-      sys-config-file-path = sys: (name: ./systems/${sys}/${name}/default.nix);
-      wsl-modules = with inputs; [
-        nixos-wsl.nixosModules.wsl
-        nixos-vscode-server.nixosModules.default
-        ./systems/${system}/shared.nix
-      ];
-    in {
-      bruce-banner = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = wsl-modules ++ [(sys-config-file-path system "bruce-banner")];
-      };
-      work-laptop = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = wsl-modules ++ [(sys-config-file-path system "work-laptop")];
-      };
-    };
-    homeConfigurations = {
-      "nixos@bruce-banner" = inputs.home-manager.lib.homeManagerConfiguration {
-        # TODO: Should this be legacy packages?
-        pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [./homes/bruce-banner.nix ./homes/shared/default.nix];
-      };
-      # https://github.com/nix-community/home-manager/issues/2942#issuecomment-1378627909
-      "nixos@work-laptop" = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-        modules = [./homes/work-laptop.nix ./homes/shared/default.nix];
-      };
-    };
 
-    devShells = forAllSystems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        import ./shell.nix {inherit pkgs;}
-    );
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+    };
+  };
+  outputs = inputs:
+  let
+    lib = inputs.snowfall-lib.mkLib {
+      inherit inputs;
+      src = ./.;
+    };
+    wsl-modules = with inputs; [
+      nixos-wsl.nixosModules.wsl
+      nixos-vscode-server.nixosModules.default
+      ./systems/x86_64-linux/shared.nix
+    ];
+  in
+    lib.mkFlake {
+      inherit inputs;
+      lib = inputs.nixpkgs.lib;
+      overlay-package-namespace = "arichtman";
+      src = ./.;
+      channels-config.allowUnfree = false; #TODO: remove if I'm really done with VSCode
+      #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
+      overlays = with inputs; [
+          poetry2nix.overlay
+        ];
+      outputs-builder = channels: {
+        devShells = {
+          default = "myshell";
+        };
+      };
+      systems.modules = with inputs; [
+        home-manager.nixosModules.home-manager
+    
+      ];
+      systems.hosts.bruce-banner.modules = wsl-modules;
+      #TODO: This might not work without deploy-rs
+      # deploy = lib.mkDeploy { inherit (inputs) self; };
   };
 }

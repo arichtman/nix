@@ -1,8 +1,12 @@
 {
   lib,
   pkgs,
+  modulesPath,
   ...
 }: {
+  # imports = [
+  #   (modulesPath + "/systems/wsl.nix")
+  # ];
   networking.hostName = "bruce-banner";
   systemd.services.nixs-wsl-systemd-fix = {
     description = "Fix the /dev/shm symlink to be a mount";
