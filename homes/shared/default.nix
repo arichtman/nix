@@ -71,6 +71,9 @@
     jq.enable = true;
     less.enable = true;
     git = {
+      init = {
+        defaultBranch = "main";
+      };
       enable = true;
       aliases = {
         c = "commit";
