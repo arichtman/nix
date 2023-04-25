@@ -35,6 +35,9 @@ with lib;
           xdg.systemDirs.data = ["$HOME/.nix-profile/share"];
 
           programs = {
+            starship = {
+              enable = true;
+            };
             # Let Home Manager install and manage itself.
             home-manager.enable = true;
             bash = {
