@@ -100,6 +100,7 @@ with lib;
 
             stateVersion = "22.11";
             sessionVariables = {
+               DIRENV_LOG_FORMAT = "";
               AWS_EC2_METADATA_DISABLED = "true";
             };
            packages = with pkgs; [
