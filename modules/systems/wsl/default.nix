@@ -6,12 +6,8 @@ in
 with lib;
 # with lib.internal;
 {
-  options.arichtman.wsl = with types; {
-    enable = mkOption { 
-      type = bool;
-      default = false;
-      description = "Apply WSL configuration.";
-    };
+  options.arichtman.wsl = {
+    enable = lib.mkEnableOption "Apply WSL configuration.";
   };
   config = mkIf cfg.enable {
     systemd.services.nixs-wsl-systemd-fix = {
