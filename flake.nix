@@ -26,6 +26,11 @@
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
     };
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
   outputs = inputs:
   let
@@ -57,7 +62,11 @@
         home-manager.nixosModules.home-manager
       ];
       systems.hosts.bruce-banner.modules = wsl-modules;
-      #TODO: This might not work without deploy-rs
-      # deploy = lib.mkDeploy { inherit (inputs) self; };
+      systems.hosts.work-laptop.modules = wsl-modules;
+      systems.hosts.macbookpro.modules = with inputs; [
+        darwin.darwinModules.simple
+        home-manager.darwinModule
+        {nixpkgs.overlays = [firefox-darwin.overlay];}
+      ];
   };
 }
