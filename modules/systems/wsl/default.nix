@@ -14,6 +14,7 @@ with lib;
     };
   };
   config = mkIf cfg.enable {
+    services.yubikey-agent.enable = true;
     systemd.services.nixs-wsl-systemd-fix = {
       description = "Fix the /dev/shm symlink to be a mount";
       unitConfig = {

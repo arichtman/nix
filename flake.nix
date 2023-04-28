@@ -57,6 +57,7 @@
         home-manager.nixosModules.home-manager
       ];
       systems.hosts.bruce-banner.modules = wsl-modules;
+      systems.hosts.work-laptop.modules = wsl-modules;
       #TODO: This might not work without deploy-rs
       # deploy = lib.mkDeploy { inherit (inputs) self; };
   };
