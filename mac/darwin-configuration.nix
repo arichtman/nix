@@ -34,6 +34,8 @@
   ];
   environment.shellAliases = {
     ll = "ls -hAlLrt";
+    "brute-force-darwin-rebuild-switch" = "until darwin-rebuild switch --flake . ; do : ; done";
+    "brute-force-flake-update" = "until nix flake update ; do : ; done";
   };
 
   nix.package = pkgs.nixUnstable;
