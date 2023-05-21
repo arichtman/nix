@@ -80,6 +80,7 @@ with lib;
         zoxide
         nnn
         trippy
+        dig
       ];
       shellAliases = {
         pls = "please";
