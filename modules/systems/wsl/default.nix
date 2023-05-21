@@ -79,6 +79,7 @@ with lib;
         ripgrep
         zoxide
         nnn
+        trippy
       ];
       shellAliases = {
         pls = "please";
