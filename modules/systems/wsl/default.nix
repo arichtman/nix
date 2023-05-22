@@ -81,9 +81,11 @@ with lib;
         nnn
         trippy
         dig
+        exa
       ];
       shellAliases = {
         pls = "please";
+        ll = "exa -@las new";
       };
       variables = {
         EDITOR = "hx";

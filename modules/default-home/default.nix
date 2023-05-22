@@ -114,7 +114,6 @@ with lib;
             ".cargo/config.toml".source = cargo/config.toml;
           };
           shellAliases = {
-            ll = "ls -thrALl";
             ".." = "cd ..";
             "..." = "cd ../..";
             "...." = "cd ../../..";
