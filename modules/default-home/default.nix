@@ -113,12 +113,17 @@ with lib;
             ".config/helix/config.toml".source = helix/config.toml;
             ".config/helix/languages.toml".source = helix/languages.toml;
             ".cargo/config.toml".source = cargo/config.toml;
+            ".terraformrc".source = terraform/.terraformrc;
+            # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
+            # https://github.com/nix-community/home-manager/issues/2104
+            ".terraform.d/plugin-cache/.keep".text = "";
           };
           shellAliases = {
             ".." = "cd ..";
             "..." = "cd ../..";
             "...." = "cd ../../..";
             "....." = "cd ../../../..";
+            ls = "exa";
             cls = "clear";
             gs = "git status";
             fuggit = "git add . && git commit --amend --no-edit && git push --force";
