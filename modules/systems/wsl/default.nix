@@ -72,6 +72,7 @@ with lib;
       systemPackages = with pkgs; [
         wget
         git
+        git-lfs
         direnv
         nix-direnv
         home-manager

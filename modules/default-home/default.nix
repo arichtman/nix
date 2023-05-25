@@ -60,6 +60,7 @@ with lib;
             jq.enable = true;
             less.enable = true;
             git = {
+              lfs.enable = true;
               userEmail = cfg.git.email;
               userName = cfg.git.username;
               enable = true;
