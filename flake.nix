@@ -60,14 +60,18 @@
       };
       systems.modules = with inputs; [
         home-manager.nixosModules.home-manager
+        # I have no idea why this doesn't throw any undefined error
+        #  but also doesn't seem to apply the module
+        my_home
       ];
       systems.hosts.bruce-banner.modules = wsl-modules;
       systems.hosts.work-laptop.modules = wsl-modules;
       systems.hosts.macbookpro.modules = with inputs; [
-        #TODO: remove arichtman references if unused
-        # arichtman.my_home
+        #@JakeHamilton All of these come up as undefined variable
         # my_home
         # arichtman
+        # arichtman.my_home
+        # arichtman.my_home.default-home
         # arichtman.default-home
         darwin.darwinModules.simple
         home-manager.darwinModule
