@@ -64,6 +64,11 @@
       systems.hosts.bruce-banner.modules = wsl-modules;
       systems.hosts.work-laptop.modules = wsl-modules;
       systems.hosts.macbookpro.modules = with inputs; [
+        #TODO: remove arichtman references if unused
+        # arichtman.my_home
+        # my_home
+        # arichtman
+        # arichtman.default-home
         darwin.darwinModules.simple
         home-manager.darwinModule
         {nixpkgs.overlays = [firefox-darwin.overlay];}

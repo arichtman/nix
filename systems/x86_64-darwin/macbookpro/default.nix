@@ -7,7 +7,10 @@
   networking.hostName = "macbookpro";
   #TODO: should be my_home?
   #  Perhaps module name from directory is only used in flake.nix to apply
-  arichtman.my_home.default-home = {
+  # arichtman.default-home = {
+  # arichtman.my_home.default-home = {
+  # my_home.default-home = {
+  default_home = {
     username = "arichtman";
     git.email = "10679234+arichtman@users.noreply.github.com";
     git.username = "Richtman, Ariel";
