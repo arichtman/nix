@@ -26,56 +26,41 @@
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
     };
+
     darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
   outputs = inputs:
-  let
-    lib = inputs.snowfall-lib.mkLib {
-      inherit inputs;
-      src = ./.;
-    };
-    wsl-modules = with inputs; [
-      nixos-wsl.nixosModules.wsl
-      nixos-vscode-server.nixosModules.default
-    ];
-  in
-    lib.mkFlake {
-      inherit inputs;
-      lib = inputs.nixpkgs.lib;
-      overlay-package-namespace = "arichtman";
-      src = ./.;
-      channels-config.allowUnfree = false; #TODO: remove if I'm really done with VSCode
+    let
       #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
+      wsl-modules = with inputs; [
+        nixos-wsl.nixosModules.wsl
+        nixos-vscode-server.nixosModules.default
+      ];
+    in
+    inputs.snowfall-lib.mkFlake {
+      inherit inputs;
+      src = ./.;
+
+      package-namespace = "arichtman";
+
+      #TODO: remove if I'm really done with VSCode
+      channels-config.allowUnfree = false;
+
       overlays = with inputs; [
-          poetry2nix.overlay
-        ];
-      outputs-builder = channels: {
-        devShells = {
-          default = "myshell";
-        };
+        poetry2nix.overlay
+      ];
+
+      alias.shells.default = "myshell";
+
+      systems.hosts = {
+        bruce-banner.modules = wsl-modules;
+
+        work-laptop.modules = wsl-modules;
       };
-      systems.modules = with inputs; [
-        home-manager.nixosModules.home-manager
-        # I have no idea why this doesn't throw any undefined error
-        #  but also doesn't seem to apply the module
-        my_home
-      ];
-      systems.hosts.bruce-banner.modules = wsl-modules;
-      systems.hosts.work-laptop.modules = wsl-modules;
-      systems.hosts.macbookpro.modules = with inputs; [
-        #@JakeHamilton All of these come up as undefined variable
-        # my_home
-        # arichtman
-        # arichtman.my_home
-        # arichtman.my_home.default-home
-        # arichtman.default-home
-        darwin.darwinModules.simple
-        home-manager.darwinModule
-        {nixpkgs.overlays = [firefox-darwin.overlay];}
-      ];
-  };
+    };
 }
