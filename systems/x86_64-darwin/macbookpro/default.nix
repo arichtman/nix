@@ -19,6 +19,11 @@
     };
   };
 
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+  };
+
   nix.configureBuildUsers = true;
   nix.extraOptions = ''
     auto-optimise-store = true
