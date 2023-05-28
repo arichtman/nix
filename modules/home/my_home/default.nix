@@ -126,7 +126,7 @@ with lib;
         nfu = "nix flake update";
       };
 
-      # enableNixpkgsReleaseCheck = true;
+      enableNixpkgsReleaseCheck = true;
     };
   };
 }
