@@ -1,6 +1,6 @@
 { options, config, pkgs, lib, inputs, ... }:
 let
-  cfg = config.arichtman.default-home;
+  cfg = config.default-home;
 in
 with lib;
 {
@@ -8,7 +8,7 @@ with lib;
   # imports = with inputs; [
   #   home-manager.nixosModules.home-manager
   # ];
-  options.arichtman.default-home = with types; {
+  options.default-home = with types; {
     username = mkOption {
       type = str;
       description = "Username";
