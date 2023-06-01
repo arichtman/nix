@@ -26,10 +26,10 @@ with lib;
           "/run/wrappers/bin/mount --bind -o X-mount.mkdir /run/shm /dev/shm"
         ];
       };
-      wantedBy = ["sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service"];
+      wantedBy = [ "sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service" ];
     };
     #TODO: factor this stuff into a common module
-   time.timeZone = "Australia/Brisbane";
+    time.timeZone = "Australia/Brisbane";
 
     services.ntp = {
       enable = true;
@@ -51,7 +51,7 @@ with lib;
     };
 
     users.users.nixos = {
-      extraGroups = ["docker" "wheel"];
+      extraGroups = [ "docker" "wheel" ];
       isNormalUser = true;
     };
 
@@ -97,8 +97,6 @@ with lib;
     # TODO: Isn't this dependent on the module being imported?
     #   Is this coupling safe? Isn't it some implicit stuff?
     services.vscode-server.enable = true;
-    # Enable unfree packages (for vscode, mostly)
-    nixpkgs.config.allowUnfree = true;
 
     nix = {
       settings = {
@@ -114,5 +112,6 @@ with lib;
     # TODO: Should we set this both here _and_ in home-manager?
     # TODO: Will using unstable/master nixpkgs/h-m have any affects with this?
     system.stateVersion = "22.11";
-    };
+  };
 }
+
