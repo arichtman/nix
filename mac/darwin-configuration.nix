@@ -2,6 +2,7 @@
 , lib
 , ...
 }: {
+  nixpkgs.config.allowUnfree = true;
   networking.hostName = "macbookpro";
   nix.settings.trusted-users = [
     "@admin"
