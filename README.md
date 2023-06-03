@@ -17,6 +17,20 @@ Nothing here should be construed as a model of good work!
 
 ## Use
 
+## Mac
+
+Current WIP / notes:
+
+system-level mac config under systems/x86_64-darwin/${system}/default.nix
+
+homes/my_home/default.nix gets applied to everything? and we pass the config via snowfallorg.user.${name}.home.config.
+I think if we want platform-specific stuff we can either make a new module and do config = mkIf and enable in system's default.nix via snowfall org OR we can do some conditional config in the existing module.
+There should be some like system.isDarwin system.isLinux options there.
+I think logically it makes sense to moduarize stuff like zsh enablement and config but not at the moment.
+
+Under homes/x86_64-darwin/arichtman@macbookpro/default.nix there seems to be some specific-to-that-combo config.
+I haven't confirmed why some of those settings don't apply but it may be zsh vs bash issue.
+
 ### WSL
 
 So 22.05 is out of support but no release on GitHub yet, luckily they give instructions and building 22.11 tarball is pretty easy + quick.

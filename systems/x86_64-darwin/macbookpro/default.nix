@@ -8,6 +8,8 @@
   # But our module config has it under *config*.arichtman.default-home
   networking.hostName = "macbookpro";
 
+  #TODO: Determine if this is supposed to be used. Feels like this should be pure system stuff?
+  snowfallorg.user.arichtman.home.config.home.file.system-snowfall-home-settings.text = "working";
   snowfallorg.user.arichtman.home.config = {
     default-home = {
       username = "arichtman";
@@ -36,27 +38,35 @@
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
+    yubikey-manager
     home-manager
     wget
     curl
     direnv
-    #darwin-zsh-completions
     git
     htop
     btop
-    #vlc
+    # Required for some c dependencies for rustc/cargo
     darwin.apple_sdk.frameworks.CoreServices
     helix
   ];
-  environment.shellAliases = {
-    ll = "ls -hAlLrt";
-    "brute-force-darwin-rebuild-switch" = "until darwin-rebuild switch --flake . ; do : ; done";
-    "brute-force-flake-update" = "until nix flake update ; do : ; done";
-  };
 
   nix.package = pkgs.nixUnstable;
 
-  system.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
+  # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
+  system.activationScripts.postUserActivation.text = ''
+    # Following line should allow us to avoid a logout/login cycle
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+  '';
+  #TODO: Investigate difference between defaults and custom user preferences
+  #TODO: Consider moving out to common mac preferences
+  #TODO: Check out all config options
+  system.defaults.CustomUserPreferences = {
+    NSGlobalDomain = {
+      NSAutomaticCapitalizationEnabled = false;
+    };
+  };
+  # system.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
   system.defaults.NSGlobalDomain.NSAutomaticDashSubstitutionEnabled = false;
   system.defaults.NSGlobalDomain.NSAutomaticPeriodSubstitutionEnabled = false;
   system.defaults.NSGlobalDomain.NSAutomaticQuoteSubstitutionEnabled = false;

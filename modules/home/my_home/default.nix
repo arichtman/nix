@@ -92,20 +92,20 @@ with lib;
     home = {
       stateVersion = "22.11";
 
+      #TODO: These don't seem to be applying
+      # I think it's because bashRC vs zsh
       sessionVariables = {
         DIRENV_LOG_FORMAT = "";
         AWS_EC2_METADATA_DISABLED = "true";
       };
 
       packages = with pkgs; [
-        vscode-extensions.mkhl.direnv
-        vscode-extensions.rust-lang.rust-analyzer
         alejandra
+        exa
       ];
 
       file = {
         ".config/helix/config.toml".source = helix/config.toml;
-        ".config/helix/languages.toml".source = helix/languages.toml;
         ".cargo/config.toml".source = cargo/config.toml;
       };
 
@@ -124,6 +124,9 @@ with lib;
         gP = "git push";
         gau = "git add --update";
         nfu = "nix flake update";
+        #TODO: work out conditional mac-only
+        # mkIf pkgs.stdEnv.isDarwin { "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done" };
+        "brute-force-flake-update" = "until nix flake update ; do : ; done";
       };
 
       enableNixpkgsReleaseCheck = true;
