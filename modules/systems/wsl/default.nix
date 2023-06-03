@@ -34,7 +34,8 @@ with lib;
       wantedBy = ["sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service"];
     };
     #TODO: factor this stuff into a common module
-   time.timeZone = "Australia/Brisbane";
+    time.timeZone = "Australia/Brisbane";
+    boot.tmp.useTmpfs = true;
 
     services.ntp = {
       enable = true;
@@ -76,7 +77,6 @@ with lib;
         direnv
         nix-direnv
         home-manager
-        helix
         ripgrep
         zoxide
         nnn
@@ -87,9 +87,6 @@ with lib;
       shellAliases = {
         pls = "please";
         ll = "exa -@las new";
-      };
-      variables = {
-        EDITOR = "hx";
       };
     };
     # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context

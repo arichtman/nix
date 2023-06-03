@@ -101,17 +101,20 @@ with lib;
 
             stateVersion = "22.11";
             sessionVariables = {
-               DIRENV_LOG_FORMAT = "";
+              DIRENV_LOG_FORMAT = "";
               AWS_EC2_METADATA_DISABLED = "true";
+              EDITOR = "hx";
             };
            packages = with pkgs; [
             vscode-extensions.mkhl.direnv
             vscode-extensions.rust-lang.rust-analyzer
             alejandra
+            helix
           ];
           file = {
             ".config/helix/config.toml".source = helix/config.toml;
-            ".config/helix/languages.toml".source = helix/languages.toml;
+            #TODO: Remove this entirely once we're sure language defaults are fine
+            # ".config/helix/languages.toml".source = helix/languages.toml;
             ".cargo/config.toml".source = cargo/config.toml;
             ".terraformrc".source = terraform/.terraformrc;
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
