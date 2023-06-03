@@ -112,9 +112,10 @@ with lib;
             helix
           ];
           file = {
-            ".config/helix/config.toml".source = helix/config.toml;
-            #TODO: Remove this entirely once we're sure language defaults are fine
-            # ".config/helix/languages.toml".source = helix/languages.toml;
+            ".config/helix" = {
+              source = ./helix;
+              recursive = true;
+            };
             ".cargo/config.toml".source = cargo/config.toml;
             ".terraformrc".source = terraform/.terraformrc;
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
