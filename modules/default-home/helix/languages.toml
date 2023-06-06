@@ -4,3 +4,9 @@
 [[language]]
 name = "rust"
 indent = { tab-width = 1, unit = "  " }
+
+[[language]]
+name = "python"
+language-server = { command = "pylyzer", args = ["--server"] }
+config = {}
+

@@ -106,8 +106,11 @@ with lib;
               EDITOR = "hx";
             };
            packages = with pkgs; [
-            vscode-extensions.mkhl.direnv
-            vscode-extensions.rust-lang.rust-analyzer
+            #TODO: Do we need both or does nix-direnv declare the dependency?
+            direnv
+            nix-direnv
+            pylyzer
+            rust-analyzer
             alejandra
             helix
           ];
