@@ -11,5 +11,6 @@ with lib; {
     git.email = "ariel.richtman@silverrailtech.com";
     git.username = "Richtman, Ariel";
   };
+  arichtman.work-home.enabled = true;
 
 }
