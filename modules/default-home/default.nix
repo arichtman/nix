@@ -43,6 +43,12 @@ with lib;
             bash = {
               enable = true;
               enableCompletion = true;
+              # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
+              # There's probably a Nix context value I can use but I don't know it
+              profileExtra = ''
+                eval "$(zoxide init bash)"
+                eval "$(thefuck --alias)"
+              '';
             };
             bat.enable = true;
             command-not-found.enable = true;
@@ -109,10 +115,22 @@ with lib;
             #TODO: Do we need both or does nix-direnv declare the dependency?
             direnv
             nix-direnv
+            wget
+            git
+            git-lfs
+            direnv
+            nix-direnv
+            ripgrep
+            zoxide
+            nnn
+            trippy
+            dig
+            exa
             pylyzer
             rust-analyzer
             alejandra
             helix
+            thefuck
           ];
           file = {
             ".config/helix" = {
@@ -131,6 +149,7 @@ with lib;
             "...." = "cd ../../..";
             "....." = "cd ../../../..";
             ls = "exa";
+            ll = "exa -@las new";
             cls = "clear";
             gs = "git status";
             fuggit = "git add . && git commit --amend --no-edit && git push --force";

@@ -71,29 +71,12 @@ with lib;
     # Set system packages
     environment = {
       systemPackages = with pkgs; [
-        wget
-        git
-        git-lfs
-        direnv
-        nix-direnv
         home-manager
-        ripgrep
-        zoxide
-        nnn
-        trippy
-        dig
-        exa
       ];
       shellAliases = {
         pls = "please";
-        ll = "exa -@las new";
       };
     };
-    # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
-    # There's probably a Nix context value I can use but I don't know it
-    programs.bash.loginShellInit = ''
-      eval "$(zoxide init bash)"
-    '';
     security = {
       please = {
         enable = true;
