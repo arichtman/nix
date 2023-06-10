@@ -159,6 +159,14 @@ with lib;
             gP = "git push";
             gau = "git add --update";
             nfu = "nix flake update";
+            #TODO: feels odd putting aliases in without installing the program but I like to keep the
+            #  environments separate between repos?
+            tgi = "terragrunt init";
+            tgp = "terragrunt plan";
+            tga = "terragrunt apply";
+            tfi = "terraform init";
+            tfp = "terraform plan";
+            tfa = "terraform apply";
           };
           enableNixpkgsReleaseCheck = true;
         };
