@@ -35,6 +35,7 @@ with lib;
       };
       # Let Home Manager install and manage itself.
       home-manager.enable = true;
+      #TODO: disable on mac?
       bash = {
         enable = true;
         enableCompletion = true;

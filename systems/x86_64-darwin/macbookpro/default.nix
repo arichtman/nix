@@ -9,7 +9,13 @@
   networking.hostName = "macbookpro";
 
   #TODO: Determine if this is supposed to be used. Feels like this should be pure system stuff?
-  snowfallorg.user.arichtman.home.config.home.file.system-snowfall-home-settings.text = "working";
+  # So... does the user value here translate to which user@system home gets applied?
+  # Or should this be a self reference to config.user
+  snowfallorg.user.arichtman.home.config.home.file."_systems_x86_64-darwin_macbookpro_default.nix".text = "";
+  # These are bombing claiming the key isn't there...
+  # snowfallorg.user.arichtman.home.config.darwin.enable = true;
+  # snowfallorg.user.arichtman.home.config.file."_system-definition".text = "applied";
+
   snowfallorg.user.arichtman.home.config = {
     default-home = {
       username = "arichtman";
@@ -49,6 +55,7 @@
     # Required for some c dependencies for rustc/cargo
     darwin.apple_sdk.frameworks.CoreServices
     helix
+    ripgrep
   ];
 
   nix.package = pkgs.nixUnstable;

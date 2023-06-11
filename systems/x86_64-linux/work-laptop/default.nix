@@ -8,6 +8,7 @@ with lib; {
 
   services.yubikey-agent.enable = true;
 
+  snowfallorg.user.arichtman.home.config.home.file."_systems.x86_64-linux_work-laptop_default.nix".text = "";
   # https://github.com/nix-community/NixOS-WSL/issues/185
   systemd.services.nixs-wsl-systemd-fix = {
     description = "Fix the /dev/shm symlink to be a mount";

@@ -13,5 +13,7 @@ with lib;
     nix.settings.trusted-users = [
       "@admin"
     ];
+    #TODO
+    snowfallorg.user.arichtman.home.file."_modules_darwin_arichtman_default.nix".text = "";
   };
 }
