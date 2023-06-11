@@ -31,6 +31,30 @@ I think logically it makes sense to moduarize stuff like zsh enablement and conf
 Under homes/x86_64-darwin/arichtman@macbookpro/default.nix there seems to be some specific-to-that-combo config.
 I haven't confirmed why some of those settings don't apply but it may be zsh vs bash issue.
 
+### MBP M2 setup
+
+1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+1. # Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
+  `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
+1. Nix-Darwin build and run installer
+```
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+./result/bin/darwin-installer
+```
+edit default configuration.nix? n
+# Accept the option to manage nix-darwin using nix-channel or else it bombs
+manage using channels? y
+add to bashrc y
+add to zshrc? y
+create /run? y
+# a nix-channel call will now fail
+1. Bootstrapping
+  1. do the xcode-install method
+  1. `git clone https://github.com/arichtman/nix.git`
+  1. Build manually once `nix build .#darwinConfigurations.macbook-pro-work.system`
+  1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
+1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`?
+
 ### WSL
 
 So 22.05 is out of support but no release on GitHub yet, luckily they give instructions and building 22.11 tarball is pretty easy + quick.

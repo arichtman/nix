@@ -6,6 +6,8 @@ let
   };
 in
 {
+  #TODO: This not applying?
+  snowfallorg.user.arichtman.home.config.home.file."_homes_x86_64-darwin_arichtman@macbookpro_default.nix".text = "";
   home = {
     stateVersion = "22.11";
     #TODO: Why is this not taking effect...

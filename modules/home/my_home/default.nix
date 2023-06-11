@@ -108,6 +108,7 @@ with lib;
       file = {
         ".config/helix/config.toml".source = helix/config.toml;
         ".cargo/config.toml".source = cargo/config.toml;
+        "_modules_home_my_home_default.nix".text = "";
       };
 
       shellAliases = {
