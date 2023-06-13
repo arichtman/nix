@@ -115,7 +115,6 @@ with lib;
             #TODO: Do we need both or does nix-direnv declare the dependency?
             direnv
             nix-direnv
-            wget
             git
             git-lfs
             direnv
@@ -125,6 +124,8 @@ with lib;
             nnn
             trippy
             dig
+            wget
+            whois
             exa
             pylyzer
             rust-analyzer
