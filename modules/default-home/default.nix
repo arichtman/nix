@@ -149,6 +149,8 @@ with lib;
             "..." = "cd ../..";
             "...." = "cd ../../..";
             "....." = "cd ../../../..";
+            j = "jobs";
+            k = "kill";
             ls = "exa";
             ll = "exa -@las new";
             cls = "clear";
