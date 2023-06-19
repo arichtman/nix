@@ -79,6 +79,8 @@ with lib;
               };
               extraConfig = {
                 init.defaultBranch = "main";
+                # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
+                rebase.updateRefs = true;
                 pull = {
                   rebase = true;
                 };
