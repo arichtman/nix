@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  modulesPath,
+  config,
   ...
 }: {
   networking.hostName = "bruce-banner";
