@@ -5,6 +5,10 @@
 }: {
   networking.hostName = "macbook-pro-work";
 
+  #TODO: Determine if this is supposed to be used. Feels like this should be pure system stuff?
+  # So... does the user value here translate to which user@system home gets applied?
+  # Or should this be a self reference to config.user
+  snowfallorg.user.arichtman.home.config.home.file."_systems_x86_64-darwin_macbook-pro_default.nix".text = "";
   snowfallorg.user.arichtman.home.config = {
   #@JakeHamilton: I am LOST as to why this module isn't applying here
     # default-home = {
@@ -16,6 +20,24 @@
     #   };
     # };
   };
+
+  #@JakeHamilton but this doesn't work either?
+  # default-home = {
+  #   username = "arichtman";
+
+  #   git = {
+  #     email = "10679234+arichtman@users.noreply.github.com";
+  #     username = "Richtman, Ariel";
+  #   };
+  # };
+  # arichtman.default-home = {
+  #   username = "arichtman";
+
+  #   git = {
+  #     email = "10679234+arichtman@users.noreply.github.com";
+  #     username = "Richtman, Ariel";
+  #   };
+  # };
 
   home-manager = {
     useGlobalPkgs = true;
