@@ -1,4 +1,4 @@
-{ pkgs, mkShell,  ... }:
+{ pkgs, mkShell, arichtman, ... }:
 
 mkShell {
   nativeBuildInputs = with pkgs; [ home-manager git ripgrep ];

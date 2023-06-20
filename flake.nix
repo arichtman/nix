@@ -48,7 +48,7 @@
     lib.mkFlake {
       inherit inputs;
       lib = inputs.nixpkgs.lib;
-      overlay-package-namespace = "arichtman";
+      package-namespace = "arichtman";
       src = ./.;
       channels-config.allowUnfree = false; #TODO: remove if I'm really done with VSCode
       #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
