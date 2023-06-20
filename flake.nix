@@ -22,7 +22,7 @@
       url = "github:msteen/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
     };
@@ -35,32 +35,35 @@
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
   outputs = inputs:
-    let
-      #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
-      wsl-modules = with inputs; [
-        nixos-wsl.nixosModules.wsl
-        nixos-vscode-server.nixosModules.default
-      ];
-    in
-    inputs.snowfall-lib.mkFlake {
+  let
+    lib = inputs.snowfall-lib.mkLib {
       inherit inputs;
       src = ./.;
-
-      package-namespace = "arichtman";
-
-      #TODO: remove if I'm really done with VSCode
-      channels-config.allowUnfree = false;
-
-      overlays = with inputs; [
-        poetry2nix.overlay
-      ];
-
-      alias.shells.default = "myshell";
-
-      systems.hosts = {
-        bruce-banner.modules = wsl-modules;
-
-        work-laptop.modules = wsl-modules;
-      };
     };
+    wsl-modules = with inputs; [
+      nixos-wsl.nixosModules.wsl
+      nixos-vscode-server.nixosModules.default
+    ];
+  in
+    lib.mkFlake {
+      inherit inputs;
+      lib = inputs.nixpkgs.lib;
+      overlay-package-namespace = "arichtman";
+      src = ./.;
+      channels-config.allowUnfree = false; #TODO: remove if I'm really done with VSCode
+      #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
+      overlays = with inputs; [
+          poetry2nix.overlay
+        ];
+      outputs-builder = channels: {
+        devShells = {
+          default = "myshell";
+        };
+      };
+      systems.modules = with inputs; [
+        home-manager.nixosModules.home-manager
+      ];
+      systems.hosts.bruce-banner.modules = wsl-modules;
+      systems.hosts.work-laptop.modules = wsl-modules;
+  };
 }

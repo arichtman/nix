@@ -1,0 +1,20 @@
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: check-added-large-files
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+  - id: check-case-conflict
+  - id: check-executables-have-shebangs
+  - id: check-shebang-scripts-are-executable
+  - id: check-toml
+  - id: check-vcs-permalinks
+  - id: check-yaml
+  - id: detect-aws-credentials
+  - id: end-of-file-fixer
+  - id: mixed-line-ending
+  - id: check-json
+  - id: pretty-format-json
+    args:
+      - "--autofix"

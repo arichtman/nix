@@ -11,9 +11,10 @@ Nothing here should be construed as a model of good work!
 ## Known issues/TODO
 
 - Recurring WSL2 systemd issue, we have a fix but it's ugly.
-- homes/shared.nix not being incorporated suddenly???
-- Incorporating the mac configuration into the central flake.
 - Look into `buildEnv` over `devShell`
+- Some minor antipatterns
+- Zsh aliases not set on darwin systems??
+- Spotlight or whatever [not seeing apps](https://github.com/nix-community/home-manager/issues/1341#issuecomment-1190875080)
 
 ## Use
 
@@ -100,3 +101,4 @@ If I need to revisit it, go check the Git history.
 - [Misterio77's starter configs](https://github.com/Misterio77/nix-starter-configs)
 - Just generally sucking at it, spelunking `nixpkgs` and `NixOS-WSL` source Nix files
 - [Jake Hamilton videos](https://www.youtube.com/@jakehamiltondev)
+- [J Matsushita's gist](https://gist.github.com/jmatsushita/5c50ef14b4b96cb24ae5268dab613050)
