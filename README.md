@@ -15,6 +15,7 @@ Nothing here should be construed as a model of good work!
 - Some minor antipatterns
 - Zsh aliases not set on darwin systems??
 - Spotlight or whatever [not seeing apps](https://github.com/nix-community/home-manager/issues/1341#issuecomment-1190875080)
+- Move central mac system level config into a module
 
 ## Use
 

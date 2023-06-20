@@ -6,14 +6,15 @@
   networking.hostName = "macbook-pro-work";
 
   snowfallorg.user.arichtman.home.config = {
-    default-home = {
-      username = "arichtman";
+  #@JakeHamilton: I am LOST as to why this module isn't applying here
+    # default-home = {
+    #   username = "arichtman";
 
-      git = {
-        email = "Ariel.Richtman@SilverRailTech.com";
-        username = "Ariel Richtman";
-      };
-    };
+    #   git = {
+    #     email = "Ariel.Richtman@SilverRailTech.com";
+    #     username = "Ariel Richtman";
+    #   };
+    # };
   };
 
   home-manager = {
@@ -34,11 +35,13 @@
 
   # Keyboard
   system.keyboard.enableKeyMapping = true;
+  #TODO: map to backspace
   # system.keyboard.remapCapsLockToEscape = true;
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
 
+  environment.shellAliases."_systems_aarch64-darwin_macbook-pro-work_default.nix" = "";
   environment.systemPackages = with pkgs; [
     yubikey-manager
     home-manager
@@ -62,7 +65,6 @@
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
   '';
   #TODO: Investigate difference between defaults and custom user preferences
-  #TODO: Consider moving out to common mac preferences
   #TODO: Check out all config options
   system.defaults.CustomUserPreferences = {
     NSGlobalDomain = {
