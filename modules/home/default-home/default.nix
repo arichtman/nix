@@ -29,6 +29,9 @@ with lib;
       data = [ "$HOME/.nix-profile/share" ];
     };
 
+    #TODO: do we want these?
+    useUserPackages = true;
+    useGlobalPkgs = true;
     programs = {
       starship = {
         enable = true;
@@ -96,7 +99,7 @@ with lib;
       };
     };
     home = {
-      #TODO: remove if not fixing anything
+      #TODO: @JakeHamilton
       username = cfg.username;
       stateVersion = "22.11";
 
