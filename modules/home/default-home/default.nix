@@ -39,7 +39,12 @@ with lib;
       bash = {
         enable = true;
         enableCompletion = true;
+        loginShellInit = ''
+                eval "$(zoxide init bash)"
+              '';
       };
+      # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
+      # There's probably a Nix context value I can use but I don't know it
       bat.enable = true;
       command-not-found.enable = true;
       direnv = {
@@ -91,24 +96,34 @@ with lib;
       };
     };
     home = {
+      #TODO: remove if not fixing anything
+      username = cfg.username;
       stateVersion = "22.11";
 
-      #TODO: These don't seem to be applying
-      # I think it's because bashRC vs zsh
+      #TODO: These don't seem to be applying to zsh
       sessionVariables = {
         DIRENV_LOG_FORMAT = "";
         AWS_EC2_METADATA_DISABLED = "true";
+        EDITOR = "hx";
       };
 
       packages = with pkgs; [
         alejandra
+        helix
+        zoxide
+        nnn
+        #TODO: does exa.enable cover this?
         exa
+        #TODO: same, isn't this in config?
+        direnv
+        nix-direnv
       ];
 
       file = {
+        #TODO: turn these recursive directories?
         ".config/helix/config.toml".source = helix/config.toml;
         ".cargo/config.toml".source = cargo/config.toml;
-        "_modules_home_my_home_default.nix".text = "";
+        "_modules_home_default-home_default.nix".text = "";
       };
 
       shellAliases = {

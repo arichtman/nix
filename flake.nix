@@ -28,7 +28,6 @@
       #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
       wsl-modules = with inputs; [
         nixos-wsl.nixosModules.wsl
-        nixos-vscode-server.nixosModules.default
       ];
     in
     inputs.snowfall-lib.mkFlake {

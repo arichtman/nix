@@ -1,15 +1,18 @@
 { options, config, lib, pkgs, ... }:
 let
-  cfg = config.arichtman.wsl;
+  #TODO: Set this up as optional config again
+  # cfg = config.wsl-system;
 in
 #TODO: Revisit the use of lib
 with lib;
 # with lib.internal;
 {
-  options.arichtman.wsl = {
-    enable = lib.mkEnableOption "Apply WSL configuration.";
-  };
-  config = mkIf cfg.enable {
+  # options.wsl-system = {
+  #   enable = lib.mkEnableOption "Apply WSL configuration.";
+  # };
+  # config = mkIf cfg.enable {
+  config = {
+  # https://github.com/nix-community/NixOS-WSL/issues/185
     systemd.services.nixs-wsl-systemd-fix = {
       description = "Fix the /dev/shm symlink to be a mount";
       unitConfig = {
@@ -28,18 +31,6 @@ with lib;
       };
       wantedBy = [ "sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service" ];
     };
-    #TODO: factor this stuff into a common module
-    time.timeZone = "Australia/Brisbane";
-
-    services.ntp = {
-      enable = true;
-      servers = [
-        "pool.ntp.org"
-      ];
-    };
-
-    networking.useDHCP = true;
-
     wsl = {
       enable = true;
       wslConf.automount.root = "/mnt";
@@ -50,30 +41,22 @@ with lib;
       docker-native.enable = true;
     };
 
-    users.users.nixos = {
-      extraGroups = [ "docker" "wheel" ];
-      isNormalUser = true;
-    };
-
-    virtualisation.docker = {
-      autoPrune.enable = true;
+    #TODO: factor this stuff into a common systems module
+    time.timeZone = "Australia/Brisbane";
+    services.ntp = {
       enable = true;
-      rootless.enable = true;
-      rootless.setSocketVariable = true;
+      servers = [
+        "pool.ntp.org"
+      ];
     };
-
+    networking.useDHCP = true;
     # Set system packages
     environment = {
       systemPackages = with pkgs; [
-        wget
+        #TODO: trim
         git
-        direnv
-        nix-direnv
         home-manager
-        helix
         ripgrep
-        zoxide
-        nnn
       ];
       shellAliases = {
         pls = "please";
@@ -82,21 +65,27 @@ with lib;
         EDITOR = "hx";
       };
     };
-    # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
-    # There's probably a Nix context value I can use but I don't know it
-    programs.bash.loginShellInit = ''
-      eval "$(zoxide init bash)"
-    '';
+    #endregion systems module
+
+    #TODO: This shouldn't be in the WSL module...
+    # users.users.nixos = {
+    #   extraGroups = [ "docker" "wheel" ];
+    #   isNormalUser = true;
+    # };
+
+    virtualisation.docker = {
+      autoPrune.enable = true;
+      enable = true;
+      rootless.enable = true;
+      rootless.setSocketVariable = true;
+    };
+
     security = {
       please = {
         enable = true;
         wheelNeedsPassword = false;
       };
     };
-    # Enable VSCode server fixer service
-    # TODO: Isn't this dependent on the module being imported?
-    #   Is this coupling safe? Isn't it some implicit stuff?
-    services.vscode-server.enable = true;
 
     nix = {
       settings = {
