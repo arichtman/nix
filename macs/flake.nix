@@ -13,10 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    poetry2nix = {
-      url = "github:nix-community/poetry2nix";
-    };
-
     darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,8 +29,5 @@
 
       channels-config.allowUnfree = true;
 
-      overlays = with inputs; [
-        poetry2nix.overlay
-      ];
     };
 }

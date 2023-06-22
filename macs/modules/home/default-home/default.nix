@@ -188,6 +188,7 @@ with lib;
           helix
           thefuck
           discord
+          firefox-darwin.firefox-bin
           #TODO: dont have these on mac, aarch64 at least
           # trippy
           # pylyzer
