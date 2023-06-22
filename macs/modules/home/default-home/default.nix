@@ -91,6 +91,40 @@ with lib;
               };
             };
           };
+          zsh = {
+            enable = true;
+            shellAliases = {
+              ".." = "cd ..";
+              "..." = "cd ../..";
+              "...." = "cd ../../..";
+              "....." = "cd ../../../..";
+              j = "jobs";
+              k = "kill";
+              ls = "exa";
+              ll = "exa -@las new";
+              cls = "clear";
+              fuggit = "git add . && git commit --amend --no-edit && git push --force";
+              fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
+              # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
+              gc = "git checkout";
+              gC = "git commit";
+              gs = "git status";
+              gS = "git switch";
+              gp = "git pull";
+              gP = "git push";
+              gb = "git branch";
+              gau = "git add --update";
+              nfu = "nix flake update";
+              #TODO: feels odd putting aliases in without installing the program but I like to keep the
+              #  environments separate between repos?
+              tgi = "terragrunt init";
+              tgp = "terragrunt plan";
+              tga = "terragrunt apply";
+              tfi = "terraform init";
+              tfp = "terraform plan";
+              tfa = "terraform apply";
+            };
+          };
         };
         editorconfig = {
           enable = true;
@@ -109,6 +143,37 @@ with lib;
             DIRENV_LOG_FORMAT = "";
             AWS_EC2_METADATA_DISABLED = "true";
             EDITOR = "hx";
+          };
+          shellAliases = {
+            ".." = "cd ..";
+            "..." = "cd ../..";
+            "...." = "cd ../../..";
+            "....." = "cd ../../../..";
+            j = "jobs";
+            k = "kill";
+            ls = "exa";
+            ll = "exa -@las new";
+            cls = "clear";
+            fuggit = "git add . && git commit --amend --no-edit && git push --force";
+            fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
+            # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
+            gc = "git checkout";
+            gC = "git commit";
+            gs = "git status";
+            gS = "git switch";
+            gp = "git pull";
+            gP = "git push";
+            gb = "git branch";
+            gau = "git add --update";
+            nfu = "nix flake update";
+            #TODO: feels odd putting aliases in without installing the program but I like to keep the
+            #  environments separate between repos?
+            tgi = "terragrunt init";
+            tgp = "terragrunt plan";
+            tga = "terragrunt apply";
+            tfi = "terraform init";
+            tfp = "terraform plan";
+            tfa = "terraform apply";
           };
          packages = with pkgs; [
           #TODO: Do we need both or does nix-direnv declare the dependency?
@@ -145,37 +210,6 @@ with lib;
           ".terraform.d/plugin-cache/.keep".text = "";
           # TODO: remove after development
           "_modules_home_default-home_default.nix".text = "";
-        };
-        shellAliases = {
-          ".." = "cd ..";
-          "..." = "cd ../..";
-          "...." = "cd ../../..";
-          "....." = "cd ../../../..";
-          j = "jobs";
-          k = "kill";
-          ls = "exa";
-          ll = "exa -@las new";
-          cls = "clear";
-          fuggit = "git add . && git commit --amend --no-edit && git push --force";
-          fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
-          # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
-          gc = "git checkout";
-          gC = "git commit";
-          gs = "git status";
-          gS = "git switch";
-          gp = "git pull";
-          gP = "git push";
-          gb = "git branch";
-          gau = "git add --update";
-          nfu = "nix flake update";
-          #TODO: feels odd putting aliases in without installing the program but I like to keep the
-          #  environments separate between repos?
-          tgi = "terragrunt init";
-          tgp = "terragrunt plan";
-          tga = "terragrunt apply";
-          tfi = "terraform init";
-          tfp = "terraform plan";
-          tfa = "terraform apply";
         };
         enableNixpkgsReleaseCheck = true;
       };
