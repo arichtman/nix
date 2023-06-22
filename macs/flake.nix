@@ -13,42 +13,28 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-wsl = {
-      url = "github:nix-community/nixos-wsl";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
     };
 
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
   };
   outputs = inputs:
-    let
-      #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
-      wsl-modules = with inputs; [
-        nixos-wsl.nixosModules.wsl
-        nixos-vscode-server.nixosModules.default
-      ];
-    in
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
 
       package-namespace = "arichtman";
 
-      channels-config.allowUnfree = false;
+      channels-config.allowUnfree = true;
 
       overlays = with inputs; [
         poetry2nix.overlay
       ];
-
-      alias.shells.default = "myshell";
-
-      systems.hosts = {
-        bruce-banner.modules = wsl-modules;
-
-        work-laptop.modules = wsl-modules;
-      };
     };
 }

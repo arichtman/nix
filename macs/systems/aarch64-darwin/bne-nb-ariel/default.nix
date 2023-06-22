@@ -3,8 +3,10 @@
 , config
 , ...
 }: {
-  networking.hostName = "macbook-pro-work";
+  networking.hostName = "bne-nb-ariel";
 
+  #TODO: remove, didn't fix missing zshrc
+  # users.users.arichtman.shell = pkgs.zsh;
   snowfallorg.user.arichtman.home.config = {
     default-home = {
       username = "arichtman";

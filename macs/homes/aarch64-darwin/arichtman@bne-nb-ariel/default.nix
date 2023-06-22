@@ -13,6 +13,17 @@ in
       # But the docs say it should be for all shells...
       shellAliases = myShellAliases;
     };
-    programs.zsh.shellAliases = myShellAliases;
+    programs = {
+      zsh = {
+        shellAliases = myShellAliases;
+        enableAutosuggestions = true;
+        enableSyntaxHighlighting = true;
+        #initExtraBeforeCompInit initExtra initExtraFirst profileExtra loginExtra
+        #TODO: check if direnv/nix-direnv addss this anyhow
+        initExtra = ''
+          eval "$(direnv hook zsh)"
+        '';
+      };
+    };
   };
 }
