@@ -36,16 +36,6 @@ with lib;
           };
           # Let Home Manager install and manage itself.
           home-manager.enable = true;
-          bash = {
-            enable = true;
-            enableCompletion = true;
-            # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
-            # There's probably a Nix context value I can use but I don't know it
-            profileExtra = ''
-              eval "$(zoxide init bash)"
-              eval "$(thefuck --alias)"
-            '';
-          };
           bat.enable = true;
           command-not-found.enable = true;
           direnv = {
@@ -93,6 +83,10 @@ with lib;
           };
           zsh = {
             enable = true;
+            initExtra = ''
+              eval "$(zoxide init bash)"
+              eval "$(thefuck --alias)"
+            '';
             shellAliases = {
               ".." = "cd ..";
               "..." = "cd ../..";
