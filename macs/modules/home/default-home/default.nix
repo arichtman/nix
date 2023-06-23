@@ -62,6 +62,7 @@ with lib;
               s = "status";
               b = "branch";
               S = "switch";
+              d = "diff";
             };
             extraConfig = {
               init.defaultBranch = "main";
@@ -107,6 +108,7 @@ with lib;
               gp = "git pull";
               gP = "git push";
               gb = "git branch";
+              gd = "git diff";
               gau = "git add --update";
               nfu = "nix flake update";
               #TODO: feels odd putting aliases in without installing the program but I like to keep the
