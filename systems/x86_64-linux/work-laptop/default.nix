@@ -7,8 +7,7 @@ with lib; {
   networking.hostName = "work-laptop";
   #TODO: move to mac only
   services.yubikey-agent.enable = true;
-  snowfallorg.user.arichtman = {
-    name = "arichtman";
+  snowfallorg.user.nixos = {
     home.config = {
       default-home = {
         username = "nixos";
@@ -17,8 +16,6 @@ with lib; {
       };
       #TODO: remove after development
       file."_systems.x86_64-linux_work-laptop_default.nix".text = "";
-      # isNormalUser = true;
-      # wsl-system.enable = true;
     };
   };
 }

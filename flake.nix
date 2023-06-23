@@ -4,7 +4,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     snowfall-lib = {
-      url = "github:snowfallorg/lib/feat/home-manager";
+      url = "github:arichtman/snowfallorg-lib/feat/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

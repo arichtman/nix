@@ -103,8 +103,9 @@ with lib;
       username = cfg.username;
       stateVersion = "22.11";
 
-      #TODO: These don't seem to be applying to zsh
       sessionVariables = {
+      #TODO: This isn't overriding the erroneous socket
+        DOCKER_HOST = "";
         DIRENV_LOG_FORMAT = "";
         AWS_EC2_METADATA_DISABLED = "true";
         EDITOR = "hx";
