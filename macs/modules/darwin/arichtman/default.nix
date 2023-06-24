@@ -26,6 +26,12 @@ with lib;
     # Required or /run/current-system/sw isn't put on PATH
     programs.zsh.enable = true;
     environment.systemPackages = with pkgs; [
+      # TODO: unavailable/supported on aarch64
+      # yubioath-flutter
+      # yubikey-touch-detector
+      # yubikey-manager-qt
+      # yubikey-personalization-gui
+      yubico-pam
       yubikey-manager
       home-manager
       wget
