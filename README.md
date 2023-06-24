@@ -33,6 +33,10 @@ I haven't confirmed why some of those settings don't apply but it may be zsh vs 
 
 ### MBP M2 setup
 
+1. Update everything `softwareupdate -ia`
+<!-- TODO: see if we can configure this in nix -->
+<!-- TODO:  Do we even want Rosetta? -->
+1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
 1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
 1. # Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
   `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`

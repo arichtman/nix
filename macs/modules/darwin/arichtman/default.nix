@@ -20,6 +20,9 @@ with lib;
       auto-optimise-store = true
       experimental-features = nix-command flakes
     '';
+    #TODO: Do we even want Rosetta?
+    #TODO: Work out how to only add extraplatforms to aarch64
+      # extra-platforms = x86_64-darwin aarch64-darwin
 
     services.nix-daemon.enable = true;
 
