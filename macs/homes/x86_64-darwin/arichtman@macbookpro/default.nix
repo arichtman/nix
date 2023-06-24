@@ -1,7 +1,6 @@
 { lib, pkgs, config, ... }:
 let
   myShellAliases = {
-    ll = "ls -hAlLrt";
     "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done";
   };
 in
