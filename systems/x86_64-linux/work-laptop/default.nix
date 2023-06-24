@@ -5,11 +5,18 @@
 }:
 with lib; {
   networking.hostName = "work-laptop";
-  arichtman.wsl.enable = true;
-  arichtman.default-home = {
-    username = "nixos";
-    git.email = "ariel.richtman@silverrailtech.com";
-    git.username = "Richtman, Ariel";
+  #TODO: move to mac only
+  services.yubikey-agent.enable = true;
+  snowfallorg.user.nixos = {
+    home.config = {
+      default-home = {
+        username = "nixos";
+        git.email = "Ariel.Richtman@SilverRailTech.com";
+        git.username = "Ariel Richtman";
+      };
+      #TODO: remove after development
+      file."_systems.x86_64-linux_work-laptop_default.nix".text = "";
+    };
   };
   arichtman.work-home.enabled = true;
 
