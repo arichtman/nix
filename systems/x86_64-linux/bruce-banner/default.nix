@@ -5,7 +5,6 @@
   ...
 }: {
   networking.hostName = "bruce-banner";
-  arichtman.wsl-system.enabled = true;
   snowfallorg.user.arichtman.home.config = {
     default-home = {
       username = "nixos";
