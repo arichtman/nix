@@ -9,6 +9,7 @@ with lib; {
   services.yubikey-agent.enable = true;
   snowfallorg.user.nixos = {
     home.config = {
+      work-home.enabled = true;
       default-home = {
         username = "nixos";
         git.email = "Ariel.Richtman@SilverRailTech.com";
@@ -18,6 +19,5 @@ with lib; {
       file."_systems.x86_64-linux_work-laptop_default.nix".text = "";
     };
   };
-  arichtman.work-home.enabled = true;
 
 }

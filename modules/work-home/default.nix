@@ -1,12 +1,12 @@
 { options, config, pkgs, lib, inputs, ... }:
 let
-  cfg = config.arichtman.work-home;
+  cfg = config.work-home;
   #TODO: Work this out when we switch to new lib
   # userName = config.snowfallorg.user.name;
 in
 with lib;
 {
-  options.arichtman.work-home = with types; {
+  options.work-home = with types; {
     enabled = mkOption {
       type = bool;
       description = "Enable work home configuration";
@@ -15,7 +15,7 @@ with lib;
   };
     config = mkIf (cfg.enabled) {
       home-manager = {
-        #TODO: Remove hard-coding
+        #TODO: Remove hard-coding of name
         users.nixos = {
           home = {
            packages = with pkgs; [
