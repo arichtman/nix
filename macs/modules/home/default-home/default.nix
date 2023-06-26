@@ -88,38 +88,6 @@ with lib;
               eval "$(zoxide init bash)"
               eval "$(thefuck --alias)"
             '';
-            shellAliases = {
-              ".." = "cd ..";
-              "..." = "cd ../..";
-              "...." = "cd ../../..";
-              "....." = "cd ../../../..";
-              j = "jobs";
-              k = "kill";
-              ls = "exa";
-              ll = "exa -@las new";
-              cls = "clear";
-              fuggit = "git add . && git commit --amend --no-edit && git push --force";
-              fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
-              # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
-              gc = "git checkout";
-              gC = "git commit";
-              gs = "git status";
-              gS = "git switch";
-              gp = "git pull";
-              gP = "git push";
-              gb = "git branch";
-              gd = "git diff";
-              gau = "git add --update";
-              nfu = "nix flake update";
-              #TODO: feels odd putting aliases in without installing the program but I like to keep the
-              #  environments separate between repos?
-              tgi = "terragrunt init";
-              tgp = "terragrunt plan";
-              tga = "terragrunt apply";
-              tfi = "terraform init";
-              tfp = "terraform plan";
-              tfa = "terraform apply";
-            };
           };
         };
         editorconfig = {
@@ -161,8 +129,9 @@ with lib;
             gp = "git pull";
             gP = "git push";
             gb = "git branch";
+            gd = "git diff";
             gau = "git add --update";
-            nfu = "nix flake update";
+            nfu = "nix flake update --commit-lock-file";
             #TODO: feels odd putting aliases in without installing the program but I like to keep the
             #  environments separate between repos?
             tgi = "terragrunt init";
@@ -171,6 +140,10 @@ with lib;
             tfi = "terraform init";
             tfp = "terraform plan";
             tfa = "terraform apply";
+            #TODO: work out conditional mac-only
+            # mkIf pkgs.stdEnv.isDarwin { "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done" };
+            "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done";
+            "brute-force-flake-update" = "until nix flake update ; do : ; done";
           };
          packages = with pkgs; [
           #TODO: Do we need both or does nix-direnv declare the dependency?

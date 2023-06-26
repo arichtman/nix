@@ -124,9 +124,16 @@ with lib;
       ];
 
       file = {
-        #TODO: turn these recursive directories?
-        ".config/helix/config.toml".source = helix/config.toml;
+        ".config/helix" = {
+          source = ./helix;
+          recursive = true;
+        };
         ".cargo/config.toml".source = cargo/config.toml;
+        ".terraformrc".source = terraform/.terraformrc;
+        # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
+        # https://github.com/nix-community/home-manager/issues/2104
+        ".terraform.d/plugin-cache/.keep".text = "";
+        # TODO: remove after development
         "_modules_home_default-home_default.nix".text = "";
       };
 
@@ -144,10 +151,7 @@ with lib;
         gp = "git pull";
         gP = "git push";
         gau = "git add --update";
-        nfu = "nix flake update";
-        #TODO: work out conditional mac-only
-        # mkIf pkgs.stdEnv.isDarwin { "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done" };
-        "brute-force-flake-update" = "until nix flake update ; do : ; done";
+        nfu = "nix flake update --commit-lock-file";
       };
 
       enableNixpkgsReleaseCheck = true;
