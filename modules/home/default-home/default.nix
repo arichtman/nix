@@ -71,6 +71,9 @@ with lib;
           c = "commit";
           co = "checkout";
           s = "status";
+          b = "branch";
+          S = "switch";
+          d = "diff";
         };
         extraConfig = {
           init.defaultBranch = "main";
@@ -138,21 +141,37 @@ with lib;
       };
 
       shellAliases = {
-        ll = "ls -thrALl";
-        ".." = "cd ..";
-        "..." = "cd ../..";
-        "...." = "cd ../../..";
-        "....." = "cd ../../../..";
-        cls = "clear";
-        gs = "git status";
-        fuggit = "git add . && git commit --amend --no-edit && git push --force";
-        gc = "git checkout";
-        gS = "git switch";
-        gp = "git pull";
-        gP = "git push";
-        gau = "git add --update";
-        nfu = "nix flake update --commit-lock-file";
-      };
+            ".." = "cd ..";
+            "..." = "cd ../..";
+            "...." = "cd ../../..";
+            "....." = "cd ../../../..";
+            j = "jobs";
+            k = "kill";
+            ls = "exa";
+            ll = "exa -@las new";
+            cls = "clear";
+            fuggit = "git add . && git commit --amend --no-edit && git push --force";
+            fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
+            # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
+            gc = "git checkout";
+            gC = "git commit";
+            gs = "git status";
+            gS = "git switch";
+            gp = "git pull";
+            gP = "git push";
+            gb = "git branch";
+            gd = "git diff";
+            gau = "git add --update";
+            nfu = "nix flake update --commit-lock-file";
+            #TODO: feels odd putting aliases in without installing the program but I like to keep the
+            #  environments separate between repos?
+            tgi = "terragrunt init";
+            tgp = "terragrunt plan";
+            tga = "terragrunt apply";
+            tfi = "terraform init";
+            tfp = "terraform plan";
+            tfa = "terraform apply";
+          };
 
       enableNixpkgsReleaseCheck = true;
     };
