@@ -26,5 +26,8 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    discord
+  ];
   system.stateVersion = 4;
 }

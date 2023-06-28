@@ -163,8 +163,8 @@ with lib;
           alejandra
           helix
           thefuck
-          discord
           firefox-darwin.firefox-bin
+          uair
           #TODO: dont have these on mac, aarch64 at least
           # trippy
           # pylyzer
@@ -172,6 +172,10 @@ with lib;
         file = {
           ".config/helix" = {
             source = ./helix;
+            recursive = true;
+          };
+          ".config/uair" = {
+            source = ./uair;
             recursive = true;
           };
           ".cargo/config.toml".source = cargo/config.toml;
