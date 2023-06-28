@@ -84,10 +84,14 @@ with lib;
           };
           zsh = {
             enable = true;
+            enableAutosuggestions = true;
+            syntaxHighlighting.enable = true;
             initExtra = ''
               eval "$(zoxide init bash)"
               eval "$(thefuck --alias)"
+              eval "$(direnv hook zsh)"
             '';
+              #TODO: check if direnv/nix-direnv adds shell completion/hooks anyhow
           };
         };
         editorconfig = {
@@ -140,10 +144,6 @@ with lib;
             tfi = "terraform init";
             tfp = "terraform plan";
             tfa = "terraform apply";
-            #TODO: work out conditional mac-only
-            # mkIf pkgs.stdEnv.isDarwin { "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done" };
-            "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done";
-            "brute-force-flake-update" = "until nix flake update ; do : ; done";
           };
          packages = with pkgs; [
           #TODO: Do we need both or does nix-direnv declare the dependency?
