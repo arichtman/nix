@@ -165,6 +165,7 @@ with lib;
           thefuck
           firefox-darwin.firefox-bin
           uair
+          gimp
           #TODO: dont have these on mac, aarch64 at least
           # trippy
           # pylyzer
