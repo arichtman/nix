@@ -167,6 +167,7 @@ with lib;
           uair
           wezterm
           gimp
+          rectangle
           #TODO: dont have these on mac, aarch64 at least
           # trippy
           # pylyzer
