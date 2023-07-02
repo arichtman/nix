@@ -1,7 +1,8 @@
-{ lib
-, pkgs
-, config
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  ...
 }: {
   # I'm not even sure these should all _be_ under the top-level config
   # The errors seem to indicate that as long as it's all either way...

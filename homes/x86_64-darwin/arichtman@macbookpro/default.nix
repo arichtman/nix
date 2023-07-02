@@ -1,11 +1,14 @@
-{ lib, pkgs, config, ... }:
-let
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}: let
   myShellAliases = {
-    "brute-force-darwin-rebuild-switch" =  "until darwin-rebuild switch --flake . ; do : ; done";
+    "brute-force-darwin-rebuild-switch" = "until darwin-rebuild switch --flake . ; do : ; done";
     "brute-force-flake-update" = "until nix flake update --commit-lock-file ; do : ; done";
   };
-in
-{
+in {
   home = {
     stateVersion = "22.11";
     shellAliases = myShellAliases;

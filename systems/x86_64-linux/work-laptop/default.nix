@@ -19,5 +19,4 @@ with lib; {
       file."_systems.x86_64-linux_work-laptop_default.nix".text = "";
     };
   };
-
 }

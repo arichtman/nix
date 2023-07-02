@@ -13,4 +13,7 @@ center = [ "version-control" ]
 [keys.normal]
 l = { e = [ "select_mode", "goto_line_end", "normal_mode" ], b = [ "goto_line_start", "move_next_word_start", "move_char_right" ] }
 D = "delete_selection_noyank"
+# TODO: config composition so this is only mac
+A-c = ":pipe-to pbcopy"
+A-p = ":insert-output pbpaste"
 
