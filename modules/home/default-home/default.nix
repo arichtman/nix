@@ -86,6 +86,8 @@ in
             S = "switch";
             d = "diff";
           };
+          # Note: regex to select non-comments ^[^#\n].*
+          ignores = import ./.gitignore.nix;
           extraConfig = {
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
             rebase.updateRefs = true;
