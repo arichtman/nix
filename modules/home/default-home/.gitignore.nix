@@ -1,6 +1,9 @@
-[
-# Created by https://www.toptal.com/developers/gitignore/api/hugo,linux,macos,python,windows,terraform,terragrunt,rust,rust-analyzer
-# Edit at https://www.toptal.com/developers/gitignore?templates=hugo,linux,macos,python,windows,terraform,terragrunt,rust,rust-analyzer
+[# Created by https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
+# Edit at https://www.toptal.com/developers/gitignore?templates=hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
+
+### direnv ###
+".direnv"
+".envrc"
 
 ### Hugo ###
 # Generated files by hugo
@@ -327,6 +330,5 @@
 # Windows shortcuts
 "*.lnk"
 
-# End of https://www.toptal.com/developers/gitignore/api/hugo,linux,macos,python,windows,terraform,terragrunt,rust,rust-analyzer
-
+# End of https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
 ]
