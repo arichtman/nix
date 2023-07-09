@@ -5,8 +5,7 @@
   ...
 }: {
   default-home = {
-    username = "arichtman";
-
+    username = "nixos";
     git = {
       email = "Ariel.Richtman@SilverRailTech.com";
       username = "Ariel Richtman";

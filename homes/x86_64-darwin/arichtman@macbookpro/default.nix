@@ -9,10 +9,15 @@
     "brute-force-flake-update" = "until nix flake update --commit-lock-file ; do : ; done";
   };
 in {
+  default-home = {
+    username = "arichtman";
+
+    git = {
+      email = "10679234+arichtman@users.noreply.github.com";
+      username = "Richtman, Ariel";
+    };
+  };
   home = {
-    stateVersion = "22.11";
     shellAliases = myShellAliases;
-    # TODO: remove after development
-    file."_homes_x86_64-darwin_arichtman@macbookpro_default.nix".text = "";
   };
 }

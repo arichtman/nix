@@ -19,15 +19,10 @@ in
       };
     };
     config = mkIf (cfg.enabled) {
-      home-manager = {
-        #TODO: Remove hard-coding of name
-        users.nixos = {
-          home = {
-            packages = with pkgs; [
-              git-remote-codecommit
-            ];
-          };
-        };
+      home = {
+        packages = with pkgs; [
+          git-remote-codecommit
+        ];
       };
     };
   }

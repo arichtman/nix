@@ -6,17 +6,6 @@
 }: {
   networking.hostName = "bne-nb-ariel";
 
-  snowfallorg.user.arichtman.home.config = {
-    default-home = {
-      username = "arichtman";
-
-      git = {
-        email = "Ariel.Richtman@SilverRailTech.com";
-        username = "Ariel Richtman";
-      };
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     slack
     zoom-us

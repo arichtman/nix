@@ -4,11 +4,12 @@
   config,
   ...
 }: {
+  work-home.enabled = true;
   default-home = {
-    username = "arichtman";
+    username = "nixos";
 
     git = {
-      email = "Ariel.Richtman@SilverRailTech.com";
+      email = "10679234+arichtman@users.noreply.github.com";
       username = "Ariel Richtman";
     };
   };

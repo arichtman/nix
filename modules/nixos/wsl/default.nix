@@ -5,18 +5,18 @@
   pkgs,
   ...
 }: let
-  #TODO: Set this up as optional config again
-  # cfg = config.wsl-system;
+  cfg = config.wsl-system;
 in
   #TODO: Revisit the use of lib
   with lib;
   # with lib.internal;
     {
-      # options.wsl-system = {
-      #   enable = lib.mkEnableOption "Apply WSL configuration.";
-      # };
-      # config = mkIf cfg.enable {
-      config = {
+      options.wsl-system = {
+        enable = lib.mkEnableOption "Apply WSL configuration.";
+      };
+      config = mkIf cfg.enable {
+        # Ref: https://github.com/nix-community/NixOS-WSL/issues/10
+        boot.isContainer = true;
         # https://github.com/nix-community/NixOS-WSL/issues/185
         systemd.services.nixs-wsl-systemd-fix = {
           description = "Fix the /dev/shm symlink to be a mount";
@@ -41,7 +41,7 @@ in
           wslConf.automount.root = "/mnt";
           defaultUser = "nixos";
           startMenuLaunchers = true;
-          #nativeSystemd = true;
+          nativeSystemd = true;
           # Enable native Docker support
           docker-native.enable = true;
         };
@@ -105,6 +105,6 @@ in
         };
         # TODO: Should we set this both here _and_ in home-manager?
         # TODO: Will using unstable/master nixpkgs/h-m have any affects with this?
-        system.stateVersion = "22.11";
+        system.stateVersion = "23.11";
       };
     }
