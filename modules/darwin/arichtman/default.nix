@@ -58,6 +58,8 @@ with lib;
         wezterm
         gimp
         rectangle
+        phinger-cursors
+        lima
         helix
         ripgrep
       ];
