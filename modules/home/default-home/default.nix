@@ -142,6 +142,7 @@ in
         };
 
         packages = with pkgs; [
+          terraform-ls
           rust-analyzer
           alejandra
           helix
