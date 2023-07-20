@@ -36,15 +36,6 @@ in
           };
           wantedBy = ["sysinit.target" "systemd-tmpfiles-setup-dev.service" "sytemd-tmpfiles-setup.service" "systemd-sysctl.service"];
         };
-        wsl = {
-          enable = true;
-          wslConf.automount.root = "/mnt";
-          defaultUser = "nixos";
-          startMenuLaunchers = true;
-          nativeSystemd = true;
-          # Enable native Docker support
-          docker-native.enable = true;
-        };
 
         #TODO: factor this stuff into a common systems module
         time.timeZone = "Australia/Brisbane";

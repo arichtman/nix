@@ -10,10 +10,10 @@ Nothing here should be construed as a model of good work!
 
 ## Known issues/TODO
 
-- Recurring WSL2 systemd issue, we have a fix but it's ugly.
-- homes/shared.nix not being incorporated suddenly???
-- Incorporating the mac configuration into the central flake.
+- ~Recurring WSL2 systemd issue, we have a fix but it's ugly.~ Work machine is off Windows, home we now have a dedicated NixOS box.
 - Look into `buildEnv` over `devShell`
+- Perhaps actually put something useful in myShell
+- Maybe test out packaging a toy app/repo
 
 ## Use
 
@@ -23,7 +23,9 @@ Current WIP / notes:
 
 system-level mac config under systems/x86_64-darwin/${system}/default.nix
 
-homes/my_home/default.nix gets applied to everything? and we pass the config via snowfallorg.user.${name}.home.config.
+homes/my_home/default.nix gets applied to everything?
+If you don't want to have a home module you can pass user config in the system file via snowfallorg.user.${name}.home.config.
+
 I think if we want platform-specific stuff we can either make a new module and do config = mkIf and enable in system's default.nix via snowfall org OR we can do some conditional config in the existing module.
 There should be some like system.isDarwin system.isLinux options there.
 I think logically it makes sense to moduarize stuff like zsh enablement and config but not at the moment.
@@ -34,9 +36,8 @@ I haven't confirmed why some of those settings don't apply but it may be zsh vs 
 ### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
-<!-- TODO: see if we can configure this in nix -->
-<!-- TODO:  Do we even want Rosetta? -->
 1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
+  (I didn't)
 1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
 1. # Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
   `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
@@ -54,8 +55,7 @@ create /run? y
 # a nix-channel call will now fail
 1. Bootstrapping
   1. do the xcode-install method
-  1. `git clone https://github.com/arichtman/nix.git`
-  1. Build manually once `nix build .#darwinConfigurations.macbook-pro-work.system`
+  1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
   1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
 1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`?
 
@@ -90,11 +90,43 @@ sudo nix store gc
 #endregion
 ```
 
+## Home lab setup
+
+Pre-requisites:
+
+- Followed instructions from NixOS to flash ISO to USB
+
+Using HP EliteDesk 800 G3 Micro/Mini.
+
+1. Mash F10 to hit the bios (this was a thowback and a pain to do)
+1. Configure the following
+  - Ensure legacy boot is enabled.
+  - I disabled secure boot and MS certificate in case
+  - Turn off fast boot (might be optional)
+  - Add boot delay 5 seconds (purely QoL)
+  - Ensure USB takes priority over local disk
+1. Save and reboot
+1. Hit escape to select boot option of USB (esc maybe not required)
+1. Follow the instructions to install NixOS
+  - 23.05 (but higher is fine)
+  - User _nixos_
+  - Same password for `root`
+  - Auto login (QoL but consult your threat model)
+1. Modify /etc/nixos/configuration.nix enough to to what you need
+1. Download flake repo from github
+
+Upcoming:
+
+- Maybe enable flakes and rebuild from github
+
 ## Notes
 
-The VSCode server used to need to be enabled and either a reboot or manually started.
-However on my 22.11 install just now it was working fine.
-If I need to revisit it, go check the Git history.
+Checking on WSL `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
+
+Add to nomicon
+
+- fakesha256
+- nix-prefetch-url > hash.txt
 
 ## References
 

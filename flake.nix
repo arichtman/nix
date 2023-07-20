@@ -41,10 +41,6 @@
 
       alias.shells.default = "myshell";
 
-      systems.hosts = {
-        bruce-banner.modules = wsl-modules;
-
-        work-laptop.modules = wsl-modules;
-      };
+      systems.hosts.bruce-banner.modules = [inputs.nixos-wsl.nixosModules.wsl];
     };
 }
