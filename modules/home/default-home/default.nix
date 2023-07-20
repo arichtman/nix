@@ -87,6 +87,7 @@ in
             d = "diff";
           };
           # Note: regex to select non-comments ^[^#\n].*
+          # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
           ignores = import ./.gitignore.nix;
           extraConfig = {
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
@@ -159,8 +160,7 @@ in
           wget
           whois
           #TODO: dont have these on mac, aarch64 at least
-          trippy
-          pylyzer
+          # trippy
         ];
 
         file = {

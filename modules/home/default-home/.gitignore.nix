@@ -3,7 +3,6 @@
 
 ### direnv ###
 ".direnv"
-".envrc"
 
 ### Hugo ###
 # Generated files by hugo
