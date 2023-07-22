@@ -70,7 +70,7 @@ in {
   };
 
   # Enable automatic login for the user.
-  services.getty.autologinUser = "nixos";
+  # services.getty.autologinUser = "nixos";
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
