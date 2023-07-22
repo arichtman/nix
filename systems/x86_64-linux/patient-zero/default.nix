@@ -18,6 +18,7 @@ in {
   # TODO: It's trying to enable wsl config for some reason
   # wsl-system.enable = false;
   users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
+  security.sudo.wheelNeedsPassword = false;
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix

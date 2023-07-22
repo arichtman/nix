@@ -24,23 +24,52 @@
     };
 
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
   outputs = inputs: let
     #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
     wsl-modules = with inputs; [
       nixos-wsl.nixosModules.wsl
     ];
-  in
-    inputs.snowfall-lib.mkFlake {
+    lib = inputs.snowfall-lib.mkLib {
       inherit inputs;
       src = ./.;
-
+    };
+  in
+    lib.mkFlake {
       package-namespace = "arichtman";
 
       channels-config.allowUnfree = true;
 
-      alias.shells.default = "myshell";
+      alias.shells = {
+        default = "myshell";
+      };
 
       systems.hosts.bruce-banner.modules = [inputs.nixos-wsl.nixosModules.wsl];
+
+      # deploy = lib.mkDeploy { inherit (inputs) self; };
+      deploy = {
+        sshUser = "nixos";
+        user = "root";
+        nodes = {
+          patient-zero = {
+            remoteBuild = true;
+            hostname = "patient-zero";
+            profiles.system = {
+              # user = "nixos";
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.patient-zero;
+            };
+          };
+        };
+      };
+
+      # checks =
+      #   builtins.mapAttrs
+      #     (system: deploy-lib:
+      #       deploy-lib.deployChecks inputs.self.deploy)
+      #     inputs.deploy-rs.lib;
+      # This is slightly adapted from deploy-rs repo. The above was verbatim from Jake's config. I think there's no difference?
+      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
     };
 }
