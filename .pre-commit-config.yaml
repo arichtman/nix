@@ -18,3 +18,7 @@ repos:
   - id: pretty-format-json
     args:
       - "--autofix"
+- repo: https://github.com/kamadorueda/alejandra
+  rev: 9512caae61b6fbda5298a33813976db4f1c0f17d
+  hooks:
+  - id: alejandra-nix

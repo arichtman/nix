@@ -1,34 +1,33 @@
 {
   lib,
   pkgs,
-	# TODO: Don't need these for now
+  # TODO: Don't need these for now
   # modulesPath,
   ...
 }: let
-
-   rawKeys= builtins.fetchurl {
-  		url = "https://github.com/arichtman.keys";
-  		sha256 = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
-  	};
-    processedKeys = builtins.split "(^\w+\n$)" rawKeys;
+  rawKeys = builtins.fetchurl {
+    url = "https://github.com/arichtman.keys";
+    sha256 = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
+  };
+  processedKeys = builtins.split "(^\w+\n$)" rawKeys;
 in {
   networking.hostName = "patient-zero";
-	services.openssh = {
-	  enable = true;
-	};
-	# TODO: It's trying to enable wsl config for some reason
-	# wsl-system.enable = false;
-	users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  services.openssh = {
+    enable = true;
+  };
+  # TODO: It's trying to enable wsl config for some reason
+  # wsl-system.enable = false;
+  users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
- # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -65,7 +64,7 @@ in {
   users.users.nixos = {
     isNormalUser = true;
     description = "nixos";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [];
   };
 
@@ -75,10 +74,10 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-     git
-     helix
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
+    git
+    helix
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -102,5 +101,4 @@ in {
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }
