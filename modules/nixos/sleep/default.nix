@@ -7,19 +7,18 @@
   ...
 }: let
   cfg = config.services.sleep-at-night;
-  cronJobCommandStringDefinition = ''${pkgs.utillinux}/bin/rtcwake --mode off --time "$(${pkgs.coreutils}/bin/date --date "${toString cfg.wakeup.hour}:${toString cfg.wakeup.minute}" +%s)"'';
+  commandDefinition = "${pkgs.utillinux}/bin/rtcwake --mode off --time \"$(${pkgs.coreutils}/bin/date --date \"${toString cfg.wakeup.hour}:${toString cfg.wakeup.minute}\" '+%s')\"";
   # TODO: There's surely a nicer switch-case or match or map function...
-  cronDaysOfWeek =
-    if cfg.weekends == "never"
-    then "1-5"
-    else
-      (
-        if cfg.weekends == "only"
-        then "0,6"
-        else "*"
-      );
-  cronJobTimeDefinition = "${toString cfg.shutdown.minute} ${toString cfg.shutdown.hour} * * ${cronDaysOfWeek}";
-  cronJobStringDefinition = lib.concatStringsSep " " [cronJobTimeDefinition "root" cronJobCommandStringDefinition];
+  # daysOfWeek = if cfg.weekends == "never" then "Mon..Fri" else (if cfg.weekends == "only" then "Sat,Sun" else "");
+  # The trailing space is dumb as hell but I can't find a whitespace trim function
+  #  or a simple drop all list items that are falsy/empty/null
+  #  AND lib.concatStringsSep isn't smart enough to recognise an empty list item >:[
+  daysOfWeek = builtins.replaceStrings ["always" "never" "only"] ["" "Mon..Fri " "Sat,Sun "] cfg.weekends;
+  startAtDefinition = "${daysOfWeek}${toString cfg.shutdown.hour}:${toString cfg.shutdown.minute}";
+  sleep-at-night = pkgs.writeScriptBin "sleep-at-night" ''
+    #!${pkgs.bash}/bin/bash
+    ${pkgs.utillinux}/bin/rtcwake --mode off --time $(${pkgs.coreutils}/bin/date --date ${toString cfg.wakeup.hour}:${toString cfg.wakeup.minute} +%s)
+  '';
 in
   with lib; {
     options = {
@@ -42,14 +41,14 @@ in
 
         wakeup = {
           hour = mkOption {
-            default = 7;
+            default = 07;
             type = with types; ints.between 0 23;
             description = ''
               Wake up at given hour.
             '';
           };
           minute = mkOption {
-            default = 0;
+            default = 00;
             type = with types; ints.between 0 59;
             description = ''
               Wake up at given minute of the given `hour`.
@@ -66,7 +65,7 @@ in
             '';
           };
           minute = mkOption {
-            default = 0;
+            default = 00;
             type = with types; ints.between 0 59;
             description = ''
               Shut down at given minute of the given `hour`.
@@ -77,11 +76,15 @@ in
     };
 
     config = mkIf cfg.enable {
-      services.cron = {
-        enable = true;
-        systemCronJobs = [
-          cronJobStringDefinition
-        ];
+      systemd.services.sleep-at-night = {
+        description = "Sleep at night.";
+        startAt = startAtDefinition;
+        # I tried using the actual command with scriptArgs
+        # It's cooked. This works at least.
+        script = "${sleep-at-night}/bin/sleep-at-night";
+        serviceConfig = {
+          User = "root";
+        };
       };
     };
   }

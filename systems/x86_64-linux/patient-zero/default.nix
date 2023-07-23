@@ -60,10 +60,9 @@ in {
     };
     sleep-at-night = {
       enable = true;
-      shutdown.hour = 20;
-      shutdown.minute = 25;
-      wakeup.hour = 20;
-      wakeup.minute = 30;
+      shutdown.hour = 23;
+      wakeup.hour = 7;
+      weekends = "only";
     };
   };
 
