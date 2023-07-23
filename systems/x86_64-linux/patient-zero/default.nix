@@ -1,8 +1,6 @@
 {
   lib,
   pkgs,
-  # TODO: Don't need these for now
-  # modulesPath,
   ...
 }: let
   rawKeys = builtins.fetchurl {
@@ -12,11 +10,7 @@
   processedKeys = builtins.split "(^\w+\n$)" rawKeys;
 in {
   networking.hostName = "patient-zero";
-  services.openssh = {
-    enable = true;
-  };
-  # TODO: It's trying to enable wsl config for some reason
-  # wsl-system.enable = false;
+
   users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
   security.sudo.wheelNeedsPassword = false;
   imports = [
@@ -55,10 +49,21 @@ in {
     LC_TIME = "en_AU.UTF-8";
   };
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "au";
-    xkbVariant = "";
+  services = {
+    openssh = {
+      enable = true;
+    };
+    # Configure keymap in X11
+    xserver = {
+      layout = "au";
+      xkbVariant = "";
+    };
+    sleep-at-night = {
+      enable = true;
+      shutdown.hour = 23;
+      wakeup.hour = 7;
+      timer.granularity = 15;
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -69,14 +74,7 @@ in {
     packages = with pkgs; [];
   };
 
-  # Enable automatic login for the user.
-  # services.getty.autologinUser = "nixos";
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
     git
     helix
   ];
