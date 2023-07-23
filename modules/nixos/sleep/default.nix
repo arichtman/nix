@@ -7,27 +7,19 @@
   ...
 }: let
   cfg = config.services.sleep-at-night;
-  sleep-at-night = pkgs.writeScriptBin "sleep-at-night" ''
-    #!${pkgs.bash}/bin/bash
-    shutdownHour="00$1"
-    shutdownHour="''${shutdownHour:(-2)}"
-    shutdownMinute="00$2"
-    shutdownMinute="''${shutdownMinute:(-2)}"
-    wakeupHour="00$3"
-    wakeupHour="''${wakeupHour:(-2)}"
-    wakeupMinute="00$4"
-    wakeupMinute="''${wakeupMinute:(-2)}"
-    currentHour="$(${pkgs.coreutils}/bin/date +%H)"
-    currentMinute="$(${pkgs.coreutils}/bin/date +%M)"
-    if [[ "$currentHour" -eq "$shutdownHour" && "$currentMinute" -eq "$shutdownMinute" ]] || [[ "$currentHour" -gt "$shutdownHour" ]]
-    then
-        echo "Shutting down now. Waking up at $wakeupTime".
-        ${pkgs.utillinux}/bin/rtcwake --mode off --time "$(${pkgs.coreutils}/bin/date --date "$wakeupHour$wakeupMinute" +%s)";
+  cronJobCommandStringDefinition = ''${pkgs.utillinux}/bin/rtcwake --mode off --time "$(${pkgs.coreutils}/bin/date --date "${toString cfg.wakeup.hour}:${toString cfg.wakeup.minute}" +%s)"'';
+  # TODO: There's surely a nicer switch-case or match or map function...
+  cronDaysOfWeek =
+    if cfg.weekends == "never"
+    then "1-5"
     else
-        echo "Shutting down at $shutdownHour:$shutdownMinute."
-        exit 0
-    fi
-  '';
+      (
+        if cfg.weekends == "only"
+        then "0,6"
+        else "*"
+      );
+  cronJobTimeDefinition = "${toString cfg.shutdown.minute} ${toString cfg.shutdown.hour} * * ${cronDaysOfWeek}";
+  cronJobStringDefinition = lib.concatStringsSep " " [cronJobTimeDefinition "root" cronJobCommandStringDefinition];
 in
   with lib; {
     options = {
@@ -36,30 +28,28 @@ in
           default = false;
           type = with types; bool;
           description = ''
-            Sleep at night.
-            If you start the system after the given `shutdown` time, the system will keep running until the `shutdown` time occurs again, even if you start it before the given `wakeup` time.
+            Cron-triggered system sleep.
           '';
         };
-
-        timer.granularity = mkOption {
-          default = 5;
-          type = with types; ints.between 1 59;
+        weekends = mkOption {
+          type = with types; enum ["always" "never" "only"];
+          default = "always";
           description = ''
-            Frequency in minutes to check if system should start sleeping.
-            Effectively the variance of start and finish times.
+            Whether to apply on weekends.
+            `Only` disables weekdays entirely.
           '';
         };
 
         wakeup = {
           hour = mkOption {
-            default = 01;
+            default = 7;
             type = with types; ints.between 0 23;
             description = ''
               Wake up at given hour.
             '';
           };
           minute = mkOption {
-            default = 00;
+            default = 0;
             type = with types; ints.between 0 59;
             description = ''
               Wake up at given minute of the given `hour`.
@@ -69,14 +59,14 @@ in
 
         shutdown = {
           hour = mkOption {
-            default = 01;
+            default = 23;
             type = with types; ints.between 0 23;
             description = ''
               Shut down at given hour.
             '';
           };
           minute = mkOption {
-            default = 00;
+            default = 0;
             type = with types; ints.between 0 59;
             description = ''
               Shut down at given minute of the given `hour`.
@@ -87,15 +77,11 @@ in
     };
 
     config = mkIf cfg.enable {
-      systemd.services.sleep-at-night = {
-        description = "Sleep at night.";
-        serviceConfig = {
-          ExecStart = "${sleep-at-night}/bin/sleep-at-night ${toString cfg.shutdown.hour} ${toString cfg.shutdown.minute} ${toString cfg.wakeup.hour} ${toString cfg.wakeup.minute}";
-          Restart = "on-success";
-          RestartSec = cfg.timer.granularity * 60;
-          User = "root";
-        };
-        wantedBy = ["multi-user.target"];
+      services.cron = {
+        enable = true;
+        systemCronJobs = [
+          cronJobStringDefinition
+        ];
       };
     };
   }

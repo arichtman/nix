@@ -60,9 +60,10 @@ in {
     };
     sleep-at-night = {
       enable = true;
-      shutdown.hour = 23;
-      wakeup.hour = 7;
-      timer.granularity = 15;
+      shutdown.hour = 20;
+      shutdown.minute = 25;
+      wakeup.hour = 20;
+      wakeup.minute = 30;
     };
   };
 
