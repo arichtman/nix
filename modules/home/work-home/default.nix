@@ -22,6 +22,8 @@ in
       home = {
         packages = with pkgs; [
           git-remote-codecommit
+          teams
+          mitmproxy
         ];
       };
     };
