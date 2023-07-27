@@ -140,6 +140,8 @@ in
           DIRENV_LOG_FORMAT = "";
           AWS_EC2_METADATA_DISABLED = "true";
           EDITOR = "hx";
+          TF_CLI_ARGS_plan = "-compact-warnings";
+          TF_CLI_ARGS_apply = "-compact-warnings";
         };
 
         packages = with pkgs; [
