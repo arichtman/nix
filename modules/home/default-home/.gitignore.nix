@@ -1,9 +1,18 @@
 [
-  # Created by https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
-  # Edit at https://www.toptal.com/developers/gitignore?templates=hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
+  # Created by https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,direnv,python,windows,terraform,terragrunt,rust-analyzer,dotnetcore
+  # Edit at https://www.toptal.com/developers/gitignore?templates=hugo,rust,linux,macos,direnv,python,windows,terraform,terragrunt,rust-analyzer,dotnetcore
 
   ### direnv ###
   ".direnv"
+
+  ### DotnetCore ###
+  # .NET Core build folders
+  "bin/"
+  "obj/"
+
+  # Common node modules locations
+  "/node_modules"
+  "/wwwroot/node_modules"
 
   ### Hugo ###
   # Generated files by hugo
@@ -328,5 +337,5 @@
   # Windows shortcuts
   "*.lnk"
 
-  # End of https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,python,windows,terraform,terragrunt,rust-analyzer,direnv
+  # End of https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,direnv,python,windows,terraform,terragrunt,rust-analyzer,dotnetcore
 ]
