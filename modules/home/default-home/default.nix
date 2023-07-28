@@ -8,6 +8,12 @@
 }: let
   cfg = config.default-home;
   user = config.snowfallorg.user;
+  gitIgnores = lib.concatStringsSep "," ["hugo" "rust" "linux" "macos" "direnv" "python" "windows" "terraform" "terragrunt" "rust-analyzer" "dotnetcore"];
+  rawGitignore = builtins.fetchurl {
+    url = "https://www.toptal.com/developers/gitignore/api/${gitIgnores}";
+    sha256 = lib.fakeSha256;
+  };
+  processedGitignore = builtins.split "(^\w+\n$)" rawGitignore;
 in
   with lib; {
     options.default-home = with types; {
@@ -88,7 +94,7 @@ in
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
-          ignores = import ./.gitignore.nix;
+          ignores = processedGitignore;
           extraConfig = {
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
             rebase.updateRefs = true;
