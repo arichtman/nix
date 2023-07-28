@@ -63,6 +63,12 @@
     tfaa = "terraform apply -auto-approve";
     flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
   };
+  gitIgnores = lib.concatStringsSep "," ["hugo" "rust" "linux" "macos" "direnv" "python" "windows" "terraform" "terragrunt" "rust-analyzer" "dotnetcore"];
+  rawGitignore = builtins.fetchurl {
+    url = "https://www.toptal.com/developers/gitignore/api/${gitIgnores}";
+    sha256 = lib.fakeSha256;
+  };
+  processedGitignore = builtins.split "(^\w+\n$)" rawGitignore;
 in
   with lib; {
     options.default-home = with types; {
@@ -185,11 +191,12 @@ in
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
-          ignores = import ./.gitignore.nix;
+          # ignores = import ./.gitignore.nix;
           signing = {
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";
           };
+          ignores = processedGitignore;
           extraConfig = {
             gpg.format = "ssh";
             maintenance = {
