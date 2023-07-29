@@ -100,24 +100,33 @@ Using HP EliteDesk 800 G3 Micro/Mini.
 
 1. Mash F10 to hit the bios (this was a thowback and a pain to do)
 1. Configure the following
-  - Ensure legacy boot is enabled.
-  - I disabled secure boot and MS certificate in case
-  - Turn off fast boot (might be optional)
-  - Add boot delay 5 seconds (purely QoL)
-  - Ensure USB takes priority over local disk
+   - Ensure legacy boot is enabled.
+   - I disabled secure boot and MS certificate in case
+   - Turn off fast boot (might be optional)
+   - Add boot delay 5 seconds (purely QoL)
+   - Ensure USB takes priority over local disk
+   - I disabled prompt on memory change so if I add RAM later I don't have to displace the system.
+   - I disabled Intel's sgx or whatnot. Don't trust it after the RST debacle.
 1. Save and reboot
 1. Hit escape to select boot option of USB (esc maybe not required)
 1. Follow the instructions to install NixOS
-  - 23.05 (but higher is fine)
-  - User _nixos_
-  - Same password for `root`
-  - Auto login (QoL but consult your threat model)
-1. Modify /etc/nixos/configuration.nix enough to to what you need
-1. Download flake repo from github
-
-Upcoming:
-
-- Maybe enable flakes and rebuild from github
+   - 23.05 (but higher is fine)
+   - User _nixos_
+   - Same password for `root`
+   - Auto login (QoL but consult your threat model)
+1. Use `nix-shell` to obtain Git and Helix
+1. Clone this flake repo from github
+1. Copy the machine-specific disk config from `/etc/nixos/hardware-configuration.nix`.
+   Place it in the machine's `hardware-configuration.nix` in the flake repo.
+1. Nix rebuild switch to the flake's config.
+1. Confirm SSH remote access is working.
+1. Reboot and enter bios.
+   - Turn fast boot back on
+   - Set boot delay to 0
+   - Disable UEFI boot priority. If we need to boot from USB we'll reenter the BIOS.
+1. Save BIOS changes and one last confirmation that the system boots and is remotable.
+1. Move the machine to it's final home.
+1. Remotely retrieve the hardware configuration and commit it to the flake repo.
 
 ## Notes
 
