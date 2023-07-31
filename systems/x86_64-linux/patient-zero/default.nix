@@ -1,17 +1,28 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  rawKeys = builtins.fetchurl {
-    url = "https://github.com/arichtman.keys";
-    sha256 = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
-  };
-  processedKeys = builtins.split "(^\w+\n$)" rawKeys;
+{pkgs, ...}: let
 in {
   networking.hostName = "patient-zero";
 
-  users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
+  # TODO
+  # users.users.nixos.openssh.authorizedKeys.keys = lib.internal.getPublicKeys "github" "arichtman" "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
+  # TODO: General module for server config for cluster
+  myKeys = {
+    enable = true;
+    github = {
+      username = "arichtman";
+      fileHash = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
+    };
+    gitlab = {
+      username = "arichtman-srt";
+      fileHash = "0xq3xxszpgrcha861b2p05hlddm4aa9s2vsr5ri1ak059lwshkc8";
+    };
+    # TODO
+    # hosts = [
+    #   {
+    #     forge = "github";
+    #     username = "arichtman";
+    #   }
+    # ];
+  };
   security.sudo.wheelNeedsPassword = false;
   imports = [
     # Include the results of the hardware scan.
@@ -22,16 +33,16 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
+  # TODO: Consider removal of networkmanager
   networking.networkmanager.enable = true;
 
   # Set your time zone.
+  # TODO: Consider switching servers to UTC
   time.timeZone = "Australia/Brisbane";
 
   # Select internationalisation properties.
