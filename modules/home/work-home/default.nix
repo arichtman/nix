@@ -3,12 +3,9 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   cfg = config.work-home;
-  #TODO: Work this out when we switch to new lib
-  # userName = config.snowfallorg.user.name;
 in
   with lib; {
     options.work-home = with types; {
@@ -23,6 +20,7 @@ in
         packages = with pkgs; [
           git-remote-codecommit
           teams
+          k9s
           mitmproxy
         ];
       };
