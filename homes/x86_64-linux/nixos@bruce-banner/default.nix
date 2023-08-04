@@ -4,7 +4,6 @@
   config,
   ...
 }: {
-  work-home.enabled = true;
   default-home = {
     username = "nixos";
 

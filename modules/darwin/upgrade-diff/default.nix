@@ -2,7 +2,9 @@
   system.activationScripts.diff = {
     supportsDryActivation = true;
     text = ''
-      ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
+      if [[ -e /run/current-system ]]; then
+         ${pkgs.nix}/bin/nix store diff-closures /run/current-system "$systemConfig"
+      fi
     '';
   };
 }

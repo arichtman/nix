@@ -145,3 +145,4 @@ Add to nomicon
 - [Misterio77's starter configs](https://github.com/Misterio77/nix-starter-configs)
 - Just generally sucking at it, spelunking `nixpkgs` and `NixOS-WSL` source Nix files
 - [Jake Hamilton videos](https://www.youtube.com/@jakehamiltondev)
+- [Nebucatnetzer's config](https://git.2li.ch/Nebucatnetzer/nixos/)
