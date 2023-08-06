@@ -2,16 +2,20 @@
   lib,
   pkgs,
   ...
-}: let
-  rawKeys = builtins.fetchurl {
-    url = "https://github.com/arichtman.keys";
-    sha256 = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
+}: {
+  myKeys = {
+    enable = true;
+    github = {
+      username = "arichtman";
+      fileHash = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
+    };
+    gitlab = {
+      username = "arichtman-srt";
+      fileHash = "0xq3xxszpgrcha861b2p05hlddm4aa9s2vsr5ri1ak059lwshkc8";
+    };
   };
-  processedKeys = builtins.split "(^\w+\n$)" rawKeys;
-in {
   networking.hostName = "smol-bat";
 
-  users.users.nixos.openssh.authorizedKeys.keys = processedKeys;
   security.sudo.wheelNeedsPassword = false;
   imports = [
     # Include the results of the hardware scan.
