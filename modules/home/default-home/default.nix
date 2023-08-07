@@ -9,11 +9,13 @@
   cfg = config.default-home;
   user = config.snowfallorg.user;
   gitIgnores = lib.concatStringsSep "," ["hugo" "rust" "linux" "macos" "direnv" "python" "windows" "terraform" "terragrunt" "rust-analyzer" "dotnetcore"];
-  rawGitignore = builtins.fetchurl {
+  rawGitignorePath = builtins.fetchurl {
     url = "https://www.toptal.com/developers/gitignore/api/${gitIgnores}";
-    sha256 = lib.fakeSha256;
+    sha256 = "sha256:0srykrnpp8j2x70vrizr1cfny28y7bap39c9nxs93qmz0svyvqv1";
+    # Required to avoid issues with the URL characters in filenames, namely , and %
+    name = "gitignores.txt";
   };
-  processedGitignore = builtins.split "(^\w+\n$)" rawGitignore;
+  processedGitignore = lib.splitString "\n" (builtins.readFile rawGitignorePath);
 in
   with lib; {
     options.default-home = with types; {
@@ -94,7 +96,7 @@ in
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
-          ignores = processedGitignore;
+          ignores = builtins.trace processedGitignore processedGitignore;
           extraConfig = {
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
             rebase.updateRefs = true;
