@@ -57,12 +57,16 @@ in
         # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
         # There's probably a Nix context value I can use but I don't know it
         bat.enable = true;
+        # TODO: This is also not being found as valid??
+        # thefuck.enable = true;
         command-not-found.enable = true;
         direnv = {
           enable = true;
-          #TODO: enable zsh integreation possible?
+          #TODO: enable zsh integration possible?
           enableBashIntegration = true;
           nix-direnv.enable = true;
+          # TODO: Unclear why this is failing, it's clearly in nix options
+          # silent = true;
         };
         fzf = {
           enable = true;
@@ -85,6 +89,7 @@ in
             b = "branch";
             S = "switch";
             d = "diff";
+            f = "fetch";
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
@@ -113,8 +118,11 @@ in
           syntaxHighlighting.enable = true;
           initExtra = ''
             eval "$(zoxide init zsh)"
-            eval "$(thefuck --alias)"
-            eval "$(direnv hook zsh)"
+            function gedditdafuckouttahere () {
+              git submodule deinit --force $1 ;
+              rm -fr .git/modules/$1 ;
+              git rm --force $1 ;
+            }
           '';
           #TODO: check if direnv/nix-direnv adds shell completion/hooks anyhow
           #  or these can be enabled by config
@@ -137,6 +145,7 @@ in
         sessionVariables = {
           #TODO: This isn't overriding the erroneous socket
           DOCKER_HOST = "";
+          # TODO: Remove if subsumed by silent = true
           DIRENV_LOG_FORMAT = "";
           AWS_EC2_METADATA_DISABLED = "true";
           EDITOR = "hx";
@@ -152,11 +161,7 @@ in
           zoxide
           nnn
           thefuck
-          #TODO: does exa.enable cover this?
           exa
-          #TODO: same, isn't this in config?
-          direnv
-          nix-direnv
           ripgrep
           dig
           wget
@@ -200,13 +205,16 @@ in
           gP = "git push";
           gb = "git branch";
           gd = "git diff";
+          gf = "git fetch";
           gau = "git add --update";
           nfu = "nix flake update --commit-lock-file";
           #TODO: feels odd putting aliases in without installing the program but I like to keep the
           #  environments separate between repos?
+          tgv = "terragrunt validate";
           tgi = "terragrunt init";
           tgp = "terragrunt plan";
           tga = "terragrunt apply";
+          tfv = "terraform validate";
           tfi = "terraform init";
           tfp = "terraform plan";
           tfa = "terraform apply";
