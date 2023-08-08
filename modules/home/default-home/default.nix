@@ -214,10 +214,12 @@ in
           tgi = "terragrunt init";
           tgp = "terragrunt plan";
           tga = "terragrunt apply";
+          tgaa = "terragrunt apply -auto-approve";
           tfv = "terraform validate";
           tfi = "terraform init";
           tfp = "terraform plan";
           tfa = "terraform apply";
+          tfaa = "terraform apply -auto-approve";
         };
 
         enableNixpkgsReleaseCheck = true;
