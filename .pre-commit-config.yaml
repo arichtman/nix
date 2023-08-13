@@ -19,6 +19,8 @@ repos:
     args:
       - "--autofix"
 - repo: https://github.com/kamadorueda/alejandra
+  # TODO: When this issue is resolved, switch to proper tag ref
+  # Ref: https://github.com/kamadorueda/alejandra/issues/388
   rev: 9512caae61b6fbda5298a33813976db4f1c0f17d
   hooks:
   - id: alejandra-nix

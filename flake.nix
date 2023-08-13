@@ -48,13 +48,12 @@
 
       systems.hosts.bruce-banner.modules = [inputs.nixos-wsl.nixosModules.wsl];
 
-      # deploy = lib.mkDeploy { inherit (inputs) self; };
       deploy = {
         sshUser = "nixos";
         user = "root";
+        remoteBuild = true;
         nodes = {
           patient-zero = {
-            remoteBuild = true;
             hostname = "patient-zero";
             profiles.system = {
               # user = "nixos";
@@ -63,14 +62,12 @@
             };
           };
           dr-singh = {
-            remoteBuild = true;
             hostname = "dr-singh";
             profiles.system = {
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
             };
           };
           smol-bat = {
-            remoteBuild = true;
             hostname = "smol-bat";
             profiles.system = {
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;

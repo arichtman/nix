@@ -1,3 +1,6 @@
+!lib/
+*.txt
+*.key
 **/result
 .direnv/
 result*

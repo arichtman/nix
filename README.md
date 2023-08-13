@@ -10,10 +10,12 @@ Nothing here should be construed as a model of good work!
 
 ## Known issues/TODO
 
+- Generate intermediate CAs and distribute somehow
 - ~Recurring WSL2 systemd issue, we have a fix but it's ugly.~ Work machine is off Windows, home we now have a dedicated NixOS box.
 - Look into `buildEnv` over `devShell`
 - Perhaps actually put something useful in myShell
 - Maybe test out packaging a toy app/repo
+- Think about intermediate CA revokation
 
 ## Use
 
@@ -90,6 +92,22 @@ sudo nix store gc
 #endregion
 ```
 
+## Trust chain setup
+
+1. Create root CA
+   `step certificate create "ariel@richtman.au" root-ca.crt root-ca.key --profile root-ca --password-file root-ca.txt`
+1. Create intermediate CA
+   `step certificate create "2023" intermediate-ca.crt intermediate-ca.key --profile intermediate-ca --ca ./root-ca.crt --ca-key ./root-ca.key --ca-password-file root-ca.txt --password-file intermediate-ca.txt`
+1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
+1. Publish the root CA, with my current setup this meant uploading it to s3.
+
+Notes:
+
+- CSR/config files would be nicer for this, but not as valuable to my use case.
+- I didn't bother backing up the intermediate CAs, they're essentially disposable.
+- I could also have added the root CA to my hugo's static files but it's not _really_ part of the website.
+  I'm probably going to move off the s3+netlify combo once my platform is set up, it's kinda limited.
+
 ## Home lab setup
 
 Pre-requisites:
@@ -146,3 +164,4 @@ Add to nomicon
 - Just generally sucking at it, spelunking `nixpkgs` and `NixOS-WSL` source Nix files
 - [Jake Hamilton videos](https://www.youtube.com/@jakehamiltondev)
 - [Nebucatnetzer's config](https://git.2li.ch/Nebucatnetzer/nixos/)
+- [Smallstep documentation](https://smallstep.com/docs/step-cli/basic-crypto-operations/index.html)
