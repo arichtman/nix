@@ -17,6 +17,10 @@ in
     };
     config = mkIf (cfg.enabled) {
       home = {
+        file.".ssh" = {
+          source = ./.ssh;
+          recursive = true;
+        };
         packages = with pkgs; [
           git-remote-codecommit
           teams
