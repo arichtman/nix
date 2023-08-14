@@ -23,6 +23,7 @@ in
           k9s
           awscli2
           mitmproxy
+          kubectl
         ];
       };
     };
