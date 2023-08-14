@@ -154,6 +154,8 @@ in
         };
 
         packages = with pkgs; [
+          nil
+          marksman
           terraform-ls
           rust-analyzer
           alejandra
