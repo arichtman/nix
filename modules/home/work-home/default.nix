@@ -21,6 +21,7 @@ in
           git-remote-codecommit
           teams
           k9s
+          awscli2
           mitmproxy
         ];
       };
