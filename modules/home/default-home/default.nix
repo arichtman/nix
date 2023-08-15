@@ -49,11 +49,8 @@ in
         bash = {
           enable = true;
           enableCompletion = true;
-          #TODO: Why are these erroring...?
-          # loginShellInit = ''
-          #         eval "$(zoxide init bash)"
-          #       '';
         };
+        zoxide.enable = true;
         # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
         # There's probably a Nix context value I can use but I don't know it
         bat.enable = true;
@@ -79,6 +76,7 @@ in
         less.enable = true;
         git = {
           enable = true;
+          delta.enable = true;
           lfs.enable = true;
           userEmail = cfg.git.email;
           userName = cfg.git.username;
@@ -117,7 +115,6 @@ in
           enableAutosuggestions = true;
           syntaxHighlighting.enable = true;
           initExtra = ''
-            eval "$(zoxide init zsh)"
             function gedditdafuckouttahere () {
               git submodule deinit --force $1 ;
               rm -fr .git/modules/$1 ;
@@ -154,17 +151,28 @@ in
         };
 
         packages = with pkgs; [
-          nil
-          marksman
-          terraform-ls
-          rust-analyzer
-          alejandra
-          helix
-          zoxide
-          nnn
-          thefuck
-          exa
-          ripgrep
+          # Ref: https://github.com/ibraheemdev/modern-unix
+          xh # curl replacement
+          dog # dig replacement
+          procs # ps replacement
+          du-dust # du replacement
+          duf # df replacement
+          sd # sed replacement
+          gping # ping replacement
+          broot # tree + tui navigation
+          choose # cut/awk replacement
+          ripgrep # find replacement
+          # Lang servers
+          nil # nix
+          marksman # md
+          terraform-ls # tf
+          rust-analyzer # rust
+          alejandra # nix formatter
+          helix # editor/ide
+          nnn # file manager
+          thefuck # the infamous
+          exa # ls replacement
+          # The essentials
           dig
           wget
           whois
