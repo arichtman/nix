@@ -26,8 +26,10 @@ in
           teams
           k9s
           awscli2
-          mitmproxy
           kubectl
+          terraform
+          terragrunt
+          mitmproxy
         ];
       };
     };
