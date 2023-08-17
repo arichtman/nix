@@ -40,7 +40,8 @@ in
       ];
       security = {
         pki.certificateFiles = [
-          rootCaStoreFile
+          # TODO: Maybe re-add? Depends
+          # rootCaStoreFile
         ];
         sudo.wheelNeedsPassword = false;
       };

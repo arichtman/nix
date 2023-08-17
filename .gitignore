@@ -1,6 +1,15 @@
-!lib/
-*.txt
-*.key
-**/result
+# Direnv cache
 .direnv/
+
+# Snowfall lib actually uses this directory, so de-exclude it
+!lib/
+
+# Nix realizations
+**/result
 result*
+
+# PKI exclude, technically the certs aren't sensitive but...
+*.pem
+*-pass.txt
+*.key
+*.pub

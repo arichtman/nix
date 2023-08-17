@@ -13,6 +13,8 @@ mkShell {
     helix
     pre-commit
     deploy-rs
+    kubectl
+    xkcdpass
   ];
   shellHook = ''
     pre-commit install --install-hooks
