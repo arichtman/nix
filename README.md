@@ -10,45 +10,31 @@ Nothing here should be construed as a model of good work!
 
 ## Known issues/TODO
 
-- Generate intermediate CAs and distribute somehow
-- ~Recurring WSL2 systemd issue, we have a fix but it's ugly.~ Work machine is off Windows, home we now have a dedicated NixOS box.
+- Look into where makes sense to bootstrap secrets/vault/trust
+- Convert nodes to use ssh certificates for authentication and server certificates
 - Look into `buildEnv` over `devShell`
 - Perhaps actually put something useful in myShell
-- Maybe test out packaging a toy app/repo
-- Think about intermediate CA revokation
-- Convert nodes to use ssh certificates for authentication and server certificates
+- Test out packaging a toy app/repo
 
 ## Use
 
 ## Mac
 
-Current WIP / notes:
-
-system-level mac config under systems/x86_64-darwin/${system}/default.nix
-
-homes/my_home/default.nix gets applied to everything?
-If you don't want to have a home module you can pass user config in the system file via snowfallorg.user.${name}.home.config.
-
-I think if we want platform-specific stuff we can either make a new module and do config = mkIf and enable in system's default.nix via snowfall org OR we can do some conditional config in the existing module.
-There should be some like system.isDarwin system.isLinux options there.
-I think logically it makes sense to moduarize stuff like zsh enablement and config but not at the moment.
-
-Under homes/x86_64-darwin/arichtman@macbookpro/default.nix there seems to be some specific-to-that-combo config.
-I haven't confirmed why some of those settings don't apply but it may be zsh vs bash issue.
-
 ### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
 1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
-  (I didn't)
+   I didn't explicitly install it but it's on there somehow now.
+   There was some mention that it auto-installs if you try running x86_64 binaries.
 1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
-1. # Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
+1. Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
   `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
 1. Nix-Darwin build and run installer
+
 ```
 nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
 ./result/bin/darwin-installer
-```
+
 edit default configuration.nix? n
 # Accept the option to manage nix-darwin using nix-channel or else it bombs
 manage using channels? y
@@ -56,11 +42,13 @@ add to bashrc y
 add to zshrc? y
 create /run? y
 # a nix-channel call will now fail
+```
+
 1. Bootstrapping
   1. do the xcode-install method
   1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
   1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
-1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`?
+1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
 
 ### WSL
 
@@ -75,7 +63,7 @@ wsl --set-default NixOS
 wsl
 ```
 
-In our shiny new install we can set up direct from GitHub!
+In our shiny new WSL install we can set up direct from GitHub!
 
 ```Bash
 # Apply directly from git
