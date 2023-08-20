@@ -233,16 +233,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1692493334,
-        "narHash": "sha256-uhIeH/nk7TJUdIcjjxzRO0v9ScfHF3E5la542xHA4gk=",
-        "owner": "arichtman",
+        "lastModified": 1692494774,
+        "narHash": "sha256-noGVoOTyZ2Kr5OFglzKYOX48cx3hggdCPbXrYMG2FDw=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bdc0a8e4507d15b1a09fe4ee6ed8ea588dcc9d65",
+        "rev": "3476a10478587dec90acb14ec6bde0966c545cc0",
         "type": "github"
       },
       "original": {
-        "owner": "arichtman",
-        "ref": "k8s",
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -267,16 +267,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1688262467,
-        "narHash": "sha256-ltEzl/u+NSattKgKavYOtR8OH/Prij5VthzHam8VrIE=",
+        "lastModified": 1692259977,
+        "narHash": "sha256-KZIElNWu0bb4T0axXDSn7aDb96h+6pYUKJWIbZj0E9A=",
         "owner": "snowfallorg",
         "repo": "lib",
-        "rev": "6b09a4b7b53c3c2531b6955a1d5e041fa10330f2",
+        "rev": "32b5448e283b9ede9f88b393be31404e33099689",
         "type": "github"
       },
       "original": {
         "owner": "snowfallorg",
-        "ref": "feat/home-manager",
+        "ref": "dev",
         "repo": "lib",
         "type": "github"
       }
