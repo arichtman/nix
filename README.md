@@ -192,6 +192,18 @@ step ssh certificate \
   -V 1d \
   -s ssh-host-ca
   -n patient-zero,patient-zero.local \
+
+Refs
+
+https://www.man7.org/linux/man-pages/man1/ssh-keygen.1.html (especially the certificates section)
+https://smallstep.com/docs/tutorials/ssh-certificate-login/index.html
+https://hackernoon.com/a-deeper-look-into-ssh-and-x509-certificates
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-creating_ssh_ca_certificate_signing-keys
+https://smallstep.com/docs/step-ca/configuration/#basic-configuration-options
+https://smallstep.com/docs/step-cli/reference/ssh/certificate/#options
+https://dev.to/gvelrajan/how-to-configure-and-setup-ssh-certificates-for-ssh-authentication-b52
+https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication
+
 -->
 
 ### Kubernetes certificate setup
