@@ -1,5 +1,4 @@
-{pkgs, ...}: let
-in {
+{lib, ...}: {
   networking.hostName = "patient-zero";
   lab-node = {
     enable = true;
@@ -113,9 +112,8 @@ in {
   services.step-ca = {
     enable = true;
     intermediatePasswordFile = "/home/nixos/certs/ca.pass";
-    # There's some very deep bug in the nix shell environment
-    # https://github.com/NixOS/nix/issues/5271
-    # https://github.com/NixOS/nixpkgs/issues/138157
-    settings = builtins.fromJSON "./ca.json";
+    settings = lib.importJSON ./ca.json;
+    address = "127.0.0.1";
+    port = 8443;
   };
 }
