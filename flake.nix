@@ -9,7 +9,7 @@
     };
 
     home-manager = {
-      url = github:nix-community/home-manager;
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -26,12 +26,10 @@
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
 
     deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = inputs: let
     #TODO: rework this https://nix.dev/anti-patterns/language#with-attrset-expression
-    wsl-modules = with inputs; [
-      nixos-wsl.nixosModules.wsl
-    ];
     lib = inputs.snowfall-lib.mkLib {
       inherit inputs;
       src = ./.;
@@ -76,12 +74,10 @@
         };
       };
 
-      # checks =
-      #   builtins.mapAttrs
-      #     (system: deploy-lib:
-      #       deploy-lib.deployChecks inputs.self.deploy)
-      #     inputs.deploy-rs.lib;
-      # This is slightly adapted from deploy-rs repo. The above was verbatim from Jake's config. I think there's no difference?
-      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
+      checks =
+        builtins.mapAttrs
+        (system: deploy-lib:
+          deploy-lib.deployChecks inputs.self.deploy)
+        inputs.deploy-rs.lib;
     };
 }

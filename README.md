@@ -100,6 +100,100 @@ sudo nix store gc
 1. Publish the root CA, with my current setup this meant uploading it to s3.
 1. Update the sha256 for the root certificate `fetchUrl` call
 
+### SSH certificate setup
+
+<!--
+Let's focus on host for now
+So we need an signing keypair and a leaf keypair for the actual host
+The signing keypair I think have to come from scratch, we can't sign it using our root CA
+Then we'll have to distribute and trust the public key from the signing pair
+
+After that we can do a one-off key-pair generation on-node.
+Create a CSR for the public key to send to the privileged machine.
+The CSR should include the node's hostname or machine ID.
+Machine uses the root CA to sign the CSR.
+Transfer the signed public key back to the node.
+Configure openssh to use the key pair for host.
+
+Now on WSL if I install/trust the signing CA public key we should be good to SSH without that host warning
+
+Rats, can't do actual trust chains. Boo.
+
+# Make password
+xkcdpass --delimiter - --numwords 4 > ssh-host-ca.pass
+
+# Create host CA keypair
+ssh-keygen \
+  -f ./ssh-host-ca # Output file pattern \
+  -t ed25519 # type elliptic curve \
+  -C "AU.Richtman.Ariel.SSH.Host.CA" # Comment for ergonomics \
+  -h # Required to make Host type certificate when signing \
+  -I "AU.Richtman.Ariel.SSH.Host.CA" # Identity \
+  -n patient-zero,patient-zero.local # Principals? What's this compared to Identity? \
+  -V 1d # Validity \
+  -P "$(< ssh-host-ca.pass)" # Passphrase \
+  -s ssh-host-ca # Signing
+
+ssh-keygen -f ./ssh-host-ca \
+  -t ed25519 \
+  -C "AU.Richtman.Ariel.SSH.Host.CA" \
+  -P "$(< ssh-host-ca.pass)" \
+  -I "AU.Richtman.Ariel.SSH.Host.CA" \
+  -h
+
+I'm unsure if -I and -h are doing anything for keypair generation
+Now, let's make the node's host certificate pair
+
+-s for sign
+-h for host
+-I for identity
+-n for principals
+
+ohhh I think identity is to lock which users can use this on which boxes. Comes in for client certs.
+ah, it'll only let us sign existing public key files.
+ssh-keygen -f ./ssh-host-pz -t ed25519 -C "AU.Richtman.Ariel.SSH.Host.Patient-Zero" -P "" -I "AU.Richtman.Ariel.SSH.Host.Patient-Zero"
+
+This works but we're trying to use Step for some reason lol
+ssh-keygen -s ./ssh-host-ca -h -n patient-zero,patient-zero.local -V +1d -I patient-zero -P "$(< ssh-host-ca.pass)" ./ssh-host-pz
+
+Looks like step maybe CAN generate the keypair too?
+Damn, step seems obsessed with having a live CA service to hit or some token thing?
+
+key-id (cert identity) key-file (private if generating, public if signing)
+force for development
+insecure no passwd for leaf/automated usage
+not after for expiry
+offline to shut it up about ca url
+host to switch off client certs
+host-id to switch from UUID to something more deterministic
+principal to set host names that are valid
+private key cause we're signing an existing pair
+sign to toggle off create mode
+no agent to stop it fucking with the sshd config
+
+step ssh certificate \
+  "AU.Richtman.Ariel.SSH.Host.Patient-Zero" ssh-host-pz.pub \
+  --force \
+  --insecure --no-password \
+  --not-after 24h \
+  --offline \
+  --host \
+  --host-id machine \
+  --principal patient-zero \
+  --principal patient-zero.local \
+  --private-key ssh-host-pz \
+  --sign \
+  --no-agent
+
+# Some ssh-keygen stuff valid for signing
+  -I "AU.Richtman.Ariel.SSH.Host.CA" \
+  -h \
+
+  -V 1d \
+  -s ssh-host-ca
+  -n patient-zero,patient-zero.local \
+-->
+
 ### Kubernetes certificate setup
 
 Be forewarned.

@@ -110,5 +110,12 @@ in {
     # it's a bugger I can't set this to an arbitrary path, it flows down into all the kubeconfigs
     # caFile = /home/nixo/certs/patient-zero.crt;
     # pki.genCfsslCACert = false;
+  services.step-ca = {
+    enable = true;
+    intermediatePasswordFile = "/home/nixos/certs/ca.pass";
+    # There's some very deep bug in the nix shell environment
+    # https://github.com/NixOS/nix/issues/5271
+    # https://github.com/NixOS/nixpkgs/issues/138157
+    settings = builtins.fromJSON "./ca.json";
   };
 }

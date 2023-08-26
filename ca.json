@@ -1,0 +1,49 @@
+{
+  "address": ":443",
+  "authority": {
+    "provisioners": [
+      {
+        "encryptedKey": "eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJjdHkiOiJqd2sranNvbiIsImVuYyI6IkEyNTZHQ00iLCJwMmMiOjEwMDAwMCwicDJzIjoiTGEyd2t5MWRMZGs0WmJ1aTN5RXhsQSJ9.iZwqn8sjDkzb7_CpllV6Z89iKr2ulXgu36WgkdXXVPq1juqZEFdG6A.TkLmof6cY9xBr9vw.gW0uGEy5MEeCVAb0-gDJtUg5OoKnIpjedMEL5mk8MeKE6YhOiuufNJnvSZINACC1xIOv5Jd9OfcRh6nRZFEFn0dL3t69J7JzbZc_8Pff9xb96WK4kVDKYmV04aNmje_c2Zv_sMa7D_DVKxt7eDePHD0REK9znuKushBzf63FH_JJsltyDyCISQKx03bmMbI7MOckgCzhE5v5oOWTJkmUAXmYv37dkIosT1Jnt-ve4ckJfY2hfV3R0qZelu8JwbUCq643ncu4aTdSYkWOkT0_4g1ZblMMk5oUdlxtQwQd7accuJBqOXbfxRxH07X2j045EfzwdP1IAZ14q4zDaGI.oSn9GRc1RQ5Se2XY7irv5w",
+        "key": {
+          "alg": "ES256",
+          "crv": "P-256",
+          "kid": "c8uxkt7lMsrTbEnSZ_cYf_JuNPun8D6JRMec5EjPVHQ",
+          "kty": "EC",
+          "use": "sig",
+          "x": "NeeK3FEXUTKmKdPhUA05iduBGmJ0Rmmh6pxAh_b8044",
+          "y": "Yo4-EpDFbrkGpjZmh6wnacStTtri2WYwT6BfVPgCKms"
+        },
+        "name": "ariel@richtman.au",
+        "type": "JWK"
+      }
+    ]
+  },
+  "crt": "/home/nixos/.step/certs/intermediate_ca.crt",
+  "db": {
+    "badgerFileLoadingMode": "",
+    "dataSource": "/var/lib/step-ca/db",
+    "type": "badgerv2"
+  },
+  "dnsNames": [
+    "patient-zero",
+    "patient-zero.local",
+    "127.0.0.1",
+    "localhost"
+  ],
+  "federatedRoots": null,
+  "insecureAddress": "",
+  "key": "/home/nixos/.step/secrets/intermediate_ca_key",
+  "logger": {
+    "format": "text"
+  },
+  "root": "/home/nixos/.step/certs/root_ca.crt",
+  "tls": {
+    "cipherSuites": [
+      "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+    ],
+    "maxVersion": 1.3,
+    "minVersion": 1.2,
+    "renegotiation": false
+  }
+}
