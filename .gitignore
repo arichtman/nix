@@ -1,3 +1,5 @@
+certificates/ssh/
+
 # Direnv cache
 .direnv/
 
