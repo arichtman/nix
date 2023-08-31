@@ -57,9 +57,8 @@ with lib;
         gimp
         rectangle
         phinger-cursors
+        # Container stuff
         lima
-        helix
-        ripgrep
       ];
 
       nix.package = pkgs.nixUnstable;

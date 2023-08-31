@@ -140,8 +140,6 @@ in
         stateVersion = "22.11";
 
         sessionVariables = {
-          #TODO: This isn't overriding the erroneous socket
-          DOCKER_HOST = "";
           # TODO: Remove if subsumed by silent = true
           DIRENV_LOG_FORMAT = "";
           AWS_EC2_METADATA_DISABLED = "true";
