@@ -109,11 +109,18 @@
     # it's a bugger I can't set this to an arbitrary path, it flows down into all the kubeconfigs
     # caFile = /home/nixo/certs/patient-zero.crt;
     # pki.genCfsslCACert = false;
+  };
   services.step-ca = {
     enable = true;
-    intermediatePasswordFile = "/home/nixos/certs/ca.pass";
+    intermediatePasswordFile = "/home/step-ca/.step/certs/intermediate-ca-pass.txt";
     settings = lib.importJSON ./ca.json;
     address = "127.0.0.1";
     port = 8443;
+  };
+  # TODO: Should we add a pass-through to the nix option?
+  systemd.services."step-ca" = {
+    environment = {
+      STEPDEBUG = "1";
+    };
   };
 }

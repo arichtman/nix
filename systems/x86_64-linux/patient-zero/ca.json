@@ -18,7 +18,7 @@
       }
     ]
   },
-  "crt": "/home/nixos/.step/certs/intermediate_ca.crt",
+  "crt": "/home/step-ca/.step/certs/intermediate-ca.pem",
   "db": {
     "badgerFileLoadingMode": "",
     "dataSource": "/var/lib/step-ca/db",
@@ -32,11 +32,11 @@
   ],
   "federatedRoots": null,
   "insecureAddress": "",
-  "key": "/home/nixos/.step/secrets/intermediate_ca_key",
+  "key": "/home/step-ca/.step/secrets/intermediate-ca-key.pem",
   "logger": {
     "format": "text"
   },
-  "root": "/home/nixos/.step/certs/root_ca.crt",
+  "root": "/home/step-ca/.step/certs/root-ca.pem",
   "tls": {
     "cipherSuites": [
       "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
