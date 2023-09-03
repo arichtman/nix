@@ -15,6 +15,8 @@ Nothing here should be construed as a model of good work!
 - Look into `buildEnv` over `devShell`
 - Perhaps actually put something useful in myShell
 - Test out packaging a toy app/repo
+- Think about intermediate CA revokation
+- Convert nodes to use ssh certificates for authentication and server certificates
 
 ## Use
 

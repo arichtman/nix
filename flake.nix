@@ -1,7 +1,7 @@
 {
   description = "Ariel's machine configs";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:arichtman/nixpkgs/k8s";
 
     snowfall-lib = {
       url = "github:snowfallorg/lib/dev";
@@ -61,18 +61,18 @@
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.patient-zero;
             };
           };
-          dr-singh = {
-            hostname = "dr-singh";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
-            };
-          };
-          smol-bat = {
-            hostname = "smol-bat";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;
-            };
-          };
+          # dr-singh = {
+          #   hostname = "dr-singh";
+          #   profiles.system = {
+          #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
+          #   };
+          # };
+          # smol-bat = {
+          #   hostname = "smol-bat";
+          #   profiles.system = {
+          #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;
+          #   };
+          # };
         };
       };
 
