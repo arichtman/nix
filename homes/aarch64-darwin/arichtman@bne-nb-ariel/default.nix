@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}: {
+{pkgs, ...}: {
   work-home.enabled = true;
   default-home = {
     username = "arichtman";

@@ -42,11 +42,9 @@ with lib;
         # yubikey-personalization-gui
         yubico-pam
         yubikey-manager
-        home-manager
-        wget
-        curl
-        direnv
-        nix-direnv
+        # TODO: pretty sure default-home applies this via nix options home-manager.enable
+        # home-manager
+        curl # TODO: Maybe make a default-system module?
         git
         htop
         btop
@@ -57,8 +55,6 @@ with lib;
         gimp
         rectangle
         phinger-cursors
-        # Container stuff
-        lima
       ];
 
       nix.package = pkgs.nixUnstable;

@@ -1,9 +1,7 @@
 {
-  options,
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   cfg = config.default-home;
