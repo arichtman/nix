@@ -7,6 +7,7 @@
       rootUuid = "1f83a0e2-f41c-4406-ac9d-36f9ffdf3345";
     };
   };
+  # TODO: see if we can use their mkSecret function
   services = {
     etcd = {
       certFile = "${config.services.kubernetes.secretsPath}/etcd-tls.pem";
@@ -20,6 +21,27 @@
       roles = ["master"];
       masterAddress = "patient-zero.local";
       easyCerts = false;
+      kubelet = {
+        kubeconfig = {
+          certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
+          keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
+          caFile = config.services.kubernetes.caFile;
+        };
+      };
+      proxy = {
+        kubeconfig = {
+          certFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client.pem";
+          keyFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client-key.pem";
+          caFile = config.services.kubernetes.caFile;
+        };
+      };
+      scheduler = {
+        kubeconfig = {
+          certFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client.pem";
+          keyFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client-key.pem";
+          caFile = config.services.kubernetes.caFile;
+        };
+      };
       apiserver = {
         serviceAccountKeyFile = "${config.services.kubernetes.secretsPath}/service-account.pem";
         serviceAccountSigningKeyFile = "${config.services.kubernetes.secretsPath}/service-account-key.pem";

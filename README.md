@@ -307,6 +307,21 @@ Notes:
   I _think_ it's possible to use one of the other certificates that we have both sides of. Unsure.
 - I'm not actually sure the service account public key has to be open but it would make sense if anything wanted to verify the tokens
 
+#### Other components
+
+```bash
+# Note the Subject.CommonName being set not by flags but required arguments
+step certificate create system:node:patient-zero kubelet-apiserver-client.pem kubelet-apiserver-client-key.pem \
+  --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json \
+  --not-after 2160h --set organization=system:nodes
+step certificate create system:kube-scheduler scheduler-apiserver-client.pem scheduler-apiserver-client-key.pem \
+  --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json \
+  --not-after 2160h
+step certificate create system:kube-proxy proxy-apiserver-client.pem proxy-apiserver-client-key.pem \
+  --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json \
+  --not-after 2160h --set organization=system:node-proxier
+```
+
 #### Onwards
 
 I worked a bit on `kube-scheduler` but it's missing an argument form for setting the trusted CA file.
