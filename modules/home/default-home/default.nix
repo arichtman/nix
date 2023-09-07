@@ -195,6 +195,9 @@ in
           "....." = "cd ../../../..";
           j = "jobs";
           k = "kill";
+          ee = "exit 0";
+          sc = "sudo systemctl";
+          jc = "journalctl -xe";
           ls = "exa";
           ll = "exa -@las new";
           cls = "clear";
