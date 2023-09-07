@@ -186,8 +186,6 @@ in
           # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
           # https://github.com/nix-community/home-manager/issues/2104
           ".terraform.d/plugin-cache/.keep".text = "";
-          # TODO: remove after development
-          "_modules_home_default-home_default.nix".text = "";
         };
 
         shellAliases = {
@@ -212,15 +210,19 @@ in
           gb = "git branch";
           gd = "git diff";
           gf = "git fetch";
+          gcm = "git checkout main || git checkout master";
+          grpo = "git remote prune origin";
           gau = "git add --update";
           nfu = "nix flake update --commit-lock-file";
           #TODO: feels odd putting aliases in without installing the program but I like to keep the
           #  environments separate between repos?
+          tg = "terragrunt";
           tgv = "terragrunt validate";
           tgi = "terragrunt init";
           tgp = "terragrunt plan";
           tga = "terragrunt apply";
           tgaa = "terragrunt apply -auto-approve";
+          tf = "terraform";
           tfv = "terraform validate";
           tfi = "terraform init";
           tfp = "terraform plan";
