@@ -164,11 +164,9 @@ Check the official Kubernetes documentation for a table of certificate requireme
 
 ```
 # etcd TLS
-step certificate create etcd etcd-tls-leafonly.pem etcd-tls-key.pem --ca etcd.pem --ca-key etcd-key.pem \
-  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h \
+step certificate create etcd etcd-tls.pem etcd-tls-key.pem --ca etcd.pem --ca-key etcd-key.pem \
+  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h --bundle \
   --san patient-zero --san patient-zero.local --san localhost --san 127.0.0.1 --san ::1 --san etcd.local
-# Bundle the TLS intermediary
-step certificate bundle etcd-tls-leafonly.pem etcd.pem etcd-tls.pem
 # kube-apiserver
 step certificate create kube-apiserver-etcd-client kube-apiserver-etcd-client.pem kube-apiserver-etcd-client-key.pem \
   --ca etcd.pem --ca-key etcd-key.pem --insecure --no-password --not-after 2160h \
@@ -233,12 +231,11 @@ We'll need a few new certificates for this one, all leaf type and only one for H
 
 ```
 # For the actual API server's HTTPS
-step certificate create kube-apiserver kube-apiserver-tls-leafonly.pem kube-apiserver-key.pem --ca ca.pem --ca-key ca-key.pem \
-  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h \
+step certificate create kube-apiserver kube-apiserver-tls.pem kube-apiserver-key.pem --ca ca.pem --ca-key ca-key.pem \
+  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h --bundle \
   --san patient-zero --san patient-zero.local --san localhost --san 127.0.0.1 --san ::1 \
   --san kubernetes --san kubernetes.default --san kubernetes.default.svc \
   --san kubernetes.default.svc.cluster --san kubernetes.default.svc.cluster.local
-step certificate bundle kube-apiserver-tls-leafonly.pem ca.pem kube-apiserver-tls.pem
 # For client authentication to kubelets
 step certificate create kube-apiserver-kubelet-client kube-apiserver-kubelet-client.pem kube-apiserver-kubelet-client-key.pem \
   --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h \
@@ -324,7 +321,7 @@ step certificate create system:kube-proxy proxy-apiserver-client.pem proxy-apise
 
 #### Onwards
 
-I worked a bit on `kube-scheduler` but it's missing an argument form for setting the trusted CA file.
+I worked a bit on `kube-scheduler` but it's missing an argument for setting the trusted CA file.
 It's kubeconfig is a generic one generated the same for every service.
 This will need some actual Nix work to get going.
 
