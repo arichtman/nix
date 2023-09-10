@@ -7,8 +7,8 @@
 }: let
   cfg = config.lab-node;
   rootCaStoreFile = builtins.fetchurl {
-    url = "https://s3.ap-southeast-2.amazonaws.com/richtman.au/root-ca.crt";
-    sha256 = "0mg0s91ilm8jc0194z8pc43r21a10yzwaszdd7c2ky7d08cn48xp";
+    url = "https://s3.ap-southeast-2.amazonaws.com/richtman.au/root-ca.pem";
+    sha256 = "1n0mmybs4alnr0zw049nm01sbrrhkj3idan917lcc6p8ils17psh";
   };
 in
   with lib; {
@@ -40,8 +40,7 @@ in
       ];
       security = {
         pki.certificateFiles = [
-          # TODO: Maybe re-add? Depends
-          # rootCaStoreFile
+          rootCaStoreFile
         ];
         sudo.wheelNeedsPassword = false;
       };
