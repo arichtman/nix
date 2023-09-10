@@ -10,9 +10,11 @@ in
       enable = mkEnableOption "Turns a machine into a full-fat control node.";
     };
     config = mkIf cfg.enable {
-      # TODO: see if we can use their mkSecret function
       services = {
+        # TODO: get working
+        flannel.enable = false;
         etcd = {
+          # TODO: see if we can use their mkSecret function
           certFile = "${config.services.kubernetes.secretsPath}/etcd-tls.pem";
           keyFile = "${config.services.kubernetes.secretsPath}/etcd-tls-key.pem";
           trustedCaFile = "${config.services.kubernetes.secretsPath}/etcd.pem";
