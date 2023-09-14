@@ -30,6 +30,7 @@ in
           terraform
           terragrunt
           mitmproxy
+          postman
         ];
       };
     };
