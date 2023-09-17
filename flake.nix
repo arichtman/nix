@@ -1,7 +1,7 @@
 {
   description = "Ariel's machine configs";
   inputs = {
-    nixpkgs.url = "github:arichtman/nixpkgs/k8s";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     snowfall-lib = {
       url = "github:snowfallorg/lib/dev";
@@ -9,7 +9,7 @@
     };
 
     home-manager = {
-      url = github:nix-community/home-manager;
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

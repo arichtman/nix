@@ -167,7 +167,8 @@ in
           helix # editor/ide
           nnn # file manager
           thefuck # the infamous
-          exa # ls replacement
+          # exa # ls replacement
+          eza # exa is unmaintained 🫣
           # The essentials
           dig
           wget
