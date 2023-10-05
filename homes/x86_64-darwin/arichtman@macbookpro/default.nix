@@ -1,12 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}: let
+{...}: let
   myShellAliases = {
     "brute-force-darwin-rebuild-switch" = "until darwin-rebuild switch --flake . ; do : ; done";
     "brute-force-flake-update" = "until nix flake update --commit-lock-file ; do : ; done";
+    "brute-force-direnv-reload" = "until direnv reload ; do : ; done";
   };
 in {
   default-home = {
