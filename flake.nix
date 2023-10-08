@@ -52,7 +52,6 @@
           patient-zero = {
             hostname = "patient-zero";
             profiles.system = {
-              # user = "nixos";
               # TODO: See about self-referencing the name or make this a function
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.patient-zero;
             };
@@ -63,12 +62,12 @@
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
             };
           };
-          # smol-bat = {
-          #   hostname = "smol-bat";
-          #   profiles.system = {
-          #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;
-          #   };
-          # };
+          smol-bat = {
+            hostname = "smol-bat";
+            profiles.system = {
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;
+            };
+          };
         };
       };
 
