@@ -37,6 +37,9 @@ in
           kubectl
           step-cli
           k9s
+          jq
+          yq
+          kubernetes-helm
         ];
       };
 

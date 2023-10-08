@@ -344,6 +344,19 @@ General notes:
 - I could also have added the root CA to my hugo's static files but it's not _really_ part of the website.
   I'm probably going to move off the s3+netlify combo once my platform is set up, it's kinda limited.
 
+Initial kubeconfig for access
+
+```
+kc config set-cluster mine --certificate-authority=$sd/ca.pem --embed-certs=true --server=https://patient-zero:6443
+
+kc config set-credentials admin --client-certificate=admin.pem --client-key=admin-key.pem
+
+kc config set-context mine --cluster=mine --user=admin
+
+#May also have to untaint stuff
+kc taint nodes patient-zero node.kubernetes.io/not-ready-
+```
+
 #### References
 
 - [Smallstep cli docs](https://smallstep.com/docs/step-cli/reference/certificate/create/)

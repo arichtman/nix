@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
   cfg = config.worker-node;
@@ -19,6 +20,8 @@ in
           masterAddress = "patient-zero.local";
           easyCerts = false;
           kubelet = {
+            # TODO: see if these are required
+            cni.packages = [pkgs.cni-plugin-flannel pkgs.cni-plugins];
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
