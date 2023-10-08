@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  options,
   ...
 }: let
   cfg = config.lab-node;
@@ -26,18 +25,21 @@ in
       };
     };
     config = mkIf cfg.enable {
-      # Define a user account. Don't forget to set a password with ‘passwd’.
+      # Define a user account.
       users.users.nixos = {
         isNormalUser = true;
         description = "nixos";
         extraGroups = ["networkmanager" "wheel"];
-        packages = with pkgs; [];
+        # TODO: Can disable this when stable
+        packages = with pkgs; [
+          git
+          helix
+          kubectl
+          step-cli
+          k9s
+        ];
       };
 
-      environment.systemPackages = with pkgs; [
-        git
-        helix
-      ];
       security = {
         pki.certificateFiles = [
           rootCaStoreFile
