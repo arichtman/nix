@@ -57,12 +57,12 @@
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.patient-zero;
             };
           };
-          # dr-singh = {
-          #   hostname = "dr-singh";
-          #   profiles.system = {
-          #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
-          #   };
-          # };
+          dr-singh = {
+            hostname = "dr-singh";
+            profiles.system = {
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
+            };
+          };
           # smol-bat = {
           #   hostname = "smol-bat";
           #   profiles.system = {

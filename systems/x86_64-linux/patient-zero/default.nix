@@ -1,4 +1,4 @@
-{config, ...}: {
+{...}: {
   networking.hostName = "patient-zero";
   lab-node = {
     enable = true;
@@ -7,5 +7,5 @@
       rootUuid = "1f83a0e2-f41c-4406-ac9d-36f9ffdf3345";
     };
   };
-  # master-node.enable = true;
+  master-node.enable = true;
 }
