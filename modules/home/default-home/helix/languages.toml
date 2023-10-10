@@ -5,3 +5,7 @@
 name = "rust"
 indent = { tab-width = 1, unit = "  " }
 
+# https://medium.com/@CaffeineForCode/helix-setup-for-markdown-b29d9891a812
+[[language]]
+name = "markdown"
+formatter = { command = "dprint", args = ["fmt", "--stdin", "md"] }

@@ -167,6 +167,7 @@ in
           helix # editor/ide
           nnn # file manager
           thefuck # the infamous
+          dprint # markdown formatting (it does more though)
           # exa # ls replacement
           eza # exa is unmaintained 🫣
           # The essentials
@@ -187,6 +188,7 @@ in
           # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
           # https://github.com/nix-community/home-manager/issues/2104
           ".terraform.d/plugin-cache/.keep".text = "";
+          ".dprint.jsonc".source = dprint/.dprint.jsonc;
         };
 
         shellAliases = {
