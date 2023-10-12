@@ -222,6 +222,10 @@ in
           nfu = "nix flake update --commit-lock-file";
           #TODO: feels odd putting aliases in without installing the program but I like to keep the
           #  environments separate between repos?
+          kc = "kubectl";
+          kcc = "kubectl config";
+          kcg = "kubectl get";
+          kcd = "kubectl describe";
           tg = "terragrunt";
           tgv = "terragrunt validate";
           tgi = "terragrunt init";
