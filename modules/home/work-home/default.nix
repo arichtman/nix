@@ -31,6 +31,7 @@ in
           terragrunt
           mitmproxy
           postman
+          kubernetes-helm
         ];
       };
     };
