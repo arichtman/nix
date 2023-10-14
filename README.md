@@ -317,6 +317,9 @@ step certificate create system:kube-scheduler scheduler-apiserver-client.pem sch
 step certificate create system:kube-proxy proxy-apiserver-client.pem proxy-apiserver-client-key.pem \
   --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json \
   --not-after 2160h --set organization=system:node-proxier
+step certificate create kube-scheduler scheduler-tls.pem scheduler-tls-key.pem --ca ca.pem --ca-key ca-key.pem \
+  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 2160h --bundle \
+  --san patient-zero --san patient-zero.local --san localhost --san 127.0.0.1 --san ::1
 ```
 
 #### Onwards
@@ -325,11 +328,6 @@ I worked a bit on `kube-scheduler` but it's missing an argument for setting the 
 It's kubeconfig is a generic one generated the same for every service.
 This will need some actual Nix work to get going.
 
-<!-- Bonus content
-step certificate create kube-scheduler kube-scheduler-tls.pem kube-scheduler-tls-key.pem --ca ca.pem --ca-key ca-key.pem \
-  --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json \
-  --san patient-zero --san patient-zero.local --san 127.0.0.1 --san localhost --san ::1
--->
 From here forwards you should have a reasonably clear hammer to hit most cert requirements with.
 It's basically either for HTTPS and needs a SAN or it's for client auth and it _may_ need the `O` property set.
 

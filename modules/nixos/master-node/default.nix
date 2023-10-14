@@ -19,6 +19,10 @@ in
         # TODO: reconsider, unless we're doing HA control plane we don't really want to expose etcd
         2379
       ];
+      # Seems to be required for the scheduler to resolve the host ip cause we didn't use localhost
+      networking.firewall.allowedUDPPorts = [
+        53
+      ];
       services = {
         # Note: I had issues being unable to configure the k8s master address
         #  I suspect it's solvable but also Flannel comes with a Helm chart so
@@ -61,6 +65,12 @@ in
             };
           };
           scheduler = {
+            extraOpts = builtins.concatStringsSep " " [
+              "--tls-cert-file"
+              "${config.services.kubernetes.secretsPath}/scheduler-tls.pem"
+              "--tls-private-key-file"
+              "${config.services.kubernetes.secretsPath}/scheduler-tls-key.pem"
+            ];
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client-key.pem";
