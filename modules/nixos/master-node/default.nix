@@ -30,6 +30,8 @@
       {
         name = "flannel";
         user = {
+          # This certificate bootstrap's not firing
+          # https://github.com/NixOS/nixpkgs/blob/5e4c2ada4fcd54b99d56d7bd62f384511a7e2593/nixos/modules/services/cluster/kubernetes/flannel.nix#L57
           client-certificate = "${config.services.kubernetes.secretsPath}/flannel-apiserver-client.pem";
           client-key = "${config.services.kubernetes.secretsPath}/flannel-apiserver-client-key.pem";
         };
