@@ -158,6 +158,11 @@ in
           broot # tree + tui navigation
           choose # cut/awk replacement
           ripgrep # find replacement
+          # Nix tooling
+          nix-init
+          nix-update
+          nix-index
+          nurl
           # Lang servers
           nil # nix
           marksman # md
