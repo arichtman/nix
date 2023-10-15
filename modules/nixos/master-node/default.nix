@@ -30,8 +30,23 @@
       {
         name = "flannel";
         user = {
-          # This certificate bootstrap's not firing
+          # TODO: This flannel RBAC bootstrap's not firing. It should be vomiting out manifests to /etc/kubernetes/addons
           # https://github.com/NixOS/nixpkgs/blob/5e4c2ada4fcd54b99d56d7bd62f384511a7e2593/nixos/modules/services/cluster/kubernetes/flannel.nix#L57
+          # So if RBAC && flannel backend is k8s, it should configure services.kubernetes.addonmanager,
+          #  adding bootstrapAddon definitions. addonmanager in turn configures a systemd service that runs after the apiserver.
+          # The addonManager is supposed to dump out arbitrary attributeSets into JSON files under the nix store
+          #  which is symlinked to /etc/kubernetes/addons.
+          # This is the method that's also used for coredns and is about what I wanted from /etc/kubernetes/manifests,
+          #  except that's limited to pods and does weird stuff replicating definitions in the apiserver, unsuitable.
+          # This magic directory is polled by an ancient and rudimentary shell script, that's maintained by the kubernetes
+          #  project. It's primarily a library file `kube-addons.sh` and a main function `kube-addons-main.sh`.
+          # The script basically runs its own loop using `sleep`, which isn't great.
+          # Anyways, turns out since it's wrapping calls to `kubectl` it's got no kubeconfig and defaults to localhost:8080
+          # Which, is bizzare anyhow since I've never seen a kube-apiserver running on that.
+          # So, turns out if we put a .kube directory with the certs and kubeconfig file into /var/lib/kubernetes
+          #  (which is the `kubernetes` account's $HOME) then it works.
+          # Not happy about _another_ manual step but maybe when we fix up this mess of cert generation and secrets
+          #  we can find something nicer. I bet we could use user config to dump out the files
           client-certificate = "${config.services.kubernetes.secretsPath}/flannel-apiserver-client.pem";
           client-key = "${config.services.kubernetes.secretsPath}/flannel-apiserver-client-key.pem";
         };
@@ -72,9 +87,9 @@ in
         #  perhaps the best way forwards is to let Flux manage it? Might have a bootstrapping
         #  cyclic dependency or some requirement to have flannel first though
         #  TBD
-        # TODO: pull common kubernetes config out into another module
-        # flannel.enable = false;
         flannel = {
+          # TODO: remove if found unnecessary to fix addon output
+          storageBackend = "kubernetes";
           kubeconfig = flannelKubeconfigPath;
         };
         etcd = {
@@ -155,7 +170,11 @@ in
               certFile = "${config.services.kubernetes.secretsPath}/kube-apiserver-etcd-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kube-apiserver-etcd-client-key.pem";
             };
+            # TODO: remove if found unnecessary to fix addon output
+            authorizationMode = ["RBAC" "Node"];
           };
+          # TODO: remove if found unnecessary to fix addon output
+          addonManager.enable = true;
         };
       };
     };

@@ -17,6 +17,8 @@ Nothing here should be construed as a model of good work!
 - Test out packaging a toy app/repo
 - Think about intermediate CA revokation
 - Convert nodes to use ssh certificates for authentication and server certificates
+- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
+- Pull common kubernetes config out into another module
 
 ## Use
 
