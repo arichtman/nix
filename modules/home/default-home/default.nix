@@ -158,6 +158,7 @@ in
           broot # tree + tui navigation
           choose # cut/awk replacement
           ripgrep # find replacement
+          jless # json tui
           # Nix tooling
           nix-init
           nix-update
