@@ -178,7 +178,7 @@ in
           # The essentials
           dig
           wget
-          whois
+          # whois
           #TODO: dont have these on mac, aarch64 at least
           # trippy
         ];
