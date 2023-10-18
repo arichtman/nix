@@ -92,7 +92,11 @@ in
           ignores = import ./.gitignore.nix;
           extraConfig = {
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
-            rebase.updateRefs = true;
+            rebase = {
+              updateRefs = true;
+              autoStash = true;
+            };
+            merge.autoStash = true;
             init.defaultBranch = "main";
             pull = {
               rebase = true;
