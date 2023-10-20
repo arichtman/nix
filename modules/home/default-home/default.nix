@@ -236,6 +236,7 @@ in
           kcc = "kubectl config";
           kcg = "kubectl get";
           kcd = "kubectl describe";
+          kcns = "kubectl config set-context --current --namespace";
           tg = "terragrunt";
           tgv = "terragrunt validate";
           tgi = "terragrunt init";
