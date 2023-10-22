@@ -79,7 +79,8 @@ in
         # KUBE_API_URL = "https://patient-zero.local:6443";
         # Absent this you get an error suggesting that KUBERNETES_MASTER should be set.
         FLANNELD_KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
-        FLANNELD_V = "10";
+        # TODO: Remove when completed debugging
+        # FLANNELD_V = "10";
       };
       services = {
         # Note: I had issues being unable to configure the k8s master address
