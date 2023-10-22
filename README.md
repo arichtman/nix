@@ -201,6 +201,30 @@ Using HP EliteDesk 800 G3 Micro/Mini.
 1. Move the machine to it's final home.
 1. Remotely retrieve the hardware configuration and commit it to the flake repo.
 
+Using Topton N100 unit:
+
+1. Mash `F10` (?) to enter BIOS
+1. Set USB boot precendence above internal drive/s
+1. Boot Proxmox installer and walk through
+   Set static IP with netmask as same as router's DHCP netmask.
+   Best I can tell this is required to send traffic _back_ to origin.
+1. Highly recommended but optionally, trust your SSH keys.
+   `curl https://github.com/arichtman.keys >> ~/.ssh/authorized_keys`
+1. Optionally, add static DHCP lease to the router.
+   If you do this, you can also optionally remove the fixed interface configuration.
+   Edit `/etc/network/interfaces` and switch the virtual bridge network configuration from `manual` to `dhcp`.
+1. Optionally, install trusted certificates.
+   Instructions are on my blog.
+1. Remove the paid `apt` repository source.
+   `rm /etc/apt/sources.list.d/pve-enterprise.list`
+1. Add the _no-subscription_ repository source.
+   [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#sysadmin_no_subscription_repo)
+1. Optionally remove/switch the Ceph repo source
+   It says they use it for testing Ceph versions against Proxmox before merging it to Enterprise repo.
+   But does that mean no-sub repo gets *no* updates?
+   `rm /etc/apt/sources.list.d/ceph.list`
+   [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#_ceph_quincy_no_subscription_repository)
+
 ## Notes
 
 Checking on WSL `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
