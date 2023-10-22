@@ -4,6 +4,8 @@ repos:
   hooks:
   - id: check-added-large-files
   - id: check-yaml
+    args:
+    - "--allow-multiple-documents"
   - id: end-of-file-fixer
   - id: trailing-whitespace
   - id: check-case-conflict
@@ -11,7 +13,6 @@ repos:
   - id: check-shebang-scripts-are-executable
   - id: check-toml
   - id: check-vcs-permalinks
-  - id: check-yaml
   - id: end-of-file-fixer
   - id: mixed-line-ending
   - id: check-json
