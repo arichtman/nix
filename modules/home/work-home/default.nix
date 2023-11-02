@@ -32,6 +32,7 @@ in
           mitmproxy
           postman
           kubernetes-helm
+          docker-client
         ];
       };
     };
