@@ -225,6 +225,28 @@ Using Topton N100 unit:
    `rm /etc/apt/sources.list.d/ceph.list`
    [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#_ceph_quincy_no_subscription_repository)
 
+### Proxmox LXC
+
+*WIP*
+
+PVE's source only has some turnkey ancient debian stuff.
+Canonical are stingy with their supplying of rootfs tarballs and won't just give you the URL.
+So we download it using vanilla LXC then add to PVE.
+
+
+```
+lxc-create --name throwaway --template download --quiet -- --dist openwrt --release 23.05 --arch amd64
+lxc-destroy throwaway
+cp /var/cache/lxc/download/openwrt/23.05/amd64/default/rootfs.tar.xz /var/lib/vz/template/cache/openwrt_23.05_amd64.tar.xz
+pveam update
+```
+
+- TODO: See if we can make it look nicer in the GUI. `pct` Might have a role here.
+- TODO: Fix unrecognised OS error when launching in PVE. Could be a VM/Container ID .conf file in `/etc/pve/nodes/proxmox/lxc/`
+  Ah yup, weirdly tied to the VM ID not handle but ok.
+  https://pve.proxmox.com/wiki/Manual:_pct.conf
+  https://pve.proxmox.com/pve-docs/pct.1.html
+
 ## Notes
 
 Checking on WSL `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
