@@ -51,7 +51,9 @@ with lib;
         # Required for some c dependencies for rustc/cargo
         darwin.apple_sdk.frameworks.CoreServices
         firefox-darwin.firefox-bin
-        wezterm
+        # switched out from wezterm due to https://github.com/NixOS/nixpkgs/issues/239384
+        alacritty
+        zellij
         gimp
         rectangle
         phinger-cursors
