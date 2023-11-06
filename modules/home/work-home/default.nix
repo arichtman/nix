@@ -16,6 +16,11 @@ in
       };
     };
     config = mkIf (cfg.enabled) {
+      programs = {
+        nushell.enable = true;
+        carapace.enable = true;
+        carapace.enableNushellIntegration = true;
+      };
       home = {
         file.".ssh" = {
           source = ./.ssh;

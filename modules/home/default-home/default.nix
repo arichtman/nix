@@ -214,6 +214,10 @@ in
           ls = "exa";
           ll = "exa -@las new";
           cls = "clear";
+          vi = "hx";
+          vim = "hx";
+          nano = "hx";
+          pico = "hx";
           fuggit = "git add . && git commit --amend --no-edit && git push --force";
           # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
           fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
