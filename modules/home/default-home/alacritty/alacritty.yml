@@ -1,0 +1,16 @@
+# TODO: Theme https://github.com/alacritty/alacritty-theme
+# TODO: Maybe make this mac-only?
+# https://github.com/zellij-org/zellij/issues/2051#issuecomment-1461519892
+window:
+  option_as_alt: Both
+
+# https://github.com/scalarwaves/dotfiles/blob/main/alacritty/alacritty.toml
+live_config_reload: true
+
+font:
+  size: 14
+  normal:
+    family: FiraCode Nerd Font
+
+shell:
+  program: zellij

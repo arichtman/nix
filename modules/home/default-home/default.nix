@@ -186,6 +186,8 @@ in
           # whois
           #TODO: dont have these on mac, aarch64 at least
           # trippy
+          # This actually makes it available to Alacritty
+          fira-code-nerdfont
         ];
 
         file = {
@@ -199,6 +201,11 @@ in
           # https://github.com/nix-community/home-manager/issues/2104
           ".terraform.d/plugin-cache/.keep".text = "";
           ".dprint.jsonc".source = dprint/.dprint.jsonc;
+          ".config/alacritty/alacritty.yml".source = ./alacritty/alacritty.yml;
+          ".config/zellij" = {
+            source = ./zellij;
+            recursive = true;
+          };
         };
 
         shellAliases = {
