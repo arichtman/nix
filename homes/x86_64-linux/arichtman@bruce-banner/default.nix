@@ -40,6 +40,9 @@
       user = "fang";
       hostname = "router.local";
     };
+    "*" = {
+      user = "nixos";
+    };
   };
   default-home = {
     username = "arichtman";
