@@ -57,7 +57,6 @@ create /run? y
 ### Universal Blue
 
 some _very_ wip notes about the desktop.
-Expect substantial revision when I either Nix it or nix it.
 
 - Installer with nVidia drivers worked ok in simplified mode
 - Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
@@ -69,27 +68,34 @@ Expect substantial revision when I either Nix it or nix it.
 - added `trusted-users = @wheel` to `/etc/nix/nix.conf`
 - Used `nix shell helix home-manager` to bootstrap
 - `home-manager switch --flake . -b backup`
+- Installed my root certificate
+  `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
+  `sudo update-ca-trust`
 
 TODOs:
 
-- work out cli clipboard access
-- work out Helix system clipboard yank
+- Get cli clipboard access
+- Fix Helix system clipboard yank
 - Learn about universal blue/ostree and decide if I want to keep this
-- Work out how to get my usual home setup on here (aliases, shell, apps etc)
-- fix autoshift on my keyboard
+- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
+  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
+- ~fix autoshift on my keyboard~
+  This is fixed, zero idea what did it.
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
-- switch to nushell + alacritty
-- Maybe some games
-
-#region Misc.
-
-# Erase history (be sure current config is good)
-nix profile wipe-history
-# Clean up store
-sudo nix store gc
-#endregion
-```
+- Fix alacritty no suitable GL error
+- Decide if I want to keep nushell
+- ~Remove the nushell banner~
+- Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
+- Fix Zellij exits still leaving you in a Bash session
+- ~Work out how to switch my shell to nushell properly...
+  or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
+  `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
+  We can use `lchsh` or `usermod` but it's under our nix profile bin dir, not a simple location like `/usr/bin`~
+  It's justifiable like this.
+- Make Alacritty visible on the launch pad or whatever it's called
+- Fix CLI history suggestions
+- Switch to nushell + alacritty
 
 ## Trust chain setup
 

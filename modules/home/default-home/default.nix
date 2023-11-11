@@ -6,6 +6,62 @@
 }: let
   cfg = config.default-home;
   user = config.snowfallorg.user;
+  classicalAliases = {
+    fuggit = "git add . && git commit --amend --no-edit && git push --force";
+    gcm = "git checkout main || git checkout master";
+    # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
+    fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
+  };
+  myAliases = {
+    ".." = "cd ..";
+    "..." = "cd ../..";
+    "...." = "cd ../../..";
+    "....." = "cd ../../../..";
+    j = "jobs";
+    k = "kill";
+    ee = "exit 0";
+    sc = "sudo systemctl";
+    jc = "journalctl -xe";
+    ls = "exa";
+    ll = "exa -las new";
+    cls = "clear";
+    vi = "hx";
+    vim = "hx";
+    nano = "hx";
+    pico = "hx";
+    gc = "git checkout";
+    gC = "git commit";
+    gs = "git status";
+    gS = "git switch";
+    gp = "git pull";
+    gP = "git push";
+    gb = "git branch";
+    gd = "git diff";
+    gf = "git fetch";
+    grpo = "git remote prune origin";
+    gau = "git add --update";
+    nfu = "nix flake update --commit-lock-file";
+    #TODO: feels odd putting aliases in without installing the program but I like to keep the
+    #  environments separate between repos?
+    kc = "kubectl";
+    kcc = "kubectl config";
+    kcg = "kubectl get";
+    kcd = "kubectl describe";
+    kcns = "kubectl config set-context --current --namespace";
+    kccc = "kubectl config use-context";
+    tg = "terragrunt";
+    tgv = "terragrunt validate";
+    tgi = "terragrunt init";
+    tgp = "terragrunt plan";
+    tga = "terragrunt apply";
+    tgaa = "terragrunt apply -auto-approve";
+    tf = "terraform";
+    tfv = "terraform validate";
+    tfi = "terraform init";
+    tfp = "terraform plan";
+    tfa = "terraform apply";
+    tfaa = "terraform apply -auto-approve";
+  };
 in
   with lib; {
     options.default-home = with types; {
@@ -31,17 +87,62 @@ in
       };
 
       programs = {
+        alacritty = {
+          enable = true;
+          settings = {
+            window.option_as_alt = "Both";
+            live_config_reloade = true;
+            font.size = 14;
+            font.normal.family = "FiraCode Nerd Font";
+            shell.program = "zellij";
+          };
+        };
+        nushell = {
+          # enable = true;
+          environmentVariables = {
+            EDITOR = "hx";
+            # TODO: Not sure if worth doing "better".
+            #  the .bashrc switcheroo doesn't update the environment which
+            #  might majorly fuck with some scripts
+            SHELL = "nu";
+          };
+          shellAliases = myAliases;
+          configFile.text = ''
+            $env.config = { show_banner: false }
+          '';
+        };
+        zellij = {
+          enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+          settings = {};
+        };
         starship = {
           enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+          enableNushellIntegration = true;
         };
         # Let Home Manager install and manage itself.
         home-manager.enable = true;
-        #TODO: disable on mac
+        # TODO: Look at disabling when comfortable
+        # It may never make sense though as system shell is bash
+        #  so in any fallback scenario you'd still like to have your aliases/PATH set.
         bash = {
           enable = true;
           enableCompletion = true;
+          bashrcExtra = ''
+            if [[ $- == *i* ]] && [[ ! -z "$(command -v nu)" ]]; then
+              exec nu "$@"
+            fi
+          '';
         };
-        zoxide.enable = true;
+        zoxide = {
+          enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+          enableNushellIntegration = true;
+        };
         # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
         # There's probably a Nix context value I can use but I don't know it
         bat.enable = true;
@@ -52,9 +153,19 @@ in
           enable = true;
           #TODO: enable zsh integration possible?
           enableBashIntegration = true;
+          enableZshIntegration = true;
+          enableNushellIntegration = true;
           nix-direnv.enable = true;
-          # TODO: Unclear why this is failing, it's clearly in nix options
-          # silent = true;
+          config.global = {
+            load_dotenv = true;
+            silent = true;
+          };
+          config.whitelist = {
+            prefix = [
+              "$HOME/repos/bne"
+              "$HOME/repos/arichtman"
+            ];
+          };
         };
         fzf = {
           enable = true;
@@ -107,7 +218,9 @@ in
         };
         zsh = {
           enable = true;
+          enableCompletion = true;
           enableAutosuggestions = true;
+          autocd = true;
           syntaxHighlighting.enable = true;
           initExtra = ''
             function gedditdafuckouttahere () {
@@ -119,6 +232,12 @@ in
           #TODO: check if direnv/nix-direnv adds shell completion/hooks anyhow
           #  or these can be enabled by config
           #TODO: see about using something like basename ${0/-/} to generalize shell init
+        };
+        carapace = {
+          enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+          enableNushellIntegration = true;
         };
       };
       editorconfig = {
@@ -194,69 +313,10 @@ in
           # https://github.com/nix-community/home-manager/issues/2104
           ".terraform.d/plugin-cache/.keep".text = "";
           ".dprint.jsonc".source = dprint/.dprint.jsonc;
-          ".config/alacritty/alacritty.yml".source = ./alacritty/alacritty.yml;
-          ".config/zellij" = {
-            source = ./zellij;
-            recursive = true;
-          };
-        };
-
-        shellAliases = {
-          ".." = "cd ..";
-          "..." = "cd ../..";
-          "...." = "cd ../../..";
-          "....." = "cd ../../../..";
-          j = "jobs";
-          k = "kill";
-          ee = "exit 0";
-          sc = "sudo systemctl";
-          jc = "journalctl -xe";
-          ls = "exa";
-          ll = "exa -@las new";
-          cls = "clear";
-          vi = "hx";
-          vim = "hx";
-          nano = "hx";
-          pico = "hx";
-          fuggit = "git add . && git commit --amend --no-edit && git push --force";
-          # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
-          fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
-          gc = "git checkout";
-          gC = "git commit";
-          gs = "git status";
-          gS = "git switch";
-          gp = "git pull";
-          gP = "git push";
-          gb = "git branch";
-          gd = "git diff";
-          gf = "git fetch";
-          gcm = "git checkout main || git checkout master";
-          grpo = "git remote prune origin";
-          gau = "git add --update";
-          nfu = "nix flake update --commit-lock-file";
-          #TODO: feels odd putting aliases in without installing the program but I like to keep the
-          #  environments separate between repos?
-          kc = "kubectl";
-          kcc = "kubectl config";
-          kcg = "kubectl get";
-          kcd = "kubectl describe";
-          kcns = "kubectl config set-context --current --namespace";
-          kccc = "kubectl config use-context";
-          tg = "terragrunt";
-          tgv = "terragrunt validate";
-          tgi = "terragrunt init";
-          tgp = "terragrunt plan";
-          tga = "terragrunt apply";
-          tgaa = "terragrunt apply -auto-approve";
-          tf = "terraform";
-          tfv = "terraform validate";
-          tfi = "terraform init";
-          tfp = "terraform plan";
-          tfa = "terraform apply";
-          tfaa = "terraform apply -auto-approve";
         };
 
         enableNixpkgsReleaseCheck = true;
+        shellAliases = myAliases // classicalAliases;
       };
     };
   }
