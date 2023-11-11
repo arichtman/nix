@@ -30,13 +30,6 @@ in
         data = ["$HOME/.nix-profile/share"];
       };
 
-      #TODO: Why are these erroring...?
-      # useUserPackages = true;
-      # useGlobalPkgs = true;
-      # mkIf pkgs.stdenv.isLinux {
-      #   useUserPackages = true;
-      #   useGlobalPkgs = true;
-      # };
       programs = {
         starship = {
           enable = true;
