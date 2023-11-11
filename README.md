@@ -54,27 +54,33 @@ create /run? y
   1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
 1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
 
-### WSL
+### Universal Blue
 
-So 22.05 is out of support but no release on GitHub yet, luckily they give instructions and building 22.11 tarball is pretty easy + quick.
-Follow that and do the import shuffle.
-Make sure to back up anything valuable.
+some _very_ wip notes about the desktop.
+Expect substantial revision when I either Nix it or nix it.
 
-```powershell
-wsl --unregister NixOS
-wsl --import nix --version 2 D:\wsl\NixOS\ .\nixos-wsl-installer.tar.gz
-wsl --set-default NixOS
-wsl
-```
+- Installer with nVidia drivers worked ok in simplified mode
+- Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
+- Bluetooth pair the speaker though you may have to change the codec in settings > sound
+- i ran `bluetoothctl trust $MAC` to try and start off autoconnect
+- rpm-ostree upgrade/rebase to Fedora 39 breaks the display driving again.
+- I fiddled about in display settings to get orientation of monitors correct
+- ran the determinant systems nix installer
+- added `trusted-users = @wheel` to `/etc/nix/nix.conf`
+- Used `nix shell helix home-manager` to bootstrap
+- `home-manager switch --flake . -b backup`
 
-In our shiny new WSL install we can set up direct from GitHub!
+TODOs:
 
-```Bash
-# Apply directly from git
-sudo nixos-rebuild switch --flake github:arichtman/nix#bruce-banner
-home-manager switch --flake github:arichtman/nix
-# Remove config that might interfere
-sudo mv /etc/nixos /etc/nixos.bak
+- work out cli clipboard access
+- work out Helix system clipboard yank
+- Learn about universal blue/ostree and decide if I want to keep this
+- Work out how to get my usual home setup on here (aliases, shell, apps etc)
+- fix autoshift on my keyboard
+- find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
+- look into errors running `tracker-miner-fs-3.service`
+- switch to nushell + alacritty
+- Maybe some games
 
 #region Misc.
 
