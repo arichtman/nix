@@ -79,8 +79,7 @@ TODOs:
 - Learn about universal blue/ostree and decide if I want to keep this
 - ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
   I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
-- ~fix autoshift on my keyboard~
-  This is fixed, zero idea what did it.
+- fix autoshift on my keyboard
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
 - Fix alacritty no suitable GL error
