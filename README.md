@@ -76,6 +76,7 @@ TODOs:
 
 - Get cli clipboard access
 - Fix Helix system clipboard yank
+- Fix zellij system clipboard copy
 - Learn about universal blue/ostree and decide if I want to keep this
 - ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
   I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
