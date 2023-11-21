@@ -40,7 +40,8 @@ with lib;
         # yubikey-touch-detector
         # yubikey-manager-qt
         # yubikey-personalization-gui
-        yubico-pam
+        # Disabled due to framework not found CoreServices
+        # yubico-pam
         yubikey-manager
         # TODO: pretty sure default-home applies this via nix options home-manager.enable
         # home-manager
@@ -101,6 +102,8 @@ with lib;
       system.defaults.trackpad.Clicking = true;
       system.defaults.trackpad.TrackpadThreeFingerDrag = true;
 
+      system.defaults.NSGlobalDomain.AppleShowAllExtensions = true;
+      system.defaults.NSGlobalDomain.AppleShowAllFiles = true;
       # Keyboard
       system.keyboard.enableKeyMapping = true;
       # system.keyboard.remapCapsLockToEscape = true;

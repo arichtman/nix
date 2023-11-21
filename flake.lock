@@ -180,16 +180,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1699725108,
-        "narHash": "sha256-NTiPW4jRC+9puakU4Vi8WpFEirhp92kTOSThuZke+FA=",
-        "owner": "nixos",
+        "lastModified": 1700571678,
+        "narHash": "sha256-cJbaNi1GpZzZm/b2lq4e0cpPBjyNIkdosXWSDtS84HE=",
+        "owner": "Lillecarl",
         "repo": "nixpkgs",
-        "rev": "911ad1e67f458b6bcf0278fa85e33bb9924fed7e",
+        "rev": "74944cd7aae3f4eed47ffac855adafbe6347c463",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "owner": "Lillecarl",
+        "ref": "awscli2_urllib_pyproject",
         "repo": "nixpkgs",
         "type": "github"
       }
