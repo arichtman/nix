@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1699867978,
-        "narHash": "sha256-+arl45HUOcBdKiRGrKXZYXDyBQ6MQGkYPZa/28f6Yzo=",
+        "lastModified": 1700795494,
+        "narHash": "sha256-gzGLZSiOhf155FW7262kdHo2YDeugp3VuIFb4/GGng0=",
         "owner": "lnl7",
         "repo": "nix-darwin",
-        "rev": "e67f2bf515343da378c3f82f098df8ca01bccc5f",
+        "rev": "4b9b83d5a92e8c1fbfd8eb27eda375908c11ec4d",
         "type": "github"
       },
       "original": {
@@ -45,11 +45,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1699663243,
-        "narHash": "sha256-Plj2ypGV/5714enFtb4O5c3vXKvHUzoksgRx3zFmIJ4=",
+        "lastModified": 1701132216,
+        "narHash": "sha256-wN/c7788jyCmDAFA+hDekRyaDqpzfSm1FWIC2CTBtJ4=",
         "owner": "bandithedoge",
         "repo": "nixpkgs-firefox-darwin",
-        "rev": "63df8ec2d300da9912ae5b56b74e7aa574b6de0c",
+        "rev": "492fbfdb15b22b9f5ff65b04dc18c5aa6b5beed6",
         "type": "github"
       },
       "original": {
@@ -133,11 +133,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1700553346,
-        "narHash": "sha256-kW7uWsCv/lxuA824Ng6EYD9hlVYRyjuFn0xBbYltAeQ=",
+        "lastModified": 1701071203,
+        "narHash": "sha256-lQywA7QU/vzTdZ1apI0PfgCWNyQobXUYghVrR5zuIeM=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "1aabb0a31b25ad83cfaa37c3fe29053417cd9a0f",
+        "rev": "db1878f013b52ba5e4034db7c1b63e8d04173a86",
         "type": "github"
       },
       "original": {
@@ -180,16 +180,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1700571678,
-        "narHash": "sha256-cJbaNi1GpZzZm/b2lq4e0cpPBjyNIkdosXWSDtS84HE=",
-        "owner": "Lillecarl",
+        "lastModified": 1701040486,
+        "narHash": "sha256-vawYwoHA5CwvjfqaT3A5CT9V36Eq43gxdwpux32Qkjw=",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "74944cd7aae3f4eed47ffac855adafbe6347c463",
+        "rev": "45827faa2132b8eade424f6bdd48d8828754341a",
         "type": "github"
       },
       "original": {
-        "owner": "Lillecarl",
-        "ref": "awscli2_urllib_pyproject",
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
