@@ -3,7 +3,7 @@
 
 [[language]]
 name = "rust"
-indent = { tab-width = 1, unit = "  " }
+indent = { tab-width = 2, unit = " " }
 
 # https://medium.com/@CaffeineForCode/helix-setup-for-markdown-b29d9891a812
 [[language]]
