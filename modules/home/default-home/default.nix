@@ -91,7 +91,7 @@ in
           enable = true;
           settings = {
             window.option_as_alt = "Both";
-            live_config_reloade = true;
+            live_config_reload = true;
             font.size = 14;
             font.normal.family = "FiraCode Nerd Font";
             shell.program = "zellij";
