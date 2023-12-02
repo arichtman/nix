@@ -87,6 +87,8 @@ in
       };
 
       programs = {
+        readline.enable = true;
+        readline.extraConfig = "set enable-bracketed-paste off";
         alacritty = {
           enable = true;
           settings = {
