@@ -9,8 +9,6 @@
   classicalAliases = {
     fuggit = "git add . && git commit --amend --no-edit && git push --force";
     gcm = "git checkout main || git checkout master";
-    # ref: https://medium.com/@kcmueller/delete-local-git-branches-that-were-deleted-on-remote-repository-b596b71b530c
-    fuhgetaboutit = "git branch -vv | grep ': gone]'|  grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -d";
   };
   myAliases = {
     ".." = "cd ..";
@@ -38,6 +36,7 @@
     gb = "git branch";
     gd = "git diff";
     gf = "git fetch";
+    gfp = "git fetch --prune";
     grpo = "git remote prune origin";
     gau = "git add --update";
     nfu = "nix flake update --commit-lock-file";

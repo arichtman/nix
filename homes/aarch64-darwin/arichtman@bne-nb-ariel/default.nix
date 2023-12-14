@@ -8,11 +8,4 @@
       username = "Ariel Richtman";
     };
   };
-  home.packages = with pkgs; [
-    slack
-    zoom-us
-    k9s
-    teams
-    mitmproxy
-  ];
 }
