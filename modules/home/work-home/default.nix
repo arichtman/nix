@@ -37,7 +37,6 @@ in
           terraform
           terragrunt
           mitmproxy
-          postman
           kubernetes-helm
           docker-client
         ];
