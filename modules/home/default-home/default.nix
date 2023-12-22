@@ -103,7 +103,7 @@ in
           environmentVariables = {
             EDITOR = "hx";
             # TODO: Not sure if worth doing "better".
-            #  the .bashrc switcheroo doesn't update the environment which
+            #  the .bashrc switcheroo doesn't update the environment $SHELL which
             #  might majorly fuck with some scripts
             SHELL = "nu";
           };
@@ -127,8 +127,6 @@ in
         # Let Home Manager install and manage itself.
         home-manager.enable = true;
         # TODO: Look at disabling when comfortable
-        # It may never make sense though as system shell is bash
-        #  so in any fallback scenario you'd still like to have your aliases/PATH set.
         bash = {
           enable = true;
           enableCompletion = true;
@@ -144,15 +142,15 @@ in
           enableZshIntegration = true;
           enableNushellIntegration = true;
         };
-        # I wanted to do a generic loginShellInit but $SHELL is set to <SHELL> in context
-        # There's probably a Nix context value I can use but I don't know it
         bat.enable = true;
-        # TODO: This is also not being found as valid??
-        # thefuck.enable = true;
+        thefuck = {
+          enable = true;
+          enableBashIntegration = true;
+          enableZshIntegration = true;
+        };
         command-not-found.enable = true;
         direnv = {
           enable = true;
-          #TODO: enable zsh integration possible?
           enableBashIntegration = true;
           enableZshIntegration = true;
           enableNushellIntegration = true;
@@ -234,12 +232,14 @@ in
           #  or these can be enabled by config
           #TODO: see about using something like basename ${0/-/} to generalize shell init
         };
-        carapace = {
-          enable = true;
-          enableBashIntegration = true;
-          enableZshIntegration = true;
-          enableNushellIntegration = true;
-        };
+        # This was cool in theory but annoying in practice for kubectl.
+        # I needed to disable that but can't locate anything about how to do that, nor HM config options
+        # carapace = {
+        #   enable = true;
+        #   enableBashIntegration = true;
+        #   enableZshIntegration = true;
+        #   enableNushellIntegration = true;
+        # };
       };
       editorconfig = {
         enable = true;
