@@ -24,6 +24,9 @@ Nothing here should be construed as a model of good work!
 
 ## Mac
 
+Trust chain system install:
+`sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
+
 ### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
