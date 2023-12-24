@@ -240,27 +240,46 @@ Using Topton N100 unit:
    `rm /etc/apt/sources.list.d/ceph.list`
    [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#_ceph_quincy_no_subscription_repository)
 
-### Proxmox LXC
+### Proxmox
 
-*WIP*
+Previously we considered LXC containers.
+We've since been advised it's not worth the hassle.
+Check git history for prior notes.
 
-PVE's source only has some turnkey ancient debian stuff.
-Canonical are stingy with their supplying of rootfs tarballs and won't just give you the URL.
-So we download it using vanilla LXC then add to PVE.
+#### Disk setup
 
+We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
+So using GUI we wiped disk and initialized with GPT.
 
-```
-lxc-create --name throwaway --template download --quiet -- --dist openwrt --release 23.05 --arch amd64
-lxc-destroy throwaway
-cp /var/cache/lxc/download/openwrt/23.05/amd64/default/rootfs.tar.xz /var/lib/vz/template/cache/openwrt_23.05_amd64.tar.xz
-pveam update
-```
+#### Image setup
 
-- TODO: See if we can make it look nicer in the GUI. `pct` Might have a role here.
-- TODO: Fix unrecognised OS error when launching in PVE. Could be a VM/Container ID .conf file in `/etc/pve/nodes/proxmox/lxc/`
-  Ah yup, weirdly tied to the VM ID not handle but ok.
-  https://pve.proxmox.com/wiki/Manual:_pct.conf
-  https://pve.proxmox.com/pve-docs/pct.1.html
+Tools are already installed on Proxmox system.
+
+1. Download latest EFI image from [OpenWRT](https://downloads.openwrt.org/)
+1. `gunzip` it
+1. Optionally resize the primary partition
+   `qemu-img resize -f raw openwrt-23.05.2-x86-64-generic-ext4-combined-efi.img 5G`
+1. Create VM
+   `qm create --name router \
+  $(pvesh get /cluster/nextid) --memory 2048 \
+  --cores 1 --cpu cputype=kvm64 \
+  --net0 virtio,bridge=vmbr0 \
+  --scsihw virtio-scsi-pci --numa 1`
+1. Import image `qm importdisk 100 openwrt-23.05.2-x86-64-generic-ext4-combined-efi.img prod`
+   Note: your VM id may be different, and the final argument is whatever you named your storage pool.
+1. Attach storage
+   `qm set 100 --scsihw virtio-scsi-pci --virtio0 prod:100/vm-100-disk-0.raw`
+   Note: I had issues with that command so went GUI.
+   I selected the VM, hardware, then unused disk and added.
+1. `qm set $VM_ID --serial0 socket --vga serial0
+    qm set $VM_ID --boot c --bootdisk virtio0
+    qm set $VM_ID --onboot 1`
+
+I should probably dump this config file out and just use that.
+
+References:
+
+- [Tutorial](https://computingforgeeks.com/install-and-configure-openwrt-vm-on-proxmox-ve/)
 
 ## Notes
 
@@ -273,7 +292,6 @@ Add to nomicon
 
 ## References
 
-- [VSCode server workaround](https://github.com/msteen/nixos-vscode-server)
 - [Opinionated flake structure](https://github.com/snowfallorg/lib)
 - [Home-manager configuration options](https://nix-community.github.io/home-manager/options.html)
 - [Misterio77's starter configs](https://github.com/Misterio77/nix-starter-configs)
