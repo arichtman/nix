@@ -233,12 +233,29 @@ Using Topton N100 unit:
 1. Remove the paid `apt` repository source.
    `rm /etc/apt/sources.list.d/pve-enterprise.list`
 1. Add the _no-subscription_ repository source.
-   [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#sysadmin_no_subscription_repo)
 1. Optionally remove/switch the Ceph repo source
    It says they use it for testing Ceph versions against Proxmox before merging it to Enterprise repo.
    But does that mean no-sub repo gets *no* updates?
    `rm /etc/apt/sources.list.d/ceph.list`
-   [Instructions](https://pve.proxmox.com/wiki/Package_Repositories#_ceph_quincy_no_subscription_repository)
+1. Enable IOMMU. First, check GRUB/systemd `efibootmgr -v`.
+   If GRUB, `sed -i -r -e 's/(GRUB_CMDLINE_LINUX_DEFAULT=")(.*)"/\1\2 intel_iommu=on iommu=pt"/' /etc/default/grub`
+1. `echo 'vfio
+    vfio_iommu_type1
+    vfio_pci
+    vfio_virqfd' >> /etc/modules`
+1. Reboot to check config
+
+If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
+It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.
+I don't expect it _hurts_ much to have iommu on as a machine default, and we're not booting anything else...
+Might tidy up the sed config command though.
+Looking at the systemd we could probably do both without harm.
+That one's also using the official proxmox command.
+
+References:
+
+- [Proxmox package repo docs](https://pve.proxmox.com/wiki/Package_Repositories)
+- [Servethehome net passthru tutorial](https://www.servethehome.com/how-to-pass-through-pcie-nics-with-proxmox-ve-on-intel-and-amd/)
 
 ### Proxmox
 
@@ -274,12 +291,36 @@ Tools are already installed on Proxmox system.
 1. `qm set $VM_ID --serial0 socket --vga serial0
     qm set $VM_ID --boot c --bootdisk virtio0
     qm set $VM_ID --onboot 1`
+1. In GUI add PICe device, raw device, select the ethernet controller and enable all functions and ROM bar
+1. For now I want to poke it, so we set lan to dhcp.
+   `uci set network.lan.proto="dhcp"
+   uci commit network
+   service network restart`
+   I could probably access it via ipv6 or if I was just using a switch and the private ipv4 address but that's more hassle.
 
 I should probably dump this config file out and just use that.
+Except I think disk stuff has unique guids that I'd have to swap in.
+
+When swapped to dhcp client mode on the bridge interface it's accessible via the host machine system ethernet port.
+This is acceptable for like, a fallback channel. I may not even keep the proxomox system port plugged in.
+I think the next steps are to set up passthru one as PPPoE, and passthru two as static IP with DHCP (for as long as we're doing 4).
+
+I set up a static lease and DNS for openwrt for convenience right now.
+It won't have any impact I think once the old router is in bridge mode.
+
+I'm still assuming that bridge mode includes the ethernet ports, or did I read that somewhere...?
+
+Eth passthrough doesn't really matter performance-wise at home network speeds.
+I'm mostly doing it now cause a) separate the management interface and b) I'm not sure how it looks to do it all over virtual interfaces.
+
+At some stage we're going to have to tackle this firewall thing...
+I think maybe inbound HTTPS for port-forwarding to the cluster workers, VPN on router, and stateful outbound (maybe proxy only).
 
 References:
 
 - [Tutorial](https://computingforgeeks.com/install-and-configure-openwrt-vm-on-proxmox-ve/)
+- [OpenWRT client device docs](https://openwrt.org/docs/guide-user/network/openwrt_as_clientdevice)
+- [OpenWRT IPv6 docs](https://openwrt.org/docs/guide-user/network/ipv6/configuration)
 
 ## Notes
 
