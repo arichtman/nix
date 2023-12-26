@@ -18,14 +18,23 @@ in
     config = mkIf (cfg.enabled) {
       programs = {
         nushell.enable = true;
-        carapace.enable = true;
-        carapace.enableNushellIntegration = true;
+        ssh = {
+          enable = true;
+          matchBlocks = {
+            gl = {
+              user = "ubuntu";
+              hostname = "gitlab-bne.silverrail.io";
+              identityFile = "~/.ssh/gitlab-prod";
+            };
+            vpn = {
+              user = "ubuntu";
+              hostname = "vpn-bne.silverrail.io";
+              identityFile = "~/.ssh/openvpn";
+            };
+          };
+        };
       };
       home = {
-        file.".ssh" = {
-          source = ./.ssh;
-          recursive = true;
-        };
         packages = with pkgs; [
           git-remote-codecommit
           teams

@@ -40,7 +40,7 @@
       user = "fang";
       hostname = "router.local";
     };
-    "*" = {
+    "*.local" = {
       user = "nixos";
     };
   };
