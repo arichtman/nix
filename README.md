@@ -268,7 +268,7 @@ Check git history for prior notes.
 We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
 
-#### Image setup
+#### vRouter setup
 
 Tools are already installed on Proxmox system.
 
@@ -316,11 +316,17 @@ I'm mostly doing it now cause a) separate the management interface and b) I'm no
 At some stage we're going to have to tackle this firewall thing...
 I think maybe inbound HTTPS for port-forwarding to the cluster workers, VPN on router, and stateful outbound (maybe proxy only).
 
+Also: 5Gi is way too much for OpenWRT, it seems to report only 1 Gb of storage anyway.
+
+OpenWRT in client mode doesn't seem to be able to resolve DNS cause it's pointing at itself and I think it's not got a gateway configured.
+
 References:
 
 - [Tutorial](https://computingforgeeks.com/install-and-configure-openwrt-vm-on-proxmox-ve/)
 - [OpenWRT client device docs](https://openwrt.org/docs/guide-user/network/openwrt_as_clientdevice)
 - [OpenWRT IPv6 docs](https://openwrt.org/docs/guide-user/network/ipv6/configuration)
+- [OpenWRT x86 docs](https://openwrt.org/docs/guide-user/installation/openwrt_x86)
+- [Reddit vRouter comment](https://www.reddit.com/r/Proxmox/comments/xu1w9b/comment/iqtnzpp)
 
 ## Notes
 
