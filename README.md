@@ -180,11 +180,19 @@ Just apply the `flannel.yaml`.
 
 ## Home lab setup
 
+We will reserve the bottom 10 of the subnet range for networking gear.
+We'll use the next ten for static stuff, and the rest can be DHCP.
+The reason for this is the core elements need fixed IPs so I can access even if DHCP and DNS is down.
+
+Opnsense 192.161.1.1
+Asus 192.168.1.2
+Topton 192.161.1.11
+
 Pre-requisites:
 
 - Followed instructions from NixOS to flash ISO to USB
 
-Using HP EliteDesk 800 G3 Micro/Mini.
+### HP EliteDesk 800 G3 Micro/Mini.
 
 1. Mash F10 to hit the bios (this was a thowback and a pain to do)
 1. Configure the following
@@ -216,7 +224,7 @@ Using HP EliteDesk 800 G3 Micro/Mini.
 1. Move the machine to it's final home.
 1. Remotely retrieve the hardware configuration and commit it to the flake repo.
 
-Using Topton N100 unit:
+### Topton N100
 
 1. Mash `F10` (?) to enter BIOS
 1. Set USB boot precendence above internal drive/s
@@ -271,6 +279,8 @@ So using GUI we wiped disk and initialized with GPT.
 #### vRouter setup
 
 Tools are already installed on Proxmox system.
+
+#### OpenWRT
 
 1. Download latest EFI image from [OpenWRT](https://downloads.openwrt.org/)
 1. `gunzip` it
@@ -327,6 +337,77 @@ References:
 - [OpenWRT IPv6 docs](https://openwrt.org/docs/guide-user/network/ipv6/configuration)
 - [OpenWRT x86 docs](https://openwrt.org/docs/guide-user/installation/openwrt_x86)
 - [Reddit vRouter comment](https://www.reddit.com/r/Proxmox/comments/xu1w9b/comment/iqtnzpp)
+
+config
+
+```yaml
+boot: c
+bootdisk: virtio0
+cores: 1
+cpu: cputype=kvm64
+hostpci0: 0000:03:00
+hostpci1: 0000:04:00
+ide0: prod:vm-100-disk-0,size=5G
+memory: 2048
+meta: creation-qemu=8.0.2,ctime=1703452786
+name: router
+net0: virtio=52:7F:87:23:B3:7B,bridge=vmbr0
+numa: 1
+onboot: 1
+scsihw: virtio-scsi-pci
+serial0: socket
+smbios1: uuid=813c2e13-a7f3-47d9-8b1c-29b511fc54a8
+vga: serial0
+vmgenid: c1d60dea-735e-4749-8e1e-6607eac07c7a
+```
+
+#### Opnsense
+
+1. Download iso and unpack
+1. Move iso to `/var/lib/vz/template/iso`
+1. Create VM with adjustments:
+   - Start at boot
+   - SSD emulation, 48GiB
+   - 1 socket+core, NUMA enabled
+   - 2048 MiB RAM
+1. Boot machine and follow installer
+1. Add PCIe ethernet controllers
+1. Boot system and root login
+1. Assign WAN and LAN interfaces to ethernet controllers
+1. Check for updates either `opkg update` or maybe system > firmware
+1. Add static DHCP leases for any machines using static IPs so Upbound will serve records for them
+1. Install an intermediate cert and it's corrosponding bundle under system > trust
+1. Switch to using the TLS certificate under System > Settings > Administration
+1. Set both interfaces to delete protected and IPv6 SLAAC
+1. Under System > General:
+   - set hostname
+   - set domanin
+   - configure DNS servers
+   - Disallow DNS override on WAN
+1. Configure Upbound DNS service
+   - enable DNSSEC
+   - enable DHCP lease registration
+
+TODO:
+
+1. Set up SSH access
+1. See about AAAA records or how to IPv6 resolve internal hosts
+1. Look into vLAN
+1. Look into removing NAT
+1. Set up VPN
+1. Set up non-root user/s
+
+Notes:
+
+I will revisit the resources supplied after running the box for a bit.
+
+Bare metal recommendation is multi-core so that system activities don't have to impact CPU network activities.
+Because we're virtualizing I don't want 2 schedulers fighting each other, so I'll rely on the hypervisor's scheduling.
+Might be worth revisiting or pinning a full core to the VM.
+
+References:
+
+- [Reddit performance comment](https://www.reddit.com/r/OPNsenseFirewall/comments/guo2iz/comment/fskpk76)
 
 ## Notes
 
