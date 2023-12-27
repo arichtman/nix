@@ -8,12 +8,6 @@ with lib;
 # with lib.internal;
   {
     config = mkIf pkgs.stdenv.isDarwin {
-      #TODO: Remove after development
-      # home = {
-      #   file = {
-      #     "_modules_darwin_arichtman_default.nix".text = "";
-      #   };
-      # };
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
@@ -43,8 +37,6 @@ with lib;
         # Disabled due to framework not found CoreServices
         # yubico-pam
         yubikey-manager
-        # TODO: pretty sure default-home applies this via nix options home-manager.enable
-        # home-manager
         curl # TODO: Maybe make a default-system module?
         git
         htop
@@ -52,9 +44,6 @@ with lib;
         # Required for some c dependencies for rustc/cargo
         darwin.apple_sdk.frameworks.CoreServices
         firefox-darwin.firefox-bin
-        # switched out from wezterm due to https://github.com/NixOS/nixpkgs/issues/239384
-        alacritty
-        zellij
         gimp
         rectangle
         phinger-cursors
@@ -81,7 +70,6 @@ with lib;
           NSAutomaticCapitalizationEnabled = false;
         };
       };
-      # system.defaults.NSGlobalDomain.NSAutomaticCapitalizationEnabled = false;
       system.defaults.NSGlobalDomain.NSAutomaticDashSubstitutionEnabled = false;
       system.defaults.NSGlobalDomain.NSAutomaticPeriodSubstitutionEnabled = false;
       system.defaults.NSGlobalDomain.NSAutomaticQuoteSubstitutionEnabled = false;
