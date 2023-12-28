@@ -16,7 +16,6 @@
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
     j = "jobs";
-    k = "kill";
     ee = "exit 0";
     sc = "sudo systemctl";
     jc = "journalctl -xe";
@@ -42,8 +41,8 @@
     nfu = "nix flake update --commit-lock-file";
     #TODO: feels odd putting aliases in without installing the program but I like to keep the
     #  environments separate between repos?
-    kc = "kubectl";
-    kcc = "kubectl config";
+    k = "kubectl";
+    kc = "kubectl config";
     kcg = "kubectl get";
     kcd = "kubectl describe";
     kcns = "kubectl config set-context --current --namespace";
