@@ -16,9 +16,9 @@ Nothing here should be construed as a model of good work!
 - Perhaps actually put something useful in myShell
 - Test out packaging a toy app/repo
 - Think about intermediate CA revokation
-- Convert nodes to use ssh certificates for authentication and server certificates
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
+- What-the-fuck-ever is wrong with my desktop's networking
 
 ## Use
 
@@ -74,6 +74,21 @@ some _very_ wip notes about the desktop.
 - Installed my root certificate
   `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
   `sudo update-ca-trust`
+
+The networking is fucked for some reason out the box.
+Direct connection to the router works-ish. I can access ap and proxmox by their DNS records, but not opnsense.
+If I add the switch in the middle I never get any replies to my DHCP requests.
+If I set the IP and DNS manually it kinda works. DNS records locally resolve fine directly but not for SSH/firefox/curl.
+Anyways, what I did was set IP+DNS on the interface manually.
+Then I had to muck with the DNS locally.
+I would have just re-ordered /etc/nsswitch.conf but it's under management.
+This set it to the same as current but with the mdns feature off entirely.
+`sudo authselect select sssd with-silent-lastlog; sudo authselect apply-changes`.
+The sssd service is actually dead so I have no idea why this is working but what-THEFUCK-ever at this point.
+Finally just for good measure I threw my other static IP boxes into `/etc/hosts` cause fuck this for a joke.
+Firefox is being a cunt and won't let me access the services by their DNS records, but IP works.
+Because fuck you, apparently.
+Yes, I tried turning off DNS security features and setting the local domain.
 
 TODOs:
 
