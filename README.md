@@ -292,17 +292,24 @@ We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
 
 For the USB rust bucket we found the device name with `fdisk -l`.
-Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.
+~Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.~
+Never mind, same dance with the GUI, followed by heading to Node > Disks > Directory and creating one.
 
 #### Opnsense
 
 1. Download iso and unpack
 1. Move iso to `/var/lib/vz/template/iso`
 1. Create VM with adjustments:
+   I'm trying 2 cores now, utilization was low but we had spikes which I suspect were system stuff
    - Start at boot
    - SSD emulation, 48GiB
-   - 1 socket+core, NUMA enabled
+   - 1 socket+ 2 cores, NUMA enabled
    - 2048 MiB RAM
+1. Use proxmox under datacenter to configure a backup schedule.
+   The following should keep a rolling 4-weekly history.
+   - Sunday 0100
+   - Notify only on fail
+   - Keep weekly 4
 1. Boot machine and follow installer
 1. Add PCIe ethernet controllers
 1. Boot system and root login
@@ -317,9 +324,31 @@ Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.
    - set domanin
    - configure DNS servers
    - Disallow DNS override on WAN
+1. Reporting > netflow set capture on
 1. Configure Upbound DNS service
    - enable DNSSEC
    - enable DHCP lease registration
+   - Disallow system nameservers in DoT and add records with blank domains+port 853
+   - Enable blocklist and use OISD Ads only (to be experimented with)
+   - Enable data capture
+1. Firewall
+   - Add aliases for static boxes, localhost
+   - Create a NAT port-forward:
+      - LAN interface
+      - IPv4+6
+      - TCP+UDP
+      - Invert
+      - Destination LAN net
+      - from dns to dns
+      - Redirect target Localhost:53
+1. System > settings > cron
+   - once daily to update the block lists
+   - once weekly after the backup is taken (this ensures we can restore)
+1. Test
+   - DNS redirection:
+      - Unbound host override bing.com to something
+      - Check this returns the override `dig +trace @4.4.4.4 bing.com`
+   - Ad blocking https://d3ward.github.io/toolz/adblock.html
 
 TODO:
 
@@ -329,6 +358,7 @@ TODO:
 1. Look into removing NAT
 1. Set up VPN
 1. Set up non-root user/s
+1. Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/
 
 Notes:
 
@@ -341,6 +371,12 @@ Might be worth revisiting or pinning a full core to the VM.
 References:
 
 - [Reddit performance comment](https://www.reddit.com/r/OPNsenseFirewall/comments/guo2iz/comment/fskpk76)
+- [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
+- [Unbount DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
+
+#### Fat controller
+
+
 
 ## Notes
 
