@@ -291,6 +291,9 @@ Check git history for prior notes.
 We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
 
+For the USB rust bucket we found the device name with `fdisk -l`.
+Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.
+
 #### vRouter setup
 
 Tools are already installed on Proxmox system.
