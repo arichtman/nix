@@ -43,5 +43,8 @@ in
         device = "/dev/disk/by-uuid/${cfg.volumes.bootUuid}";
         fsType = "vfat";
       };
+      networking.interfaces.eno1.wakeOnLan.enable = true;
+      powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+      hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     };
   }
