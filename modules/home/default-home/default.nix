@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   cfg = config.default-home;
@@ -317,6 +318,33 @@ in
 
         enableNixpkgsReleaseCheck = true;
         shellAliases = myAliases // classicalAliases;
+        # Install MacOS applications to the user Applications folder. Also update Docked applications
+        # extraActivationPath = mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        # [
+        #   rsync
+        #   dockutil
+        #   gawk
+        # ];
+        # };
+        # } // darwinLaunchpadFixes;
       };
+      # Darwin launchpad fixes
+      # Ref: https://github.com/nix-community/home-manager/issues/1341#issuecomment-1870352014
+      # It's kinda ugly to do it this way but I had issues with the attrset update operator and let scoping
+      home.extraActivationPath = with pkgs;
+        mkIf pkgs.stdenv.hostPlatform.isDarwin
+        # Install MacOS applications to the user Applications folder. Also update Docked applications
+        [
+          rsync
+          dockutil
+          gawk
+        ];
+      home.activation.trampolineApps = with pkgs;
+        mkIf pkgs.stdenv.hostPlatform.isDarwin (inputs.home-manager.lib.hm.dag.entryAfter ["writeBoundary"] ''
+          ${builtins.readFile ./launchpad.sh}
+          fromDir="$HOME/Applications/Home Manager Apps"
+          toDir="$HOME/Applications/Home Manager Trampolines"
+          sync_trampolines "$fromDir" "$toDir"
+        '');
     };
   }

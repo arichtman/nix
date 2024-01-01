@@ -376,7 +376,11 @@ References:
 
 #### Fat controller
 
-
+1. Use GUI installer to deploy, cli one's a pain, 12GiB storage, 4 cores/8GiB ram. We'll scale it down later.
+1. Make a template from it that vanishes
+1. Thing's a pain to bootstrap and the web console is limited
+   Sudo edit `/etc/nixos/configuration.nix` to enable the openssh service, rename the host, and rebuild.
+   Then pull down some keys to get in, it should have already DHCP'd over the bridge network.
 
 ## Notes
 
