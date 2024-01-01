@@ -2,6 +2,7 @@
   networking.hostName = "patient-zero";
   system.stateVersion = "23.05";
   lab-node.enable = true;
+  worker-node.enable = true;
   physical-node = {
     volumes = {
       bootUuid = "52CA-14B2";
