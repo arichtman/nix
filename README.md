@@ -380,7 +380,7 @@ References:
 
 ## Notes
 
-Checking on WSL `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
+Checking builds manually: `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
 
 Add to nomicon
 

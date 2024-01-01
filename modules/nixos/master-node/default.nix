@@ -105,8 +105,7 @@ in
         kubernetes = {
           caFile = "${config.services.kubernetes.secretsPath}/ca.pem";
           roles = ["master"];
-          # TODO: can probably poach this out of networking.hostName
-          masterAddress = "patient-zero.local";
+          masterAddress = config.networking.hostName;
           easyCerts = false;
           kubelet = {
             # TODO: see if these are required

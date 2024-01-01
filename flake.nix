@@ -30,6 +30,7 @@
   in
     lib.mkFlake {
       package-namespace = "arichtman";
+      namespace = "foo";
 
       channels-config.allowUnfree = true;
 
@@ -42,6 +43,12 @@
         user = "root";
         remoteBuild = true;
         nodes = {
+          fat-controller = {
+            hostname = "fat-controller";
+            profiles.system = {
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.fat-controller;
+            };
+          };
           patient-zero = {
             hostname = "patient-zero";
             profiles.system = {
@@ -64,12 +71,6 @@
         };
       };
 
-      # checks =
-      #   builtins.mapAttrs
-      #     (system: deploy-lib:
-      #       deploy-lib.deployChecks inputs.self.deploy)
-      #     inputs.deploy-rs.lib;
-      # This is slightly adapted from deploy-rs repo. The above was verbatim from Jake's config. I think there's no difference?
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
     };
 }

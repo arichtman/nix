@@ -56,7 +56,7 @@ in
         kubernetes = {
           caFile = "${config.services.kubernetes.secretsPath}/ca.pem";
           roles = ["node"];
-          masterAddress = "patient-zero.local";
+          masterAddress = "fat-controller.local";
           easyCerts = false;
           kubelet = {
             # TODO: see if these are required
