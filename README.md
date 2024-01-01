@@ -10,6 +10,8 @@ Nothing here should be construed as a model of good work!
 
 ## Known issues/TODO
 
+Generate new certificates for control and worker nodes.
+
 - Look into where makes sense to bootstrap secrets/vault/trust
 - Convert nodes to use ssh certificates for authentication and server certificates
 - Look into `buildEnv` over `devShell`
@@ -19,6 +21,8 @@ Nothing here should be construed as a model of good work!
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
 - What-the-fuck-ever is wrong with my desktop's networking
+- Disable password ssh access
+- `system.autoUpgrade.enable` make it Wednesday morning, after our flake updates
 
 ## Use
 
