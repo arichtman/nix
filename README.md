@@ -23,6 +23,7 @@ Generate new certificates for control and worker nodes.
 - What-the-fuck-ever is wrong with my desktop's networking
 - Disable password ssh access
 - `system.autoUpgrade.enable` make it Wednesday morning, after our flake updates
+- Look into using /disk/by- something that's not so finnicky
 
 ## Use
 
@@ -143,9 +144,9 @@ Here's a dump of some utility stuff for developing this.
 ```
 # Send over all the keys and open permissions
 function keySync {
-  rsync ./*.pem patient-zero:/home/nixos/kubernetes
-  ssh patient-zero sudo cp ./kubernetes/*.pem /var/lib/kubernetes/secrets
-  ssh patient-zero sudo chmod 777 /var/lib/kubernetes/secrets/*.pem
+  rsync *.pem fat-controller.local:/home/nixos/kubernetes
+  ssh fat-controller.local sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
+  ssh fat-controller.local sudo chmod 777 "/var/lib/kubernetes/secrets/*.pem"
 }
 
 # Check a services logs from the last run
@@ -154,7 +155,7 @@ function logs { journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p Invocation
 alias sci='step certificate inspect'
 
 # TCP check
-cat < /dev/tcp/patient-zero/2379
+cat < /dev/tcp/fat-controller.local/2379
 
 # Checking served certificates
 openssl s_client -showcerts -connect localhost:2379 # -servername $NAME (if facing SNI)
@@ -171,14 +172,14 @@ General notes:
 Initial kubeconfig for access
 
 ```
-kc config set-cluster mine --certificate-authority=$sd/ca.pem --embed-certs=true --server=https://patient-zero:6443
+kc config set-cluster mine --certificate-authority=$sd/ca.pem --embed-certs=true --server=https://fat-controller.local:6443
 
 kc config set-credentials admin --client-certificate=admin.pem --client-key=admin-key.pem
 
 kc config set-context mine --cluster=mine --user=admin
 
 #May also have to untaint stuff
-kc taint nodes patient-zero node.kubernetes.io/not-ready-
+kc taint nodes fat-controller.local node.kubernetes.io/not-ready-
 ```
 
 For some reason the flannel bootstrap isn't putting the right files into the manifests directory.
@@ -390,9 +391,11 @@ References:
 1. Rebuild
 1. Then pull down some keys to get in, it should have already DHCP'd over the bridge network.
 
-## Notes
+#### Notes
 
-Checking builds manually: `nix build .#nixosConfigurations.patient-zero.config.system.build.toplevel`
+Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
+Minimal install ~3.2 gigs
+Lab-node with master node about 3.2 gb also, so will want more headroom.
 
 Add to nomicon
 
