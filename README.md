@@ -13,17 +13,18 @@ Nothing here should be construed as a model of good work!
 Generate new certificates for control and worker nodes.
 
 - Look into where makes sense to bootstrap secrets/vault/trust
-- Convert nodes to use ssh certificates for authentication and server certificates
+- Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Look into `buildEnv` over `devShell`
 - Perhaps actually put something useful in myShell
 - Test out packaging a toy app/repo
 - Think about intermediate CA revokation
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
-- What-the-fuck-ever is wrong with my desktop's networking
 - Disable password ssh access
-- `system.autoUpgrade.enable` make it Wednesday morning, after our flake updates
+- `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
 - Look into using /disk/by- something that's not so finnicky
+- Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
+- Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
 
 ## Use
 
@@ -146,7 +147,10 @@ Here's a dump of some utility stuff for developing this.
 function keySync {
   rsync *.pem fat-controller.local:/home/nixos/kubernetes
   ssh fat-controller.local sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
-  ssh fat-controller.local sudo chmod 777 "/var/lib/kubernetes/secrets/*.pem"
+  ssh fat-controller.local sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
+  ssh fat-controller.local sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
+  ssh fat-controller.local sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
+  ssh fat-controller.local sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
 }
 
 # Check a services logs from the last run
