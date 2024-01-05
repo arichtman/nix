@@ -35,6 +35,7 @@ in
         };
       };
       home = {
+        shellAliases."set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
         packages = with pkgs; [
           git-remote-codecommit
           teams
