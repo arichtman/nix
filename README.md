@@ -145,12 +145,15 @@ Here's a dump of some utility stuff for developing this.
 ```
 # Send over all the keys and open permissions
 function keySync {
-  rsync *.pem fat-controller.local:/home/nixos/kubernetes
-  ssh fat-controller.local sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
-  ssh fat-controller.local sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
-  ssh fat-controller.local sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
-  ssh fat-controller.local sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
-  ssh fat-controller.local sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
+  rsync etcd*.pem "${1}.local:/home/nixos/kubernetes"
+  rsync kube*.pem "${1}.local:/home/nixos/kubernetes"
+  rsync ca* "${1}.local:/home/nixos/kubernetes"
+  rsync flannel* "${1}.local:/home/nixos/kubernetes"
+  ssh "${1}.local" sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
+  ssh "${1}.local" sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
+  ssh "${1}.local" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
+  ssh "${1}.local" sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
+  ssh "${1}.local" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
 }
 
 # Check a services logs from the last run
@@ -405,7 +408,16 @@ References:
    `sudo rm /nix/var/nix/profiles/system-#-profile`
    `sudo nix-collect-garbage --delete-old`
 1. Adjust hardware down to 1/2GiB.
-!. Make template
+1. Make template
+
+Re-iding a proxmox vm:
+
+1. Stop VM
+1. Get storage group name `gvs -a`
+1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
+1. Enter `/etc/pve/nodes/proxmox/qemu-server`
+1. Edit conf file to use renamed disk.
+1. Move conf file to new id
 
 #### Notes
 
@@ -428,3 +440,5 @@ Add to nomicon
 - [Nebucatnetzer's config](https://git.2li.ch/Nebucatnetzer/nixos/)
 - [Smallstep documentation](https://smallstep.com/docs/step-cli/basic-crypto-operations/index.html)
 - [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+- [Nixos VM tutorial](https://mattwidmann.net/notes/running-nixos-in-a-vm/)
+- [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)

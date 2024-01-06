@@ -15,6 +15,11 @@ in
       enable = mkEnableOption "Turns a machine into one of my minions mwahahaha";
     };
     config = mkIf cfg.enable {
+      boot.tmp.cleanOnBoot = true;
+      services.journald.extraConfig = ''
+        SystemMaxUse=100M
+        MaxFileSec=7day
+      '';
       # Define a user account.
       users.users.nixos = {
         isNormalUser = true;

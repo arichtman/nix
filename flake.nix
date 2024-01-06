@@ -42,11 +42,18 @@
         sshUser = "nixos";
         user = "root";
         remoteBuild = true;
+        # TODO: DRY this up
         nodes = {
           fat-controller = {
             hostname = "fat-controller";
             profiles.system = {
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.fat-controller;
+            };
+          };
+          mum = {
+            hostname = "mum";
+            profiles.system = {
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.mum;
             };
           };
           patient-zero = {
