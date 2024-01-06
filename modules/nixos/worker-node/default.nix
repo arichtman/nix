@@ -65,6 +65,8 @@ in
           kubelet = {
             # TODO: see if these are required
             cni.packages = [pkgs.cni-plugin-flannel pkgs.cni-plugins];
+            tlsKeyFile = "${config.services.kubernetes.secretsPath}/kubelet-tls-key.pem";
+            tlsCertFile = "${config.services.kubernetes.secretsPath}/kubelet-tls.pem";
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";

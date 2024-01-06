@@ -444,6 +444,12 @@ kubectl config set-context --user home-admin --cluster home home-admin
 1. Submit the CSR to the cluster `envsubst -i klient-csr.yaml | kubectly apply -f -`
 1. Approve the request `kubectl certificate user approve`
 
+#### Cluster node roles
+
+For security reasons, it's not possible for nodes to self-select roles.
+We can label our nodes using this:
+`kubectl label no/fat-controller node-role.kubernetes.io/master=master`
+
 #### Notes
 
 Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
