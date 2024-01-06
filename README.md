@@ -25,6 +25,9 @@ Generate new certificates for control and worker nodes.
 - Look into using /disk/by- something that's not so finnicky
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
+- Controller manager not signing approved CSRs
+- Swap my user to a lower privilege one
+- Work out what's up with cached/wrong certificates on kubelet on worker node mum
 
 ## Use
 
@@ -419,6 +422,28 @@ Re-iding a proxmox vm:
 1. Edit conf file to use renamed disk.
 1. Move conf file to new id
 
+#### Cluster access bootstrap
+
+```bash
+# Create a client certificate with admin
+step certificate create cluster-admin cluster-admin.pem cluster-admin-key.pem \
+  --ca ca.pem --ca-key ca-key.pem --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 8760h \
+  --set organization=system:masters
+# Construct the kubeconfig file
+# Here we're embedding certificates to avoid breaking stuff if we move or remove cert files
+kubectl config set-cluster home --server https://fat-controller.local:6443 --certificate-authority ca.pem --embed-certs=true
+kubectl config set-credentials home-admin --client-certificate cluster-admin.pem --client-key cluster-admin-key.pem --embed-certs=true
+kubectl config set-context --user home-admin --cluster home home-admin
+```
+
+#### Cluster access (normal)
+
+1. Create private key `openssl genpkey -out klient-key.pem -algorithm ed25519`
+1. Create CSR `openssl req -new -config klient.csr.conf -key klient-key.pem -out klient.csr`
+1. `export KLIENT_CSR=$(base64 klient.csr | tr -d "\n")`
+1. Submit the CSR to the cluster `envsubst -i klient-csr.yaml | kubectly apply -f -`
+1. Approve the request `kubectl certificate user approve`
+
 #### Notes
 
 Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
@@ -442,3 +467,4 @@ Add to nomicon
 - [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
 - [Nixos VM tutorial](https://mattwidmann.net/notes/running-nixos-in-a-vm/)
 - [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)
+- [Certificate creation/authorization tutorial](https://yuminlee2.medium.com/kubernetes-generate-certificates-for-normal-users-using-certificates-api-7ba71170aa52)

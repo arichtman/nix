@@ -157,6 +157,13 @@ in
               keyFile = "${config.services.kubernetes.secretsPath}/controllermanager-apiserver-client-key.pem";
               caFile = config.services.kubernetes.caFile;
             };
+            # Note: currently doesn't appear to be signing with these.
+            extraOpts = ''
+              --cluster-signing-cert-file \
+              ${config.services.kubernetes.secretsPath}/ca.pem \
+              --cluster-signing-key-file \
+              ${config.services.kubernetes.secretsPath}/ca-key.pem
+            '';
           };
           apiserver = {
             serviceAccountKeyFile = "${config.services.kubernetes.secretsPath}/service-account.pem";

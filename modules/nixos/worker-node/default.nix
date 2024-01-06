@@ -43,6 +43,10 @@ in
       enable = mkEnableOption "Turns a machine into a drone.";
     };
     config = mkIf cfg.enable {
+      networking.firewall.allowedTCPPorts = [
+        # Kubelet access
+        10250
+      ];
       systemd.services.flannel.environment = {
         FLANNELD_KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
       };
