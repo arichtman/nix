@@ -60,6 +60,7 @@
     tfp = "terraform plan";
     tfa = "terraform apply";
     tfaa = "terraform apply -auto-approve";
+    flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
   };
 in
   with lib; {

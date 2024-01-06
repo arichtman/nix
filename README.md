@@ -383,17 +383,29 @@ References:
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
 - [Unbount DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
 
-#### Fat controller
+#### Virtualized Nixos Node Bootstrap
 
-1. Use GUI installer to deploy, cli one's a pain, 12GiB storage, 4 cores/8GiB ram. We'll scale it down later.
-1. Make a template from it that vanishes
+1. Use GUI installer to deploy, cli one's a pain, 12GiB storage minimum, 4 cores/8GiB ram (min 4+ GiB). We'll scale it down later.
 1. Thing's a pain to bootstrap and the web console is limited
    Sudo edit `/etc/nixos/configuration.nix`
    - Enable the openssh service
-   - Rename the host
    - `security.sudo.wheelNeedsPassword = false`
+   - Disable OSprober by removing the line
+   - Set disk source to `/dev/sda`
+   - I'm not sure those last 2 make much of a difference once the machine is under flake control
 1. Rebuild
+1. Bounce the machine so it releases using the new hostname
 1. Then pull down some keys to get in, it should have already DHCP'd over the bridge network.
+   `mkdir ~/.ssh && curl https://github.com/arichtman.keys -o ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`
+1. Upgrade the system
+   `sudo nixos-rebuild switch --upgrade --upgrade-all`
+1. Reboot to test
+1. Clear history
+   `sudo nix-rebuild list-generations`
+   `sudo rm /nix/var/nix/profiles/system-#-profile`
+   `sudo nix-collect-garbage --delete-old`
+1. Adjust hardware down to 1/2GiB.
+!. Make template
 
 #### Notes
 
