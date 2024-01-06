@@ -67,6 +67,10 @@ in
             cni.packages = [pkgs.cni-plugin-flannel pkgs.cni-plugins];
             tlsKeyFile = "${config.services.kubernetes.secretsPath}/kubelet-tls-key.pem";
             tlsCertFile = "${config.services.kubernetes.secretsPath}/kubelet-tls.pem";
+            extraOpts = ''
+              --rotate-server-certificates \
+              --rotate-certificates \
+            '';
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
