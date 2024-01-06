@@ -13,6 +13,17 @@ with lib;
         useUserPackages = true;
       };
 
+      # TODO: Get launchd weeky gc installed
+      # launchd.agents.nix-gc = {
+      #   command = "nix-collect-garbage --delete-old";
+      #   serviceConfig = {
+      #     timeout = 600;
+      #     launchOnlyOnce = true;
+      #     program = "nix-collect-garbage";
+      #     programArguments = [ "--delete-old"];
+      #     startCalendarInterval = [{hour = 0; minute = 0; day = "*"; month = "*"; weekday = 0;}];
+      #   };
+      # };
       nix.configureBuildUsers = true;
       nix.extraOptions = ''
         auto-optimise-store = true
