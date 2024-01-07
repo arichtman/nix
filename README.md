@@ -15,19 +15,23 @@ Generate new certificates for control and worker nodes.
 - Look into where makes sense to bootstrap secrets/vault/trust
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Look into `buildEnv` over `devShell`
-- Perhaps actually put something useful in myShell
 - Test out packaging a toy app/repo
-- Think about intermediate CA revokation
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
 - Disable password ssh access
 - `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
-- Look into using /disk/by- something that's not so finnicky
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
 - Controller manager not signing approved CSRs
 - Swap my user to a lower privilege one
-- Work out what's up with cached/wrong certificates on kubelet on worker node mum
+- Work out what's to replace addon-manager
+- Troubleshoot Flannel control node routing
+- Switch to Calico
+- Install MetalLB in BGP mode with OPNsense
+- Set up port forwarding from world
+- Set up IPv6 (incl firewall rules)
+- Swap kubernetes to IPv6
+- See about auto-approve TLS certificate requests by nodes
 
 ## Use
 
@@ -449,6 +453,20 @@ kubectl config set-context --user home-admin --cluster home home-admin
 For security reasons, it's not possible for nodes to self-select roles.
 We can label our nodes using this:
 `kubectl label no/fat-controller node-role.kubernetes.io/master=master`
+
+#### Addon-manager
+
+Apparently this is deprecated as of years ago but is still shambling along.
+As much as I'd love to declaratively bootstrap the cluster it will be less headache to have a one-off CD app install and do the rest declaratively that way.
+Anywho - to make addon manager actually work, you need to drop a `.kube/config` file in `/var/lib/kubernetes`.
+
+#### Virtual node disk resize
+
+```bash
+nix-shell -p cloud-utils
+growpart /dev/sda 1
+resize2fs /dev/sda1
+```
 
 #### Notes
 

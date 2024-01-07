@@ -107,6 +107,7 @@ in
           roles = ["master"];
           masterAddress = config.networking.hostName;
           easyCerts = false;
+          addons.dns.enable = true;
           kubelet = {
             # TODO: see if these are required
             cni.packages = [pkgs.cni-plugin-flannel pkgs.cni-plugins];

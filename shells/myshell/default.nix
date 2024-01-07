@@ -15,6 +15,7 @@ mkShell {
     # Kubernetes stuff
     kubectl
     kubectx
+    kubernetes-helm
     # Certificates and secrets
     xkcdpass
     step-cli

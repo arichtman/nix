@@ -30,7 +30,6 @@
   in
     lib.mkFlake {
       package-namespace = "arichtman";
-      namespace = "foo";
 
       channels-config.allowUnfree = true;
 
