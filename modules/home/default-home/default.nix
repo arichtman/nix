@@ -44,10 +44,10 @@
     #  environments separate between repos?
     k = "kubectl";
     kc = "kubectl config";
-    kcg = "kubectl get";
-    kcd = "kubectl describe";
+    kg = "kubectl get";
+    kd = "kubectl describe";
     kcns = "kubectl config set-context --current --namespace";
-    kccc = "kubectl config use-context";
+    kcc = "kubectl config use-context";
     tg = "terragrunt";
     tgv = "terragrunt validate";
     tgi = "terragrunt init";
@@ -169,8 +169,8 @@ in
         };
         fzf = {
           enable = true;
-          #TODO: enable zsh integreation possible?
           enableBashIntegration = true;
+          enableZshIntegration = true;
         };
         gpg.enable = true;
         htop.enable = true;
@@ -260,8 +260,11 @@ in
           DIRENV_LOG_FORMAT = "";
           AWS_EC2_METADATA_DISABLED = "true";
           EDITOR = "hx";
+          # This is annoying, ideally I'd set them all in .terraformrc but some options don't seem to be available
           TF_CLI_ARGS_plan = "-compact-warnings";
           TF_CLI_ARGS_apply = "-compact-warnings";
+          TF_PLUGIN_CACHE_DIR = "$HOME/.terraform.d/plugin-cache";
+          TF_CLI_CONFIG_FILE = "$HOME/.config/terraform/.terraformrc";
         };
 
         packages = with pkgs; [
@@ -290,7 +293,6 @@ in
           alejandra # nix formatter
           helix # editor/ide
           nnn # file manager
-          thefuck # the infamous
           dprint # markdown formatting (it does more though)
           # exa # ls replacement
           eza # exa is unmaintained 🫣
@@ -310,7 +312,10 @@ in
             recursive = true;
           };
           ".cargo/config.toml".source = cargo/config.toml;
-          ".terraformrc".source = terraform/.terraformrc;
+          ".config/terraform" = {
+            source = ./terraform;
+            recursive = true;
+          };
           # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
           # https://github.com/nix-community/home-manager/issues/2104
           ".terraform.d/plugin-cache/.keep".text = "";
@@ -319,15 +324,6 @@ in
 
         enableNixpkgsReleaseCheck = true;
         shellAliases = myAliases // classicalAliases;
-        # Install MacOS applications to the user Applications folder. Also update Docked applications
-        # extraActivationPath = mkIf pkgs.stdenv.hostPlatform.isDarwin {
-        # [
-        #   rsync
-        #   dockutil
-        #   gawk
-        # ];
-        # };
-        # } // darwinLaunchpadFixes;
       };
       # Darwin launchpad fixes
       # Ref: https://github.com/nix-community/home-manager/issues/1341#issuecomment-1870352014
