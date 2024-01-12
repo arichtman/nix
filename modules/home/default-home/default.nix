@@ -36,7 +36,6 @@
     gb = "git branch";
     gd = "git diff";
     gf = "git fetch";
-    gfp = "git fetch --prune";
     grpo = "git remote prune origin";
     gau = "git add --update";
     nfu = "nix flake update --commit-lock-file";
@@ -200,6 +199,7 @@ in
               updateRefs = true;
               autoStash = true;
             };
+            fetch.prune = true;
             merge.autoStash = true;
             init.defaultBranch = "main";
             pull = {
