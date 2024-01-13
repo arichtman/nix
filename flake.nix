@@ -20,6 +20,8 @@
 
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
 
+    nixgl.url = "github:nix-community/nixGL";
+
     deploy-rs.url = "github:serokell/deploy-rs";
   };
   outputs = inputs: let
@@ -33,6 +35,9 @@
 
       channels-config.allowUnfree = true;
 
+      overlays = with inputs; [
+        nixgl.overlays.default
+      ];
       alias.shells = {
         default = "myshell";
       };
