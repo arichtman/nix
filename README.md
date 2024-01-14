@@ -16,22 +16,29 @@ Generate new certificates for control and worker nodes.
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Look into `buildEnv` over `devShell`
 - Test out packaging a toy app/repo
+- Get a container image build with nix going
+  [Jamey blog](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
+  [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
+- Look into roles anywhere for DDNS
+  [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
-- Disable password ssh access
 - `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
 - Controller manager not signing approved CSRs
-- Swap my user to a lower privilege one
+- Swap my user to a lower privilege one on Proxmox and OPNsense
 - Work out what's to replace addon-manager
-- Troubleshoot Flannel control node routing
+- Troubleshoot Flannel control node routing/coreDNS resolution
+- Set up VPN in OPNsense
 - Switch to Calico
 - Install MetalLB in BGP mode with OPNsense
 - Set up port forwarding from world
 - Set up IPv6 (incl firewall rules)
 - Swap kubernetes to IPv6
 - See about auto-approve TLS certificate requests by nodes
+- Set up persistent remount of the backup disk
+- See about nixos on-boot auto disk resize (and add to template!)
 
 ## Use
 
@@ -467,6 +474,26 @@ nix-shell -p cloud-utils
 growpart /dev/sda 1
 resize2fs /dev/sda1
 ```
+
+#### Mobile setup
+
+Using tasker
+
+```yaml
+Profile: AutoPrivateDNS
+         State: Wifi Connected [ SSID:sugar_monster_house MAC:* IP:* Active:Any ]
+     Enter: Anon
+         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:opportunistic Use Root:Off Read Setting To: ]
+     Exit: Anon
+         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:hostname Use Root:Off Read Setting To: ]
+```
+
+`nix shell nixpkgs#android-tools -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS`
+
+References:
+
+- [StackExchange](https://android.stackexchange.com/a/239471)
+- [AdGuard instructions for secret settings](https://adguard.com/kb/adguard-for-android/solving-problems/firefox-certificates/)
 
 #### Notes
 
