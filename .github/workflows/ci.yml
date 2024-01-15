@@ -43,14 +43,18 @@ jobs:
     - name: Test machine
         # TODO: Work through making this
       run: |
-        nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-        nix-channel --update
-        sudo rm -f /etc/zshenv
-        sudo rm -f /etc/nix/nix.conf
-        nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-        ./result/bin/darwin-installer
-        source /etc/static/bashrc
-        darwin-rebuild check --flake .
+        # nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+        # nix-channel --update
+        nix build .#darwinConfigurations.macbookpro.system
+        # sudo rm -f /etc/zshenv
+        # sudo rm -f /etc/nix/nix.conf
+        # nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+        # ./result/bin/darwin-installer
+        # source /etc/static/bashrc
+        #  warning: ignoring untrusted substituter 'http://127.0.0.1:37515/?trusted=1&compression=zstd&parallel-compression=true', you are not a trusted user.
+        # Run `man nix.conf` for more information on the `substituters` configuration option.
+        # building the system configuration...
+        # darwin-rebuild check --flake .
   # check_aarch64-darwin:
   #   runs-on: macos-13-large
   #   steps:
