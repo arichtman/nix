@@ -49,6 +49,7 @@ jobs:
         sudo rm -f /etc/nix/nix.conf
         nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
         ./result/bin/darwin-installer
+        source /etc/static/bashrc
         darwin-rebuild check --flake .
   # check_aarch64-darwin:
   #   runs-on: macos-13-large
