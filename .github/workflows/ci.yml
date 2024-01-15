@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  check_development:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-12, macos-13-large, ubuntu-latest ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test nix environment
+      run: nix develop
+
+  check_linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [ fat-controller, mum, patient-zero ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - uses: DeterminateSystems/flake-checker-action@main
+    - name: Test system builds
+      run: |
+          nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+
+  check_x86_64-darwin:
+    runs-on: macos-12
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test machine
+      run: nix build .#darwinConfigurations.macbookpro.system
+
+  check_aarch64-darwin:
+    runs-on: macos-latest-xlarge
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test machine
+      run: nix build .#darwinConfigurations.bne-nb-ariel.system

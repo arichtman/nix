@@ -1,0 +1,36 @@
+name: Update packages
+
+on:
+  # Automatically run once a week.
+  schedule:
+  - cron: 0 7 * * MON
+  # Allow manual triggers.
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        # Bit torn, submodule pull and update should be a no-op, then I can keep my CI files standard
+        # submodules: recursive
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Update stuff
+      run: |
+        nix flake update
+        nix develop --command pre-commit autoupdate
+        # git submodule update --remote
+    - uses: peter-evans/create-pull-request@v5
+      with:
+        branch: auto-updates
+        token: ${{ secrets.WRITEBACK_TOKEN }}
+        title: 'chore(deps): Update packages'
+        commit-message: 'chore(deps): Update packages'
+        body: Update packages
+        labels: dependencies
+        delete-branch: true
+        committer: Richtman, Ariel <10679234+arichtman@users.noreply.github.com>
+        author: Richtman, Ariel <10679234+arichtman@users.noreply.github.com>
