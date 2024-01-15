@@ -45,7 +45,8 @@ jobs:
       run: |
         nix-channel --add https://nixos.org/channels/nixpkgs-unstable
         nix-channel --update
-        sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
+        sudo rm -f /etc/zshenv
+        sudo rm -f /etc/nix/nix.conf
         nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
         ./result/bin/darwin-installer
         darwin-rebuild check --flake .
