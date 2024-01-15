@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  check development:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-12, macos-13-large, ubuntu-latest ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test nix environment
+      run: nix develop
+  check linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [ fat-controller, bruce-banner, mum, patient-zero ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - uses: DeterminateSystems/flake-checker-action@main
+    - name: Test system builds
+      run: |
+          nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+  check x86_64-darwin:
+    runs-on: macos-12
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test machine
+        # TODO: Work through making this
+      run: |
+        sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
+        nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+        ./result/bin/darwin-installer
+        darwin-rebuild check --flake .
+  # check aarch64-darwin:
+  #   runs-on: macos-13-large
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 1
+  #   - uses: DeterminateSystems/nix-installer-action@main
+  #   - uses: DeterminateSystems/magic-nix-cache-action@main
+  #   - name: Test machine
+  #     run: darwin-rebuild check --flake .
