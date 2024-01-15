@@ -43,6 +43,8 @@ jobs:
     - name: Test machine
         # TODO: Work through making this
       run: |
+        nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+        nix-channel --update
         sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf
         nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
         ./result/bin/darwin-installer
