@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  check development:
+  check_development:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,7 +17,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Test nix environment
       run: nix develop
-  check linux:
+  check_linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,7 +32,7 @@ jobs:
     - name: Test system builds
       run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
-  check x86_64-darwin:
+  check_x86_64-darwin:
     runs-on: macos-12
     steps:
     - uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
         nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
         ./result/bin/darwin-installer
         darwin-rebuild check --flake .
-  # check aarch64-darwin:
+  # check_aarch64-darwin:
   #   runs-on: macos-13-large
   #   steps:
   #   - uses: actions/checkout@v4
