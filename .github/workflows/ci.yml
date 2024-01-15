@@ -17,6 +17,7 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Test nix environment
       run: nix develop
+
   check_linux:
     runs-on: ubuntu-latest
     strategy:
@@ -32,6 +33,7 @@ jobs:
     - name: Test system builds
       run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+
   check_x86_64-darwin:
     runs-on: macos-12
     steps:
@@ -41,27 +43,15 @@ jobs:
     - uses: DeterminateSystems/nix-installer-action@main
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Test machine
-        # TODO: Work through making this
-      run: |
-        # nix-channel --add https://nixos.org/channels/nixpkgs-unstable
-        # nix-channel --update
-        nix build .#darwinConfigurations.macbookpro.system
-        # sudo rm -f /etc/zshenv
-        # sudo rm -f /etc/nix/nix.conf
-        # nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-        # ./result/bin/darwin-installer
-        # source /etc/static/bashrc
-        #  warning: ignoring untrusted substituter 'http://127.0.0.1:37515/?trusted=1&compression=zstd&parallel-compression=true', you are not a trusted user.
-        # Run `man nix.conf` for more information on the `substituters` configuration option.
-        # building the system configuration...
-        # darwin-rebuild check --flake .
-  # check_aarch64-darwin:
-  #   runs-on: macos-13-large
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #     with:
-  #       fetch-depth: 1
-  #   - uses: DeterminateSystems/nix-installer-action@main
-  #   - uses: DeterminateSystems/magic-nix-cache-action@main
-  #   - name: Test machine
-  #     run: darwin-rebuild check --flake .
+      run: nix build .#darwinConfigurations.macbookpro.system
+
+  check_aarch64-darwin:
+    runs-on: macos-13-large
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+    - uses: DeterminateSystems/nix-installer-action@main
+    - uses: DeterminateSystems/magic-nix-cache-action@main
+    - name: Test machine
+      run: nix build .#darwinConfigurations.bne-nb-ariel.system
