@@ -46,7 +46,7 @@ jobs:
       run: nix build .#darwinConfigurations.macbookpro.system
 
   check_aarch64-darwin:
-    runs-on: macos-13-large
+    runs-on: macos-latest-xlarge
     steps:
     - uses: actions/checkout@v4
       with:
