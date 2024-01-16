@@ -51,11 +51,9 @@ with lib;
         yubikey-manager
         curl # TODO: Maybe make a default-system module?
         git
-        htop
         btop
         # Required for some c dependencies for rustc/cargo
         darwin.apple_sdk.frameworks.CoreServices
-        firefox-darwin.firefox-bin
         gimp
         rectangle
         phinger-cursors

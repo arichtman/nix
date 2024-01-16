@@ -18,8 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
-
     nixgl.url = "github:nix-community/nixGL";
 
     deploy-rs.url = "github:serokell/deploy-rs";
