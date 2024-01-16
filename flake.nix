@@ -1,7 +1,7 @@
 {
   description = "Ariel's machine configs";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/23.11";
 
     snowfall-lib = {
       url = "github:snowfallorg/lib";
