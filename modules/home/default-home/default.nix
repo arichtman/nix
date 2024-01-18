@@ -214,6 +214,11 @@ in
               autoSetupRemote = true;
               default = "current";
             };
+            url = {
+              "https://github.com" = {insteadOf = "gh";};
+              "https://gitlab.com" = {insteadOf = "gl";};
+              "https://codeberg.org" = {insteadOf = "cb";};
+            };
           };
         };
         zsh = {
