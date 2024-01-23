@@ -23,6 +23,6 @@ repos:
 - repo: https://github.com/kamadorueda/alejandra
   # TODO: When this issue is resolved, switch to proper tag ref
   # Ref: https://github.com/kamadorueda/alejandra/issues/388
-  rev: 9512caae61b6fbda5298a33813976db4f1c0f17d
+  rev: 1.3.0
   hooks:
-  - id: alejandra-system
+  - id: alejandra
