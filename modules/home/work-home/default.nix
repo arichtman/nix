@@ -17,7 +17,6 @@ in
     };
     config = mkIf (cfg.enabled) {
       programs = {
-        nushell.enable = true;
         ssh = {
           enable = true;
           matchBlocks = {
@@ -30,6 +29,11 @@ in
               user = "ubuntu";
               hostname = "vpn-bne.silverrail.io";
               identityFile = "~/.ssh/openvpn";
+            };
+            bb = {
+              user = "ubuntu";
+              hostname = "bamboo.silverrailtech.net";
+              identityFile = "~/.ssh/AWS-DevTest.pem";
             };
           };
         };
