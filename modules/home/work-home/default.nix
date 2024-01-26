@@ -35,6 +35,11 @@ in
               hostname = "bamboo.silverrailtech.net";
               identityFile = "~/.ssh/AWS-DevTest.pem";
             };
+            art = {
+              user = "ubuntu";
+              hostname = "artifactory-bne.silverrail.io";
+              identityFile = "~/.ssh/artifactory_main-instance";
+            };
           };
         };
       };
