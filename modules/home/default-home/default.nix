@@ -292,6 +292,8 @@ in
           nix-update
           nix-index
           nurl
+          # Kube stuff
+          kubectl
           # Lang servers
           nil # nix
           marksman # md

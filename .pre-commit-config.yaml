@@ -25,4 +25,4 @@ repos:
   # Ref: https://github.com/kamadorueda/alejandra/issues/388
   rev: 3.0.0
   hooks:
-  - id: alejandra
+  - id: alejandra-system
