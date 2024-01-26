@@ -161,8 +161,10 @@ in
           };
           config.whitelist = {
             prefix = [
-              "$HOME/repos/bne"
-              "$HOME/repos/arichtman"
+              "~/repos/bne"
+              "~/repos/*/arichtman"
+              "~/repos/gl"
+              "~/repos/core"
             ];
           };
         };
