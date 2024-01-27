@@ -81,6 +81,8 @@ in
       };
     };
     config = {
+      nix.extraOptions = "keep-going = true";
+      # TODO: Remember what the f*** this fixes and update this comment
       xdg.systemDirs = mkIf pkgs.stdenv.isLinux {
         data = ["$HOME/.nix-profile/share"];
       };
