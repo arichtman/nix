@@ -107,7 +107,10 @@ in
           roles = ["master"];
           masterAddress = config.networking.hostName;
           easyCerts = false;
-          addons.dns.enable = true;
+          # Shitcanning coreDNS in favor of external-dns
+          # For some reason it gets fucky and re-instates the files unless explicitly disabled now.
+          # Probably something else setting it to true as part of being clever
+          addons.dns.enable = false;
           kubelet = {
             # TODO: see if these are required
             cni.packages = [pkgs.cni-plugin-flannel pkgs.cni-plugins];

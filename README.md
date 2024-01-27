@@ -161,8 +161,9 @@ Here's a dump of some utility stuff for developing this.
 function keySync {
   rsync etcd*.pem "${1}.local:/home/nixos/kubernetes"
   rsync kube*.pem "${1}.local:/home/nixos/kubernetes"
-  rsync ca* "${1}.local:/home/nixos/kubernetes"
-  rsync flannel* "${1}.local:/home/nixos/kubernetes"
+  rsync ca*.pem "${1}.local:/home/nixos/kubernetes"
+  rsync flannel*.pem "${1}.local:/home/nixos/kubernetes"
+  rsync proxy-*.pem "${1}.local:/home/nixos/kubernetes"
   ssh "${1}.local" sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
   ssh "${1}.local" sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
   ssh "${1}.local" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
@@ -466,6 +467,9 @@ We can label our nodes using this:
 Apparently this is deprecated as of years ago but is still shambling along.
 As much as I'd love to declaratively bootstrap the cluster it will be less headache to have a one-off CD app install and do the rest declaratively that way.
 Anywho - to make addon manager actually work, you need to drop a `.kube/config` file in `/var/lib/kubernetes`.
+
+Removing coredns shenanigans:
+`k delete svc/kube-dns deploy/coredns sa/coredns cm/coredns clusterrole/system:kube-dns clusterrolebinding/system:kube-dns`
 
 #### Virtual node disk resize
 
