@@ -9,4 +9,12 @@ with lib; {
       url = "https://${forge}.com/${username}.keys";
       sha256 = fileHash;
     }));
+  # TODO: test this. nix repl was being a pain
+  mkGitignore = {
+    languages ? [],
+    hash ? fakeSha256,
+  } @ inputs: (builtins.fetchurl {
+    url = "https://www.toptal.com/developers/gitignore/api/${concatStringSep "," inputs.languages}";
+    sha256 = inputs.hash;
+  });
 }
