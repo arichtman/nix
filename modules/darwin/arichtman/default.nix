@@ -54,6 +54,10 @@ with lib;
         btop
         # Required for some c dependencies for rustc/cargo
         darwin.apple_sdk.frameworks.CoreServices
+        darwin.apple_sdk.frameworks.Security
+        pkg-config
+        openssl
+        # Other shit
         gimp
         rectangle
         phinger-cursors
