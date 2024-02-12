@@ -27,6 +27,7 @@ Generate new certificates for control and worker nodes.
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
 - Controller manager not signing approved CSRs
+- Work out graceful node shutdown to remove them from the API server
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - Work out what's to replace addon-manager
 - Troubleshoot Flannel control node routing/coreDNS resolution
@@ -460,7 +461,15 @@ kubectl config set-context --user home-admin --cluster home home-admin
 
 For security reasons, it's not possible for nodes to self-select roles.
 We can label our nodes using this:
-`kubectl label no/fat-controller node-role.kubernetes.io/master=master`
+
+```
+# Fill in the blanks
+k label no/fat-controller node-role.kubernetes.io/master=master`
+k label no/mum admin.richtman.au/ephemeral=false
+# Now we can clean up shut down nodes
+k delete no -l admin.richtman.au/ephemeral=true
+```
+
 
 #### Addon-manager
 
