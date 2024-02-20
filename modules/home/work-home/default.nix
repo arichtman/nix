@@ -58,6 +58,8 @@ in
           mitmproxy
           kubernetes-helm
           docker-client
+          docker-buildx
+          docker-compose
         ];
       };
     };
