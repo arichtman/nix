@@ -20,6 +20,7 @@ in
         SystemMaxUse=100M
         MaxFileSec=7day
       '';
+      nix.optimise.automatic = true;
       # Define a user account.
       users.users.nixos = {
         isNormalUser = true;
