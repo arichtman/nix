@@ -464,12 +464,34 @@ We can label our nodes using this:
 
 ```
 # Fill in the blanks
-k label no/fat-controller node-role.kubernetes.io/master=master`
-k label no/mum admin.richtman.au/ephemeral=false
+k label no/fat-controller node-role.kubernetes.io/master=master
+k label no/fat-controller kubernetes.richtman.au/ephemeral=false
+
+k label no/mum node-role.kubernetes.io/worker=worker
+k label no/mum kubernetes.richtman.au/ephemeral=false
+
+k label no/patient-zero node-role.kubernetes.io/worker=worker
+k label no/patient-zero kubernetes.richtman.au/ephemeral=true
+k label no/dr-singh node-role.kubernetes.io/worker=worker
+k label no/dr-singh kubernetes.richtman.au/ephemeral=true
+k label no/smol-bat node-role.kubernetes.io/worker=worker
+k label no/smol-bat kubernetes.richtman.au/ephemeral=true
+
 # Now we can clean up shut down nodes
-k delete no -l admin.richtman.au/ephemeral=true
+k delete no -l kubernetes.richtman.au/ephemeral=true
 ```
 
+hmmm, deleting the nodes (reasonably) removes labels.
+...and since they can't self-identify, we have to relabel every time.
+I expect taints would work the same way, so we couldn't use a daemonset or spread topology with labeling privileges since it wouldn't know what to label the node.
+Unless... we deploy it with a configMap? That's kinda lame.
+I suppose all the nodes that need this are dynamic, ergo ephemeral and workers, so we could make something like that.
+Heck, a static pod would work fine for this and be simple as.
+But then it'd be a pod, which is a continuous workload, which we really don't need.
+A job would suit better, but then it's like, why even run this on the nodes themselves?
+Have the node self-delete (it'll self-register again anyway), and have the admin box worry about admin like labelling.
+I wonder if there's any better way security-wise to have nodes be trusted with certain labels.
+Already they need apiServer-trusted client certificates, it'd be cool if the metadata on those could determine labels.
 
 #### Addon-manager
 
