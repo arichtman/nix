@@ -2,6 +2,10 @@ name: CI
 
 on:
   push:
+    # Looks like branches-ignore isn't available for push context
+    # We don't want to wasted CI minutes on things already on main
+    branches:
+      - '!main'
 
 jobs:
   check_development:
