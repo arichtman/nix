@@ -7,10 +7,7 @@ Be warned, I'm still learning and experimenting.
 Nothing here should be construed as a model of good work!
 ... yet.
 
-
 ## Known issues/TODO
-
-Generate new certificates for control and worker nodes.
 
 - Look into where makes sense to bootstrap secrets/vault/trust
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
@@ -26,132 +23,16 @@ Generate new certificates for control and worker nodes.
 - `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
-- Controller manager not signing approved CSRs
 - Work out graceful node shutdown to remove them from the API server
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - Work out what's to replace addon-manager
-- Troubleshoot Flannel control node routing/coreDNS resolution
 - Set up VPN in OPNsense
 - Switch to Calico
-- Install MetalLB in BGP mode with OPNsense
-- Set up port forwarding from world
-- Set up IPv6 (incl firewall rules)
+- BGP peer cluster to router
+- Set up IPv6 ingress and firewalling
 - Swap kubernetes to IPv6
-- See about auto-approve TLS certificate requests by nodes
-- Set up persistent remount of the backup disk
 - See about nixos on-boot auto disk resize (and add to template!)
-
-## Use
-
-## Mac
-
-Trust chain system install:
-`sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
-
-### MBP M2 setup
-
-1. Update everything `softwareupdate -ia`
-1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
-   I didn't explicitly install it but it's on there somehow now.
-   There was some mention that it auto-installs if you try running x86_64 binaries.
-1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
-1. Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
-  `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
-1. Nix-Darwin build and run installer
-
-```
-nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-./result/bin/darwin-installer
-
-edit default configuration.nix? n
-# Accept the option to manage nix-darwin using nix-channel or else it bombs
-manage using channels? y
-add to bashrc y
-add to zshrc? y
-create /run? y
-# a nix-channel call will now fail
-```
-
-1. Bootstrapping
-  1. do the xcode-install method
-  1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
-  1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
-1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
-
-### Universal Blue
-
-some _very_ wip notes about the desktop.
-
-- Installer with nVidia drivers worked ok in simplified mode
-- Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
-- Bluetooth pair the speaker though you may have to change the codec in settings > sound
-- i ran `bluetoothctl trust $MAC` to try and start off autoconnect
-- rpm-ostree upgrade/rebase to Fedora 39 breaks the display driving again.
-- I fiddled about in display settings to get orientation of monitors correct
-- ran the determinant systems nix installer
-- added `trusted-users = @wheel` to `/etc/nix/nix.conf`
-- Used `nix shell helix home-manager` to bootstrap
-- `home-manager switch --flake . -b backup`
-- Installed my root certificate
-  `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
-  `sudo update-ca-trust`
-
-The networking is fucked for some reason out the box.
-Direct connection to the router works-ish. I can access ap and proxmox by their DNS records, but not opnsense.
-If I add the switch in the middle I never get any replies to my DHCP requests.
-If I set the IP and DNS manually it kinda works. DNS records locally resolve fine directly but not for SSH/firefox/curl.
-Anyways, what I did was set IP+DNS on the interface manually.
-Then I had to muck with the DNS locally.
-I would have just re-ordered /etc/nsswitch.conf but it's under management.
-This set it to the same as current but with the mdns feature off entirely.
-`sudo authselect select sssd with-silent-lastlog; sudo authselect apply-changes`.
-The sssd service is actually dead so I have no idea why this is working but what-THEFUCK-ever at this point.
-Finally just for good measure I threw my other static IP boxes into `/etc/hosts` cause fuck this for a joke.
-Firefox is being a cunt and won't let me access the services by their DNS records, but IP works.
-Because fuck you, apparently.
-Yes, I tried turning off DNS security features and setting the local domain.
-
-TODOs:
-
-- Get cli clipboard access
-- Fix Helix system clipboard yank
-- Fix zellij system clipboard copy
-- Learn about universal blue/ostree and decide if I want to keep this
-- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
-  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
-- fix autoshift on my keyboard
-- find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
-- look into errors running `tracker-miner-fs-3.service`
-- Fix alacritty no suitable GL error
-- Decide if I want to keep nushell
-- ~Remove the nushell banner~
-- Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
-- Fix Zellij exits still leaving you in a Bash session
-- ~Work out how to switch my shell to nushell properly...
-  or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
-  `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
-  We can use `lchsh` or `usermod` but it's under our nix profile bin dir, not a simple location like `/usr/bin`~
-  It's justifiable like this.
-- Make Alacritty visible on the launch pad or whatever it's called
-- Fix CLI history suggestions
-- Switch to nushell + alacritty
-
-## Trust chain setup
-
-1. Create root CA
-   `xkcdpass --delimiter - --numwords 4 > root-ca.pass`
-   `step certificate create "ariel@richtman.au" ./root-ca.pem ./root-ca-key.pem --profile root-ca --password-file ./root-ca.pass`
-1. Make node directories cause this is going to get messy
-   `<nodes.txt xargs mkdir`
-1. Create password files
-   `<nodes.txt xargs -I% sh -c 'xkcdpass --delimiter - --numwords 4 > "./$1/$1-pass.txt"' -- %`
-1. Secure them `chmod 400 *.pass`
-1. Create intermediate CAs
-   `<nodes.txt xargs -I% step certificate create % ./%/%.pem ./%/%-key.pem --profile intermediate-ca --ca ./root-ca.pem --ca-key ./root-ca-key.pem --ca-password-file root-ca-pass.txt --password-file ./%/%-pass.txt`
-1. Distribute the intermediate certificates and keys
-1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
-1. Publish the root CA, with my current setup this meant uploading it to s3.
-1. Update the sha256 for the root certificate `fetchUrl` call
+- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
 
 ### Kubernetes certificate setup
 
@@ -323,6 +204,9 @@ For the USB rust bucket we found the device name with `fdisk -l`.
 ~Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.~
 Never mind, same dance with the GUI, followed by heading to Node > Disks > Directory and creating one.
 
+Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount of backup disk.
+[Ref](https://www.baeldung.com/linux/automount-partitions-startup)
+
 #### Opnsense
 
 1. Download iso and unpack
@@ -426,7 +310,7 @@ References:
 1. Adjust hardware down to 1/2GiB.
 1. Make template
 
-Re-iding a proxmox vm:
+Re-IDing a proxmox vm:
 
 1. Stop VM
 1. Get storage group name `gvs -a`
@@ -502,6 +386,12 @@ Anywho - to make addon manager actually work, you need to drop a `.kube/config` 
 Removing coredns shenanigans:
 `k delete svc/kube-dns deploy/coredns sa/coredns cm/coredns clusterrole/system:kube-dns clusterrolebinding/system:kube-dns`
 
+#### Node CSRs piling up
+
+`kubectl get csr --no-headers -o jsonpath='{.items[*].metadata.name}' | xargs -r kubectl certificate approve`
+
+[Ref](https://github.com/dyrnq/kubeadm-vagrant/issues/4)
+
 #### Virtual node disk resize
 
 ```bash
@@ -540,6 +430,118 @@ Add to nomicon
 
 - fakesha256
 - nix-prefetch-url > hash.txt
+
+## Desktops
+
+## Mac
+
+Trust chain system install:
+`sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
+
+### MBP M2 setup
+
+1. Update everything `softwareupdate -ia`
+1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
+   I didn't explicitly install it but it's on there somehow now.
+   There was some mention that it auto-installs if you try running x86_64 binaries.
+1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+1. Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
+  `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
+1. Nix-Darwin build and run installer
+
+```
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+./result/bin/darwin-installer
+
+edit default configuration.nix? n
+# Accept the option to manage nix-darwin using nix-channel or else it bombs
+manage using channels? y
+add to bashrc y
+add to zshrc? y
+create /run? y
+# a nix-channel call will now fail
+```
+
+1. Bootstrapping
+  1. do the xcode-install method
+  1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
+  1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
+1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
+
+### Universal Blue
+
+some _very_ wip notes about the desktop.
+
+- Installer with nVidia drivers worked ok in simplified mode
+- Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
+- Bluetooth pair the speaker though you may have to change the codec in settings > sound
+- i ran `bluetoothctl trust $MAC` to try and start off autoconnect
+- rpm-ostree upgrade/rebase to Fedora 39 breaks the display driving again.
+- I fiddled about in display settings to get orientation of monitors correct
+- ran the determinant systems nix installer
+- added `trusted-users = @wheel` to `/etc/nix/nix.conf`
+- Used `nix shell helix home-manager` to bootstrap
+- `home-manager switch --flake . -b backup`
+- Installed my root certificate
+  `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
+  `sudo update-ca-trust`
+
+The networking is fucked for some reason out the box.
+Direct connection to the router works-ish. I can access ap and proxmox by their DNS records, but not opnsense.
+If I add the switch in the middle I never get any replies to my DHCP requests.
+If I set the IP and DNS manually it kinda works. DNS records locally resolve fine directly but not for SSH/firefox/curl.
+Anyways, what I did was set IP+DNS on the interface manually.
+Then I had to muck with the DNS locally.
+I would have just re-ordered /etc/nsswitch.conf but it's under management.
+This set it to the same as current but with the mdns feature off entirely.
+`sudo authselect select sssd with-silent-lastlog; sudo authselect apply-changes`.
+The sssd service is actually dead so I have no idea why this is working but what-THEFUCK-ever at this point.
+Finally just for good measure I threw my other static IP boxes into `/etc/hosts` cause fuck this for a joke.
+Firefox is being a cunt and won't let me access the services by their DNS records, but IP works.
+Because fuck you, apparently.
+Yes, I tried turning off DNS security features and setting the local domain.
+
+TODOs:
+
+- Get cli clipboard access
+- Fix Helix system clipboard yank
+- Fix zellij system clipboard copy
+- Learn about universal blue/ostree and decide if I want to keep this
+- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
+  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
+- fix autoshift on my keyboard
+- find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
+- look into errors running `tracker-miner-fs-3.service`
+- Fix alacritty no suitable GL error
+- Decide if I want to keep nushell
+- ~Remove the nushell banner~
+- Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
+- Fix Zellij exits still leaving you in a Bash session
+- ~Work out how to switch my shell to nushell properly...
+  or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
+  `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
+  We can use `lchsh` or `usermod` but it's under our nix profile bin dir, not a simple location like `/usr/bin`~
+  It's justifiable like this.
+- Make Alacritty visible on the launch pad or whatever it's called
+- Fix CLI history suggestions
+- Switch to nushell + alacritty
+
+## Trust chain setup
+
+1. Create root CA
+   `xkcdpass --delimiter - --numwords 4 > root-ca.pass`
+   `step certificate create "ariel@richtman.au" ./root-ca.pem ./root-ca-key.pem --profile root-ca --password-file ./root-ca.pass`
+1. Make node directories cause this is going to get messy
+   `<nodes.txt xargs mkdir`
+1. Create password files
+   `<nodes.txt xargs -I% sh -c 'xkcdpass --delimiter - --numwords 4 > "./$1/$1-pass.txt"' -- %`
+1. Secure them `chmod 400 *.pass`
+1. Create intermediate CAs
+   `<nodes.txt xargs -I% step certificate create % ./%/%.pem ./%/%-key.pem --profile intermediate-ca --ca ./root-ca.pem --ca-key ./root-ca-key.pem --ca-password-file root-ca-pass.txt --password-file ./%/%-pass.txt`
+1. Distribute the intermediate certificates and keys
+1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
+1. Publish the root CA, with my current setup this meant uploading it to s3.
+1. Update the sha256 for the root certificate `fetchUrl` call
 
 ## References
 
