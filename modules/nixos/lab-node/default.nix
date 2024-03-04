@@ -57,10 +57,6 @@ in
           fileHash = "0xq3xxszpgrcha861b2p05hlddm4aa9s2vsr5ri1ak059lwshkc8";
         };
       };
-      # Enable networking
-      # TODO: Consider removal of networkmanager
-      networking.networkmanager.enable = true;
-
       # Set your time zone.
       time.timeZone = "UTC";
 
@@ -96,11 +92,17 @@ in
         };
       };
 
+      # Enable networking
+      # TODO: Consider removal of networkmanager
+      networking.networkmanager.enable = true;
       # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
       # (the default) this is the recommended approach. When using systemd-networkd it's
       # still possible to use this option, but it's recommended to use it in conjunction
       # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
       networking.useDHCP = lib.mkDefault true;
+      # Required for Calico to manage
+      # Ref: https://docs.tigera.io/calico/latest/operations/troubleshoot/troubleshooting#configure-networkmanager
+      networking.networkmanager.unmanaged = ["interface-name:cali*" "interface-name:tunl*" "interface-name:vxlan.calico" "interface-name:vxlan-v6.calico" "interface-name:wireguard.cali" "interface-name:wg-v6.cali"];
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     };

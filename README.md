@@ -392,6 +392,21 @@ Removing coredns shenanigans:
 
 [Ref](https://github.com/dyrnq/kubeadm-vagrant/issues/4)
 
+#### Calico
+
+***Under Construction***
+
+uninstaller bombs due to insufficient permissions
+so does operator running, but not until it installs a buncha shit
+
+```
+helm repo add projectcalico https://projectcalico.docs.tigera.io/charts
+kubectl create namespace tigera-operator
+helm install calico projectcalico/tigera-operator --namespace tigera-operator
+```
+
+[Chart](https://github.com/projectcalico/calico/tree/master/charts/tigera-operator)
+
 #### Virtual node disk resize
 
 ```bash
