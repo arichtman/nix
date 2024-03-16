@@ -4,10 +4,10 @@
   pkgs,
   ...
 }: let
-  cfg = config.master-node;
+  cfg = config.control-node;
 in
   with lib; {
-    options.master-node = with types; {
+    options.control-node = with types; {
       enable = mkEnableOption "Turns a machine into a full-fat control node.";
     };
     config = mkIf cfg.enable {
@@ -54,7 +54,7 @@ in
               caFile = config.services.kubernetes.caFile;
             };
           };
-          # TODO: I wonder if we could remove the proxy from the master node, seeing as nothing
+          # TODO: I wonder if we could remove the proxy from the control node, seeing as nothing
           #  should be routing via it...
           proxy = {
             kubeconfig = {
@@ -70,7 +70,7 @@ in
               "--tls-private-key-file"
               "${config.services.kubernetes.secretsPath}/scheduler-tls-key.pem"
             ];
-            # This is defaulted to something the master node isn't expecting.
+            # This is defaulted to something the control node isn't expecting.
             # No idea why.
             port = 10259;
             kubeconfig = {
@@ -84,7 +84,7 @@ in
             tlsKeyFile = "${config.services.kubernetes.secretsPath}/kubelet-tls-key.pem";
           };
           controllerManager = {
-            # This is defaulted to something the master node isn't expecting.
+            # This is defaulted to something the control node isn't expecting.
             # No idea why.
             securePort = 10257;
             tlsCertFile = "${config.services.kubernetes.secretsPath}/controllermanager-tls.pem";
