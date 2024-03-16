@@ -18,21 +18,24 @@ Nothing here should be construed as a model of good work!
   [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Pull common kubernetes config out into another module
+- Possibly rewrite the Kubernetes module(s)
+- Fix addonManager not finding anything to apply
+- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
+- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
+- Look into reducing addonManager and Flannel permissions
 - Work out graceful node shutdown to remove them from the API server
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - Work out what's to replace addon-manager
 - Set up VPN in OPNsense
-- Switch to Calico
-- BGP peer cluster to router
-- Set up IPv6 ingress and firewalling
 - Swap kubernetes to IPv6
+- Get Calico working
+- Set up IPv6 ingress and firewalling
+- BGP peer cluster to router?
 - See about nixos on-boot auto disk resize (and add to template!)
-- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
 
 ### Kubernetes certificate setup
 
@@ -85,10 +88,6 @@ kc config set-context mine --cluster=mine --user=admin
 #May also have to untaint stuff
 kc taint nodes fat-controller.local node.kubernetes.io/not-ready-
 ```
-
-For some reason the flannel bootstrap isn't putting the right files into the manifests directory.
-For now I've manually set up the RBAC for flannel.
-Just apply the `flannel.yaml`.
 
 #### References
 

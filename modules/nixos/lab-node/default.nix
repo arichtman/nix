@@ -102,7 +102,7 @@ in
       networking.useDHCP = lib.mkDefault true;
       # Required for Calico to manage
       # Ref: https://docs.tigera.io/calico/latest/operations/troubleshoot/troubleshooting#configure-networkmanager
-      networking.networkmanager.unmanaged = ["interface-name:cali*" "interface-name:tunl*" "interface-name:vxlan.calico" "interface-name:vxlan-v6.calico" "interface-name:wireguard.cali" "interface-name:wg-v6.cali"];
+      # networking.networkmanager.unmanaged = ["interface-name:cali*" "interface-name:tunl*" "interface-name:vxlan.calico" "interface-name:vxlan-v6.calico" "interface-name:wireguard.cali" "interface-name:wg-v6.cali"];
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     };

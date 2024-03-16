@@ -45,9 +45,7 @@ in
           # Probably something else setting it to true as part of being clever
           addons.dns.enable = false;
           kubelet = {
-            # TODO: see if these are required
-            # Pretty sure the operator deploys these anyways. Should we Nix manage them?
-            # cni.packages = [pkgs.calico-cni-plugin];
+            enable = false;
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
@@ -57,6 +55,7 @@ in
           # TODO: I wonder if we could remove the proxy from the control node, seeing as nothing
           #  should be routing via it...
           proxy = {
+            # enabled = false;
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client-key.pem";
@@ -102,6 +101,13 @@ in
               --cluster-signing-key-file \
               ${config.services.kubernetes.secretsPath}/ca-key.pem
             '';
+            # I don't think that prefix matters since we're not running DHCP6 and we're not reserving the range
+            # I'm unsure if the cluster cidr should be link-local or local unicast or what,
+            # They should need to be routable since each node is BGP-ing and pods need to talk to each other directly.
+            # Then unique local addressess should be out too? FC00::/7
+            # So there's no point setting service and pod addresses differently then? Maybe it's a leftover v4 thing?
+            # --cluster-cidr=fe80::/64 \
+            # --service-cluster-ip-range=2403:580a:e4b1:ffff::/64
           };
           apiserver = {
             # Required for Calico operator to deploy all it's components (and probably to manage the host network interfaces)
