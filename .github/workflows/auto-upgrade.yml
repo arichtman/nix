@@ -23,7 +23,7 @@ jobs:
         nix flake update
         nix develop --command pre-commit autoupdate
         # git submodule update --remote
-    - uses: peter-evans/create-pull-request@v5
+    - uses: peter-evans/create-pull-request@v6
       with:
         branch: auto-updates
         token: ${{ secrets.WRITEBACK_TOKEN }}
