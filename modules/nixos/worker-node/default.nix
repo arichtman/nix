@@ -23,6 +23,7 @@ in
           masterAddress = "fat-controller.local";
           # masterAddress = config.services.kubernetes.masterAddress;
           easyCerts = false;
+          flannel.enable = false;
           kubelet = {
             tlsKeyFile = "${config.services.kubernetes.secretsPath}/kubelet-tls-key.pem";
             tlsCertFile = "${config.services.kubernetes.secretsPath}/kubelet-tls.pem";

@@ -123,8 +123,6 @@ in
               certFile = "${config.services.kubernetes.secretsPath}/kube-apiserver-etcd-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kube-apiserver-etcd-client-key.pem";
             };
-            # TODO: remove if found unnecessary to fix addon output
-            authorizationMode = ["RBAC" "Node"];
           };
         };
       };

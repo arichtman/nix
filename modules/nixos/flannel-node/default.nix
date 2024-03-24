@@ -47,16 +47,21 @@ in
         kubernetes = {
           kubelet.cni = mkIf (!config.control-node.enable) {packages = [pkgs.cni-plugin-flannel];};
           # Only the worker nodes actually need the CNI
-          flannel = mkIf (!config.control-node.enable) {enable = true;};
-          # flannel.enable = lib.mkForce true;
+          flannel = mkIf (!config.control-node.enable) {enable = lib.mkForce true;};
           # Only the control node needs this PoS and even then only one of them
           addonManager = mkIf config.control-node.enable {
             enable = true;
+            # for some reason bootstrap throws errors about valid file extensions
+            # The entirety of addonManager is jank tbh, at least use inotifywait :eyeroll:
+            # bootstrapAddons = {
             addons = {
               flannel-cr = {
                 apiVersion = "rbac.authorization.k8s.io/v1";
                 kind = "ClusterRole";
                 metadata.name = "flannel";
+                metadata.labels = {
+                  "addonmanager.kubernetes.io/mode" = "Reconcile";
+                };
                 rules = [
                   {
                     apiGroups = [""];
@@ -79,6 +84,9 @@ in
                 apiVersion = "rbac.authorization.k8s.io/v1";
                 kind = "ClusterRoleBinding";
                 metadata.name = "flannel";
+                metadata.labels = {
+                  "addonmanager.kubernetes.io/mode" = "Reconcile";
+                };
                 roleRef = {
                   apiGroup = "rbac.authorization.k8s.io";
                   kind = "ClusterRole";
@@ -96,22 +104,25 @@ in
           };
         };
       };
-      systemd.services.flannel = mkIf (!config.control-node.enable) {
-        environment = {
-          # FLANNELD_KUBERNETES_MASTER = "${config.services.kubernetes.masterAddress}";
-          # KUBERNETES_MASTER = "${config.services.kubernetes.masterAddress}";
-          # FLANNELD_NODE_NAME = config.services.kubernetes.masterAddress;
-          # KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
-          # Absent this you get an error suggesting that KUBERNETES_MASTER should be set.
-          FLANNELD_KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
-          # TODO: Remove when completed debugging
-          # FLANNELD_V = "10";
+      systemd.services = {
+        flannel = mkIf (!config.control-node.enable) {
+          environment = {
+            # FLANNELD_KUBERNETES_MASTER = "${config.services.kubernetes.masterAddress}";
+            # KUBERNETES_MASTER = "${config.services.kubernetes.masterAddress}";
+            # FLANNELD_NODE_NAME = config.services.kubernetes.masterAddress;
+            # KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
+            # Absent this you get an error suggesting that KUBERNETES_MASTER should be set.
+            FLANNELD_KUBE_API_URL = "https://${config.services.kubernetes.masterAddress}:6443";
+            # TODO: Remove when completed debugging
+            # FLANNELD_V = "10";
+          };
         };
-      };
-      # TODO: Fix. Store location is fine, variable is set in unit file
-      # May not be propagating env to kubectl process, use KUBE_OPTS?
-      systemd.services.kube-addon-manager = mkIf config.control-node.enable {
-        # environment.KUBECONFIG = flannelKubeconfigPath;
+        # TODO: Fix. Store location is fine, variable is set in unit file
+        # May not be propagating env to kubectl process, use KUBE_OPTS?
+        kube-addon-manager = mkIf config.control-node.enable {
+          # environment.KUBECONFIG = flannelKubeconfigPath;
+          # environment.ADDON_PATH = lib.mkForce "/etc/kubernetes/addons";
+        };
       };
       services = {
         # Note: I had issues being unable to configure the k8s master address

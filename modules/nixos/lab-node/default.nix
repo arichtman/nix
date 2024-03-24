@@ -21,6 +21,9 @@ in
         MaxFileSec=7day
       '';
       nix.optimise.automatic = true;
+      nix.gc.automatic = true;
+      # optimised for noninteractive
+      nix.daemonCPUSchedPolicy = "batch";
       # Define a user account.
       users.users.nixos = {
         isNormalUser = true;
