@@ -20,6 +20,7 @@ in
         SystemMaxUse=100M
         MaxFileSec=7day
       '';
+      system.autoUpgrade.flake = "github:arichtman/nix";
       nix.optimise.automatic = true;
       nix.gc.automatic = true;
       # optimised for noninteractive
