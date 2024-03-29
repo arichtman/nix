@@ -304,6 +304,7 @@ in
           alejandra # nix formatter
           helix # editor/ide
           nnn # file manager
+          yazi # file manager
           dprint # markdown formatting (it does more though)
           # exa # ls replacement
           eza # exa is unmaintained 🫣
