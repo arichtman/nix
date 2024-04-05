@@ -5,6 +5,7 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   environment.systemPackages = [
+    pkgs.colima
     pkgs.lima
   ];
   # only looks to be on unstable but in wiki?

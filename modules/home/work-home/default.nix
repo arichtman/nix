@@ -53,7 +53,16 @@ in
           k9s
           awscli2
           kubectl
-          terraform
+          (terraform.overrideAttrs (self: {
+            version = "1.6.4";
+            src = fetchFromGitHub {
+              owner = "hashicorp";
+              repo = "terraform";
+              rev = "v${self.version}";
+              # hash = lib.fakeSha256;
+              hash = "sha256-kA0H+JxyMV6RKRr20enTOzfwj2Lk2IP4vivfHv02+w8=";
+            };
+          }))
           terragrunt
           mitmproxy
           kubernetes-helm
