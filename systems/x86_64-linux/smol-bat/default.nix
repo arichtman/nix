@@ -3,7 +3,6 @@
   system.stateVersion = "23.11";
   lab-node.enable = true;
   worker-node.enable = true;
-  flannel-node.enable = true;
   physical-node = {
     volumes = {
       bootUuid = "D889-8B8F";

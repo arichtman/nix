@@ -15,6 +15,7 @@ in
         # Kubelet access
         10250
       ];
+      flannel-node.enable = true;
       services = {
         kubernetes = {
           caFile = "${config.services.kubernetes.secretsPath}/ca.pem";
@@ -23,7 +24,6 @@ in
           masterAddress = "fat-controller.local";
           # masterAddress = config.services.kubernetes.masterAddress;
           easyCerts = false;
-          flannel.enable = false;
           kubelet = {
             tlsKeyFile = "${config.services.kubernetes.secretsPath}/kubelet-tls-key.pem";
             tlsCertFile = "${config.services.kubernetes.secretsPath}/kubelet-tls.pem";
