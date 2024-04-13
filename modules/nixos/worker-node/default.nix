@@ -15,7 +15,7 @@ in
         # Kubelet access
         10250
       ];
-      flannel-node.enable = true;
+      flannel-node.enable = false;
       services = {
         kubernetes = {
           caFile = "${config.services.kubernetes.secretsPath}/ca.pem";
