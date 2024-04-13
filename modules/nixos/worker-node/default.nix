@@ -9,13 +9,13 @@ in
   with lib; {
     options.worker-node = with types; {
       enable = mkEnableOption "Turns a machine into a drone.";
+      default = false;
     };
     config = mkIf cfg.enable {
       networking.firewall.allowedTCPPorts = [
         # Kubelet access
         10250
       ];
-      flannel-node.enable = false;
       services = {
         kubernetes = {
           caFile = "${config.services.kubernetes.secretsPath}/ca.pem";

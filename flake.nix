@@ -1,7 +1,7 @@
 {
   description = "Ariel's machine configs";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     snowfall-lib = {
       url = "github:snowfallorg/lib";
@@ -21,6 +21,7 @@
     nixgl.url = "github:nix-community/nixGL";
 
     deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = inputs: let
     lib = inputs.snowfall-lib.mkLib {

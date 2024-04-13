@@ -20,6 +20,7 @@ in
         SystemMaxUse=100M
         MaxFileSec=7day
       '';
+      services.flannel.enable = false;
       system.autoUpgrade.flake = "github:arichtman/nix";
       nix.optimise.automatic = true;
       nix.gc.automatic = true;
@@ -30,6 +31,16 @@ in
         isNormalUser = true;
         description = "nixos";
         extraGroups = ["networkmanager" "wheel"];
+        packages = with pkgs; [
+          git
+          helix
+          kubectl
+          step-cli
+          k9s
+          jq
+          yq
+          kubernetes-helm
+        ];
       };
 
       security = {
@@ -74,8 +85,10 @@ in
         };
         # Configure keymap in X11
         xserver = {
-          layout = "au";
-          xkbVariant = "";
+          xkb = {
+            layout = "au";
+            variant = "";
+          };
         };
         sleep-at-night = {
           enable = true;
