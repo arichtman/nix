@@ -23,6 +23,17 @@ in
       networking.firewall.allowedUDPPorts = [
         53
       ];
+      # TODO: Can disable this when stable
+      environment.systemPackages = with pkgs; [
+        git
+        helix
+        kubectl
+        step-cli
+        k9s
+        jq
+        yq
+        kubernetes-helm
+      ];
       services = {
         etcd = {
           # TODO: see if we can use their mkSecret function

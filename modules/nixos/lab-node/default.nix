@@ -30,17 +30,6 @@ in
         isNormalUser = true;
         description = "nixos";
         extraGroups = ["networkmanager" "wheel"];
-        # TODO: Can disable this when stable
-        packages = with pkgs; [
-          git
-          helix
-          kubectl
-          step-cli
-          k9s
-          jq
-          yq
-          kubernetes-helm
-        ];
       };
 
       security = {
