@@ -47,7 +47,7 @@ in
         kubernetes = {
           kubelet.cni = mkIf (!config.control-node.enable) {packages = [pkgs.cni-plugin-flannel];};
           # Only the worker nodes actually need the CNI
-          flannel = mkIf (!config.control-node.enable) {enable = lib.mkForce true;};
+          flannel.enable = lib.mkDefault cfg.enable;
           # Only the control node needs this PoS and even then only one of them
           addonManager = mkIf config.control-node.enable {
             enable = true;
