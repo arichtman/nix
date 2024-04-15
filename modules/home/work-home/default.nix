@@ -54,17 +54,19 @@ in
           awscli2
           kubectl
           (terraform.overrideAttrs (self: {
+            # lol this isn't even v1.6.4??? I hate nixpkgs pinning story
             version = "1.6.4";
             src = fetchFromGitHub {
               owner = "hashicorp";
               repo = "terraform";
               rev = "v${self.version}";
               # hash = lib.fakeSha256;
-              hash = "sha256-kA0H+JxyMV6RKRr20enTOzfwj2Lk2IP4vivfHv02+w8=";
+              hash = "sha256-k/ugXlHK7lEKfOpSBXQNUdcq26rVVdjo53U+7ChJLIc=";
             };
           }))
           terragrunt
-          mitmproxy
+          # Ref: https://github.com/NixOS/nixpkgs/issues/291753
+          # mitmproxy
           kubernetes-helm
           docker-client
           docker-buildx

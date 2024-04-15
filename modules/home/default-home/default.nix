@@ -228,7 +228,7 @@ in
         zsh = {
           enable = true;
           enableCompletion = true;
-          enableAutosuggestions = true;
+          autosuggestion.enable = true;
           autocd = true;
           syntaxHighlighting.enable = true;
           initExtra = ''
