@@ -549,6 +549,13 @@ TODOs:
 - Make Alacritty visible on the launch pad or whatever it's called
 - Fix CLI history suggestions
 
+## Cilium references
+
+- https://docs.cilium.io/en/stable/installation/k8s-install-helm/
+- https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
+- https://docs.cilium.io/en/stable/operations/troubleshooting/
+- https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+
 ## Trust chain setup
 
 1. Create root CA

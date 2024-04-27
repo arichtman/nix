@@ -15,6 +15,9 @@ in
       networking.firewall.allowedTCPPorts = [
         # Kubelet access
         10250
+        # Cilium
+        4245
+        4240
       ];
       services = {
         kubernetes = {
@@ -31,6 +34,9 @@ in
               --rotate-server-certificates \
               --rotate-certificates \
             '';
+            # Cilium
+            cni.configDir = "/run/cni/net.d";
+            cni.config = [];
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
@@ -38,6 +44,8 @@ in
             };
           };
           proxy = {
+            # Cilium
+            enable = false;
             kubeconfig = {
               certFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client.pem";
               keyFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client-key.pem";
