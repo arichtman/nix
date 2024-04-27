@@ -536,7 +536,8 @@ TODOs:
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
 - Fix alacritty no suitable GL error
-- Decide if I want to keep nushell
+- ~Decide if I want to keep nushell~
+  I don't. I'm sure it's cool but I need to work on too many systems and environments that won't be compatible.
 - ~Remove the nushell banner~
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix Zellij exits still leaving you in a Bash session
@@ -547,7 +548,6 @@ TODOs:
   It's justifiable like this.
 - Make Alacritty visible on the launch pad or whatever it's called
 - Fix CLI history suggestions
-- Switch to nushell + alacritty
 
 ## Trust chain setup
 
