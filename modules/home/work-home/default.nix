@@ -71,6 +71,12 @@ in
           docker-client
           docker-buildx
           docker-compose
+          docker-ls
+          docker-slim
+          docker-gc
+          dive
+          lazydocker
+          docker-credential-helpers
         ];
       };
     };
