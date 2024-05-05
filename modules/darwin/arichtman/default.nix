@@ -61,6 +61,7 @@ with lib;
         gimp
         rectangle
         phinger-cursors
+        wireguard-go
       ];
 
       nix.package = pkgs.nixUnstable;
