@@ -62,6 +62,7 @@ with lib;
         rectangle
         phinger-cursors
         wireguard-go
+        wireguard-tools
       ];
 
       nix.package = pkgs.nixUnstable;
