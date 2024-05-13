@@ -38,6 +38,7 @@
     gf = "git fetch";
     grpo = "git remote prune origin";
     gau = "git add --update";
+    gbl = "git blame -wCCC";
     nfu = "nix flake update --commit-lock-file";
     #TODO: feels odd putting aliases in without installing the program but I like to keep the
     #  environments separate between repos?
@@ -99,20 +100,6 @@ in
             font.normal.family = "FiraCode Nerd Font";
             shell.program = "zellij";
           };
-        };
-        nushell = {
-          # enable = true;
-          environmentVariables = {
-            EDITOR = "hx";
-            # TODO: Not sure if worth doing "better".
-            #  the .bashrc switcheroo doesn't update the environment $SHELL which
-            #  might majorly fuck with some scripts
-            SHELL = "nu";
-          };
-          shellAliases = myAliases;
-          configFile.text = ''
-            $env.config = { show_banner: false }
-          '';
         };
         zellij = {
           enable = true;
@@ -193,11 +180,21 @@ in
             S = "switch";
             d = "diff";
             f = "fetch";
+            bl = "blame";
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
           ignores = import ./.gitignore.nix;
+          signing = {
+            signByDefault = true;
+            key = "~/.ssh/id_ed25519.pub";
+          };
           extraConfig = {
+            gpg.format = "ssh";
+            maintenance = {
+              auto = "false";
+              strategy = "incremental";
+            };
             # ref: https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
             rebase = {
               updateRefs = true;

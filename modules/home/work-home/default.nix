@@ -42,9 +42,24 @@ in
             };
           };
         };
+        git = {
+          extraConfig = {
+            "includeIf \"gitdir:~/repos/gh/arichtman/\"" = {
+              path = "~/.config/git/personal";
+            };
+          };
+        };
       };
       home = {
+        # Annoyingly, the precedence order of git config means the default user still overrides
         shellAliases."set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
+        file = {
+          ".config/git/personal".text = ''
+            [user]
+              email = "10679234+arichtman@users.noreply.github.com"
+              name = "Ariel Richtman"
+          '';
+        };
         packages = with pkgs; [
           git-remote-codecommit
           teams
