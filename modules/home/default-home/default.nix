@@ -33,6 +33,7 @@
     gS = "git switch";
     gp = "git pull";
     gP = "git push";
+    gPf = "git push --force-with-lease";
     gb = "git branch";
     gd = "git diff";
     gf = "git fetch";
