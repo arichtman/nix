@@ -292,6 +292,7 @@ in
           nix-update
           nix-index
           nurl
+          nix-bash-completions
           # Kube stuff
           kubectl
           # Lang servers
@@ -306,6 +307,19 @@ in
           dprint # markdown formatting (it does more though)
           # exa # ls replacement
           eza # exa is unmaintained 🫣
+          helm-ls
+          yaml-language-server
+          ansible-language-server
+          vscode-langservers-extracted
+          dockerfile-language-server-nodejs
+          docker-compose-language-service
+          jq-lsp
+          buf-language-server
+          nixd
+          nil
+          marksman
+          terraform-ls
+          ruff-lsp
           # The essentials
           dig
           wget
