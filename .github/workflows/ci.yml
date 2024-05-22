@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-12, macos-13-large, ubuntu-latest ]
+        os: [ macos-12, macos-14, ubuntu-latest ]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -49,7 +49,7 @@ jobs:
       run: nix build .#darwinConfigurations.macbookpro.system
 
   check_aarch64-darwin:
-    runs-on: macos-latest-xlarge
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
       with:
