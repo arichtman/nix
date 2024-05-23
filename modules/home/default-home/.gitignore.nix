@@ -1,4 +1,5 @@
 [
+  "result"
   # Created by https://www.toptal.com/developers/gitignore/api/hugo,rust,linux,macos,direnv,python,windows,terraform,terragrunt,rust-analyzer,csharp,dotnetcore
   # Edit at https://www.toptal.com/developers/gitignore?templates=hugo,rust,linux,macos,direnv,python,windows,terraform,terragrunt,rust-analyzer,csharp,dotnetcore
 
