@@ -20,6 +20,8 @@ mkShell {
     xkcdpass
     step-cli
     openssl
+    # Flake tooling
+    snowfallorg.thaw
   ];
   shellHook = ''
     pre-commit install --install-hooks

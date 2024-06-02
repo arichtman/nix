@@ -4,7 +4,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     snowfall-lib = {
-      url = "github:snowfallorg/lib";
+      url = "github:snowfallorg/lib/v3.0.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    snowfall-thaw = {
+      url = "github:snowfallorg/thaw";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -36,6 +40,7 @@
 
       overlays = with inputs; [
         nixgl.overlays.default
+        snowfall-thaw.overlays.default
       ];
       alias.shells = {
         default = "myshell";
