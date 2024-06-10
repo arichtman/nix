@@ -42,11 +42,11 @@ if [[ ! -z "${2}" ]] ; then
     --san kubernetes --san kubernetes.default --san kubernetes.default.svc \
     --san kubernetes.default.svc.cluster --san kubernetes.default.svc.cluster.local
 
-  rsync service-account*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
-  rsync scheduler*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
-  rsync etcd*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
-  rsync kube*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
-  rsync ca*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
+  rsync service-account*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+  rsync scheduler*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+  rsync etcd*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+  rsync kube*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+  rsync ca*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
 fi
 
 # For client authentication to kubelets
@@ -70,12 +70,18 @@ step certificate create kubelet kubelet-tls.pem kubelet-tls-key.pem --ca ca.pem 
   --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_DNS_NAME}" --san "${NODE_DNS_NAME}.local" --san localhost --san 127.0.0.1 --san ::1
 
-rsync proxy-*.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
-rsync ca.pem "${NODE_DNS_NAME}.local:/home/nixos/kubernetes"
+rsync proxy-*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+rsync kube*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+rsync ca.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
 
-ssh "${NODE_DNS_NAME}.local" sudo mkdir --parent /var/lib/kubernetes/secrets
-ssh "${NODE_DNS_NAME}.local" sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
+ssh "${NODE_DNS_NAME}.local" sudo rm -fr /var/lib/kubernetes/secrets
+ssh "${NODE_DNS_NAME}.local" sudo mv --force "~/secrets" /var/lib/kubernetes/
 ssh "${NODE_DNS_NAME}.local" sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
 ssh "${NODE_DNS_NAME}.local" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
 ssh "${NODE_DNS_NAME}.local" sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
 ssh "${NODE_DNS_NAME}.local" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
+
+# this logic is also not working, this command should not be running
+if [[ ! -z "${2}" ]] ; then
+  ssh "${NODE_DNS_NAME}.local" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
+fi
