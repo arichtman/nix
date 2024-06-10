@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIBzzCCAXWgAwIBAgIQYZc7Wz6x7J+c9i29WyySjTAKBggqhkjOPQQDAjAcMRow
+    GAYDVQQDDBFhcmllbEByaWNodG1hbi5hdTAeFw0yNDAxMDEyMjA4NThaFw0yNDEy
+    MzEyMjA4NThaME8xEjAQBgNVBAYTCUF1c3RyYWxpYTERMA8GA1UEChMIUmljaHRt
+    YW4xDjAMBgNVBAsTBUFyaWVsMRYwFAYDVQQDEw1rdWJlcm5ldGVzLWNhMFkwEwYH
+    KoZIzj0CAQYIKoZIzj0DAQcDQgAEuQvyS40jCuWcEJc/DAlkJXvPnGAZDT7+doJm
+    Ty/1pm8zC90/hFtUPN3upqrVWPI/TF5kgFXP68Wr/tI2ExiQoKNmMGQwDgYDVR0P
+    AQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFF6KDEf97f+f
+    xsPPmqnplKYbKUq/MB8GA1UdIwQYMBaAFI/JMgeeJ9YlyNWvl4M6IcrJgbfqMAoG
+    CCqGSM49BAMCA0gAMEUCIFvdD1XhGNhpwixGQ8+/bdOzOeSx7oMob7mOG0Ma+XYb
+    AiEAz5uiEzTzVdrfXMEoiO0m8EjDEZEooa6qyiAOdrc+gNM=
+    -----END CERTIFICATE-----
+kind: ConfigMap
+metadata:
+  name: kube-root-ca.crt
+  namespace: kube-system
