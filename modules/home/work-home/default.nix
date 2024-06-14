@@ -62,7 +62,6 @@ in
         };
         packages = with pkgs; [
           git-remote-codecommit
-          teams
           slack
           zoom-us
           k9s
