@@ -14,7 +14,7 @@
   #   pkgs.fira-code-nerdfont
   # ];
   # TODO: What's the difference here, activation?
-  fonts.fonts = [
+  fonts.packages = [
     pkgs.fira-code-nerdfont
   ];
 
