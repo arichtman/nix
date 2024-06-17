@@ -20,7 +20,6 @@ in
         SystemMaxUse=100M
         MaxFileSec=7day
       '';
-      services.flannel.enable = false;
       system.autoUpgrade.flake = "github:arichtman/nix";
       nix.optimise.automatic = true;
       nix.gc.automatic = true;

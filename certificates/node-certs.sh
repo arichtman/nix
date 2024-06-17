@@ -45,6 +45,7 @@ if [[ ! -z "${2}" ]] ; then
   rsync service-account*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
   rsync scheduler*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
   rsync etcd*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
+  rsync controller*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
   rsync kube*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
   rsync ca*.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
 fi
