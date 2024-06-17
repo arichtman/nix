@@ -555,6 +555,9 @@ TODOs:
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
 - https://docs.cilium.io/en/stable/operations/troubleshooting/
 - https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+- https://github.com/containerd/containerd/issues/9139
+- https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
+- https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
 
 ## Trust chain setup
 
