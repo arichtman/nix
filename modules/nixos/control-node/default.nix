@@ -61,6 +61,35 @@ in {
             keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
             caFile = config.services.kubernetes.caFile;
           };
+          cni.configDir = "/run/kubernetes/net.d";
+          # cni.config is bombing on missing `entry.type` in kubelet.nix L19
+          # cni.config = [
+          #   {
+          #     cniVersion = "1.0.0";
+          #     name = "mynet";
+          #     plugins = [{
+          #       type = "ipvlan";
+          #       master = "eth0";
+          #       ipam = {
+          #         type = "host-local";
+          #         ranges = [[{
+          #           subnet = "10.1.1.0/24";
+          #         }]];
+          #       };
+          #     }];
+          # type = "bridge";
+          # bridge = "cni0";
+          # isGateway = true;
+          # ipMasq = true;
+          # ipam = {
+          #     type = "host-local";
+          #     subnet = "10.22.0.0/16";
+          #     routes = [
+          #         { dst = "0.0.0.0/0"; }
+          #     ];
+          #   };
+          # }
+          # ];
         };
         # TODO: I wonder if we could remove the proxy from the control node, seeing as nothing
         #  should be routing via it...
