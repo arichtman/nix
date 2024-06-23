@@ -7,6 +7,7 @@
 }: let
   k8l = import ./lib.nix;
 in {
+  imports = [./kubelet.nix ./apiserver.nix];
   options.services.k8s = {
     controller = lib.options.mkOption {
       description = ''

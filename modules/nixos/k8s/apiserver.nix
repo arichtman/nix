@@ -13,5 +13,12 @@ in {
       default = [];
     };
   };
-  environment.etc.cni.text = pkgs.writeText "baz" k8l.mkConfig config.services.k8s-apiserver.config;
+  # environment.etc.cni.text = pkgs.writeText "baz" k8l.mkConfig config.services.k8s-apiserver.config;
+  config.environment.etc = {
+    # poopy = (pkgs.writeText "baz" k8l.mkConfig config.services.k8s-apiserver.config);
+  };
+  config.environment.etc."poop/popo".text = ''
+    some
+    thing
+  '';
 }
