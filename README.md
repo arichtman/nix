@@ -314,7 +314,7 @@ References:
 Re-IDing a proxmox vm:
 
 1. Stop VM
-1. Get storage group name `gvs -a`
+1. Get storage group name `lvs -a`
 1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
 1. Enter `/etc/pve/nodes/proxmox/qemu-server`
 1. Edit conf file to use renamed disk.
@@ -548,6 +548,16 @@ TODOs:
   It's justifiable like this.
 - Make Alacritty visible on the launch pad or whatever it's called
 - Fix CLI history suggestions
+
+## Cilium references
+
+- https://docs.cilium.io/en/stable/installation/k8s-install-helm/
+- https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
+- https://docs.cilium.io/en/stable/operations/troubleshooting/
+- https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+- https://github.com/containerd/containerd/issues/9139
+- https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
+- https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
 
 ## Trust chain setup
 

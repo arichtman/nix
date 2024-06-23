@@ -16,6 +16,9 @@ mkShell {
     kubectl
     kubectx
     kubernetes-helm
+    # Cilium
+    cilium-cli
+    hubble
     # Certificates and secrets
     xkcdpass
     step-cli

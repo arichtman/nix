@@ -1,0 +1,5 @@
+cni:
+  confPath: /run/cni/net.d
+# ipv6:
+#   enbabled: true
+kubeProxyReplacement: "true"
