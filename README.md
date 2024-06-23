@@ -13,31 +13,36 @@ Nothing here should be construed as a model of good work!
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Look into `buildEnv` over `devShell`
 - Test out packaging a toy app/repo
-- Get a container image build with nix going
+- ~Get a container image build with nix going~
   [Jamey blog](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
   [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- Pull common kubernetes config out into another module
-- Possibly rewrite the Kubernetes module(s)
-- Fix addonManager not finding anything to apply
+- ~Pull common kubernetes config out into another module~
+- ~Possibly rewrite the Kubernetes module(s)~
+- ~Fix addonManager not finding anything to apply~
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
 - Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
-- Look into reducing addonManager and Flannel permissions
 - Work out graceful node shutdown to remove them from the API server
 - Swap my user to a lower privilege one on Proxmox and OPNsense
-- Work out what's to replace addon-manager
-- Set up VPN in OPNsense
+- ~Work out what's to replace addon-manager~
+  It's sig-addonmanager, I think.
+  That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
+- ~Set up VPN in OPNsense~
+  WG and OpenVPN working.
+  Might to IPsec too or further tuning.
 - Swap kubernetes to IPv6
-- Get Calico working
 - Set up IPv6 ingress and firewalling
 - BGP peer cluster to router?
 - See about nixos on-boot auto disk resize (and add to template!)
-- Work out watchdog on Opnsense BSD
+- ~Work out watchdog on Opnsense BSD~
+  HW watchdog configured on the Topton N100.
+  Monitoring it to see if it locks up still.
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
+- Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
 
 ### Kubernetes certificate setup
 
@@ -523,6 +528,19 @@ Finally just for good measure I threw my other static IP boxes into `/etc/hosts`
 Firefox is being a cunt and won't let me access the services by their DNS records, but IP works.
 Because fuck you, apparently.
 Yes, I tried turning off DNS security features and setting the local domain.
+Gave up and added to /etc/hosts
+
+#### Fixing DNS
+
+https://infosec.exchange/@ds/112663636510469329
+
+```bash
+sudo systemctl disable systemd-resolved --now
+sudo systemctl stop NetworkManager
+# Former symlink `/etc/resolv.conf` = `../run/systemd/resolve/stub-resolve.conf`
+sudo rm -f /etc/resolve.conf
+sudo systemctl restart NetworkManager
+```
 
 TODOs:
 

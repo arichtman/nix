@@ -6,6 +6,25 @@ https://docs.cilium.io/en/stable/operations/troubleshooting/
 https://www.cni.dev/docs/spec/#configuration-format
 https://docs.cilium.io/en/stable/network/kubernetes/configuration/
 
+TAP interface?
+https://www.cni.dev/plugins/current/main/tap/
+
+Some settings we might need for naked pods
+https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/
+
+More cilium v6 stuff
+https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/
+
+Networking stuff
+https://social.treehouse.systems/@hugo/112371852060835506
+https://social.treehouse.systems/@hugo/112370032832667163
+https://social.treehouse.systems/@hugo/112370056983832054
+https://techhub.social/@kubefred/112367921561319546
+https://techhub.social/@kubefred/112366082388857564
+
+Offer to help
+https://hachyderm.io/@jpetazzo/112371149239851518
+
 kubectl create configmap kube-root-ca.crt --from-file=certificates/ca.pem
 
 - Scheduler's client certificate wasn't granting permissions
