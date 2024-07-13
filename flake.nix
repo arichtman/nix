@@ -21,6 +21,10 @@
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nixgl.url = "github:nix-community/nixGL";
 
@@ -38,6 +42,9 @@
 
       channels-config.allowUnfree = true;
 
+      systems.modules.darwin = with inputs; [
+        mac-app-util.darwinModules.default
+      ];
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default

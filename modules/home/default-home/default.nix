@@ -354,18 +354,11 @@ in
       # It's kinda ugly to do it this way but I had issues with the attrset update operator and let scoping
       home.extraActivationPath = with pkgs;
         mkIf pkgs.stdenv.hostPlatform.isDarwin
-        # Install MacOS applications to the user Applications folder. Also update Docked applications
+        # Install MacOS applications to the user Applications folder.
         [
           rsync
           dockutil
           gawk
         ];
-      home.activation.trampolineApps = with pkgs;
-        mkIf pkgs.stdenv.hostPlatform.isDarwin (inputs.home-manager.lib.hm.dag.entryAfter ["writeBoundary"] ''
-          ${builtins.readFile ./launchpad.sh}
-          fromDir="$HOME/Applications/Home Manager Apps"
-          toDir="$HOME/Applications/Home Manager Trampolines"
-          sync_trampolines "$fromDir" "$toDir"
-        '');
     };
   }
