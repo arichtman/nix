@@ -40,6 +40,7 @@
     lib.mkFlake {
       package-namespace = "arichtman";
 
+      nix.package = inputs.nixpkgs.lix;
       channels-config.allowUnfree = true;
 
       systems.modules.darwin = with inputs; [
