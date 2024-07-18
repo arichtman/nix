@@ -186,6 +186,7 @@ in
             d = "diff";
             f = "fetch";
             bl = "blame";
+            xclean = "clean --force -x --exclude '.env'";
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
