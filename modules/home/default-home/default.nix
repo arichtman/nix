@@ -104,6 +104,23 @@ in
             font.size = 14;
             font.normal.family = "FiraCode Nerd Font";
             shell.program = "zellij";
+            keyboard.bindings = [
+              {
+                key = "Equals";
+                mods = "Control";
+                action = "IncreaseFontSize";
+              }
+              {
+                key = "Minus";
+                mods = "Control";
+                action = "DecreaseFontSize";
+              }
+              {
+                key = "Zero";
+                mods = "Control";
+                action = "ResetFontSize";
+              }
+            ];
           };
         };
         zellij = {
