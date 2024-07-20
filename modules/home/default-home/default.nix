@@ -133,7 +133,6 @@ in
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
-          enableNushellIntegration = true;
         };
         # Let Home Manager install and manage itself.
         home-manager.enable = true;
@@ -141,17 +140,11 @@ in
         bash = {
           enable = true;
           enableCompletion = true;
-          bashrcExtra = ''
-            if [[ $- == *i* ]] && [[ ! -z "$(command -v nu)" ]]; then
-              exec nu "$@"
-            fi
-          '';
         };
         zoxide = {
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
-          enableNushellIntegration = true;
         };
         bat.enable = true;
         thefuck = {
@@ -164,7 +157,6 @@ in
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
-          enableNushellIntegration = true;
           nix-direnv.enable = true;
           config.global = {
             load_dotenv = true;
@@ -206,7 +198,7 @@ in
             xclean = "clean --force -x --exclude '.env'";
           };
           # Note: regex to select non-comments ^[^#\n].*
-          # TODO: Generate the file from fetchURL call, run regex, remove .envrc line
+          # TODO: Generate the file from fetchURL call, run regex, remove .envrc line?
           ignores = import ./.gitignore.nix;
           signing = {
             signByDefault = true;
@@ -258,18 +250,7 @@ in
               git rm --force $1 ;
             }
           '';
-          #TODO: check if direnv/nix-direnv adds shell completion/hooks anyhow
-          #  or these can be enabled by config
-          #TODO: see about using something like basename ${0/-/} to generalize shell init
         };
-        # This was cool in theory but annoying in practice for kubectl.
-        # I needed to disable that but can't locate anything about how to do that, nor HM config options
-        # carapace = {
-        #   enable = true;
-        #   enableBashIntegration = true;
-        #   enableZshIntegration = true;
-        #   enableNushellIntegration = true;
-        # };
       };
       editorconfig = {
         enable = true;
@@ -297,6 +278,9 @@ in
         };
 
         packages = with pkgs; [
+          # The essentials
+          dig
+          wget
           # Ref: https://github.com/ibraheemdev/modern-unix
           xh # curl replacement
           dog # dig replacement
@@ -309,6 +293,11 @@ in
           choose # cut/awk replacement
           ripgrep # find replacement
           jless # json tui
+          helix # editor/ide
+          nnn # file manager
+          yazi # file manager
+          eza # exa is unmaintained 🫣
+          fira-code-nerdfont # This actually makes it available to Alacritty
           # Nix tooling
           nix-init
           nix-update
@@ -323,12 +312,7 @@ in
           terraform-ls # tf
           rust-analyzer # rust
           alejandra # nix formatter
-          helix # editor/ide
-          nnn # file manager
-          yazi # file manager
           dprint # markdown formatting (it does more though)
-          # exa # ls replacement
-          eza # exa is unmaintained 🫣
           helm-ls
           yaml-language-server
           ansible-language-server
@@ -339,19 +323,10 @@ in
           buf-language-server
           nixd
           nil
-          marksman
-          terraform-ls
           ruff-lsp
-          # The essentials
-          dig
-          wget
-          # whois
           #TODO: dont have these on mac, aarch64 at least
           # trippy
-          # This actually makes it available to Alacritty
-          fira-code-nerdfont
         ];
-
         file = {
           ".config/helix" = {
             source = ./helix;
