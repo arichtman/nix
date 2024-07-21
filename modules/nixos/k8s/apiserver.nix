@@ -5,7 +5,6 @@
   modulesPath,
   ...
 }: let
-  k8l = import ./lib.nix;
 in {
   options.services.k8s-apiserver = {
     config = lib.options.mkOption {
