@@ -21,7 +21,7 @@
     };
   };
   # TODO: Review or remove these. they're just for development
-  config.environment.systemPackages = [pkgs.ripgrep];
+  config.environment.systemPackages = [pkgs.ripgrep pkgs.kubernetes];
   config.services.k8s-apiserver.config = lib.mkIf config.services.k8s.controller [
     {
       foo = "bar";

@@ -1,12 +1,9 @@
 {
   lib,
-  pkgs,
   config,
-  options,
   ...
 }: let
   cfg = config.myKeys;
-  user = config.snowfallorg.user;
 in
   with lib; {
     options.myKeys = with types; {

@@ -21,8 +21,16 @@ repos:
     args:
       - "--autofix"
 - repo: https://github.com/kamadorueda/alejandra
-  # TODO: When this issue is resolved, switch to proper tag ref
-  # Ref: https://github.com/kamadorueda/alejandra/issues/388
   rev: 3.0.0
   hooks:
   - id: alejandra-system
+- repo: https://github.com/astro/deadnix
+  rev: v1.2.1
+  hooks:
+  - id: deadnix
+  # TODO: revert to main project when this is merged
+  # https://github.com/oppiliappan/statix/pull/81
+- repo: https://github.com/Matthieu-LAURENT39/statix/
+  rev: pre-commit
+  hooks:
+  - id: statix-fix

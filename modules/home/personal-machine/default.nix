@@ -1,7 +1,5 @@
 {
-  options,
   config,
-  pkgs,
   lib,
   ...
 }: let
@@ -15,7 +13,7 @@ in
         default = false;
       };
     };
-    config = mkIf (cfg.enabled) {
+    config = mkIf cfg.enabled {
       programs.ssh.enable = true;
       programs.ssh.matchBlocks = {
         proxmox = {

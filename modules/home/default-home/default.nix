@@ -2,11 +2,10 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   cfg = config.default-home;
-  user = config.snowfallorg.user;
+  inherit (config.snowfallorg) user;
   classicalAliases = {
     fuggit = "git add . && git commit --amend --no-edit && git push --force";
     gcm = "git checkout main || git checkout master";
@@ -262,7 +261,7 @@ in
         };
       };
       home = {
-        username = cfg.username;
+        inherit (cfg) username;
         stateVersion = "22.11";
 
         sessionVariables = {

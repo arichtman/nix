@@ -1,4 +1,4 @@
-{...}: {
+_: {
   networking.hostName = "smol-bat";
   system.stateVersion = "23.11";
   lab-node.enable = true;

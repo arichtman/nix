@@ -12,6 +12,8 @@ mkShell {
     helix
     pre-commit
     deploy-rs
+    statix
+    deadnix
     # Kubernetes stuff
     kubectl
     kubectx

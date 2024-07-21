@@ -1,4 +1,4 @@
-{...}: {
+_: {
   networking.hostName = "patient-zero";
   system.stateVersion = "23.11";
   lab-node.enable = true;

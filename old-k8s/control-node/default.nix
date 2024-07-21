@@ -59,7 +59,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
           cni.configDir = "/run/kubernetes/net.d";
           # cni.config is bombing on missing `entry.type` in kubelet.nix L19
@@ -98,7 +98,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
         };
         scheduler = {
@@ -114,7 +114,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/scheduler-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
         };
         kubelet = {
@@ -131,7 +131,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/controllermanager-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/controllermanager-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
           # Note: currently doesn't appear to be signing with these.
           extraOpts = ''

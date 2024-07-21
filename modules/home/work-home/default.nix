@@ -1,5 +1,4 @@
 {
-  options,
   config,
   pkgs,
   lib,
@@ -15,7 +14,7 @@ in
         default = false;
       };
     };
-    config = mkIf (cfg.enabled) {
+    config = mkIf cfg.enabled {
       programs = {
         ssh = {
           enable = true;

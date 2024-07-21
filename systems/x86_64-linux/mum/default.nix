@@ -1,4 +1,4 @@
-{...}: {
+_: {
   networking.hostName = "mum";
   lab-node.enable = true;
   virtual-node.enable = true;

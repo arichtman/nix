@@ -18,3 +18,5 @@ so all in Nix it shall be.
 
 I'm unclear why the `etcd` module uses environment variables instead of a config file.
 I don't love it but I'm not making this hole any deeper lest I strike lava.
+Annoyingly, the **Kubelet** is rolling to config file *only* while I can't find anything
+about `kube-apiserver` taking config files at all :S.

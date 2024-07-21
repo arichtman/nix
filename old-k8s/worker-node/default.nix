@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
   cfg = config.worker-node;
@@ -41,7 +40,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/kubelet-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
         };
         proxy = {
@@ -50,7 +49,7 @@ in {
           kubeconfig = {
             certFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client.pem";
             keyFile = "${config.services.kubernetes.secretsPath}/proxy-apiserver-client-key.pem";
-            caFile = config.services.kubernetes.caFile;
+            inherit (config.services.kubernetes) caFile;
           };
         };
       };

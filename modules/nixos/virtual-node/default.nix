@@ -1,8 +1,6 @@
 {
   config,
   lib,
-  pkgs,
-  modulesPath,
   ...
 }: let
   cfg = config.virtual-node;
@@ -15,7 +13,7 @@ in
         default = false;
       };
     };
-    config = mkIf (cfg.enable) {
+    config = mkIf cfg.enable {
       # Bootloader.
       boot.loader.grub.enable = true;
       boot.loader.grub.device = "/dev/sda";
