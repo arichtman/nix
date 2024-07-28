@@ -20,3 +20,10 @@ I'm unclear why the `etcd` module uses environment variables instead of a config
 I don't love it but I'm not making this hole any deeper lest I strike lava.
 Annoyingly, the **Kubelet** is rolling to config file *only* while I can't find anything
 about `kube-apiserver` taking config files at all :S.
+
+TODOs:
+
+- Implement `StructuredAuthorizationConfiguration`
+- Try out ABAC
+- Limit API server source IPs to my home prefix
+- Work out what the service cluster IP range and cluster IP range should be.

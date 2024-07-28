@@ -12,11 +12,12 @@ in {
     # For now, use the existing Kubernetes location.
     # TODO: ascertain where this should be placed
     # TODO: work out secrets management
-    trustedCaFile = "${cfg.secretsPath}/ca.pem";
+    trustedCaFile = "${cfg.secretsPath}/etcd.pem";
     certFile = "${cfg.secretsPath}/etcd-tls.pem";
     keyFile = "${cfg.secretsPath}/etcd-tls-key.pem";
-    # TODO: work out if dataDir being a systemd tmpfile location is wise
-    # Ref: https://github.com/NixOS/nixpkgs/blob/1d9c2c9b3e71b9ee663d11c5d298727dace8d374/nixos/modules/services/databases/etcd.nix#L166
-    # dataDir = "";
+    clientCertAuth = true;
+    listenClientUrls = [
+      "https://[::1]:2379"
+    ];
   };
 }

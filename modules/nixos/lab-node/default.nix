@@ -16,6 +16,8 @@ in
     };
     config = mkIf cfg.enable {
       boot.tmp.cleanOnBoot = true;
+      # TODO: Pretty sure this defaults to 0 anyways...
+      nix.settings.cores = 0;
       services.journald.extraConfig = ''
         SystemMaxUse=100M
         MaxFileSec=7day
