@@ -182,7 +182,6 @@ in
         git = {
           enable = true;
           delta.enable = true;
-          lfs.enable = true;
           userEmail = cfg.git.email;
           userName = cfg.git.username;
           aliases = {
