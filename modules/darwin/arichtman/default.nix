@@ -56,7 +56,7 @@ with lib;
         wireguard-tools
       ];
 
-      nix.package = pkgs.nixVersions.latest;
+      nix.package = pkgs.lix;
 
       # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
       system.activationScripts.postUserActivation.text = ''
