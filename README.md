@@ -168,13 +168,9 @@ Pre-requisites:
    Edit `/etc/network/interfaces` and switch the virtual bridge network configuration from `manual` to `dhcp`.
 1. Optionally, install trusted certificates.
    Instructions are on my blog.
-1. Remove the paid `apt` repository source.
-   `rm /etc/apt/sources.list.d/pve-enterprise.list`
-1. Add the _no-subscription_ repository source.
-1. Optionally remove/switch the Ceph repo source
-   It says they use it for testing Ceph versions against Proxmox before merging it to Enterprise repo.
-   But does that mean no-sub repo gets *no* updates?
-   `rm /etc/apt/sources.list.d/ceph.list`
+1. Run some of [the proxmox helper scripts](https://tteck.github.io/Proxmox/)
+   At least the post install one to fix sources.
+   I also ran the microcode update, CPU scaling governor, and kernel cleanup (since I had been operating for a while).
 1. Enable IOMMU. First, check GRUB/systemd `efibootmgr -v`.
    If GRUB, `sed -i -r -e 's/(GRUB_CMDLINE_LINUX_DEFAULT=")(.*)"/\1\2 intel_iommu=on iommu=pt"/' /etc/default/grub`
 1. `echo 'vfio
