@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  imports = [./etcd.nix ./apiserver.nix];
+  imports = [./etcd.nix ./apiserver.nix ./kubelet.nix];
   options.services.k8s = {
     controller = lib.options.mkOption {
       description = ''
@@ -31,10 +31,14 @@
   config = {
     environment.systemPackages = [pkgs.ripgrep pkgs.kubernetes pkgs.bat pkgs.jq pkgs.yq-go];
     services.k8s-apiserver.enabled = config.services.k8s.controller;
+    # Enable kubelet for control nodes.
+    # It's not worth the resource savings to miss seeing status and managing taints etc
+    services.k8s-kubelet.enabled = config.services.k8s.controller;
     users = lib.mkIf (config.services.k8s.controller || config.services.k8s.worker) {
       users = {
         kubernetes = {
-          uid = config.ids.uids.kubernetes;
+          # TODO: remove if unnecessary
+          # uid = config.ids.uids.kubernetes;
           description = "K8s user";
           group = "kubernetes";
           home = "/var/lib/kubernetes";
@@ -43,7 +47,7 @@
           isSystemUser = true;
         };
       };
-      groups.kubernetes.gid = config.ids.gids.kubernetes;
+      groups.kubernetes = {};
     };
   };
 }

@@ -82,8 +82,13 @@ in {
   config = lib.mkIf cfg.enabled {
     systemd.services.k8s-apiserver = {
       description = "K8s API server AKA mother brain";
+      # Required to activate the service.
+      wantedBy = ["kubernetes.target"];
+      # Wait on networking.
       after = ["network.target"];
       serviceConfig = {
+        # For managing resources of groups of services
+        Slice = "kubernetes.slice";
         ExecStart = "${pkgs.kubernetes}/bin/kube-apiserver " + serviceArgs;
         WorkingDirectory = "/var/lib/kubernetes";
         # TODO: not sure if there's any nicer way to couple these to the user definition
