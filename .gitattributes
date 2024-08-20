@@ -1,2 +1,3 @@
 *.lock -diff
 LICENSE -diff
+*.svg binary

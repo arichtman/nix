@@ -8,13 +8,13 @@ repos:
     - "--allow-multiple-documents"
     additional_dependencies: [ ruamel_yaml ]
   - id: end-of-file-fixer
+    exclude: '^(.+\.svg)$'
   - id: trailing-whitespace
   - id: check-case-conflict
   - id: check-executables-have-shebangs
   - id: check-shebang-scripts-are-executable
   - id: check-toml
   - id: check-vcs-permalinks
-  - id: end-of-file-fixer
   - id: mixed-line-ending
   - id: check-json
   - id: pretty-format-json

@@ -606,3 +606,7 @@ TODOs:
 - [Proxmox watchdog tutorial](https://it-notes.dragas.net/2018/09/16/proxmox-enable-and-use-watchdog-to-reboot-stuck-servers/)
 - [Proxmox CPU selection tutorial](https://www.yinfor.com/2023/06/how-i-choose-vm-cpu-type-in-proxmox-ve.html)
 - [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
+
+## Insane IPv6 Plan
+
+![foolish mortals](./native-k8s-ipv6.drawio.svg "What the fuck is this")
