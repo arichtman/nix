@@ -616,3 +616,7 @@ TODOs:
 ## Insane IPv6 Plan
 
 ![foolish mortals](./native-k8s-ipv6.drawio.svg "What the fuck is this")
+
+### References
+
+- [Cilium with OpnSense blog](https://dickingwithdocker.com/posts/using-bgp-to-integrate-cilium-with-opnsense/)

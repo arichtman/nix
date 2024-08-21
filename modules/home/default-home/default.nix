@@ -10,62 +10,64 @@
     fuggit = "git add . && git commit --amend --no-edit && git push --force";
     gcm = "git checkout main || git checkout master";
   };
-  myAliases = {
-    ".." = "cd ..";
-    "..." = "cd ../..";
-    "...." = "cd ../../..";
-    "....." = "cd ../../../..";
-    j = "jobs";
-    ee = "exit 0";
-    sc = "sudo systemctl";
-    jc = "journalctl -xe";
-    ls = "exa";
-    ll = "exa -las new";
-    cls = "clear";
-    vi = "hx";
-    vim = "hx";
-    nano = "hx";
-    pico = "hx";
-    gc = "git checkout";
-    gC = "git commit";
-    gs = "git status";
-    gS = "git switch";
-    gp = "git pull";
-    gP = "git push";
-    gPf = "git push --force-with-lease";
-    gb = "git branch";
-    gd = "git diff";
-    gf = "git fetch";
-    grpo = "git remote prune origin";
-    gau = "git add --update";
-    gbl = "git blame -wCCC";
-    nfu = "nix flake update --commit-lock-file";
-    #TODO: feels odd putting aliases in without installing the program but I like to keep the
-    #  environments separate between repos?
-    k = "kubectl";
-    kc = "kubectl config";
-    kg = "kubectl get";
-    kd = "kubectl describe";
-    kcns = "kubectl config set-context --current --namespace";
-    kcc = "kubectl config use-context";
-    tg = "terragrunt";
-    tgv = "terragrunt validate";
-    tgi = "terragrunt init";
-    tgp = "terragrunt plan";
-    tga = "terragrunt apply";
-    tgaa = "terragrunt apply -auto-approve";
-    tf = "terraform";
-    tfv = "terraform validate";
-    tfi = "terraform init";
-    tfp = "terraform plan";
-    tfa = "terraform apply";
-    tfaa = "terraform apply -auto-approve";
-    flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
-    phonesetup = ''      nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb tcpip 5555 \
-            && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
-            && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1
-    '';
-  };
+  myAliases =
+    {
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      "...." = "cd ../../..";
+      "....." = "cd ../../../..";
+      j = "jobs";
+      ee = "exit 0";
+      sc = "sudo systemctl";
+      jc = "journalctl -xe";
+      ls = "exa";
+      ll = "exa -las new";
+      cls = "clear";
+      vi = "hx";
+      vim = "hx";
+      nano = "hx";
+      pico = "hx";
+      gc = "git checkout";
+      gC = "git commit";
+      gs = "git status";
+      gS = "git switch";
+      gp = "git pull";
+      gP = "git push";
+      gPf = "git push --force-with-lease";
+      gb = "git branch";
+      gd = "git diff";
+      gf = "git fetch";
+      grpo = "git remote prune origin";
+      gau = "git add --update";
+      gbl = "git blame -wCCC";
+      nfu = "nix flake update --commit-lock-file";
+      #TODO: feels odd putting aliases in without installing the program but I like to keep the
+      #  environments separate between repos?
+      k = "kubectl";
+      kc = "kubectl config";
+      kg = "kubectl get";
+      kd = "kubectl describe";
+      kcns = "kubectl config set-context --current --namespace";
+      kcc = "kubectl config use-context";
+      tg = "terragrunt";
+      tgv = "terragrunt validate";
+      tgi = "terragrunt init";
+      tgp = "terragrunt plan";
+      tga = "terragrunt apply";
+      tgaa = "terragrunt apply -auto-approve";
+      tf = "terraform";
+      tfv = "terraform validate";
+      tfi = "terraform init";
+      tfp = "terraform plan";
+      tfa = "terraform apply";
+      tfaa = "terraform apply -auto-approve";
+      flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
+      phonesetup = ''        nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb tcpip 5555 \
+              && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
+              && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1
+      '';
+    }
+    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nixGLNvidia alacritty";};
 in
   with lib; {
     options.default-home = with types; {
@@ -83,6 +85,11 @@ in
           type = str;
           description = "Username to use in git config";
         };
+      };
+      isThatOneWeirdMachine = mkOption {
+        type = bool;
+        description = "IYKYK";
+        default = false;
       };
     };
     config = {
@@ -103,23 +110,26 @@ in
             font.size = 14;
             font.normal.family = "FiraCode Nerd Font";
             shell.program = "zellij";
-            keyboard.bindings = [
-              {
-                key = "Equals";
-                mods = "Control";
-                action = "IncreaseFontSize";
-              }
-              {
-                key = "Minus";
-                mods = "Control";
-                action = "DecreaseFontSize";
-              }
-              {
+            keyboard.bindings = let
+              zeroKeyReset = {
                 key = "Zero";
                 mods = "Control";
                 action = "ResetFontSize";
-              }
-            ];
+              };
+            in
+              [
+                {
+                  key = "Equals";
+                  mods = "Control";
+                  action = "IncreaseFontSize";
+                }
+                {
+                  key = "Minus";
+                  mods = "Control";
+                  action = "DecreaseFontSize";
+                }
+              ]
+              ++ lib.optional (!cfg.isThatOneWeirdMachine) zeroKeyReset;
           };
         };
         zellij = {
