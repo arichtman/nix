@@ -16,7 +16,7 @@
     "--anonymous-auth"
     "false"
     "--authorization-mode"
-    "RBAC"
+    "RBAC,Node"
     "--bind-address"
     "::"
     # TODO: Apparently this *won't* make it search for certificates relative to this.
@@ -83,7 +83,7 @@ in {
     systemd.services.k8s-apiserver = {
       description = "K8s API server AKA mother brain";
       # Required to activate the service.
-      wantedBy = ["kubernetes.target"];
+      wantedBy = ["kubernetes.target" "multi-user.target"];
       # Wait on networking.
       after = ["network.target"];
       serviceConfig = {

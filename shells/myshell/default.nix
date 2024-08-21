@@ -9,6 +9,8 @@ mkShell {
     # Minimal development stuff
     git
     ripgrep
+    jq
+    yq
     helix
     pre-commit
     deploy-rs
