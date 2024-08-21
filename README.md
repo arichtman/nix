@@ -263,16 +263,22 @@ Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount
       - Unbound host override bing.com to something
       - Check this returns the override `dig +trace @4.4.4.4 bing.com`
    - Ad blocking https://d3ward.github.io/toolz/adblock.html
+1. If enabling BGP run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
+1. Install plugins:
+   - NextCloud backup
+   - FRR BGP
+   - Prometheus exporter
+   - DynamicDNS client
+   - [themes]
 
 TODO:
 
-1. Set up SSH access
-1. See about AAAA records or how to IPv6 resolve internal hosts
-1. Look into vLAN
-1. Look into removing NAT
-1. Set up VPN
+1. ~See about AAAA records or how to IPv6 resolve internal hosts~ It's either DHCPv6 or mDNS
+1. ~Look into vLAN~ Requires managed switches and more interfaces than I have.
+1. ~Look into removing NAT~ Not gonna happen for IPv4
+1. ~Set up VPN~
 1. Set up non-root user/s
-1. Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/
+1. ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~ Implemented along with reverse-proxy trapping.
 
 Notes:
 
