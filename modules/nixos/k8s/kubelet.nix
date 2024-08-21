@@ -37,6 +37,8 @@
       };
       clusterDomain = "local";
       imageMaximumGCAge = "604800s";
+      # Going to override this setting in configDir anyways
+      # podCIDR = "";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...
       # address = "::";
@@ -113,27 +115,36 @@ in {
     virtualisation.containerd = {
       enable = true;
     };
-    systemd.services."k8s-kubelet" = {
-      description = "Kubernetes Kubelet Service";
-      after = ["containerd.service" "network.target" "kube-apiserver.service"];
-      wantedBy = ["kubernetes.target"];
-      serviceConfig = {
-        Slice = "kubernetes.slice";
-        # Until a drop-in directory becomes default we'll just nail the file exactly.
-        ExecStart =
-          "${pkgs.kubernetes}/bin/kubelet"
-          + " --config"
-          + " ${kubeletConfigFile}"
-          + " --node-ip=::"
-          + " --kubeconfig=${kubeletKubeconfigFile}"
-          + " --v=2"; # TODO: Remove after debugging
-        WorkingDirectory = "/var/lib/kubernetes";
-        # Must be run as root which is... odd
-        Restart = "on-failure";
-        RestartSec = 5;
+    systemd = {
+      services."k8s-kubelet" = {
+        description = "Kubernetes Kubelet Service";
+        after = ["containerd.service" "network.target" "kube-apiserver.service"];
+        wantedBy = ["kubernetes.target" "multi-user.target"];
+        serviceConfig = {
+          Slice = "kubernetes.slice";
+          # Until a drop-in directory becomes default we'll just nail the file exactly.
+          ExecStart =
+            "${pkgs.kubernetes}/bin/kubelet"
+            + " --config"
+            + " ${kubeletConfigFile}"
+            + " --node-ip=::"
+            + " --kubeconfig=${kubeletKubeconfigFile}"
+            + " --config-dir=/var/lib/kubelet/config.d"
+            + " --v=2"; # TODO: Remove after debugging
+          WorkingDirectory = "/var/lib/kubernetes";
+          # Must be run as root which is... odd
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        unitConfig = {
+          StartLimitIntervalSec = 0;
+        };
       };
-      unitConfig = {
-        StartLimitIntervalSec = 0;
+      tmpfiles.settings."kubelet-config-dropin"."/var/lib/kubelet/config.d" = {
+        d = {
+          user = "kubernetes";
+          mode = "0755";
+        };
       };
     };
     # This is just to bootstrap us into being able to run containers,

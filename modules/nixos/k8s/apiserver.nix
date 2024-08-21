@@ -101,6 +101,16 @@ in {
       unitConfig = {
         StartLimitIntervalSec = 0;
       };
+      path = with pkgs; [
+        gitMinimal
+        openssh
+        util-linux
+        iproute2
+        ethtool
+        thin-provisioning-tools
+        iptables
+        socat
+      ];
     };
     networking.nftables.enable = true;
     # Only allow ingress from ranges I control
