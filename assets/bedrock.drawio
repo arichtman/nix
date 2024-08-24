@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:128.0) Gecko/20100101 Firefox/128.0" version="24.7.7">
+  <diagram name="Physical Network" id="upPUInfLPvXHzUokezXu">
+    <mxGraphModel dx="794" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-1" value="&lt;div&gt;ISP&lt;/div&gt;&lt;div&gt;Semi-static IPv4&lt;/div&gt;&lt;div&gt;/48 Delegated prefix&lt;br&gt;&lt;/div&gt;" style="image;html=1;image=img/lib/clip_art/networking/Cloud_Rack_128x128.png;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="30" y="279" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-2" value="&lt;div&gt;Topton N100&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" vertex="1" parent="1">
+          <mxGeometry x="180" y="190" width="220" height="370" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-3" target="JlHfTX5ZqMkSwKbxRi0o-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-3" value="&lt;div&gt;Host NIC&lt;/div&gt;&lt;div&gt;Management interface&lt;/div&gt;&lt;div&gt;192.168.1.11&lt;br&gt;&lt;/div&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="390" y="207" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-4" value="Unused" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="390" y="512" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-5" target="JlHfTX5ZqMkSwKbxRi0o-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-5" value="&lt;div&gt;Pass-though to OPNsense&lt;/div&gt;&lt;div&gt;WAN interface&lt;/div&gt;&lt;div&gt;DHCPv4+6 client&lt;br&gt;&lt;/div&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="160" y="300" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-6" value="&lt;div&gt;Pass-through to OPNsense&lt;/div&gt;&lt;div&gt;LAN interface&lt;/div&gt;&lt;div&gt;IPv4+6 DHCP server&lt;br&gt;&lt;/div&gt;&lt;div&gt;Addr: 192.168.1.1&lt;br&gt;&lt;/div&gt;&lt;div&gt;192.168.1.0/24&lt;br&gt;&lt;/div&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="390" y="390" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-8" target="JlHfTX5ZqMkSwKbxRi0o-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-8" value="&lt;div&gt;8-port TP-link&lt;/div&gt;&lt;div&gt;unmanaged&lt;br&gt;&lt;/div&gt;&amp;nbsp;1Gbe" style="image;html=1;image=img/lib/clip_art/networking/Switch_128x128.png;labelPosition=left;verticalLabelPosition=bottom;align=right;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="550" y="369" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="300" width="120" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-9" value="" style="image;html=1;image=img/lib/clip_art/networking/Wireless_Router_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="730" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-11" value="2.5 Gbe" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="721.5" y="480" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-12" target="JlHfTX5ZqMkSwKbxRi0o-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-12" value="&lt;div&gt;WAN&lt;/div&gt;&lt;div&gt;IPv4 static 192.168.1.2&lt;/div&gt;&lt;div&gt;IPv6 SLAAC with PD&lt;br&gt;&lt;/div&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="730" y="338" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-13" value="1 Gbe x 4" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="841.5" y="480" width="57" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-17" target="JlHfTX5ZqMkSwKbxRi0o-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-17" value="&lt;div&gt;Main desktop&lt;/div&gt;&lt;div&gt;IPv4 DHCP client&lt;/div&gt;&lt;div&gt;IPv6 SLAAC&lt;br&gt;&lt;/div&gt;" style="verticalLabelPosition=top;sketch=0;aspect=fixed;html=1;verticalAlign=bottom;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.desktop;labelPosition=center;" vertex="1" parent="1">
+          <mxGeometry x="546" y="210" width="89" height="98" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-19" target="JlHfTX5ZqMkSwKbxRi0o-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-19" value="&lt;div&gt;5-port&lt;/div&gt;&lt;div&gt;unmanaged 1gbe&lt;br&gt;&lt;/div&gt;" style="image;html=1;image=img/lib/clip_art/networking/Switch_128x128.png;labelPosition=left;verticalLabelPosition=bottom;align=right;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="550" y="500" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="JlHfTX5ZqMkSwKbxRi0o-21" target="JlHfTX5ZqMkSwKbxRi0o-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-21" value="&lt;div&gt;Worker machines&lt;/div&gt;&lt;div&gt;IPv4 DHCP client&lt;/div&gt;&lt;div&gt;IPv6 SLAAC&lt;br&gt;&lt;/div&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/server_farm.svg;" vertex="1" parent="1">
+          <mxGeometry x="660" y="575" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-27" value="&lt;div&gt;Proxmox host OS&lt;/div&gt;" style="shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#EF8F21;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.linux;" vertex="1" parent="1">
+          <mxGeometry x="267.6" y="203.2" width="44.8" height="44.8" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-29" value="&lt;div&gt;OPNsense&lt;/div&gt;&lt;div&gt;Kea DHCPv4&lt;/div&gt;&lt;div&gt;ISC DHCPv6&lt;br&gt;&lt;/div&gt;" style="shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.vm_linux;" vertex="1" parent="1">
+          <mxGeometry x="267.6" y="291.4" width="57.2" height="55.2" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-30" value="Control node" style="shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#4495D1;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.veeam.vm_linux;" vertex="1" parent="1">
+          <mxGeometry x="267.6" y="471.4" width="57.2" height="55.2" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-31" value="vEth bridge" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="270" y="444.73" width="40" height="26.67" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-34" value="vEth bridge" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;outlineConnect=0;align=center;shape=mxgraph.office.devices.nic;" vertex="1" parent="1">
+          <mxGeometry x="230" y="212.26000000000002" width="40" height="26.67" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-36" value="&lt;div&gt;Asstd devices&lt;/div&gt;&lt;div&gt;DHCPv4 client&lt;/div&gt;&lt;div&gt;IPv6 SLAAC&lt;br&gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.laptop_2;" vertex="1" parent="1">
+          <mxGeometry x="810" y="116.7" width="98.3" height="73.3" as="geometry" />
+        </mxCell>
+        <mxCell id="JlHfTX5ZqMkSwKbxRi0o-37" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#434445;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.vvd.wi_fi;" vertex="1" parent="1">
+          <mxGeometry x="787" y="220" width="50" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
