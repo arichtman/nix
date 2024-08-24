@@ -1,3 +1,12 @@
+# Cilium
+
+- https://docs.cilium.io/en/stable/installation/k8s-install-helm/
+- https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
+- https://docs.cilium.io/en/stable/operations/troubleshooting/
+- https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+- https://github.com/containerd/containerd/issues/9139
+- https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
+- https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
 
 https://thelinuxcode.com/masquerade-with-iptables/
 https://nixos.wiki/wiki/Linux_kernel
@@ -16,11 +25,13 @@ More cilium v6 stuff
 https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/
 
 Networking stuff
-https://social.treehouse.systems/@hugo/112371852060835506
-https://social.treehouse.systems/@hugo/112370032832667163
-https://social.treehouse.systems/@hugo/112370056983832054
-https://techhub.social/@kubefred/112367921561319546
-https://techhub.social/@kubefred/112366082388857564
+
+- https://social.treehouse.systems/@hugo/112371852060835506
+- https://social.treehouse.systems/@hugo/112370032832667163
+- https://social.treehouse.systems/@hugo/112370056983832054
+- https://techhub.social/@kubefred/112367921561319546
+- https://techhub.social/@kubefred/112366082388857564
+- [Post about ingress](https://hdev.im/@farcaller/113018985033564592)
 
 Offer to help
 https://hachyderm.io/@jpetazzo/112371149239851518

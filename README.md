@@ -4,70 +4,117 @@
 
 A home for my system configurations using Nix Flakes
 Be warned, I'm still learning and experimenting.
-Nothing here should be construed as a model of good work!
-... yet.
 
-## Known issues/TODO
+~Nothing here should be construed as a model of good work!
+... yet.~
+Y'know, I'm starting to feel pretty good about this.
 
-- Look into where makes sense to bootstrap secrets/vault/trust
-- Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
-- Look into `buildEnv` over `devShell`
-- Test out packaging a toy app/repo
-- ~Get a container image build with nix going~
-  [Jamey blog](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
-  [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
+## Features and Todo
+
+![Diagram of Earth's layers](./assets/layers.png "Diagram of Earth's layers")
+
+<!-- source: https://ucanr.edu/blogs/blogcore/postdetail.cfm?postnum=55747&sharing=yes -->
+
+### Bedrock (Networking)
+
+- Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
+- Enable mDNS bridging to VPN interfaces
+- Enable mDNS responses from OPNsense box
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- ~Pull common kubernetes config out into another module~
-- ~Possibly rewrite the Kubernetes module(s)~
-- ~Fix addonManager not finding anything to apply~
-- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
-- `system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates
-- Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
-- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
-- Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`
-- Work out graceful node shutdown to remove them from the API server
-- Swap my user to a lower privilege one on Proxmox and OPNsense
-- ~Work out what's to replace addon-manager~
-  It's sig-addonmanager, I think.
-  That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
+- ~Properly set up the access point as a downstream router (with PD)~
+  Done! Sweaty, slightly stressful afternoon but worth it.
 - ~Set up VPN in OPNsense~
   WG and OpenVPN working.
   Might do IPsec too or further tuning.
-- Swap kubernetes to IPv6
-- Set up IPv6 ingress and firewalling
-- BGP peer cluster to router?
-  See crazy diagram for IPv6
-- ~See about nixos on-boot auto disk resize (and add to template!)~
-  Virtual nodes auto-resizing, physical nodes no point.
+1. ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~
+   Implemented along with reverse-proxy trapping.
+
+### Substratum (Virtualization and Systems)
+
+- Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
+- Swap my user to a lower privilege one on Proxmox and OPNsense
+- See about more modern watchdog options - apparently this one is ancient 32 bit PCI
+  [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
+- Set up PXE booting off of OPNsense
+  [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)
+- Set up iPXE or something so multiple options.
+  [iPXE](https://ipxe.org/)
+  [netboot](https://netboot.xyz/)
+- Set up OpenAMT for out-of-band management.
 - ~Work out watchdog on Opnsense BSD~
   HW watchdog configured on the Topton N100.
   Monitoring it to see if it locks up still.
   Update: it does, have upgraded the processor microcode.
   Continuing to monitor.
-- See about more modern watchdog options - apparently this one is ancient 32 bit PCI
-- Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
-- Enable mDNS bridging to VPN interfaces
-- Enable mDNS responses from OPNsense box
-- Properly set up the access point as a downstream router (with PD)
+- ~See about nixos on-boot auto disk resize (and add to template!)~
+  Virtual nodes auto-resizing, physical nodes no point.
+- ~`system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates~
+  Without rollback and strong CI this feels risky, I might do this manually for a while until I'm confident
 
-## Home lab setup
+### Subsoil (Foundational Services)
 
-We will reserve the bottom 10 of the subnet range for networking gear.
-We'll use the next ten for static stuff, and the rest can be DHCP.
-The reason for this is the core elements need fixed IPs so I can access even if DHCP and DNS is down.
+- Determine "foundational services" (and set up)
+  - Prometheus
+  - Authentik/Kanidm/Guacamole
+- Look into where makes sense to bootstrap secrets/vault/trust
 
-Opnsense 192.161.1.1
-Asus 192.168.1.2
-Topton 192.161.1.11
+### Topsoil (Kubernetes)
+
+- Write my own k8s module (in progress)
+- Pull k8s module out into it's own flake/repo/overlay.
+- Swap kubernetes to IPv6
+- Set up IPv6 ingress and firewalling
+- BGP peer cluster to router?
+  See crazy diagram for IPv6
+- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
+- Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
+- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
+- Work out graceful node shutdown to remove them from the API server
+- Find some kind of dynamic PV/storage option
+  [post 1](https://akko.wtf/objects/79d8a9df-c1fe-4112-9d69-acc57977a0de)
+  [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)
+- Play around with Timoni, Kluctl, etc
+- "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
+- Write a custom cloud provider using SSH and WoL.
+- Adjust the custom cloud provider to use OpenAMT.
+- ~Work out what's to replace addon-manager~
+  It's sig-addonmanager, I think.
+  That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
+- ~Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`~
+  Node authorization enabled so clients with signed `O=cluster:nodes:$NAME` are working.
+- ~Pull common kubernetes config out into another module~
+- ~Possibly rewrite the Kubernetes module(s)~
+- ~Fix addonManager not finding anything to apply~
+
+![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
+
+- [Cilium with OpnSense blog](https://dickingwithdocker.com/posts/using-bgp-to-integrate-cilium-with-opnsense/)
+- [k8s setup with BGP and /64s](https://functional.cafe/@arianvp/112994181771306904)
+
+### Organics (Applications and nice-to-haves)
+
+- Look into `buildEnv` over `devShell`
+- ~Get a container image build with nix going~
+  [Jamey blog](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
+  [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
+
+## Implementation Notes
+
+### Bedrock
+
+![Annoyingly complicated networking](./assets/bedrock.drawio.svg "As-is networking diagram")
+
+### Substratum
 
 Pre-requisites:
 
-- Followed instructions from NixOS to flash ISO to USB
+- NixOS flashed to USB
 
 ### HP EliteDesk 800 G3 Micro/Mini.
 
-1. Mash F10 to hit the bios (this was a thowback and a pain to do)
+1. Mash F10 to hit the bios (this was a thowback and a pain to do).
+   Or just use `systemctl reboot --firmware-setup` ~ Future Ariel.
 1. Configure the following
    - Ensure legacy boot is enabled.
    - I disabled secure boot and MS certificate in case
@@ -87,6 +134,7 @@ Pre-requisites:
 1. Clone this flake repo from github
 1. Copy the machine-specific disk config from `/etc/nixos/hardware-configuration.nix`.
    Place it in the machine's `hardware-configuration.nix` in the flake repo.
+   (This step may no longer be necessary)
 1. Nix rebuild switch to the flake's config.
 1. Confirm SSH remote access is working.
 1. Reboot and enter bios.
@@ -134,13 +182,11 @@ References:
 - [Proxmox package repo docs](https://pve.proxmox.com/wiki/Package_Repositories)
 - [Servethehome net passthru tutorial](https://www.servethehome.com/how-to-pass-through-pcie-nics-with-proxmox-ve-on-intel-and-amd/)
 
-### Proxmox
+## Substratum
 
-Previously we considered LXC containers.
-We've since been advised it's not worth the hassle.
-Check git history for prior notes.
+- [Proxmox CPU selection tutorial](https://www.yinfor.com/2023/06/how-i-choose-vm-cpu-type-in-proxmox-ve.html)
 
-#### Disk setup
+### Proxmox Disk Setup
 
 We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
@@ -152,7 +198,33 @@ Never mind, same dance with the GUI, followed by heading to Node > Disks > Direc
 Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount of backup disk.
 [Ref](https://www.baeldung.com/linux/automount-partitions-startup)
 
-#### Opnsense
+### Re-IDing a Proxmox VM
+
+1. Stop VM
+1. Get storage group name `lvs -a`
+1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
+1. Enter `/etc/pve/nodes/proxmox/qemu-server`
+1. Edit conf file to use renamed disk.
+1. Move conf file to new id
+
+- [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)
+
+### Adding watchdog to a proxmox VM
+
+1. Add `watchdog: model=i6300esb,action=reset` to the conf file in `/etc/pve/qemu-server/`.
+1. Stop and start the VM.
+
+- [Proxmox watchdog tutorial](https://it-notes.dragas.net/2018/09/16/proxmox-enable-and-use-watchdog-to-reboot-stuck-servers/)
+
+### Virtual node disk resize
+
+```bash
+nix-shell -p cloud-utils
+growpart /dev/sda 1
+resize2fs /dev/sda1
+```
+
+### Opnsense
 
 1. Download iso and unpack
 1. Move iso to `/var/lib/vz/template/iso`
@@ -212,34 +284,33 @@ Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount
    - FRR BGP
    - Prometheus exporter
    - DynamicDNS client
-   - [themes]
-
-TODO:
-
-1. ~See about AAAA records or how to IPv6 resolve internal hosts~ It's either DHCPv6 or mDNS
-1. ~Look into vLAN~ Requires managed switches and more interfaces than I have.
-1. ~Look into removing NAT~ Not gonna happen for IPv4
-1. ~Set up VPN~
-1. Set up non-root user/s
-1. ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~ Implemented along with reverse-proxy trapping.
+   - AMD microcode updates (unsure how wise this is given hypervisor is Intel)
+     OPNsense already had this set up when I installed it but check post-install instructions.
+   - tftp plugin (unmaintained but possibly workable)
+     [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp)
+   - optionally: themes
+1. Configure NextCloud backup with an app key
+1. Configure DynamicDNS with AWS access key
 
 Notes:
 
 I will revisit the resources supplied after running the box for a bit.
 
-Bare metal recommendation is multi-core so that system activities don't have to impact CPU network activities.
-Because we're virtualizing I don't want 2 schedulers fighting each other, so I'll rely on the hypervisor's scheduling.
-Might be worth revisiting or pinning a full core to the VM.
+CPU seems fine, spikey with what I think are Python runtime startups from the control layer.
+RAM looks consistently under about 1Gb so I'll trim that back from the
+[recommended minimum](https://docs.opnsense.org/manual/hardware.html) 2Gb.
 
 References:
 
 - [Reddit performance comment](https://www.reddit.com/r/OPNsenseFirewall/comments/guo2iz/comment/fskpk76)
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
-- [Unbount DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
+- [Unbound DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
+- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
 
-#### Virtualized Nixos Node Bootstrap
+### Virtualized NixOS Node Bootstrap
 
-1. Use GUI installer to deploy, cli one's a pain, 12GiB storage minimum, 4 cores/8GiB ram (min 4+ GiB). We'll scale it down later.
+1. Use GUI installer to deploy, the CLI one's a pain, 12GiB storage minimum, 4 cores/8GiB ram (min 4+ GiB).
+   We'll scale it down later, it bombs completely without plenty of RAM.
 1. Thing's a pain to bootstrap and the web console is limited
    Sudo edit `/etc/nixos/configuration.nix`
    - Enable the openssh service
@@ -261,23 +332,37 @@ References:
 1. Adjust hardware down to 1/2GiB.
 1. Make template
 
-Re-IDing a proxmox vm:
+- [Nixos VM tutorial](https://mattwidmann.net/notes/running-nixos-in-a-vm/)
 
-1. Stop VM
-1. Get storage group name `lvs -a`
-1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
-1. Enter `/etc/pve/nodes/proxmox/qemu-server`
-1. Edit conf file to use renamed disk.
-1. Move conf file to new id
+## Subsoil
 
-Adding watchdog to a proxmox VM
+## Trust chain setup
 
-1. Add `watchdog: model=i6300esb,action=reset` to the conf file in `/etc/pve/qemu-server/`.
-1. Stop and start the VM.
+Arguably this mingles with substratum, as PKI/trust/TLS is required or very desirable for VPN/HTTPS etc.
 
-See references for details.
+1. Create root CA
+   `xkcdpass --delimiter - --numwords 4 > root-ca.pass`
+   `step certificate create "ariel@richtman.au" ./root-ca.pem ./root-ca-key.pem --profile root-ca --password-file ./root-ca.pass`
+1. Make node directories cause this is going to get messy
+   `<nodes.txt xargs mkdir`
+1. Create password files
+   `<nodes.txt xargs -I% sh -c 'xkcdpass --delimiter - --numwords 4 > "./$1/$1-pass.txt"' -- %`
+1. Secure them `chmod 400 *.pass`
+1. Create intermediate CAs
+   `<nodes.txt xargs -I% step certificate create % ./%/%.pem ./%/%-key.pem --profile intermediate-ca --ca ./root-ca.pem --ca-key ./root-ca-key.pem --ca-password-file root-ca-pass.txt --password-file ./%/%-pass.txt`
+1. Distribute the intermediate certificates and keys
+1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
+1. Publish the root CA, with my current setup this meant uploading it to s3.
+1. Update the sha256 for the root certificate `fetchUrl` call
 
-#### Cluster access bootstrap
+- [Smallstep documentation](https://smallstep.com/docs/step-cli/basic-crypto-operations/index.html)
+- [Certificate creation/authorization tutorial](https://yuminlee2.medium.com/kubernetes-generate-certificates-for-normal-users-using-certificates-api-7ba71170aa52)
+
+## Topsoil
+
+- [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+
+### Cluster access bootstrap
 
 ```bash
 # Create a client certificate with admin
@@ -291,7 +376,7 @@ kubectl config set-credentials home-admin --client-certificate cluster-admin.pem
 kubectl config set-context --user home-admin --cluster home home-admin
 ```
 
-#### Cluster access (normal)
+### Cluster access (normal)
 
 1. Create private key `openssl genpkey -out klient-key.pem -algorithm ed25519`
 1. Create CSR `openssl req -new -config klient.csr.conf -key klient-key.pem -out klient.csr`
@@ -299,7 +384,7 @@ kubectl config set-context --user home-admin --cluster home home-admin
 1. Submit the CSR to the cluster `envsubst -i klient-csr.yaml | kubectly apply -f -`
 1. Approve the request `kubectl certificate user approve`
 
-#### Cluster node roles
+### Cluster node roles
 
 For security reasons, it's not possible for nodes to self-select roles.
 We can label our nodes using this:
@@ -335,7 +420,7 @@ Have the node self-delete (it'll self-register again anyway), and have the admin
 I wonder if there's any better way security-wise to have nodes be trusted with certain labels.
 Already they need apiServer-trusted client certificates, it'd be cool if the metadata on those could determine labels.
 
-#### Addon-manager
+### Addon-manager
 
 Apparently this is deprecated as of years ago but is still shambling along.
 As much as I'd love to declaratively bootstrap the cluster it will be less headache to have a one-off CD app install and do the rest declaratively that way.
@@ -344,36 +429,24 @@ Anywho - to make addon manager actually work, you need to drop a `.kube/config` 
 Removing coredns shenanigans:
 `k delete svc/kube-dns deploy/coredns sa/coredns cm/coredns clusterrole/system:kube-dns clusterrolebinding/system:kube-dns`
 
-#### Node CSRs piling up
+### Node CSRs piling up
 
 `kubectl get csr --no-headers -o jsonpath='{.items[*].metadata.name}' | xargs -r kubectl certificate approve`
 
 [Ref](https://github.com/dyrnq/kubeadm-vagrant/issues/4)
 
-#### Calico
+#### Notes
 
-***Under Construction***
+Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
+Minimal install ~3.2 gigs
+Lab-node with master node about 3.2 gb also, so will want more headroom.
 
-uninstaller bombs due to insufficient permissions
-so does operator running, but not until it installs a buncha shit
+Add to nomicon
 
-```
-helm repo add projectcalico https://projectcalico.docs.tigera.io/charts
-kubectl create namespace tigera-operator
-helm install calico projectcalico/tigera-operator --namespace tigera-operator
-```
+- fakesha256
+- nix-prefetch-url > hash.txt
 
-[Chart](https://github.com/projectcalico/calico/tree/master/charts/tigera-operator)
-
-#### Virtual node disk resize
-
-```bash
-nix-shell -p cloud-utils
-growpart /dev/sda 1
-resize2fs /dev/sda1
-```
-
-#### Mobile setup
+## Mobile setup
 
 Using tasker
 
@@ -393,25 +466,14 @@ References:
 - [StackExchange](https://android.stackexchange.com/a/239471)
 - [AdGuard instructions for secret settings](https://adguard.com/kb/adguard-for-android/solving-problems/firefox-certificates/)
 
-#### Notes
-
-Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
-Minimal install ~3.2 gigs
-Lab-node with master node about 3.2 gb also, so will want more headroom.
-
-Add to nomicon
-
-- fakesha256
-- nix-prefetch-url > hash.txt
-
 ## Desktops
 
-## Mac
+### Mac
 
 Trust chain system install:
 `sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
 
-### MBP M2 setup
+#### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
 1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
@@ -459,22 +521,6 @@ some _very_ wip notes about the desktop.
   `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
   `sudo update-ca-trust`
 
-The networking is fucked for some reason out the box.
-Direct connection to the router works-ish. I can access ap and proxmox by their DNS records, but not opnsense.
-If I add the switch in the middle I never get any replies to my DHCP requests.
-If I set the IP and DNS manually it kinda works. DNS records locally resolve fine directly but not for SSH/firefox/curl.
-Anyways, what I did was set IP+DNS on the interface manually.
-Then I had to muck with the DNS locally.
-I would have just re-ordered /etc/nsswitch.conf but it's under management.
-This set it to the same as current but with the mdns feature off entirely.
-`sudo authselect select sssd with-silent-lastlog; sudo authselect apply-changes`.
-The sssd service is actually dead so I have no idea why this is working but what-THEFUCK-ever at this point.
-Finally just for good measure I threw my other static IP boxes into `/etc/hosts` cause fuck this for a joke.
-Firefox is being a cunt and won't let me access the services by their DNS records, but IP works.
-Because fuck you, apparently.
-Yes, I tried turning off DNS security features and setting the local domain.
-Gave up and added to /etc/hosts
-
 #### Fixing DNS
 
 https://infosec.exchange/@ds/112663636510469329
@@ -487,59 +533,35 @@ sudo rm -f /etc/resolve.conf
 sudo systemctl restart NetworkManager
 ```
 
-TODOs:
+### Desktop Todo
 
 - Get cli clipboard access
+  [post](https://fosstodon.org/@ferki/112868797150769449)
 - Fix Helix system clipboard yank
-- Fix zellij system clipboard copy
 - Learn about universal blue/ostree and decide if I want to keep this
 - ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
   I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
 - fix autoshift on my keyboard
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
-- Fix alacritty no suitable GL error
+- Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
+- Fix Zellij exits still leaving you in a Bash session.
+- Make Alacritty visible on the launch pad or whatever it's called
+- Fix CLI history suggestions
+- ~Fix zellij system clipboard copy~
+  Works fine in Alacritty?
+- ~Fix alacritty no suitable GL error~
+  Did some dirty hax with `nixGLIntel`, whatever, it's a complex and long-standing OpenGL on non-Nix systems issue.
 - ~Decide if I want to keep nushell~
   I don't. I'm sure it's cool but I need to work on too many systems and environments that won't be compatible.
 - ~Remove the nushell banner~
-- Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
-- Fix Zellij exits still leaving you in a Bash session
 - ~Work out how to switch my shell to nushell properly...
   or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
   `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
   We can use `lchsh` or `usermod` but it's under our nix profile bin dir, not a simple location like `/usr/bin`~
   It's justifiable like this.
-- Make Alacritty visible on the launch pad or whatever it's called
-- Fix CLI history suggestions
 
-## Cilium references
-
-- https://docs.cilium.io/en/stable/installation/k8s-install-helm/
-- https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
-- https://docs.cilium.io/en/stable/operations/troubleshooting/
-- https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
-- https://github.com/containerd/containerd/issues/9139
-- https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
-- https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
-
-## Trust chain setup
-
-1. Create root CA
-   `xkcdpass --delimiter - --numwords 4 > root-ca.pass`
-   `step certificate create "ariel@richtman.au" ./root-ca.pem ./root-ca-key.pem --profile root-ca --password-file ./root-ca.pass`
-1. Make node directories cause this is going to get messy
-   `<nodes.txt xargs mkdir`
-1. Create password files
-   `<nodes.txt xargs -I% sh -c 'xkcdpass --delimiter - --numwords 4 > "./$1/$1-pass.txt"' -- %`
-1. Secure them `chmod 400 *.pass`
-1. Create intermediate CAs
-   `<nodes.txt xargs -I% step certificate create % ./%/%.pem ./%/%-key.pem --profile intermediate-ca --ca ./root-ca.pem --ca-key ./root-ca-key.pem --ca-password-file root-ca-pass.txt --password-file ./%/%-pass.txt`
-1. Distribute the intermediate certificates and keys
-1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
-1. Publish the root CA, with my current setup this meant uploading it to s3.
-1. Update the sha256 for the root certificate `fetchUrl` call
-
-## References
+## Nix References
 
 - [Opinionated flake structure](https://github.com/snowfallorg/lib)
 - [Home-manager configuration options](https://nix-community.github.io/home-manager/options.html)
@@ -547,19 +569,4 @@ TODOs:
 - Just generally sucking at it, spelunking `nixpkgs` and `NixOS-WSL` source Nix files
 - [Jake Hamilton videos](https://www.youtube.com/@jakehamiltondev)
 - [Nebucatnetzer's config](https://git.2li.ch/Nebucatnetzer/nixos/)
-- [Smallstep documentation](https://smallstep.com/docs/step-cli/basic-crypto-operations/index.html)
-- [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
-- [Nixos VM tutorial](https://mattwidmann.net/notes/running-nixos-in-a-vm/)
-- [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)
-- [Certificate creation/authorization tutorial](https://yuminlee2.medium.com/kubernetes-generate-certificates-for-normal-users-using-certificates-api-7ba71170aa52)
-- [Proxmox watchdog tutorial](https://it-notes.dragas.net/2018/09/16/proxmox-enable-and-use-watchdog-to-reboot-stuck-servers/)
-- [Proxmox CPU selection tutorial](https://www.yinfor.com/2023/06/how-i-choose-vm-cpu-type-in-proxmox-ve.html)
-- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
-
-## Insane IPv6 Plan
-
-![foolish mortals](./native-k8s-ipv6.drawio.svg "What the fuck is this")
-
-### References
-
-- [Cilium with OpnSense blog](https://dickingwithdocker.com/posts/using-bgp-to-integrate-cilium-with-opnsense/)
+- [Post about inline nix use helm](https://hdev.im/@farcaller/113018001043836518)
