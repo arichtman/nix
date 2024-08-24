@@ -41,6 +41,7 @@
       gau = "git add --update";
       gbl = "git blame -wCCC";
       nfu = "nix flake update --commit-lock-file";
+      sci = "step certificate inspect";
       #TODO: feels odd putting aliases in without installing the program but I like to keep the
       #  environments separate between repos?
       k = "kubectl";
@@ -257,6 +258,7 @@ in
               rm -fr .git/modules/$1 ;
               git rm --force $1 ;
             }
+            function llog { journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p InvocationID --value $1) ; }
           '';
         };
       };

@@ -33,80 +33,23 @@ Nothing here should be construed as a model of good work!
   That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
 - ~Set up VPN in OPNsense~
   WG and OpenVPN working.
-  Might to IPsec too or further tuning.
+  Might do IPsec too or further tuning.
 - Swap kubernetes to IPv6
 - Set up IPv6 ingress and firewalling
 - BGP peer cluster to router?
-- See about nixos on-boot auto disk resize (and add to template!)
+  See crazy diagram for IPv6
+- ~See about nixos on-boot auto disk resize (and add to template!)~
+  Virtual nodes auto-resizing, physical nodes no point.
 - ~Work out watchdog on Opnsense BSD~
   HW watchdog configured on the Topton N100.
   Monitoring it to see if it locks up still.
+  Update: it does, have upgraded the processor microcode.
+  Continuing to monitor.
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
 - Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
-
-### Kubernetes certificate setup
-
-Here's a dump of some utility stuff for developing this.
-
-```
-# Send over all the keys and open permissions
-function keySync {
-  rsync etcd*.pem "${1}.local:/home/nixos/kubernetes"
-  rsync kube*.pem "${1}.local:/home/nixos/kubernetes"
-  rsync ca*.pem "${1}.local:/home/nixos/kubernetes"
-  rsync flannel*.pem "${1}.local:/home/nixos/kubernetes"
-  rsync proxy-*.pem "${1}.local:/home/nixos/kubernetes"
-  ssh "${1}.local" sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
-  ssh "${1}.local" sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"
-  ssh "${1}.local" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
-  ssh "${1}.local" sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
-  ssh "${1}.local" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
-}
-
-# Check a services logs from the last run
-function logs { journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p InvocationID --value $1) ; }
-
-alias sci='step certificate inspect'
-
-# TCP check
-cat < /dev/tcp/fat-controller.local/2379
-
-# Checking served certificates
-openssl s_client -showcerts -connect localhost:2379 # -servername $NAME (if facing SNI)
-```
-
-General notes:
-
-- My DNS name has been kinda hard-coded into this, I need to genericize it but probably a Nix thing. TODO
-- I should update the Nix module reference to `glog` to `klog` and the [URL](https://kubernetes.io/docs/concepts/cluster-administration/system-logs/#log-verbosity-level) too.
-  TODO
-- I could also have added the root CA to my hugo's static files but it's not _really_ part of the website.
-  I'm probably going to move off the s3+netlify combo once my platform is set up, it's kinda limited.
-
-Initial kubeconfig for access
-
-```
-kc config set-cluster mine --certificate-authority=$sd/ca.pem --embed-certs=true --server=https://fat-controller.local:6443
-
-kc config set-credentials admin --client-certificate=admin.pem --client-key=admin-key.pem
-
-kc config set-context mine --cluster=mine --user=admin
-
-#May also have to untaint stuff
-kc taint nodes fat-controller.local node.kubernetes.io/not-ready-
-```
-
-#### References
-
-- [Smallstep cli docs](https://smallstep.com/docs/step-cli/reference/certificate/create/)
-- [k8s certificate guide](https://kubernetes.io/docs/setup/best-practices/certificates/#single-root-ca)
-- [k8s apiserver cli reference](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/)
-- [k8s tls rotation procedure](https://kubernetes.io/docs/tasks/tls/certificate-rotation/)
-- [Resetting easyCerts/PKI](https://github.com/NixOS/nixpkgs/issues/59364#issuecomment-485249797)
-- [NixOS wiki on k8s](https://nixos.wiki/wiki/Kubernetes)
-- [Broken etcd hack to fix k8s module](https://github.com/NixOS/nixpkgs/issues/124037#issuecomment-846538656)
-- [NixOS issue on poor k8s documentation](https://github.com/NixOS/nixpkgs/issues/39327)
-- [NixOS forum post on k8s config](https://discourse.nixos.org/t/kubernetes-using-multiple-nodes-with-latest-unstable/3936)
+- Enable mDNS bridging to VPN interfaces
+- Enable mDNS responses from OPNsense box
+- Properly set up the access point as a downstream router (with PD)
 
 ## Home lab setup
 

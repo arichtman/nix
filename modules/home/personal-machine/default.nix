@@ -17,7 +17,7 @@ in
       programs.ssh.enable = true;
       programs.ssh.matchBlocks = {
         proxmox = {
-          hostname = "proxmox.local";
+          hostname = "proxmox.internal";
           user = "root";
         };
         github = {
@@ -40,19 +40,19 @@ in
         };
         ap = {
           user = "fang";
-          hostname = "ap.local";
+          hostname = "ap.internal";
         };
-        "*.local" = {
+        "*.internal" = {
           user = "nixos";
         };
         pz = {
-          hostname = "patient-zero.local";
+          hostname = "patient-zero.internal";
         };
         ds = {
-          hostname = "dr-singh.local";
+          hostname = "dr-singh.internal";
         };
         sb = {
-          hostname = "smol-bat.local";
+          hostname = "smol-bat.internal";
         };
       };
     };

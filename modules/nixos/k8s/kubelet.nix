@@ -35,7 +35,7 @@
       authorization = {
         mode = "Webhook";
       };
-      clusterDomain = "local";
+      clusterDomain = "internal";
       imageMaximumGCAge = "604800s";
       # Going to override this setting in configDir anyways
       # podCIDR = "";
@@ -55,7 +55,7 @@
   #   tlsMinVersion = "VersionTLS12";
   #   authentication = {};
   #   authorization = {};
-  #   clusterDomain = "local";
+  #   clusterDomain = "internal";
   #   imageMaximumGCAge = "604800s"; # One week, TODO 7d wasn't ok?
   #   # TODO: may have a default and just not be documented?
   #   containerRuntimeEndpoint = "unix:///run/containerd/containerd.sock";
@@ -83,7 +83,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${mainK8sConfig.secretsPath}/ca.pem";
-          server = "https://fat-controller.local:6443";
+          server = "https://fat-controller.internal:6443";
         };
       }
     ];
