@@ -18,10 +18,6 @@ in
       boot.tmp.cleanOnBoot = true;
       # TODO: Pretty sure this defaults to 0 anyways...
       nix.settings.cores = 0;
-      services.journald.extraConfig = ''
-        SystemMaxUse=100M
-        MaxFileSec=7day
-      '';
       system.autoUpgrade.flake = "github:arichtman/nix";
       nix.optimise.automatic = true;
       nix.gc.automatic = true;
@@ -83,6 +79,19 @@ in
       services = {
         openssh = {
           enable = true;
+        };
+        journald.extraConfig = ''
+          SystemMaxUse=100M
+          MaxFileSec=7day
+        '';
+        avahi = {
+          enable = true;
+          domainName = "internal";
+          publish = {
+            enable = true;
+            domain = true;
+          };
+          ipv6 = true;
         };
         # Configure keymap in X11
         xserver = {
