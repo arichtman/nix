@@ -27,7 +27,7 @@ Y'know, I'm starting to feel pretty good about this.
 - ~Set up VPN in OPNsense~
   WG and OpenVPN working.
   Might do IPsec too or further tuning.
-1. ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~
+- ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~
    Implemented along with reverse-proxy trapping.
 
 ### Substratum (Virtualization and Systems)
@@ -56,7 +56,12 @@ Y'know, I'm starting to feel pretty good about this.
 
 - Determine "foundational services" (and set up)
   - Prometheus
-  - Authentik/Kanidm/Guacamole
+  - Grafana
+  - NixOS store cache (Attic?)
+  - Secrets (Vault/OpenBao?)
+  - Object storage (Minio?)
+  - Certificate authority? (step-ca?)
+  - Identity (Authentik/Kanidm/Guacamole/Gluu)
 - Look into where makes sense to bootstrap secrets/vault/trust
 
 ### Topsoil (Kubernetes)
@@ -433,7 +438,7 @@ Removing coredns shenanigans:
 
 `kubectl get csr --no-headers -o jsonpath='{.items[*].metadata.name}' | xargs -r kubectl certificate approve`
 
-[Ref](https://github.com/dyrnq/kubeadm-vagrant/issues/4)
+- [GitHub comment](https://github.com/dyrnq/kubeadm-vagrant/issues/4#issuecomment-917590114)
 
 #### Notes
 
@@ -535,12 +540,11 @@ sudo systemctl restart NetworkManager
 
 ### Desktop Todo
 
-- Get cli clipboard access
+- Switch to LibreWolf
+- Fix Firefox image pasting
+- Get CLI clipboard access
   [post](https://fosstodon.org/@ferki/112868797150769449)
-- Fix Helix system clipboard yank
 - Learn about universal blue/ostree and decide if I want to keep this
-- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
-  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
 - fix autoshift on my keyboard
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
@@ -548,6 +552,10 @@ sudo systemctl restart NetworkManager
 - Fix Zellij exits still leaving you in a Bash session.
 - Make Alacritty visible on the launch pad or whatever it's called
 - Fix CLI history suggestions
+- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
+  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
+- ~Fix Helix system clipboard yank~
+  Just works in Alacritty?
 - ~Fix zellij system clipboard copy~
   Works fine in Alacritty?
 - ~Fix alacritty no suitable GL error~
