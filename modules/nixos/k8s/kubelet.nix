@@ -83,7 +83,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${mainK8sConfig.secretsPath}/ca.pem";
-          server = "https://fat-controller.internal:6443";
+          server = "https://fat-controller.local:6443";
         };
       }
     ];

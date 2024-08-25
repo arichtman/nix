@@ -84,13 +84,21 @@ in
           SystemMaxUse=100M
           MaxFileSec=7day
         '';
+        # Ref: https://github.com/avahi/avahi/blob/master/avahi-daemon/avahi-daemon.conf
         avahi = {
           enable = true;
-          domainName = "internal";
+          # domainName = "internal";
           publish = {
             enable = true;
             domain = true;
+            # TODO: testing all enabled
+            workstation = true;
+            userServices = true;
+            hinfo = true;
+            addresses = true;
           };
+          nssmdns6 = true;
+          nssmdns4 = true;
           ipv6 = true;
         };
         # Configure keymap in X11
@@ -111,6 +119,12 @@ in
       # Enable networking
       # TODO: Consider removal of networkmanager
       networking.networkmanager.enable = true;
+      networking.nftables.enable = true;
+      # Only allow ingress from ranges I control
+      networking.firewall.extraInputRules = ''
+        ip saddr { 192.168.1.0/24 } udp dport 5353 accept
+        ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept
+      '';
       # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
       # (the default) this is the recommended approach. When using systemd-networkd it's
       # still possible to use this option, but it's recommended to use it in conjunction
