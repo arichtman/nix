@@ -5,8 +5,7 @@
 A home for my system configurations using Nix Flakes
 Be warned, I'm still learning and experimenting.
 
-~Nothing here should be construed as a model of good work!
-... yet.~
+~~Nothing here should be construed as a model of good work!... yet.~~
 Y'know, I'm starting to feel pretty good about this.
 
 ## Features and Todo
@@ -20,14 +19,16 @@ Y'know, I'm starting to feel pretty good about this.
 - Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
 - Enable mDNS bridging to VPN interfaces
 - Enable mDNS responses from OPNsense box
+- Enable IPv6 DNS server for Wireguard on MacOS.
+  [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
 - ~Properly set up the access point as a downstream router (with PD)~
   Done! Sweaty, slightly stressful afternoon but worth it.
-- ~Set up VPN in OPNsense~
+- ~~Set up VPN in OPNsense~~
   WG and OpenVPN working.
   Might do IPsec too or further tuning.
-- ~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~
+- ~~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~~
    Implemented along with reverse-proxy trapping.
 
 ### Substratum (Virtualization and Systems)
@@ -42,14 +43,14 @@ Y'know, I'm starting to feel pretty good about this.
   [iPXE](https://ipxe.org/)
   [netboot](https://netboot.xyz/)
 - Set up OpenAMT for out-of-band management.
-- ~Work out watchdog on Opnsense BSD~
+- ~~Work out watchdog on Opnsense BSD~~
   HW watchdog configured on the Topton N100.
   Monitoring it to see if it locks up still.
   Update: it does, have upgraded the processor microcode.
   Continuing to monitor.
-- ~See about nixos on-boot auto disk resize (and add to template!)~
+- ~~See about nixos on-boot auto disk resize (and add to template!)~~
   Virtual nodes auto-resizing, physical nodes no point.
-- ~`system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates~
+- ~~`system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates~~
   Without rollback and strong CI this feels risky, I might do this manually for a while until I'm confident
 
 ### Subsoil (Foundational Services)
@@ -83,14 +84,14 @@ Y'know, I'm starting to feel pretty good about this.
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
-- ~Work out what's to replace addon-manager~
+- ~~Work out what's to replace addon-manager~~
   It's sig-addonmanager, I think.
   That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
-- ~Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`~
+- ~~Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`~~
   Node authorization enabled so clients with signed `O=cluster:nodes:$NAME` are working.
-- ~Pull common kubernetes config out into another module~
-- ~Possibly rewrite the Kubernetes module(s)~
-- ~Fix addonManager not finding anything to apply~
+- ~~Pull common kubernetes config out into another module~~
+- ~~Possibly rewrite the Kubernetes module(s)~~
+- ~~Fix addonManager not finding anything to apply~~
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
@@ -100,7 +101,7 @@ Y'know, I'm starting to feel pretty good about this.
 ### Organics (Applications and nice-to-haves)
 
 - Look into `buildEnv` over `devShell`
-- ~Get a container image build with nix going~
+- ~~Get a container image build with nix going~~
   [Jamey blog](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
   [Amos's example](https://jamey.thesharps.us/2021/02/02/docker-containers-nix/)
 
@@ -197,7 +198,7 @@ We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
 
 For the USB rust bucket we found the device name with `fdisk -l`.
-~Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.~
+~~Then we `mkfs -t ext4 /dev/sdb`, followed by a `mount /dev/sdb /media/backup`.~~
 Never mind, same dance with the GUI, followed by heading to Node > Disks > Directory and creating one.
 
 Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount of backup disk.
@@ -205,6 +206,7 @@ Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount
 
 ### Re-IDing a Proxmox VM
 
+I used this to shift OPNsense to 999 and any templates to >=1000.
 1. Stop VM
 1. Get storage group name `lvs -a`
 1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
@@ -231,6 +233,8 @@ resize2fs /dev/sda1
 
 ### Opnsense
 
+#### VM Setup
+
 1. Download iso and unpack
 1. Move iso to `/var/lib/vz/template/iso`
 1. Create VM with adjustments:
@@ -246,6 +250,9 @@ resize2fs /dev/sda1
    - Keep weekly 4
 1. Boot machine and follow installer
 1. Add PCIe ethernet controllers
+
+#### Base OS Setup
+
 1. Boot system and root login
 1. Assign WAN and LAN interfaces to ethernet controllers
 1. Check for updates either `opkg update` or maybe system > firmware
@@ -259,12 +266,21 @@ resize2fs /dev/sda1
    - configure DNS servers
    - Disallow DNS override on WAN
 1. Reporting > netflow set capture on
+1. System > settings > cron
+   - once daily to update the block lists
+   - once weekly after the backup is taken (this ensures we can restore)
+
+#### DNS Configuration
+
 1. Configure Upbound DNS service
    - enable DNSSEC
    - enable DHCP lease registration
    - Disallow system nameservers in DoT and add records with blank domains+port 853
    - Enable blocklist and use OISD Ads only (to be experimented with)
    - Enable data capture
+
+#### Firewall Configuration
+
 1. Firewall
    - Add aliases for static boxes, localhost
    - Create a NAT port-forward:
@@ -275,27 +291,39 @@ resize2fs /dev/sda1
       - Destination LAN net
       - from dns to dns
       - Redirect target Localhost:53
-1. System > settings > cron
-   - once daily to update the block lists
-   - once weekly after the backup is taken (this ensures we can restore)
 1. Test
    - DNS redirection:
       - Unbound host override bing.com to something
       - Check this returns the override `dig +trace @4.4.4.4 bing.com`
    - Ad blocking https://d3ward.github.io/toolz/adblock.html
-1. If enabling BGP run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
-1. Install plugins:
-   - NextCloud backup
-   - FRR BGP
-   - Prometheus exporter
-   - DynamicDNS client
-   - AMD microcode updates (unsure how wise this is given hypervisor is Intel)
-     OPNsense already had this set up when I installed it but check post-install instructions.
-   - tftp plugin (unmaintained but possibly workable)
-     [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp)
-   - optionally: themes
-1. Configure NextCloud backup with an app key
-1. Configure DynamicDNS with AWS access key
+
+- [Unbound DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
+- [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
+
+#### OpenVPN
+
+Follow one of the 6000 tutorials AKA yes, I forgot to document it.
+
+- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
+
+#### WireGuard
+
+Follow tutorial AKA forgot to document it.
+See also `wg0.conf` in this repo.
+
+#### Plugins
+
+- NextCloud backup, configure with an app key.
+- FRR BGP, BGP run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
+  (Not immediately in use, for Cillium later)
+- Prometheus exporter.
+  (Not immediately in use, for foundatinoal monitoring later)
+- DynamicDNS client, configure with AWS Access Key.
+- AMD microcode updates (unsure how wise this is given hypervisor is Intel)
+  OPNsense already had this set up when I installed it but check post-install instructions.
+- tftp plugin (unmaintained but possibly workable)
+  [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp)
+- optionally: themes
 
 Notes:
 
@@ -304,13 +332,11 @@ I will revisit the resources supplied after running the box for a bit.
 CPU seems fine, spikey with what I think are Python runtime startups from the control layer.
 RAM looks consistently under about 1Gb so I'll trim that back from the
 [recommended minimum](https://docs.opnsense.org/manual/hardware.html) 2Gb.
+We're doing pretty well on space too but I'm less short on that.
 
 References:
 
 - [Reddit performance comment](https://www.reddit.com/r/OPNsenseFirewall/comments/guo2iz/comment/fskpk76)
-- [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
-- [Unbound DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
-- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
 
 ### Virtualized NixOS Node Bootstrap
 
@@ -326,7 +352,7 @@ References:
 1. Rebuild
 1. Bounce the machine so it releases using the new hostname
 1. Then pull down some keys to get in, it should have already DHCP'd over the bridge network.
-   `mkdir ~/.ssh && curl https://github.com/arichtman.keys -o ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys`
+   `mkdir ~~/.ssh && curl https://github.com/arichtman.keys -o ~/.ssh/authorized_keys && chmod 600 ~~/.ssh/authorized_keys`
 1. Upgrade the system
    `sudo nixos-rebuild switch --upgrade --upgrade-all`
 1. Reboot to test
@@ -552,17 +578,17 @@ sudo systemctl restart NetworkManager
 - Fix Zellij exits still leaving you in a Bash session.
 - Make Alacritty visible on the launch pad or whatever it's called
 - Fix CLI history suggestions
-- ~Work out how to get my usual home setup on here (aliases, shell, apps etc)~
+- ~~Work out how to get my usual home setup on here (aliases, shell, apps etc)~~
   I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
-- ~Fix Helix system clipboard yank~
+- ~~Fix Helix system clipboard yank~~
   Just works in Alacritty?
-- ~Fix zellij system clipboard copy~
+- ~~Fix zellij system clipboard copy~~
   Works fine in Alacritty?
-- ~Fix alacritty no suitable GL error~
+- ~~Fix alacritty no suitable GL error~~
   Did some dirty hax with `nixGLIntel`, whatever, it's a complex and long-standing OpenGL on non-Nix systems issue.
-- ~Decide if I want to keep nushell~
+- ~~Decide if I want to keep nushell~~
   I don't. I'm sure it's cool but I need to work on too many systems and environments that won't be compatible.
-- ~Remove the nushell banner~
+- ~~Remove the nushell banner~~
 - ~Work out how to switch my shell to nushell properly...
   or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
   `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
