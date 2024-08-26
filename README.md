@@ -37,12 +37,14 @@ Y'know, I'm starting to feel pretty good about this.
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
-- Set up PXE booting off of OPNsense
-  [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)
-- Set up iPXE or something so multiple options.
-  [iPXE](https://ipxe.org/)
-  [netboot](https://netboot.xyz/)
 - Set up OpenAMT for out-of-band management.
+- ~~Set up PXE booting off of OPNsense
+  [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
+  IPv4 PXE working.
+- ~~Set up iPXE or something so multiple options.
+  [iPXE](https://ipxe.org/)
+  [netboot](https://netboot.xyz/)~~
+  iPXE working.
 - ~~Work out watchdog on Opnsense BSD~~
   HW watchdog configured on the Topton N100.
   Monitoring it to see if it locks up still.
@@ -121,6 +123,8 @@ Pre-requisites:
 
 1. Mash F10 to hit the bios (this was a thowback and a pain to do).
    Or just use `systemctl reboot --firmware-setup` ~ Future Ariel.
+1. Update the BIOS
+1. Load the settings from `HpSetup.txt` OR follow along the rest.
 1. Configure the following
    - Ensure legacy boot is enabled.
    - I disabled secure boot and MS certificate in case
@@ -321,8 +325,12 @@ See also `wg0.conf` in this repo.
 - DynamicDNS client, configure with AWS Access Key.
 - AMD microcode updates (unsure how wise this is given hypervisor is Intel)
   OPNsense already had this set up when I installed it but check post-install instructions.
-- tftp plugin (unmaintained but possibly workable)
-  [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp)
+- tftp plugin (unmaintained but workable)
+  [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp).
+  Make directory `/usr/local/tftp` and download `netboot.xyz.kpxe`.
+  I also downloaded `netboot.xyz.efi` for good measure.
+  Enable TFTP and set listening IP to `0.0.0.0`.
+  This defaulted to `127.0.0.1` which may have worked but I didn't test.
 - optionally: themes
 
 Notes:

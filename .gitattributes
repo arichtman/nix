@@ -1,3 +1,4 @@
 *.lock -diff
 LICENSE -diff
 *.svg binary
+HpSetup.txt binary
