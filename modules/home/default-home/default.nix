@@ -259,6 +259,9 @@ in
               git rm --force $1 ;
             }
             function llog { journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p InvocationID --value $1) ; }
+            if command -v nix-your-shell > /dev/null; then
+              nix-your-shell zsh | source /dev/stdin
+            fi
           '';
         };
       };
@@ -314,6 +317,7 @@ in
           nix-index
           nurl
           nix-bash-completions
+          nix-your-shell
           # Kube stuff
           kubectl
           # Lang servers
