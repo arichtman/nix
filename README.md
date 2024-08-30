@@ -38,6 +38,7 @@ Y'know, I'm starting to feel pretty good about this.
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
 - Set up OpenAMT for out-of-band management.
+- Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
 - ~~Set up PXE booting off of OPNsense
   [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
   IPv4 PXE working.
