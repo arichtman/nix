@@ -20,6 +20,8 @@
       ee = "exit 0";
       sc = "sudo systemctl";
       jc = "journalctl -xe";
+      nm = "sudo nmcli";
+      rc = "sudo resolvectl";
       ls = "exa";
       ll = "exa -las new";
       cls = "clear";
