@@ -23,13 +23,20 @@ Y'know, I'm starting to feel pretty good about this.
   [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- ~Properly set up the access point as a downstream router (with PD)~
+- Find a DDNS provider that supports the generic update mechanism, not proprietary API.
+- Configure secondary router to [repeat mDNS](https://www.snbforums.com/threads/mdns-repeater-with-guest-network-vlan.86503/),
+  [other thread](https://www.snbforums.com/threads/help-with-avahi-mdns-redirector-please.86537/).
+- Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
+- Set up valid TLS for secondary router.
+- ~~Configure downstream router to trap DNS and forward to Unbound.~~
+- ~~Properly set up the access point as a downstream router (with PD)~~
   Done! Sweaty, slightly stressful afternoon but worth it.
 - ~~Set up VPN in OPNsense~~
   WG and OpenVPN working.
   Might do IPsec too or further tuning.
 - ~~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~~
    Implemented along with reverse-proxy trapping.
+- ~~Set up valid TLS for OPNsense and Proxmox~~
 
 ### Substratum (Virtualization and Systems)
 
@@ -38,7 +45,12 @@ Y'know, I'm starting to feel pretty good about this.
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
 - Set up OpenAMT for out-of-band management.
-- Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
+- Work out watchdog on Opnsense BSD
+- Configure Topton N100 watchdog.
+  HW watchdog configured on the Topton N100.
+  Monitoring it to see if it locks up still.
+  Update: it does, have upgraded the processor microcode.
+  Continuing to monitor.
 - ~~Set up PXE booting off of OPNsense
   [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
   IPv4 PXE working.
@@ -46,11 +58,6 @@ Y'know, I'm starting to feel pretty good about this.
   [iPXE](https://ipxe.org/)
   [netboot](https://netboot.xyz/)~~
   iPXE working.
-- ~~Work out watchdog on Opnsense BSD~~
-  HW watchdog configured on the Topton N100.
-  Monitoring it to see if it locks up still.
-  Update: it does, have upgraded the processor microcode.
-  Continuing to monitor.
 - ~~See about nixos on-boot auto disk resize (and add to template!)~~
   Virtual nodes auto-resizing, physical nodes no point.
 - ~~`system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates~~
