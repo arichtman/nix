@@ -15,7 +15,21 @@ in
       enable = mkEnableOption "Turns a machine into one of my minions mwahahaha";
     };
     config = mkIf cfg.enable {
+      environment.systemPackages = with pkgs; [
+        git
+        helix
+        kubectl
+        step-cli
+        k9s
+        jq
+        yq
+        kubernetes-helm
+        tcpdump
+        trippy
+      ];
       boot.tmp.cleanOnBoot = true;
+      # TODO: See if this ought to be richtman.au
+      networking.domain = "local";
       # TODO: Pretty sure this defaults to 0 anyways...
       nix.settings.cores = 0;
       system.autoUpgrade.flake = "github:arichtman/nix";
@@ -28,16 +42,6 @@ in
         isNormalUser = true;
         description = "nixos";
         extraGroups = ["networkmanager" "wheel"];
-        packages = with pkgs; [
-          git
-          helix
-          kubectl
-          step-cli
-          k9s
-          jq
-          yq
-          kubernetes-helm
-        ];
       };
 
       security = {

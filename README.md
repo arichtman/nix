@@ -20,15 +20,19 @@ Y'know, I'm starting to feel pretty good about this.
 - Enable mDNS bridging to VPN interfaces
 - Enable mDNS responses from OPNsense box
 - Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
-- Enable IPv6 DNS server for Wireguard on MacOS.
-  [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- Find a DDNS provider that supports the generic update mechanism, not proprietary API.
+- Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
+  Switch to Inadyne DDNS client for that.
+- Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.
+- Enable mTLS to protect some routes. [Caddy docs](https://caddyserver.com/docs/caddyfile/directives/tls)
 - Configure secondary router to [repeat mDNS](https://www.snbforums.com/threads/mdns-repeater-with-guest-network-vlan.86503/),
   [other thread](https://www.snbforums.com/threads/help-with-avahi-mdns-redirector-please.86537/).
 - Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
 - Set up valid TLS for secondary router.
+  I have successfully uploaded a valid TLS leaf certificate but it doesn't seem to be serving it.
+- ~~Enable IPv6 DNS server for Wireguard on MacOS.
+  [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)~~
 - ~~Configure downstream router to trap DNS and forward to Unbound.~~
 - ~~Properly set up the access point as a downstream router (with PD)~~
   Done! Sweaty, slightly stressful afternoon but worth it.
