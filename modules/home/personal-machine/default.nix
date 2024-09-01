@@ -39,20 +39,35 @@ in
           ];
         };
         ap = {
-          user = "fang";
+          user = "chanya";
           hostname = "ap.internal";
         };
         "*.internal" = {
           user = "nixos";
         };
+        "*.local" = {
+          user = "nixos";
+        };
+        fc = {
+          hostname = "fat-controller.local";
+        };
+        mum = {
+          hostname = "mum.local";
+        };
         pz = {
-          hostname = "patient-zero.internal";
+          hostname = "patient-zero.local";
         };
         ds = {
-          hostname = "dr-singh.internal";
+          hostname = "dr-singh.local";
         };
         sb = {
-          hostname = "smol-bat.internal";
+          hostname = "smol-bat.local";
+        };
+        tm = {
+          hostname = "tweedledum.local";
+        };
+        te = {
+          hostname = "tweedledee.local";
         };
       };
     };
