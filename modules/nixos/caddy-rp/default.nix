@@ -37,6 +37,18 @@ in {
           # Ref: https://caddy.community/t/bind-caddy-to-ipv6-only-via-docker-compose/22988/6
         ];
         virtualHosts = {
+          # the protocol portion controls TLS and the bind
+          # not that we're using TLS but the hostname must match
+          # this one's an upstream intended for access by nginx on opnsense
+          "http://home.richtman.au" = {
+            extraConfig = ''
+              redir /graph /prometheus/graph
+              redir /prometheus /prometheus/
+              handle_path /prometheus/* {
+                reverse_proxy localhost:9090
+              }
+            '';
+          };
           "https://${config.services.r53-ddns.hostname}.${config.services.r53-ddns.domain}" = {
             # Requires DNS-01 challenge which needs compiled caddy
             # serverAliases = [ config.networking.fqdn "${config.networking.hostName}.internal" ];

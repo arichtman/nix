@@ -9,6 +9,10 @@
   lab-node.enable = true;
   system.stateVersion = "24.11";
   networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
+    # Allow my IPv4 private subnets into HTTP
+    "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 80 accept"
+    # Allow anything in my primary prefix into HTTP
+    "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 80 accept"
     # Allow my IPv4 private subnets into HTTPS
     "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 443 accept"
     # Allow anything in my primary prefix into HTTPS
@@ -41,6 +45,13 @@
           scrape_interval = "15s";
           static_configs = [{
             targets = ["localhost:2019"];
+          }];
+        }
+        {
+          job_name = "sixth-sense";
+          scrape_interval = "15s";
+          static_configs = [{
+            targets = ["opnsense.internal:9100"];
           }];
         }
       ]; # Ref: https://wiki.nixos.org/wiki/Prometheus
