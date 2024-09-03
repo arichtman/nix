@@ -24,8 +24,6 @@ Y'know, I'm starting to feel pretty good about this.
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
 - Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
   Switch to Inadyne DDNS client for that.
-- Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.
-- Enable mTLS to protect some routes. [Caddy docs](https://caddyserver.com/docs/caddyfile/directives/tls)
 - Configure secondary router to [repeat mDNS](https://www.snbforums.com/threads/mdns-repeater-with-guest-network-vlan.86503/),
   [other thread](https://www.snbforums.com/threads/help-with-avahi-mdns-redirector-please.86537/).
 - Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
@@ -79,6 +77,14 @@ Y'know, I'm starting to feel pretty good about this.
   - Certificate authority? (step-ca?)
   - Identity (Authentik/Kanidm/Guacamole/Gluu)
 - Look into where makes sense to bootstrap secrets/vault/trust
+- Deploy reverse proxy with ACME/LetsEncrypt.
+  Configure secondary reverse proxy to services.
+- Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.
+- Enable mTLS to protect some routes. [Caddy docs](https://caddyserver.com/docs/caddyfile/directives/tls)
+- Switch routing to dynamic subdomains.
+- Add Uptime Kuma publicly
+- Apply WAF protection.
+- Deploy CrowdSec.
 
 ### Topsoil (Kubernetes)
 
