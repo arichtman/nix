@@ -9,10 +9,6 @@
   lab-node.enable = true;
   system.stateVersion = "24.11";
   networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
-    # Allow my IPv4 private subnets into HTTP
-    "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 80 accept"
-    # Allow anything in my primary prefix into HTTP
-    "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 80 accept"
     # Allow my IPv4 private subnets into HTTPS
     "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 443 accept"
     # Allow anything in my primary prefix into HTTPS
@@ -37,22 +33,26 @@
       # TODO: Wire this all up centrally somewhere
       # TODO: Find out what fuckery is causing /prometheus/ to redirect to /graph
       # I tried setting Prom's web.external-url to the full thing with and without trailing slash.
-      webExternalUrl = "https://services.richtman.dev/";
+      webExternalUrl = "https://home.richtman.au/";
       retentionTime = "14d";
       scrapeConfigs = [
         {
           job_name = "catdaddy";
           scrape_interval = "15s";
-          static_configs = [{
-            targets = ["localhost:2019"];
-          }];
+          static_configs = [
+            {
+              targets = ["localhost:2019"];
+            }
+          ];
         }
         {
           job_name = "sixth-sense";
           scrape_interval = "15s";
-          static_configs = [{
-            targets = ["opnsense.internal:9100"];
-          }];
+          static_configs = [
+            {
+              targets = ["opnsense.internal:9100"];
+            }
+          ];
         }
       ]; # Ref: https://wiki.nixos.org/wiki/Prometheus
       alertmanager = {
