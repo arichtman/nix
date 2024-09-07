@@ -350,6 +350,7 @@ See also `wg0.conf` in this repo.
   I also downloaded `netboot.xyz.efi` for good measure.
   Enable TFTP and set listening IP to `0.0.0.0`.
   This defaulted to `127.0.0.1` which may have worked but I didn't test.
+- ACME client [tutorial](https://forum.opnsense.org/index.php?topic=24778.0)
 - optionally: themes
 
 Notes:

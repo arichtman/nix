@@ -17,23 +17,13 @@
   services = {
     k8s.controller = true;
     caddyRP.enabled = true;
-    r53-ddns = {
-      enable = true;
-      zoneID = "Z094201131ER8RBWWZLOL";
-      hostname = "services";
-      domain = "richtman.dev";
-      environmentFile = "/var/lib/r53-ddns/secret.env";
-    };
     prometheus = {
       enable = true;
-      # Apparently this listens IPv4 also
-      # TODO: scale back to localhost only when RP working?
-      #   Could also be convenient to access directly from LAN
-      listenAddress = "[::]";
+      listenAddress = "[::1]";
       # TODO: Wire this all up centrally somewhere
       # TODO: Find out what fuckery is causing /prometheus/ to redirect to /graph
       # I tried setting Prom's web.external-url to the full thing with and without trailing slash.
-      webExternalUrl = "https://home.richtman.au/";
+      webExternalUrl = "https://fat-controller.local/";
       retentionTime = "14d";
       scrapeConfigs = [
         {

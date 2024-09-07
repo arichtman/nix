@@ -25,8 +25,6 @@ in {
     services = {
       caddy = {
         enable = true;
-        # For testing
-        acmeCA = "https://acme-staging-v02.api.letsencrypt.org/directory";
         email = "ariel@richtman.au";
         globalConfig = lib.concatStringsSep "\n" [
           # Don't store out-of-band config changes
@@ -39,15 +37,11 @@ in {
           "auto_https off"
           # For testing
           "debug"
-          # Doesn't work without an actual IP I think...
-          # Set to IPv6 so it doesn't try IPv4 ACME and bomb
-          # "default_bind ip6/[::]"
-          # Ref: https://caddy.community/t/bind-caddy-to-ipv6-only-via-docker-compose/22988/6
         ];
         virtualHosts = {
-          # Maybe try `reverse_proxy` directive
-          # and look into response rewrite to see about the /graph issue
-          "http://home.richtman.au" = {
+          # If hostname needs adjusting
+          #     header_up Host {upstream_hostport}
+          "http://fat-controller.local" = {
             extraConfig = ''
               redir /graph /prometheus/graph
               handle_path /prometheus* {
