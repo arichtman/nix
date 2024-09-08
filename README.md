@@ -50,10 +50,7 @@ Y'know, I'm starting to feel pretty good about this.
 - Set up OpenAMT for out-of-band management.
 - Work out watchdog on Opnsense BSD
 - Configure Topton N100 watchdog.
-  HW watchdog configured on the Topton N100.
-  Monitoring it to see if it locks up still.
-  Update: it does, have upgraded the processor microcode.
-  Continuing to monitor.
+  BIOS setting located but microcode update seems to have stabilized the system.
 - ~~Set up PXE booting off of OPNsense
   [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
   IPv4 PXE working.
@@ -176,7 +173,10 @@ Pre-requisites:
 
 ### Topton N100
 
-1. Mash `F10` (?) to enter BIOS
+1. Download BIOS update and place on Ventoy USB.
+1. Mash `F10` to enter BIOS, boot update.
+   Enter `1` and it should update.
+1. Reset and wait, it will beep and hang and reboot but eventually it should come good.
 1. Set USB boot precendence above internal drive/s
 1. Boot Proxmox installer and walk through
    Set static IP with netmask as same as router's DHCP netmask.
@@ -198,6 +198,18 @@ Pre-requisites:
     vfio_pci
     vfio_virqfd' >> /etc/modules`
 1. Reboot to check config
+1. Set BIOS settings:
+   - Boot:
+     - Enable fast boot
+     - Enable network stack
+   - Advanced:
+     - IT8613
+       - WDT Timeout (this is your watchdog interval)
+       - Disable beep
+     - Network Stack
+       - Enable and turn on all PXE options
+     - ACPI
+       - Disable Suspend
 
 If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
 It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.
@@ -210,6 +222,8 @@ References:
 
 - [Proxmox package repo docs](https://pve.proxmox.com/wiki/Package_Repositories)
 - [Servethehome net passthru tutorial](https://www.servethehome.com/how-to-pass-through-pcie-nics-with-proxmox-ve-on-intel-and-amd/)
+- [Reddit BIOS post](https://www.reddit.com/r/homelab/comments/1bzlicc/updating_bios_on_cwwk_n100_nas_motherboard/)
+- [Actual BIOS download](https://pan.x86pi.cn/BIOS%E6%9B%B4%E6%96%B0/3.NAS%E5%AD%98%E5%82%A8%E7%B1%BB%E4%BA%A7%E5%93%81%E7%B3%BB%E5%88%97BIOS/2.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%9B%9B%E7%BD%91N100-N305-NAS-BIOS)
 
 ## Substratum
 
