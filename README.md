@@ -171,7 +171,7 @@ Pre-requisites:
 1. Move the machine to it's final home.
 1. Remotely retrieve the hardware configuration and commit it to the flake repo.
 
-### Topton N100
+### Topton N100 (CW-AL-4L-V1.0 N100)
 
 1. Download BIOS update and place on Ventoy USB.
 1. Mash `F10` to enter BIOS, boot update.
@@ -200,16 +200,13 @@ Pre-requisites:
 1. Reboot to check config
 1. Set BIOS settings:
    - Boot:
+     - Disable beep
      - Enable fast boot
      - Enable network stack
-   - Advanced:
-     - IT8613
-       - WDT Timeout (this is your watchdog interval)
-       - Disable beep
-     - Network Stack
-       - Enable and turn on all PXE options
-     - ACPI
-       - Disable Suspend
+  - Chipset:
+    - PCH-IO:
+      - Enable Wake on lan and BT
+      - Enable TCO timer
 
 If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
 It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.
@@ -223,7 +220,8 @@ References:
 - [Proxmox package repo docs](https://pve.proxmox.com/wiki/Package_Repositories)
 - [Servethehome net passthru tutorial](https://www.servethehome.com/how-to-pass-through-pcie-nics-with-proxmox-ve-on-intel-and-amd/)
 - [Reddit BIOS post](https://www.reddit.com/r/homelab/comments/1bzlicc/updating_bios_on_cwwk_n100_nas_motherboard/)
-- [Actual BIOS download](https://pan.x86pi.cn/BIOS%E6%9B%B4%E6%96%B0/3.NAS%E5%AD%98%E5%82%A8%E7%B1%BB%E4%BA%A7%E5%93%81%E7%B3%BB%E5%88%97BIOS/2.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%9B%9B%E7%BD%91N100-N305-NAS-BIOS)
+- [Actual BIOS download](https://pan.x86pi.cn/BIOS%E6%9B%B4%E6%96%B0/1.Intel%E8%BF%B7%E4%BD%A0%E4%B8%BB%E6%9C%BA%E7%B3%BB%E5%88%97BIOS/1.%E7%AC%AC12%E4%BB%A3AlderLake-U-P-N%E5%85%A8%E7%B3%BB%E5%88%97/1.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N95-N100-N200-N305%E7%B3%BB%E5%88%97-V1-V2/1.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91%E7%B3%BB%E5%88%97-V1/AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N100-N200-I3-N305-V1_%E5%87%BA%E5%8E%82%E9%BB%98%E8%AE%A4%E5%8E%9F%E5%A7%8B%E7%89%88/CW-AL-4L-V1.0(%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N95-N100-N200-I3-N305-V1%E5%87%BA%E5%8E%82%E9%BB%98%E8%AE%A4%E5%8E%9F%E5%A7%8B%E7%89%88%E6%9C%AC)23.04.28.iso)
+- [Watchdog post](https://forum.proxmox.com/threads/watchdog-will-not-trigger-on-intel-system.152238/)
 
 ## Substratum
 
