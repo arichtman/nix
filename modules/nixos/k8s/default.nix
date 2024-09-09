@@ -37,6 +37,7 @@
     users = lib.mkIf (config.services.k8s.controller || config.services.k8s.worker) {
       users = {
         kubernetes = {
+          # TODO: See about using DynamicUser and StateDirectory
           # TODO: remove if unnecessary
           # uid = config.ids.uids.kubernetes;
           description = "K8s user";
