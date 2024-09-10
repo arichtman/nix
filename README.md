@@ -239,6 +239,17 @@ Never mind, same dance with the GUI, followed by heading to Node > Disks > Direc
 Use `blkid` to pull details and populate a line in `/etc/fstab` for auto remount of backup disk.
 [Ref](https://www.baeldung.com/linux/automount-partitions-startup)
 
+`/etc/fstab`:
+
+```text
+# <file system> <mount point> <type> <options> <dump> <pass>
+/dev/pve/root / ext4 errors=remount-ro 0 1
+UUID=C61A-7940 /boot/efi vfat defaults 0 1
+/dev/pve/swap none swap sw 0 0
+proc /proc proc defaults 0 0
+UUID=b35130d3-6351-4010-87dd-6f2dac34cfba /mnt/pve/Backup ext4 defaults,nofail,x-systemd.device-timeout=5 0 2
+```
+
 ### Re-IDing a Proxmox VM
 
 I used this to shift OPNsense to 999 and any templates to >=1000.
