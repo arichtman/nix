@@ -313,6 +313,7 @@ in
           yazi # file manager
           eza # exa is unmaintained 🫣
           fira-code-nerdfont # This actually makes it available to Alacritty
+          cyme # lsusb replacement
           # Nix tooling
           nix-init
           nix-update

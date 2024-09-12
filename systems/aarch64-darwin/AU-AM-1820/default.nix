@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  networking.hostName = "bne-nb-ariel";
+  networking.hostName = "AU-AM-1820";
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
