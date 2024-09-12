@@ -207,6 +207,7 @@ Pre-requisites:
     - PCH-IO:
       - Enable Wake on lan and BT
       - Enable TCO timer
+1. Install Prometheus node exporter, `apt install prometheus-node-exporter`.
 
 If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
 It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.

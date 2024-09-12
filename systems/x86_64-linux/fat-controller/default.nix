@@ -40,34 +40,40 @@
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://fat-controller.local/";
       retentionTime = "14d";
+      exporters.node.enable = true;
+      # TODO: Configure global defaults
       scrapeConfigs = [
         {
-          job_name = "catdaddy";
+          job_name = "caddy";
           scrape_interval = "15s";
           static_configs = [
             {
-              targets = ["localhost:2019"];
+              targets = ["fat-controller.local:2019"];
             }
           ];
         }
         {
-          job_name = "self-love";
+          job_name = "monitoring";
           scrape_interval = "15s";
           static_configs = [
             {
               targets = [
-                "localhost:9090"
-                "localhost:3000"
+                "fat-controller.local:9090"
+                "fat-controller.local:3000"
               ];
             }
           ];
         }
         {
-          job_name = "sixth-sense";
+          job_name = "machines";
           scrape_interval = "15s";
           static_configs = [
             {
-              targets = ["opnsense.internal:9100"];
+              targets = [
+                "fat-controller.local:9100"
+                "opnsense.internal:9100"
+                "proxmox.internal:9100"
+              ];
             }
           ];
         }
