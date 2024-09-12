@@ -17,10 +17,27 @@
   services = {
     k8s.controller = true;
     caddyRP.enabled = true;
+    grafana = {
+      enable = true;
+      settings = {};
+      provision = {
+        enable = true;
+        datasources.settings.datasources = [
+          {
+            name = "prometheus";
+            type = "prometheus";
+            url = "http://localhost:9090";
+            isDefault = true;
+            editable = false;
+          }
+        ];
+      };
+    };
     prometheus = {
       enable = true;
       listenAddress = "[::1]";
       # TODO: Wire this all up centrally somewhere
+      # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://fat-controller.local/";
       retentionTime = "14d";
       scrapeConfigs = [
@@ -30,6 +47,18 @@
           static_configs = [
             {
               targets = ["localhost:2019"];
+            }
+          ];
+        }
+        {
+          job_name = "self-love";
+          scrape_interval = "15s";
+          static_configs = [
+            {
+              targets = [
+                "localhost:9090"
+                "localhost:3000"
+              ];
             }
           ];
         }

@@ -50,6 +50,10 @@ in {
               handle_path /prometheus* {
                 reverse_proxy localhost:9090
               }
+              redir /login /grafana/login
+              handle_path /grafana* {
+                reverse_proxy localhost:3000
+              }
             '';
           };
         };
