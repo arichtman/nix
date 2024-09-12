@@ -21,8 +21,6 @@
       enable = true;
       listenAddress = "[::1]";
       # TODO: Wire this all up centrally somewhere
-      # TODO: Find out what fuckery is causing /prometheus/ to redirect to /graph
-      # I tried setting Prom's web.external-url to the full thing with and without trailing slash.
       webExternalUrl = "https://fat-controller.local/";
       retentionTime = "14d";
       scrapeConfigs = [

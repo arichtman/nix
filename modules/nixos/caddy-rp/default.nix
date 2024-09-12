@@ -41,9 +41,10 @@ in {
           "debug"
         ];
         virtualHosts = {
-          # If hostname needs adjusting
-          #     header_up Host {upstream_hostport}
-          "http://fat-controller.local" = {
+          # Ignore hostname for routing purposes
+          ":80" = {
+            # TODO: Find out what fuckery is causing /prometheus/ to redirect to /graph
+            # I tried setting Prom's web.external-url to the full thing with and without trailing slash.
             extraConfig = ''
               redir /graph /prometheus/graph
               handle_path /prometheus* {
