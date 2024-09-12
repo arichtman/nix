@@ -21,6 +21,8 @@ in {
       "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 80 accept"
       # Allow anything in my primary prefix into HTTP
       "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 80 accept"
+      # Allow link-local HTTP
+      "ip6 saddr { fe80::/10 } tcp dport 80 accept"
     ];
     services = {
       caddy = {
