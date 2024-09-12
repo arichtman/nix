@@ -54,6 +54,9 @@ in {
               handle_path /grafana* {
                 reverse_proxy localhost:3000
               }
+              handle_path /alertmanager* {
+                reverse_proxy localhost:9093
+              }
             '';
           };
         };

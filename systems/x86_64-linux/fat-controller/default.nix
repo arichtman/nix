@@ -60,6 +60,7 @@
               targets = [
                 "fat-controller.local:9090"
                 "fat-controller.local:3000"
+                "fat-controller.local:9093"
               ];
             }
           ];
@@ -79,8 +80,25 @@
         }
       ]; # Ref: https://wiki.nixos.org/wiki/Prometheus
       alertmanager = {
-        # enable = true;
-        configuration = {};
+        enable = true;
+        # Required to use files in config?
+        # checkConfig = false;
+        configuration = {
+          receivers = [
+            {
+              name = "discord";
+              discord_configs = [
+                {
+                  webhook_url = "";
+                  # webhook_url_file = "/var/lib/alertmanager/discord-webhook-url.txt";
+                }
+              ];
+            }
+          ];
+          route = {
+            receiver = "discord";
+          };
+        };
       };
     };
   };
