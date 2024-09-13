@@ -3,7 +3,13 @@
   lib,
   config,
   ...
-}: {
+}: let
+  downloadedRuleFile = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/host-and-hardware/node-exporter.yml";
+    sha256 = "12r78fav9gr8bvqbrhk0b24wrcd5162n8ycbiragbkddasipwzgw";
+  };
+  downloadedRuleFiles = [downloadedRuleFile];
+in {
   networking.hostName = "fat-controller";
   virtual-node.enable = true;
   lab-node.enable = true;
@@ -35,12 +41,13 @@
     };
     prometheus = {
       enable = true;
-      listenAddress = "[::1]";
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://fat-controller.local/";
+      ruleFiles = downloadedRuleFiles;
       retentionTime = "14d";
       exporters.node.enable = true;
+      # TODO: Think about localhost and relabelling the targets, or finding a way to use fat-controller without binding [::]
       # TODO: Configure global defaults
       scrapeConfigs = [
         {
@@ -48,7 +55,7 @@
           scrape_interval = "15s";
           static_configs = [
             {
-              targets = ["fat-controller.local:2019"];
+              targets = ["localhost:2019"];
             }
           ];
         }
@@ -58,9 +65,9 @@
           static_configs = [
             {
               targets = [
-                "fat-controller.local:9090"
-                "fat-controller.local:3000"
-                "fat-controller.local:9093"
+                "localhost:9090"
+                "localhost:3000"
+                "localhost:9093"
               ];
             }
           ];
@@ -71,7 +78,7 @@
           static_configs = [
             {
               targets = [
-                "fat-controller.local:9100"
+                "localhost:9100"
                 "opnsense.internal:9100"
                 "proxmox.internal:9100"
               ];

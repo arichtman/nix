@@ -30,6 +30,9 @@
 
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+
+    yaml2nix.url = "github:euank/yaml2nix";
+    yaml2nix.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = inputs: let
     lib = inputs.snowfall-lib.mkLib {
