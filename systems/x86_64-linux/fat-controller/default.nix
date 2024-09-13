@@ -9,6 +9,22 @@
     sha256 = "12r78fav9gr8bvqbrhk0b24wrcd5162n8ycbiragbkddasipwzgw";
   };
   downloadedRuleFiles = [downloadedRuleFile];
+  promLocalHostRelabelConfigs = [
+    # Relabel localhost so we don't have to open metrics to the world
+    {
+      source_labels = ["__address__"];
+      regex = "(localhost):.*";
+      target_label = "instance";
+      replacement = "fat-controller.local";
+    }
+    # Remove port numbers
+    {
+      source_labels = ["__address__"];
+      regex = "(.+):.*";
+      target_label = "instance";
+      replacement = "\${1}";
+    }
+  ];
 in {
   networking.hostName = "fat-controller";
   virtual-node.enable = true;
@@ -47,12 +63,12 @@ in {
       ruleFiles = downloadedRuleFiles;
       retentionTime = "14d";
       exporters.node.enable = true;
-      # TODO: Think about localhost and relabelling the targets, or finding a way to use fat-controller without binding [::]
       # TODO: Configure global defaults
       scrapeConfigs = [
         {
           job_name = "caddy";
           scrape_interval = "15s";
+          relabel_configs = promLocalHostRelabelConfigs;
           static_configs = [
             {
               targets = ["localhost:2019"];
@@ -62,6 +78,7 @@ in {
         {
           job_name = "monitoring";
           scrape_interval = "15s";
+          relabel_configs = promLocalHostRelabelConfigs;
           static_configs = [
             {
               targets = [
@@ -75,6 +92,7 @@ in {
         {
           job_name = "machines";
           scrape_interval = "15s";
+          relabel_configs = promLocalHostRelabelConfigs;
           static_configs = [
             {
               targets = [
