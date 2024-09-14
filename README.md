@@ -192,7 +192,7 @@ Pre-requisites:
    At least the post install one to fix sources.
    I also ran the microcode update, CPU scaling governor, and kernel cleanup (since I had been operating for a while).
 1. Enable IOMMU. First, check GRUB/systemd `efibootmgr -v`.
-   If GRUB, `sed -i -r -e 's/(GRUB_CMDLINE_LINUX_DEFAULT=")(.*)"/\1\2 intel_iommu=on iommu=pt"/' /etc/default/grub`
+   If GRUB, `sed -i -r -e 's/(GRUB_CMDLINE_LINUX_DEFAULT=")(.*)"/\1\2 intel_iommu=on"/' /etc/default/grub`
 1. `echo 'vfio
     vfio_iommu_type1
     vfio_pci
@@ -211,6 +211,7 @@ Pre-requisites:
 1. Install Avahi daemon to enable mDNS, `apt install avahi-daemon`.
 1. Install grub package so actual grub binaries get updates, `apt install grub-efi-amd64`.
 1. Optionally comment out the Cron job on reboot that sets it to power save.
+1. Disable IPMI service since we don't have support, `systemctl disable openipmi`.
 
 If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
 It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.

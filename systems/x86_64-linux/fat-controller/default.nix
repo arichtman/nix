@@ -1,19 +1,37 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: let
-  downloadedRuleFile = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/host-and-hardware/node-exporter.yml";
-    sha256 = "12r78fav9gr8bvqbrhk0b24wrcd5162n8ycbiragbkddasipwzgw";
+{lib, ...}: let
+  # Source: https://samber.github.io/awesome-prometheus-alerts/
+  ruleSets = [
+    {
+      url = "https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/prometheus-self-monitoring/embedded-exporter.yml";
+      sha256 = "00n6c22qrib6wix31c3q2bp69kaplqm1awyhxawd1r1disp5gi4v";
+    }
+    {
+      url = "https://raw.githubusercontent.com/samber/awesome-prometheus-alerts/master/dist/rules/host-and-hardware/node-exporter.yml";
+      sha256 = "12r78fav9gr8bvqbrhk0b24wrcd5162n8ycbiragbkddasipwzgw";
+    }
+  ];
+  downloadedRuleFiles = builtins.map builtins.fetchurl ruleSets;
+  mkLocalScrapeConfig = name: port: {
+    job_name = builtins.toString name;
+    relabel_configs = promLocalHostRelabelConfigs;
+    honor_labels = false;
+    static_configs = [
+      {
+        targets = [
+          "localhost:${builtins.toString port}"
+        ];
+        labels = {
+          instance = "fat-controller.local";
+        };
+      }
+    ];
   };
-  downloadedRuleFiles = [downloadedRuleFile];
   promLocalHostRelabelConfigs = [
+    # TODO: Work out why localhost relabel and label override aren't working
     # Relabel localhost so we don't have to open metrics to the world
     {
       source_labels = ["__address__"];
-      regex = "(localhost):.*";
+      regex = ".*localhost.*";
       target_label = "instance";
       replacement = "fat-controller.local";
     }
@@ -59,44 +77,48 @@ in {
       enable = true;
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
-      webExternalUrl = "https://fat-controller.local/";
+      webExternalUrl = "https://prometheus.services.richtman.au/";
       ruleFiles = downloadedRuleFiles;
-      retentionTime = "14d";
-      exporters.node.enable = true;
-      # TODO: Configure global defaults
-      scrapeConfigs = [
+      alertmanagers = [
         {
-          job_name = "caddy";
-          scrape_interval = "15s";
-          relabel_configs = promLocalHostRelabelConfigs;
-          static_configs = [
-            {
-              targets = ["localhost:2019"];
-            }
-          ];
-        }
-        {
-          job_name = "monitoring";
-          scrape_interval = "15s";
-          relabel_configs = promLocalHostRelabelConfigs;
+          scheme = "http";
+          path_prefix = "/alertmanager";
           static_configs = [
             {
               targets = [
-                "localhost:9090"
-                "localhost:3000"
-                "localhost:9093"
+                "localhost"
               ];
             }
           ];
         }
+      ];
+      retentionTime = "14d";
+      exporters.node.enable = true;
+      globalConfig = {
+        scrape_interval = "15s";
+      };
+      scrapeConfigs = [
+        (mkLocalScrapeConfig "caddy" 2019)
+        (mkLocalScrapeConfig "grafana" 3000)
+        # Required to silence rule about missing Alertmanager job
+        (mkLocalScrapeConfig "alertmanager" 9093)
+        # Required to silence rule about missing Prometheus job
+        (mkLocalScrapeConfig "prometheus" 9090)
         {
           job_name = "machines";
-          scrape_interval = "15s";
           relabel_configs = promLocalHostRelabelConfigs;
+          honor_labels = false;
           static_configs = [
             {
               targets = [
                 "localhost:9100"
+              ];
+              labels = {
+                instance = "fat-controller.local";
+              };
+            }
+            {
+              targets = [
                 "opnsense.internal:9100"
                 "proxmox.internal:9100"
               ];
@@ -111,6 +133,9 @@ in {
         configuration = {
           receivers = [
             {
+              name = "null";
+            }
+            {
               name = "discord";
               discord_configs = [
                 {
@@ -122,6 +147,7 @@ in {
           ];
           route = {
             receiver = "discord";
+            group_by = ["alertname"];
           };
         };
       };
