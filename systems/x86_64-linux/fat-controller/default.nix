@@ -147,7 +147,15 @@ in {
           ];
           route = {
             receiver = "discord";
-            group_by = ["alertname"];
+            group_by = ["alertname" "nodename"];
+            routes = [
+              {
+                matchers = [
+                  "alertname=\"PrometheusAlertmanagerE2eDeadManSwitch\""
+                ];
+                receiver = "null";
+              }
+            ];
           };
         };
       };
