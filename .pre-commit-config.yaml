@@ -29,9 +29,9 @@ repos:
   rev: v1.2.1
   hooks:
   - id: deadnix
-  # TODO: revert to main project when this is merged
+  # TODO: Re-add when working/merged
   # https://github.com/oppiliappan/statix/pull/81
-- repo: https://github.com/Matthieu-LAURENT39/statix/
-  rev: pre-commit
-  hooks:
-  - id: statix-fix
+# - repo: https://github.com/Matthieu-LAURENT39/statix/
+#   rev: pre-commit
+#   hooks:
+#   - id: statix-fix

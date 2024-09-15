@@ -14,15 +14,12 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 1
-        # Bit torn, submodule pull and update should be a no-op, then I can keep my CI files standard
-        # submodules: recursive
     - uses: DeterminateSystems/nix-installer-action@main
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Update stuff
       run: |
         nix flake update
         nix develop --command pre-commit autoupdate
-        # git submodule update --remote
     - uses: peter-evans/create-pull-request@v6
       with:
         branch: auto-updates
