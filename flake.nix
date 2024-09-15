@@ -39,6 +39,12 @@
       inherit inputs;
       src = ./.;
     };
+    mkNixosConfiguration = name: {
+      hostname = "${builtins.toString name}";
+      profiles.system = {
+        path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
+      };
+    };
   in
     lib.mkFlake {
       package-namespace = "arichtman";
@@ -63,37 +69,13 @@
         remoteBuild = true;
         # TODO: DRY this up
         nodes = {
-          fat-controller = {
-            hostname = "fat-controller";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.fat-controller;
-            };
-          };
-          mum = {
-            hostname = "mum";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.mum;
-            };
-          };
-          patient-zero = {
-            hostname = "patient-zero";
-            profiles.system = {
-              # TODO: See about self-referencing the name or make this a function
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.patient-zero;
-            };
-          };
-          dr-singh = {
-            hostname = "dr-singh";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.dr-singh;
-            };
-          };
-          smol-bat = {
-            hostname = "smol-bat";
-            profiles.system = {
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.smol-bat;
-            };
-          };
+          fat-controller = mkNixosConfiguration "fat-controller";
+          mum = mkNixosConfiguration "mum";
+          patient-zero = mkNixosConfiguration "patient-zero";
+          dr-singh = mkNixosConfiguration "dr-singh";
+          smol-bat = mkNixosConfiguration "smol-bat";
+          tweedledee = mkNixosConfiguration "tweedledee";
+          tweedledum = mkNixosConfiguration "tweedledum";
         };
       };
 

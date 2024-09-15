@@ -229,6 +229,7 @@ References:
 - [Watchdog post](https://forum.proxmox.com/threads/watchdog-will-not-trigger-on-intel-system.152238/)
 - [Grub forum post](https://forum.proxmox.com/threads/update-installed-system-booted-in-efi-mode-but-grub-efi-amd64-meta-package-not-installed.137324/)
 - [Arch wiki on CPU scaling](https://wiki.archlinux.org/title/CPU_frequency_scaling)
+- [Proxmox performance tuning](https://sumguy.com/understanding-and-optimizing-performance-in-proxmox-ve/)
 
 ## Substratum
 

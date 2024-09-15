@@ -57,6 +57,9 @@ in {
   services = {
     k8s.controller = true;
     caddyRP.enabled = true;
+    minio = {
+      enable = true;
+    };
     grafana = {
       enable = true;
       settings = {};
@@ -95,7 +98,7 @@ in {
       retentionTime = "14d";
       exporters.node.enable = true;
       globalConfig = {
-        scrape_interval = "15s";
+        scrape_interval = "30s";
       };
       scrapeConfigs = [
         (mkLocalScrapeConfig "caddy" 2019)
@@ -121,6 +124,11 @@ in {
               targets = [
                 "opnsense.internal:9100"
                 "proxmox.internal:9100"
+                "patient-zero.local:9100"
+                "dr-singh.local:9100"
+                "smol-bat.local:9100"
+                "tweedledee.local:9100"
+                "tweedledum.local:9100"
               ];
             }
           ];
@@ -130,6 +138,7 @@ in {
         enable = true;
         # Required to use files in config?
         # checkConfig = false;
+        # Ref: https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
         configuration = {
           receivers = [
             {

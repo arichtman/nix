@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   cfg = config.services.caddyRP;
@@ -56,6 +55,12 @@ in {
               }
               handle_path /alertmanager* {
                 reverse_proxy localhost:9093
+              }
+              handle_path /minio/browse* {
+                reverse_proxy localhost:9001
+              }
+              handle_path /minio* {
+                reverse_proxy localhost:9000
               }
             '';
           };

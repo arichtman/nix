@@ -26,6 +26,7 @@ in
         kubernetes-helm
         tcpdump
         trippy
+        btop
       ];
       boot.tmp.cleanOnBoot = true;
       # TODO: See if this ought to be richtman.au
@@ -88,6 +89,10 @@ in
           SystemMaxUse=100M
           MaxFileSec=7day
         '';
+        prometheus.exporters.node = {
+          enable = true;
+          openFirewall = true;
+        };
         # Ref: https://github.com/avahi/avahi/blob/master/avahi-daemon/avahi-daemon.conf
         avahi = {
           enable = true;
