@@ -19,7 +19,6 @@ Y'know, I'm starting to feel pretty good about this.
 - Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
 - Enable mDNS bridging to VPN interfaces
 - Enable mDNS responses from OPNsense box
-- Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
 - Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
@@ -66,22 +65,24 @@ Y'know, I'm starting to feel pretty good about this.
 ### Subsoil (Foundational Services)
 
 - Determine "foundational services" (and set up)
-  - Prometheus
-  - Grafana
+  - Advanced monitoring (Mimir, Tempo, Loki, Trickster, etc)
   - NixOS store cache (Attic?)
   - Secrets (Vault/OpenBao?)
-  - Object storage (Minio?)
   - Certificate authority? (step-ca?)
   - Identity (Authentik/Kanidm/Guacamole/Gluu)
 - Look into where makes sense to bootstrap secrets/vault/trust
-- Deploy reverse proxy with ACME/LetsEncrypt.
-  Configure secondary reverse proxy to services.
-- Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.
-- Enable mTLS to protect some routes. [Caddy docs](https://caddyserver.com/docs/caddyfile/directives/tls)
-- Switch routing to dynamic subdomains.
+- Switch routing to *dynamic* subdomains.
 - Add Uptime Kuma publicly
-- Apply WAF protection.
+- Deploy external dead man's switch and route Alertmanager to it.
 - Deploy CrowdSec.
+- ~~Enable mTLS to protect ingress.~~
+  ~~Configure secondary reverse proxy to services.~~
+- ~~Deploy reverse proxy with ACME/LetsEncrypt.~~
+- ~~Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.~~
+- ~~Use subdomain routing to access foundational services~~
+- ~~Apply WAF protection.~~
+- ~~Monitoring (Prometheus, Grafana, Alertmanager)~~
+- ~~Object storage (Garage)~~
 
 ### Topsoil (Kubernetes)
 
@@ -135,9 +136,9 @@ Pre-requisites:
 
 - NixOS flashed to USB
 
-### HP EliteDesk 800 G3 Micro/Mini.
+#### HP EliteDesk 800 G3 Micro/Mini.
 
-1. Mash F10 to hit the bios (this was a thowback and a pain to do).
+1. Mash F10/Esc to hit the bios (this was a thowback and a pain to do).
    Or just use `systemctl reboot --firmware-setup` ~ Future Ariel.
 1. Update the BIOS
 1. Load the settings from `HpSetup.txt` OR follow along the rest.
@@ -171,7 +172,7 @@ Pre-requisites:
 1. Move the machine to it's final home.
 1. Remotely retrieve the hardware configuration and commit it to the flake repo.
 
-### Topton N100 (CW-AL-4L-V1.0 N100)
+#### Topton N100 (CW-AL-4L-V1.0 N100)
 
 1. Download BIOS update and place on Ventoy USB.
 1. Mash `F10` to enter BIOS, boot update.
@@ -230,12 +231,9 @@ References:
 - [Grub forum post](https://forum.proxmox.com/threads/update-installed-system-booted-in-efi-mode-but-grub-efi-amd64-meta-package-not-installed.137324/)
 - [Arch wiki on CPU scaling](https://wiki.archlinux.org/title/CPU_frequency_scaling)
 - [Proxmox performance tuning](https://sumguy.com/understanding-and-optimizing-performance-in-proxmox-ve/)
-
-## Substratum
-
 - [Proxmox CPU selection tutorial](https://www.yinfor.com/2023/06/how-i-choose-vm-cpu-type-in-proxmox-ve.html)
 
-### Proxmox Disk Setup
+#### Proxmox Disk Setup
 
 We did run `mkfs -t ext4` but it didn't allow us to use the disk in the GUI.
 So using GUI we wiped disk and initialized with GPT.
@@ -258,7 +256,7 @@ proc /proc proc defaults 0 0
 UUID=b35130d3-6351-4010-87dd-6f2dac34cfba /mnt/pve/Backup ext4 defaults,nofail,x-systemd.device-timeout=5 0 2
 ```
 
-### Re-IDing a Proxmox VM
+#### Re-IDing a Proxmox VM
 
 I used this to shift OPNsense to 999 and any templates to >=1000.
 1. Stop VM
@@ -270,14 +268,14 @@ I used this to shift OPNsense to 999 and any templates to >=1000.
 
 - [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)
 
-### Adding watchdog to a proxmox VM
+#### Adding watchdog to a proxmox VM
 
 1. Add `watchdog: model=i6300esb,action=reset` to the conf file in `/etc/pve/qemu-server/`.
 1. Stop and start the VM.
 
 - [Proxmox watchdog tutorial](https://it-notes.dragas.net/2018/09/16/proxmox-enable-and-use-watchdog-to-reboot-stuck-servers/)
 
-### Virtual node disk resize
+#### Virtual node disk resize
 
 ```bash
 nix-shell -p cloud-utils
@@ -285,9 +283,9 @@ growpart /dev/sda 1
 resize2fs /dev/sda1
 ```
 
-### Opnsense
+#### Opnsense
 
-#### VM Setup
+##### VM Setup
 
 1. Download iso and unpack
 1. Move iso to `/var/lib/vz/template/iso`
@@ -305,7 +303,7 @@ resize2fs /dev/sda1
 1. Boot machine and follow installer
 1. Add PCIe ethernet controllers
 
-#### Base OS Setup
+##### Base OS Setup
 
 1. Boot system and root login
 1. Assign WAN and LAN interfaces to ethernet controllers
@@ -324,7 +322,7 @@ resize2fs /dev/sda1
    - once daily to update the block lists
    - once weekly after the backup is taken (this ensures we can restore)
 
-#### DNS Configuration
+##### DNS Configuration
 
 1. Configure Upbound DNS service
    - enable DNSSEC
@@ -333,7 +331,7 @@ resize2fs /dev/sda1
    - Enable blocklist and use OISD Ads only (to be experimented with)
    - Enable data capture
 
-#### Firewall Configuration
+##### Firewall Configuration
 
 1. Firewall
    - Add aliases for static boxes, localhost
@@ -354,18 +352,18 @@ resize2fs /dev/sda1
 - [Unbound DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
 
-#### OpenVPN
+##### OpenVPN
 
 Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 
 - [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
 
-#### WireGuard
+##### WireGuard
 
 Follow tutorial AKA forgot to document it.
 See also `wg0.conf` in this repo.
 
-#### Plugins
+##### Plugins
 
 - NextCloud backup, configure with an app key.
 - FRR BGP, BGP run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
@@ -424,9 +422,9 @@ References:
 
 - [Nixos VM tutorial](https://mattwidmann.net/notes/running-nixos-in-a-vm/)
 
-## Subsoil
+### Subsoil
 
-## Trust chain setup
+#### Trust chain setup
 
 Arguably this mingles with substratum, as PKI/trust/TLS is required or very desirable for VPN/HTTPS etc.
 
@@ -448,11 +446,18 @@ Arguably this mingles with substratum, as PKI/trust/TLS is required or very desi
 - [Smallstep documentation](https://smallstep.com/docs/step-cli/basic-crypto-operations/index.html)
 - [Certificate creation/authorization tutorial](https://yuminlee2.medium.com/kubernetes-generate-certificates-for-normal-users-using-certificates-api-7ba71170aa52)
 
-## Topsoil
+#### Garage setup
+
+```bash
+garage layout assign --zone garage.services.richtman.au --capacity 128GB $(garage node id 2>/dev/null)
+garage layout apply --version 1
+```
+
+#### Topsoil
 
 - [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
 
-### Cluster access bootstrap
+##### Cluster access bootstrap
 
 ```bash
 # Create a client certificate with admin
@@ -466,7 +471,7 @@ kubectl config set-credentials home-admin --client-certificate cluster-admin.pem
 kubectl config set-context --user home-admin --cluster home home-admin
 ```
 
-### Cluster access (normal)
+#### Cluster access (normal)
 
 1. Create private key `openssl genpkey -out klient-key.pem -algorithm ed25519`
 1. Create CSR `openssl req -new -config klient.csr.conf -key klient-key.pem -out klient.csr`
@@ -474,7 +479,7 @@ kubectl config set-context --user home-admin --cluster home home-admin
 1. Submit the CSR to the cluster `envsubst -i klient-csr.yaml | kubectly apply -f -`
 1. Approve the request `kubectl certificate user approve`
 
-### Cluster node roles
+#### Cluster node roles
 
 For security reasons, it's not possible for nodes to self-select roles.
 We can label our nodes using this:
@@ -510,7 +515,7 @@ Have the node self-delete (it'll self-register again anyway), and have the admin
 I wonder if there's any better way security-wise to have nodes be trusted with certain labels.
 Already they need apiServer-trusted client certificates, it'd be cool if the metadata on those could determine labels.
 
-### Addon-manager
+#### Addon-manager
 
 Apparently this is deprecated as of years ago but is still shambling along.
 As much as I'd love to declaratively bootstrap the cluster it will be less headache to have a one-off CD app install and do the rest declaratively that way.
@@ -519,7 +524,7 @@ Anywho - to make addon manager actually work, you need to drop a `.kube/config` 
 Removing coredns shenanigans:
 `k delete svc/kube-dns deploy/coredns sa/coredns cm/coredns clusterrole/system:kube-dns clusterrolebinding/system:kube-dns`
 
-### Node CSRs piling up
+#### Node CSRs piling up
 
 `kubectl get csr --no-headers -o jsonpath='{.items[*].metadata.name}' | xargs -r kubectl certificate approve`
 
@@ -774,6 +779,7 @@ References:
 
 ### Desktop Todo
 
+- Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
 - Switch to LibreWolf
 - Fix Firefox image pasting
 - Get CLI clipboard access

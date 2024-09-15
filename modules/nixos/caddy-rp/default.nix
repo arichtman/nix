@@ -56,11 +56,14 @@ in {
               handle_path /alertmanager* {
                 reverse_proxy localhost:9093
               }
-              handle_path /minio/browse* {
-                reverse_proxy localhost:9001
+              handle_path /garage* {
+                reverse_proxy localhost:3900
               }
-              handle_path /minio* {
-                reverse_proxy localhost:9000
+              handle_path /garage/web* {
+                reverse_proxy localhost:3902
+              }
+              handle_path /garage/admin* {
+                reverse_proxy localhost:3903
               }
             '';
           };
