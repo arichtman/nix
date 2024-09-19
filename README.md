@@ -380,6 +380,8 @@ See also `wg0.conf` in this repo.
   Enable TFTP and set listening IP to `0.0.0.0`.
   This defaulted to `127.0.0.1` which may have worked but I didn't test.
 - ACME client [tutorial](https://forum.opnsense.org/index.php?topic=24778.0)
+- Install `os-wol` to wake on lan.
+  Add all physical machines to the list of known, you can use Kea DHCP leases to find all the MACs in one place.
 - optionally: themes
 
 Notes:
