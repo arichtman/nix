@@ -617,6 +617,7 @@ some _very_ wip notes about the desktop.
 - Installed my root certificate
   `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
   `sudo update-ca-trust`
+- Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
 
 #### DNS
 
