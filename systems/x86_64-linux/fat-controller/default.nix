@@ -84,18 +84,6 @@ in {
       };
       package = pkgs.garage;
     };
-    # Required to respond to neighbor discovery protocol for IPv6 SLAAC
-    # Turns out it may have just been a DNS mistake
-    # radvd = {
-    #   enable = true;
-    #   debugLevel = 4;
-    #   config = ''
-    #     interface ens18 {
-    #       AdvSendAdvert on;
-    #     };
-    #   '';
-    #       # prefix ::/64 {};
-    # };
     grafana = {
       enable = true;
       settings = {};
@@ -174,7 +162,7 @@ in {
       alertmanager = {
         enable = true;
         # Required to use files in config?
-        # checkConfig = false;
+        checkConfig = false;
         # Ref: https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
         configuration = {
           receivers = [
@@ -186,7 +174,7 @@ in {
               discord_configs = [
                 {
                   webhook_url = "";
-                  # webhook_url_file = "/var/lib/alertmanager/discord-webhook-url.txt";
+                  # webhook_url_file = "/var/lib/alertmanager/discord-webhook-url";
                 }
               ];
             }

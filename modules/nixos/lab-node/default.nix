@@ -110,6 +110,19 @@ in
           nssmdns4 = true;
           ipv6 = true;
         };
+        # Required to respond to neighbor discovery protocol for IPv6 SLAAC
+        # mDNS does the name-to-IP, ND does IP-to-MAC
+        radvd = {
+          enable = true;
+          # Leftover from testing, remove before flight
+          # prefix ::/64 {};
+          # debugLevel = 4;
+          config = ''
+            interface eno1 {
+              AdvSendAdvert on;
+            };
+          '';
+        };
         # Configure keymap in X11
         xserver = {
           xkb = {
