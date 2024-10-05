@@ -328,6 +328,7 @@ in
           marksman # md
           terraform-ls # tf
           rust-analyzer # rust
+          lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
           alejandra # nix formatter
           dprint # markdown formatting (it does more though)
           helm-ls

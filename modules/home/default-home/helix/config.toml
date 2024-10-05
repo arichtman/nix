@@ -5,12 +5,21 @@ theme = "monokai_pro"
 line-number = "relative"
 mouse = false
 
+[editor.lsp]
+display-inlay-hints = true
+
 [editor.file-picker]
 hidden = false
 
+# Ref: https://www.reddit.com/r/HelixEditor/comments/w3higo/comment/k1okf1g/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 [editor.statusline]
 center = [ "version-control" ]
 
 [keys.normal]
 l = { e = [ "select_mode", "goto_line_end", "normal_mode" ], b = [ "goto_line_start", "move_next_word_start", "move_char_right" ] }
 D = "delete_selection_noyank"
+
+[keys.normal."+"]
+c = ":run-shell-command cargo check"
+b = ":run-shell-command cargo build"
+t = ":run-shell-command cargo test"
