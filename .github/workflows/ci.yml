@@ -57,4 +57,4 @@ jobs:
     - uses: DeterminateSystems/nix-installer-action@main
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Test machine
-      run: nix build .#darwinConfigurations.bne-nb-ariel.system
+      run: nix build .#darwinConfigurations.AU-AM-1820.system
