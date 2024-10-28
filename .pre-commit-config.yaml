@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.6.0
+  rev: v5.0.0
   hooks:
   - id: check-added-large-files
   - id: check-yaml
@@ -29,9 +29,10 @@ repos:
   rev: v1.2.1
   hooks:
   - id: deadnix
+  # Disabled due to breaking updates
   # TODO: revert to main project when this is merged
   # https://github.com/oppiliappan/statix/pull/81
-- repo: https://github.com/Matthieu-LAURENT39/statix/
-  rev: pre-commit
-  hooks:
-  - id: statix-fix
+# - repo: https://github.com/Matthieu-LAURENT39/statix/
+#   rev: pre-commit
+#   hooks:
+#   - id: statix-fix
