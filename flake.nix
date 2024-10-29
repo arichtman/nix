@@ -49,7 +49,12 @@
     lib.mkFlake {
       package-namespace = "arichtman";
 
-      nix.package = inputs.nixpkgs.lix;
+      # Workaround to https://github.com/NixOS/nixpkgs/issues/337036
+      nix.package = inputs.nixpkgs.lix.overrideAttrs {
+        doCheck = false;
+        doInstallCheck = false;
+      };
+
       channels-config.allowUnfree = true;
 
       systems.modules.darwin = with inputs; [
