@@ -322,6 +322,10 @@ resize2fs /dev/sda1
    - once daily to update the block lists
    - once weekly after the backup is taken (this ensures we can restore)
 
+##### Tuning
+
+- Follow [Ben Tasker's stuff](https://www.bentasker.co.uk/posts/blog/general/opnsense-pfsense-fttp-and-1gbps-pppoe.html)
+
 ##### DNS Configuration
 
 1. Configure Upbound DNS service
