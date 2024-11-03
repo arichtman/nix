@@ -10,9 +10,7 @@ Y'know, I'm starting to feel pretty good about this.
 
 ## Features and Todo
 
-![Diagram of Earth's layers](./assets/layers.png "Diagram of Earth's layers")
-
-<!-- source: https://ucanr.edu/blogs/blogcore/postdetail.cfm?postnum=55747&sharing=yes -->
+![Diagram of Earth's layers](./assets/layers.png "source: https://ucanr.edu/blogs/blogcore/postdetail.cfm?postnum=55747")
 
 ### Bedrock (Networking)
 
@@ -66,7 +64,8 @@ Y'know, I'm starting to feel pretty good about this.
 
 - Determine "foundational services" (and set up)
   - Advanced monitoring (Mimir, Tempo, Loki, Trickster, etc)
-  - NixOS store cache (Attic?)
+  - NixOS store cache (Attic? [inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
+    [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)
   - Secrets (Vault/OpenBao?)
   - Certificate authority? (step-ca?)
   - Identity (Authentik/Kanidm/Guacamole/Gluu)
@@ -504,6 +503,10 @@ k label no/dr-singh node-role.kubernetes.io/worker=worker
 k label no/dr-singh kubernetes.richtman.au/ephemeral=true
 k label no/smol-bat node-role.kubernetes.io/worker=worker
 k label no/smol-bat kubernetes.richtman.au/ephemeral=true
+k label no/tweedledee node-role.kubernetes.io/worker=worker
+k label no/tweedledee kubernetes.richtman.au/ephemeral=true
+k label no/tweedledum node-role.kubernetes.io/worker=worker
+k label no/tweedledum kubernetes.richtman.au/ephemeral=true
 
 # Now we can clean up shut down nodes
 k delete no -l kubernetes.richtman.au/ephemeral=true

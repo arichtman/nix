@@ -30,6 +30,6 @@ rsync ca.pem "${NODE_DNS_NAME}.local:/home/nixos/secrets"
 # Kubelet needs to run as root so the specific files that it accesses should be owned by it.
 ssh "${NODE_DNS_NAME}.local" sudo rm -fr /var/lib/kubelet/secrets/
 ssh "${NODE_DNS_NAME}.local" sudo mv --force "~/secrets" /var/lib/kubelet/
-ssh "${NODE_DNS_NAME}.local" sudo chown root:kubernetes "/var/lib/kubelet/secrets/*.pem"
+ssh "${NODE_DNS_NAME}.local" sudo chown root: "/var/lib/kubelet/secrets/*.pem"
 ssh "${NODE_DNS_NAME}.local" sudo chmod 444 "/var/lib/kubelet/secrets/*.pem"
 ssh "${NODE_DNS_NAME}.local" sudo chmod 400 "/var/lib/kubelet/secrets/*key*.pem"

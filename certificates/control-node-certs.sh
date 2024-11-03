@@ -43,7 +43,7 @@ step certificate create system:kube-scheduler scheduler-apiserver-client.pem sch
   --not-after 8760h
 
 # Scheduler TLS
-step certificate create kube-scheduler scheduler-tls.pem scheduler-tls-key.pem --ca ca.pem --ca-key ca-key.pem \
+step certificate create scheduler scheduler-tls-cert-file.pem scheduler-tls-private-key-file.pem --ca ca.pem --ca-key ca-key.pem \
   --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_DNS_NAME}" --san "${NODE_DNS_NAME}.local" --san "${NODE_DNS_NAME}.internal" --san localhost --san 127.0.0.1 --san ::1
 

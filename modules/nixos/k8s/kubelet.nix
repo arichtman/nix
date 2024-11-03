@@ -4,10 +4,11 @@
   pkgs,
   ...
 }: let
-  mainK8sConfig = config.services.k8s;
+  kubeletSecretsPath = "/var/lib/kubelet/secrets";
   kubeletServiceConfig = config.services.k8s-kubelet;
+  kubeletConfigDropinPath = "/var/lib/kubelet/config.d";
   # Ref: https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/
-  # controllerConfig = (lib.mkIf config.services.k8s.controller.enabled {
+  # controllerConfig = (lib.mkIf config.services.k8s.controller.enable {
   #   registerWithTaints = [
   #     "NoSchedule"
   #   ];
@@ -15,20 +16,20 @@
   # mergedKubeletConfig = controllerConfig // kubeletConfig;
   kubeletConfig =
     # TODO: Unclear why this is returning a bool instead of the merged attrSet unless it thinks one is a function?
-    # lib.optionalAttrs (config.services.k8s.controller.enabled) { registerWithTaints = ["NoSchedule"]; } //
+    # lib.optionalAttrs (config.services.k8s.controller.enable) { registerWithTaints = ["NoSchedule"]; } //
     {
       apiVersion = "kubelet.config.k8s.io/v1beta1";
       kind = "KubeletConfiguration";
       enableServer = true;
-      tlsCertFile = "${mainK8sConfig.secretsPath}/kubelet-tls-cert-file.pem";
-      tlsPrivateKeyFile = "${mainK8sConfig.secretsPath}/kubelet-tls-private-key-file.pem";
+      tlsCertFile = "${kubeletSecretsPath}/kubelet-tls-cert-file.pem";
+      tlsPrivateKeyFile = "${kubeletSecretsPath}/kubelet-tls-private-key-file.pem";
       tlsMinVersion = "VersionTLS12";
       authentication = {
         x509 = {
-          clientCAFile = "${mainK8sConfig.secretsPath}/ca.pem";
+          clientCAFile = "${kubeletSecretsPath}/ca.pem";
         };
         webhook = {
-          enabled = true;
+          enable = true;
           cacheTTL = "10s";
         };
       };
@@ -45,27 +46,6 @@
       # port = 1;
     };
   kubeletConfigFile = pkgs.writeText "kubelet-config" (builtins.toJSON kubeletConfig);
-  # kubeletConfigFile = pkgs.writeText "kubelet-config" (builtins.toJSON ({
-  #   apiVersion = "kubelet.config.k8s.io/v1beta1";
-  #   kind = "KubeletConfiguration";
-  #   enableServer = true;
-  #   # TODO: consider --cert-dir?
-  #   tlsCertFile = "${mainCfg.secretsPath}/kubelet-tls-cert-file.pem";
-  #   tlsPrivateKeyFile = "${mainCfg.secretsPath}/kubelet-tls-private-key-file.pem";
-  #   tlsMinVersion = "VersionTLS12";
-  #   authentication = {};
-  #   authorization = {};
-  #   clusterDomain = "internal";
-  #   imageMaximumGCAge = "604800s"; # One week, TODO 7d wasn't ok?
-  #   # TODO: may have a default and just not be documented?
-  #   containerRuntimeEndpoint = "unix:///run/containerd/containerd.sock";
-  #   }
-  # ));
-  # kubeletConfigFile = (pkgs.writeText "kubelet-config" (builtins.toJSON kubeletConfig));
-  # kubeletConfigFile = pkgs.writeTextFile {
-  #   name = "kubelet-config";
-  #   text = (builtins.toJSON kubeletConfig);
-  # };
   kubeletKubeconfig = {
     apiVersion = "v1";
     kind = "Config";
@@ -73,8 +53,8 @@
       {
         name = "kubelet";
         user = {
-          client-certificate = "${mainK8sConfig.secretsPath}/kubelet-kubeconfig-client-certificate.pem";
-          client-key = "${mainK8sConfig.secretsPath}/kubelet-kubeconfig-client-key.pem";
+          client-certificate = "${kubeletSecretsPath}/kubelet-kubeconfig-client-certificate.pem";
+          client-key = "${kubeletSecretsPath}/kubelet-kubeconfig-client-key.pem";
         };
       }
     ];
@@ -82,7 +62,7 @@
       {
         name = "default";
         cluster = {
-          certificate-authority = "${mainK8sConfig.secretsPath}/ca.pem";
+          certificate-authority = "${kubeletSecretsPath}/ca.pem";
           server = "https://fat-controller.local:6443";
         };
       }
@@ -98,10 +78,10 @@
     ];
     current-context = "default";
   };
-  kubeletKubeconfigFile = pkgs.writeText "kubelet-config" (builtins.toJSON kubeletKubeconfig);
+  kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
 in {
   options.services.k8s-kubelet = {
-    enabled = lib.options.mkOption {
+    enable = lib.options.mkOption {
       description = "Enable Kubelet server";
       default = false;
       type = lib.types.bool;
@@ -111,13 +91,14 @@ in {
       default = [];
     };
   };
-  config = lib.mkIf kubeletServiceConfig.enabled {
+  config = lib.mkIf kubeletServiceConfig.enable {
     virtualisation.containerd = {
       enable = true;
     };
     systemd = {
-      services."k8s-kubelet" = {
+      services.k8s-kubelet = {
         description = "Kubernetes Kubelet Service";
+        # TODO: Add conditional here if not controller
         after = ["containerd.service" "network.target" "kube-apiserver.service"];
         wantedBy = ["kubernetes.target" "multi-user.target"];
         serviceConfig = {
@@ -129,9 +110,9 @@ in {
             + " ${kubeletConfigFile}"
             + " --node-ip=::"
             + " --kubeconfig=${kubeletKubeconfigFile}"
-            + " --config-dir=/var/lib/kubelet/config.d"
+            + " --config-dir=${kubeletConfigDropinPath}"
             + " --v=2"; # TODO: Remove after debugging
-          WorkingDirectory = "/var/lib/kubernetes";
+          WorkingDirectory = "/var/lib/kubelet";
           # Must be run as root which is... odd
           Restart = "on-failure";
           RestartSec = 5;
@@ -140,10 +121,25 @@ in {
           StartLimitIntervalSec = 0;
         };
       };
-      tmpfiles.settings."kubelet-config-dropin"."/var/lib/kubelet/config.d" = {
-        d = {
-          user = "kubernetes";
-          mode = "0755";
+      tmpfiles.settings = {
+        "kubelet-secrets" = {
+          "${kubeletSecretsPath}" = {
+            d = {
+              user = "root";
+              group = "root";
+              mode = "0755";
+            };
+          };
+        };
+        "kubelet-config-dropin" = {
+          "${kubeletConfigDropinPath}" = {
+            d = {
+              user = "root";
+              # I suppose kubernetes stuff can read this, it's not secret.
+              group = "kubernetes";
+              mode = "0775";
+            };
+          };
         };
       };
     };
@@ -157,23 +153,6 @@ in {
         	"type": "loopback"
         }
       '';
-      # TODO: proper toJSON and writeText or something
-      # Ref: https://github.com/containernetworking/cni#running-the-plugins
-      # Ref: https://www.cni.dev/plugins/current/main/bridge/#example-configuration
-      # config.environment.etc."cni/net.d/10-localhost.conf".text = ''
-      #   {
-      #   	"cniVersion": "0.3.1",
-      #   	"name": "mynet",
-      #   	"type": "bridge",
-      #   	"isDefaultGateway": true,
-      #   	"ipMasq": true,
-      #     "hairpinMode": true,
-      #   	"ipam": {
-      #   		"type": "host-local",
-      #   		"subnet": "10.22.0.0/16"
-      #   	}
-      #   }
-      # '';
     };
   };
 }

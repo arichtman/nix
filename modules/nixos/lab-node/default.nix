@@ -29,15 +29,15 @@ in
         btop
       ];
       boot.tmp.cleanOnBoot = true;
-      # TODO: See if this ought to be richtman.au
-      networking.domain = "local";
-      # TODO: Pretty sure this defaults to 0 anyways...
-      nix.settings.cores = 0;
+      nix = {
+        # TODO: Pretty sure this defaults to 0 anyways...
+        settings.cores = 0;
+        optimise.automatic = true;
+        gc.automatic = true;
+        # optimised for noninteractive
+        daemonCPUSchedPolicy = "batch";
+      };
       system.autoUpgrade.flake = "github:arichtman/nix";
-      nix.optimise.automatic = true;
-      nix.gc.automatic = true;
-      # optimised for noninteractive
-      nix.daemonCPUSchedPolicy = "batch";
       # Define a user account.
       users.users.nixos = {
         isNormalUser = true;
@@ -82,6 +82,7 @@ in
       };
 
       services = {
+        k8s.worker = true;
         openssh = {
           enable = true;
         };
@@ -131,30 +132,33 @@ in
           };
         };
         sleep-at-night = {
-          enable = true;
+          enable = false;
           shutdown.hour = 23;
           wakeup.hour = 7;
           weekends = "only";
         };
       };
 
-      # Enable networking
-      # TODO: Consider removal of networkmanager
-      networking.networkmanager.enable = true;
-      networking.nftables.enable = true;
-      # Only allow ingress from ranges I control
-      networking.firewall.extraInputRules = ''
-        ip saddr { 192.168.1.0/24 } udp dport 5353 accept
-        ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept
-      '';
-      # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-      # (the default) this is the recommended approach. When using systemd-networkd it's
-      # still possible to use this option, but it's recommended to use it in conjunction
-      # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-      networking.useDHCP = lib.mkDefault true;
-      # Required for Calico to manage
-      # Ref: https://docs.tigera.io/calico/latest/operations/troubleshoot/troubleshooting#configure-networkmanager
-      # networking.networkmanager.unmanaged = ["interface-name:cali*" "interface-name:tunl*" "interface-name:vxlan.calico" "interface-name:vxlan-v6.calico" "interface-name:wireguard.cali" "interface-name:wg-v6.cali"];
+      networking = {
+        # TODO: See if this ought to be richtman.au
+        domain = "local";
+        # TODO: Consider removal of networkmanager
+        networkmanager.enable = true;
+        nftables.enable = true;
+        # Only allow ingress from ranges I control
+        firewall.extraInputRules = ''
+          ip saddr { 192.168.1.0/24 } udp dport 5353 accept
+          ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept
+        '';
+        # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+        # (the default) this is the recommended approach. When using systemd-networkd it's
+        # still possible to use this option, but it's recommended to use it in conjunction
+        # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+        useDHCP = lib.mkDefault true;
+        # Required for Calico to manage
+        # Ref: https://docs.tigera.io/calico/latest/operations/troubleshoot/troubleshooting#configure-networkmanager
+        # networkmanager.unmanaged = ["interface-name:cali*" "interface-name:tunl*" "interface-name:vxlan.calico" "interface-name:vxlan-v6.calico" "interface-name:wireguard.cali" "interface-name:wg-v6.cali"];
+      };
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     };

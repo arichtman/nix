@@ -63,7 +63,7 @@ in {
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   # Ref: https://github.dev/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/cluster/kubernetes/default.nix
   options.services.k8s-apiserver = {
-    enabled = lib.options.mkOption {
+    enable = lib.options.mkOption {
       description = "Enable API server";
       default = false;
       type = lib.types.bool;
@@ -79,7 +79,7 @@ in {
       type = lib.types.path;
     };
   };
-  config = lib.mkIf cfg.enabled {
+  config = lib.mkIf cfg.enable {
     systemd.services.k8s-apiserver = {
       description = "K8s API server AKA mother brain";
       # Required to activate the service.
