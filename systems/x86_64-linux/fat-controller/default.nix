@@ -173,7 +173,7 @@ in {
               name = "discord";
               discord_configs = [
                 {
-                  webhook_url = "https://discord.com/api/webhooks/1283925938156994611/REXyzKsnqkWwj1CPwkSiY2FKuUo2hztJJ2z6naN3IHy6ydLutnfbBdxGaarHF5RchzwO";
+                  webhook_url = "";
                   # webhook_url_file = "/var/lib/alertmanager/discord-webhook-url";
                 }
               ];

@@ -70,7 +70,7 @@
               && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1
       '';
     }
-    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nixGLNvidia alacritty";};
+    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nohup nixGLNvidia alacritty &";};
   # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
   # List of binaries to create a symlink to in `~/.cargo/bin`.
   # From my testing, adding "cargo" and "rustc" should be enough, but better
@@ -140,10 +140,10 @@ in
           enable = true;
           settings = {
             window.option_as_alt = "Both";
-            live_config_reload = true;
+            general.live_config_reload = true;
             font.size = 14;
             font.normal.family = "FiraCode Nerd Font";
-            shell.program = "zellij";
+            terminal.shell.program = "zellij";
             keyboard.bindings = let
               zeroKeyReset = {
                 key = "Zero";
