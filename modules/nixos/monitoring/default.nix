@@ -45,6 +45,10 @@ in {
     };
   };
   config.services = lib.mkIf config.services.monitoring.enable {
+    kthxbye = {
+      enable = true;
+      port = 9099;
+    };
     grafana = {
       enable = true;
       settings = {};
@@ -86,12 +90,13 @@ in {
         scrape_interval = "30s";
       };
       scrapeConfigs = [
+        # TODO: Maybe wire these up to the actual service config?
         (mkLocalScrapeConfig "caddy" 2019)
         (mkLocalScrapeConfig "grafana" 3000)
         (mkLocalScrapeConfig "garage" 3903)
-        # Required to silence rule about missing Alertmanager job
+        (mkLocalScrapeConfig "kthxbye" 9099)
+        # Self-monitoring (fwiw)
         (mkLocalScrapeConfig "alertmanager" 9093)
-        # Required to silence rule about missing Prometheus job
         (mkLocalScrapeConfig "prometheus" 9090)
         {
           job_name = "machines";
