@@ -30,8 +30,11 @@ in
       ];
       boot.tmp.cleanOnBoot = true;
       nix = {
-        # TODO: Pretty sure this defaults to 0 anyways...
-        settings.cores = 0;
+        settings = {
+          trusted-public-keys = lib.mkAfter ["fat-controller.local:nIUqbWD1JiFbdLsKigseHZgj5T8e4Xja0vE0kS1AtHY="];
+          auto-optimise-store = true;
+          substituters = ["http://fat-controller.local:5000"];
+        };
         optimise.automatic = true;
         gc.automatic = true;
         # optimised for noninteractive
