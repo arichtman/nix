@@ -150,6 +150,27 @@ in {
                 ];
                 receiver = "null";
               }
+              # Null route Wireguard errors
+              # The interface typically isn't transmitting anything so errors cause divide by zero +Inf firing
+              {
+                matchers = [
+                  "alertname=\"HostNetworkTransmitErrors\""
+                  "device=\"wg0\""
+                  "nodename=\"opnsense\""
+                ];
+                receiver = "null";
+              }
+              # Null route the weird tmpfs Nixos error
+              # TODO: Fix root cause
+              {
+                matchers = [
+                  "alertname=\"HostFilesystemDeviceError\""
+                  "mountpoint=\"/run/user/1000\""
+                  "device=\"tmpfs\""
+                  "fstype=\"tmpfs\""
+                ];
+                receiver = "null";
+              }
             ];
           };
         };
