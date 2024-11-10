@@ -6,7 +6,7 @@
 }: let
   anyK8sEnabled = config.services.k8s.controller || config.services.k8s.worker;
 in {
-  imports = [./etcd.nix ./apiserver.nix ./kubelet.nix ./scheduler.nix];
+  imports = [./etcd.nix ./apiserver.nix ./kubelet.nix ./scheduler.nix ./controller.nix];
   options.services.k8s = {
     controller = lib.options.mkOption {
       description = ''
@@ -34,6 +34,7 @@ in {
     environment.systemPackages = [pkgs.ripgrep pkgs.kubernetes pkgs.bat pkgs.jq pkgs.yq-go];
     services.k8s-apiserver.enable = lib.mkDefault config.services.k8s.controller;
     services.k8s-scheduler.enable = lib.mkDefault config.services.k8s.controller;
+    services.k8s-controller.enable = lib.mkDefault config.services.k8s.controller;
     # Enable kubelet for control nodes.
     # It's not worth the resource savings to miss seeing status and managing taints etc
     services.k8s-kubelet.enable = lib.mkDefault anyK8sEnabled;

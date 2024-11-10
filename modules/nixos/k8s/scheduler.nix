@@ -11,7 +11,7 @@
     kind = "Config";
     users = [
       {
-        name = "kubelet";
+        name = "scheduler";
         user = {
           client-certificate = "${topConfig.secretsPath}/kubelet-kubeconfig-client-certificate.pem";
           client-key = "${topConfig.secretsPath}/kubelet-kubeconfig-client-key.pem";
@@ -32,7 +32,7 @@
         name = "default";
         context = {
           cluster = "default";
-          user = "kubelet";
+          user = "scheduler";
         };
       }
     ];
@@ -97,16 +97,6 @@ in {
       unitConfig = {
         StartLimitIntervalSec = 0;
       };
-      # path = with pkgs; [
-      #   gitMinimal
-      #   openssh
-      #   util-linux
-      #   iproute2
-      #   ethtool
-      #   thin-provisioning-tools
-      #   iptables
-      #   socat
-      # ];
     };
   };
 }

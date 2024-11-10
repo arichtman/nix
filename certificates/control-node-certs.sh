@@ -33,7 +33,7 @@ step certificate create system:kube-controller-manager controllermanager-apiserv
   --not-after 8760h --set organization=system:kube-controller-manager
 
 # Controller manager TLS
-step certificate create kube-controllermanager controllermanager-tls.pem controllermanager-tls-key.pem --ca ca.pem --ca-key ca-key.pem \
+step certificate create kube-controllermanager controllermanager-tls-cert-file.pem controllermanager-tls-private-key-file.pem --ca ca.pem --ca-key ca-key.pem \
   --insecure --no-password --template granular-dn-leaf.tpl --set-file dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_DNS_NAME}" --san "${NODE_DNS_NAME}.local" --san "${NODE_DNS_NAME}.internal" --san localhost --san 127.0.0.1 --san ::1
 

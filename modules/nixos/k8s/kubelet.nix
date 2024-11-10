@@ -79,6 +79,21 @@
     current-context = "default";
   };
   kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
+  serviceArgs = lib.concatMapStrings (x:
+    if (builtins.substring 0 2 x) == "--"
+    then "${x}="
+    else "${x} ") [
+    "--config"
+    kubeletConfigFile
+    "--node-ip"
+    "::"
+    "--kubeconfig"
+    kubeletKubeconfigFile
+    "--config-dir"
+    kubeletConfigDropinPath
+    "--v" # TODO: Remove after debugging
+    "2"
+  ];
 in {
   options.services.k8s-kubelet = {
     enable = lib.options.mkOption {
@@ -104,16 +119,10 @@ in {
         serviceConfig = {
           Slice = "kubernetes.slice";
           # Until a drop-in directory becomes default we'll just nail the file exactly.
-          ExecStart =
-            "${pkgs.kubernetes}/bin/kubelet"
-            + " --config"
-            + " ${kubeletConfigFile}"
-            + " --node-ip=::"
-            + " --kubeconfig=${kubeletKubeconfigFile}"
-            + " --config-dir=${kubeletConfigDropinPath}"
-            + " --v=2"; # TODO: Remove after debugging
+          ExecStart = "${pkgs.kubernetes}/bin/kubelet " + serviceArgs;
           WorkingDirectory = "/var/lib/kubelet";
           # Must be run as root which is... odd
+          # I suppose the container runtime is what needs to be rootless
           Restart = "on-failure";
           RestartSec = 5;
         };
