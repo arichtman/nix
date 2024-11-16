@@ -25,6 +25,8 @@
       ls = "exa";
       ll = "exa -las new";
       cls = "clear";
+      dea = "direnv allow";
+      der = "diren reload";
       vi = "hx";
       vim = "hx";
       nano = "hx";
@@ -39,8 +41,13 @@
       gb = "git branch";
       gd = "git diff";
       gf = "git fetch";
+      grc = "git rebase --continue";
+      gra = "git rebase --abort";
       grpo = "git remote prune origin";
       gau = "git add --update";
+      gCnv = "git commit --no-verify";
+      gCam = "git commit --amend";
+      gCC = "git commit --amend --no-verify";
       gbl = "git blame -wCCC";
       nfu = "nix flake update --commit-lock-file";
       sci = "step certificate inspect";
