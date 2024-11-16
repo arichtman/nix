@@ -393,6 +393,22 @@
         "type": "github"
       }
     },
+    "pkgsMaster": {
+      "locked": {
+        "lastModified": 1731738178,
+        "narHash": "sha256-2+Ezy1XdeoAO+CTpo+XHfG2z1X1szoNsQmllYRHyDt8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e2b0cccf5508f35c234ab79dc29c471e60825d7c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -401,6 +417,7 @@
         "mac-app-util": "mac-app-util",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_2",
+        "pkgsMaster": "pkgsMaster",
         "snowfall-lib": "snowfall-lib",
         "snowfall-thaw": "snowfall-thaw",
         "yaml2nix": "yaml2nix"

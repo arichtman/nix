@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }: let
   cfg = config.default-home;
@@ -248,7 +249,7 @@ in
           };
           # Note: regex to select non-comments ^[^#\n].*
           # TODO: Generate the file from fetchURL call, run regex, remove .envrc line?
-          ignores = import ./.gitignore.nix;
+          ignores = import ./git/.gitignore.nix;
           signing = {
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";
@@ -278,6 +279,13 @@ in
             push = {
               autoSetupRemote = true;
               default = "current";
+            };
+            merge.mergiraf = {
+              name = "mergiraf";
+              driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P";
+            };
+            core = {
+              attributesfile = "~/.gitattributes";
             };
             url = {
               "https://github.com" = {insteadOf = "gh";};
@@ -380,6 +388,9 @@ in
           nixd
           nil
           ruff-lsp
+          # diff tool
+          # TODO: simplify when this hits unstable or whatever
+          inputs.pkgsMaster.legacyPackages.${system}.mergiraf
           # langs
           rustup
           #TODO: dont have these on mac, aarch64 at least
@@ -399,6 +410,7 @@ in
               source = ./terraform;
               recursive = true;
             };
+            ".config/git/.gitattributes".source = git/.gitattributes;
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
             # https://github.com/nix-community/home-manager/issues/2104
             ".terraform.d/plugin-cache/.keep".text = "";
