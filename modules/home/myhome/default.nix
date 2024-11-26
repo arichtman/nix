@@ -384,7 +384,7 @@ in
           dockerfile-language-server-nodejs
           docker-compose-language-service
           jq-lsp
-          buf-language-server
+          buf
           nixd
           nil
           ruff-lsp
