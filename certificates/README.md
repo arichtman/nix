@@ -24,10 +24,16 @@ step certificate create ariel@richtman.au client.pem client-key.pem --template g
   --ca opnsense-ca.pem --ca-key opnsense-ca-key.pem --no-password --insecure --force --bundle \
   --set-file dn-defaults.json --san home.richtman.au
 
+step certificate create poco-f4-gt client.pem client-key.pem --template granular-dn-leaf.tpl --not-after 1461h \
+  --ca opnsense-ca.pem --ca-key opnsense-ca-key.pem --no-password --insecure --force --bundle \
+  --set-file dn-defaults.json --ca root-ca.pem
+
 step certificate inspect client.pem
 
 # Package for Android
 # Android insists on password and won't even try any other extensions.
 step certificate p12 client.p12 client.pem client-key.pem --ca opnsense-ca.pem
+# Or
+openssl pkcs12 -export -out client.p12 -in client.pem -inkey client-key.pem
 mv client.p12 ~/Downloads
 ```
