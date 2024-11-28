@@ -395,6 +395,8 @@ in
           rustup
           #TODO: dont have these on mac, aarch64 at least
           # trippy
+          jujutsu # VCS tool
+          # Ref: https://terminaltrove.com
         ];
         file =
           # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
