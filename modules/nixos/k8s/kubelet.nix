@@ -91,6 +91,11 @@
     kubeletKubeconfigFile
     "--config-dir"
     kubeletConfigDropinPath
+    # Seems to be necessary to allow the kubelet to register it's HostName address type
+    #   with the domain qualification.
+    # TODO: See about having the golang DNS resolution stack include mDNS :eyeroll:
+    "--hostname-override"
+    "${config.networking.hostName}.local"
     "--v" # TODO: Remove after debugging
     "2"
   ];
@@ -129,6 +134,10 @@ in {
         unitConfig = {
           StartLimitIntervalSec = 0;
         };
+        # Required for volumes, at least projected ones but probably emptyDir etc also
+        path = with pkgs; [
+          mount
+        ];
       };
       tmpfiles.settings = {
         "kubelet-secrets" = {

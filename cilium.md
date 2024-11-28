@@ -3,7 +3,7 @@
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
 - https://docs.cilium.io/en/stable/operations/troubleshooting/
-- https://github.com/cilium/cilium/blob/main/install/kubernetes/cilium/values.yaml
+- https://github.com/cilium/cilium/tree/main/install/kubernetes/cilium
 - https://github.com/containerd/containerd/issues/9139
 - https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
 - https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
@@ -47,3 +47,5 @@ kubectl create configmap kube-root-ca.crt --from-file=certificates/ca.pem
 - serviceAccount `default` missing from at least nameSpace `kube-system`
 - I can't run containers without a CNI, but Cilium operator wants to manage the `/etc/cni/net.d` config file
 - Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...
+
+helm install cilium cilium/cilium --namespace kube-system --values cilium.yaml --atomic
