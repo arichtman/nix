@@ -35,6 +35,12 @@
     "https://[::1]:2379"
     "--external-hostname"
     config.networking.hostName
+    # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
+    # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
+    "--feature-gates"
+    "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true"
+    "--runtime-config"
+    "certificates.k8s.io/v1alpha1/clustertrustbundles=true"
     # TODO: deduplicate/couple this
     "--kubelet-certificate-authority"
     "${cfg.secretsPath}/ca.pem"
