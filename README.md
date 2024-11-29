@@ -44,10 +44,12 @@ Y'know, I'm starting to feel pretty good about this.
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
-- Set up OpenAMT for out-of-band management.
+- Debug watchdog not stopping on control node reboot.
+  [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
 - Work out watchdog on Opnsense BSD
 - Configure Topton N100 watchdog.
   BIOS setting located but microcode update seems to have stabilized the system.
+- Set up OpenAMT for out-of-band management.
 - ~~Set up PXE booting off of OPNsense
   [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
   IPv4 PXE working.
@@ -63,7 +65,7 @@ Y'know, I'm starting to feel pretty good about this.
 ### Subsoil (Foundational Services)
 
 - Determine "foundational services" (and set up)
-  - Advanced monitoring (Mimir, Tempo, Loki, Trickster, etc)
+  - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
   - NixOS store cache (Attic? [inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
     [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)
   - Secrets (Vault/OpenBao?)
@@ -73,7 +75,8 @@ Y'know, I'm starting to feel pretty good about this.
 - Switch routing to *dynamic* subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
-- Deploy CrowdSec.
+- ~~Deploy CrowdSec.~~
+  Tried this, it seemed to negatively impact OPNsense/network stability.
 - ~~Enable mTLS to protect ingress.~~
   ~~Configure secondary reverse proxy to services.~~
 - ~~Deploy reverse proxy with ACME/LetsEncrypt.~~

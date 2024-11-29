@@ -44,6 +44,11 @@ in {
       type = lib.types.bool;
     };
   };
+  # Not working, suspect tmpfs created for pod is permissions-wise out of reach of node exporter
+  # Ref: https://github.com/prometheus/node_exporter/issues/2470#issuecomment-1247604030
+  # config.systemd.services.prometheus-node-exporter.serviceConfig = lib.mkIf config.services.monitoring.enable {
+  #   ProtectHome = lib.mkForce "read-only";
+  # };
   config.services = lib.mkIf config.services.monitoring.enable {
     nix-serve = {
       enable = true;
@@ -90,7 +95,11 @@ in {
         }
       ];
       retentionTime = "14d";
-      exporters.node.enable = true;
+      exporters.node = {
+        enable = true;
+        # I don't think this is strictly necessary for dual stack but eh
+        listenAddress = "[::]";
+      };
       globalConfig = {
         scrape_interval = "30s";
       };
@@ -167,17 +176,6 @@ in {
                   "alertname=\"HostNetworkTransmitErrors\""
                   "device=\"wg0\""
                   "nodename=\"opnsense\""
-                ];
-                receiver = "null";
-              }
-              # Null route the weird tmpfs Nixos error
-              # TODO: Fix root cause
-              {
-                matchers = [
-                  "alertname=\"HostFilesystemDeviceError\""
-                  "mountpoint=\"/run/user/1000\""
-                  "device=\"tmpfs\""
-                  "fstype=\"tmpfs\""
                 ];
                 receiver = "null";
               }
