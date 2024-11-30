@@ -56,30 +56,32 @@
     if (builtins.substring 0 2 x) == "--"
     then "${x}="
     else "${x} ") [
-    "--bind-address"
-    "::"
-    # "--config"
-    # controllerConfigFile
-    "--kubeconfig"
-    controllerKubeconfigFile
     "--authorization-kubeconfig"
     controllerKubeconfigFile
     # "--authentication-kubeconfig"
     # controllerKubeconfigFile
-    "--use-service-account-credentials"
-    "true"
-    "--service-account-private-key-file"
-    "${topConfig.secretsPath}/service-account-key.pem"
+    "--bind-address"
+    "::"
+    # "--config"
+    # controllerConfigFile
     "--client-ca-file"
     "${topConfig.secretsPath}/ca.pem"
-    "--tls-cert-file"
-    "${topConfig.secretsPath}/controllermanager-tls-cert-file.pem"
-    "--tls-private-key-file"
-    "${topConfig.secretsPath}/controllermanager-tls-private-key-file.pem"
     "--cluster-signing-cert-file"
     "${topConfig.secretsPath}/ca.pem"
     "--cluster-signing-key-file"
     "${topConfig.secretsPath}/ca-key.pem"
+    "--kubeconfig"
+    controllerKubeconfigFile
+    "--root-ca-file"
+    "${topConfig.secretsPath}/ca.pem"
+    "--service-account-private-key-file"
+    "${topConfig.secretsPath}/service-account-key.pem"
+    "--tls-cert-file"
+    "${topConfig.secretsPath}/controllermanager-tls-cert-file.pem"
+    "--tls-private-key-file"
+    "${topConfig.secretsPath}/controllermanager-tls-private-key-file.pem"
+    "--use-service-account-credentials"
+    "true"
     # TODO: for development
     "--v"
     "2"

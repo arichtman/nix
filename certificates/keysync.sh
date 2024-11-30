@@ -3,7 +3,6 @@
 rsync etcd*.pem "${1}.local:/home/nixos/kubernetes"
 rsync kube*.pem "${1}.local:/home/nixos/kubernetes"
 rsync ca*.pem "${1}.local:/home/nixos/kubernetes"
-rsync flannel*.pem "${1}.local:/home/nixos/kubernetes"
 rsync proxy-*.pem "${1}.local:/home/nixos/kubernetes"
 ssh "${1}.internal" sudo cp "./kubernetes/*.pem" /var/lib/kubernetes/secrets
 ssh "${1}.internal" sudo chown kubernetes: "/var/lib/kubernetes/secrets/*.pem"

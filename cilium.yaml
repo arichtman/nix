@@ -1,5 +1,12 @@
-cni:
-  confPath: /run/cni/net.d
+debug:
+  enabled: true
+# cni:
+#   confPath: /run/cni/net.d
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+# ipv4:
+#   enabled: false
 # ipv6:
-#   enbabled: true
-kubeProxyReplacement: "true"
+#   enabled: true
+kubeProxyReplacement: true
+# gatewayAPI:
+#   enabled: true

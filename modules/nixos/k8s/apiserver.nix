@@ -56,6 +56,7 @@
     "${cfg.secretsPath}/service-account.pem"
     "--service-account-signing-key-file"
     "${cfg.secretsPath}/service-account-key.pem"
+    # TODO: Revisit
     "--service-cluster-ip-range"
     "2403:580a:e4b1:fffd::/108"
     # Can't mix public and private

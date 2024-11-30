@@ -24,6 +24,8 @@
       tlsCertFile = "${kubeletSecretsPath}/kubelet-tls-cert-file.pem";
       tlsPrivateKeyFile = "${kubeletSecretsPath}/kubelet-tls-private-key-file.pem";
       tlsMinVersion = "VersionTLS12";
+      # TODO: when we have an approval operator, enable
+      rotateCertificates = false;
       authentication = {
         x509 = {
           clientCAFile = "${kubeletSecretsPath}/ca.pem";
@@ -32,6 +34,11 @@
           enable = true;
           cacheTTL = "10s";
         };
+        # TODO: probably defaults false but may fix log access
+        # Ref: https://github.com/kubernetes/kubernetes/issues/55872
+        # anonymous = {
+        #   enabled = false;
+        # };
       };
       authorization = {
         mode = "Webhook";
@@ -97,7 +104,7 @@
     "--hostname-override"
     "${config.networking.hostName}.local"
     "--v" # TODO: Remove after debugging
-    "2"
+    "4"
   ];
 in {
   options.services.k8s-kubelet = {
@@ -163,13 +170,65 @@ in {
     };
     # This is just to bootstrap us into being able to run containers,
     #   since Cilium needs to run some to deploy itself.
+    # Linux itself requires the loopback device apparently,
+    #   and for this reason I think containerd won't actually launch containers if /etc/cni/net.d has no configurations
+    # This doesn't work tho - has issues finding the sandbox so can't actually run pods
     environment.etc = {
-      "cni/net.d/99-loopback.conf".text = ''
-        {
-        	"cniVersion": "0.2.0",
-        	"name": "lo",
-        	"type": "loopback"
-        }
+      # "cni/net.d/99-loopback.conf".text = ''
+      #   {
+      #   	"cniVersion": "0.3.1",
+      #   	"name": "lo",
+      #   	"type": "loopback"
+      #   }
+      # '';
+      # Ref: https://github.com/containernetworking/plugins/tree/main/plugins/main/dummy
+      # "cni/net.d/98-dummy.conf".text = ''
+      #   {
+      #   	"cniVersion": "0.3.1",
+      #   	"name": "mynet",
+      #   	"type": "dummy",
+      #     "ipam": {
+      #       "type": "host-local",
+      #       "subnet": "10.1.2.0/24"
+      #     }
+      #   }
+      # '';
+      "cni/net.d/97-mixed.conflist".text = ''
+      {
+        "cniVersion": "1.0.0",
+        "name": "containerd-net",
+        "plugins": [
+          {
+            "type": "loopback"
+          },
+          {
+            "type": "bridge",
+            "bridge": "cni0",
+            "isGateway": true,
+            "ipMasq": true,
+            "promiscMode": true,
+            "ipam": {
+              "type": "host-local",
+              "ranges": [
+                [{
+                  "subnet": "10.88.0.0/16"
+                }],
+                [{
+                  "subnet": "2001:4860:4860::/64"
+                }]
+              ],
+              "routes": [
+                { "dst": "0.0.0.0/0" },
+                { "dst": "::/0" }
+              ]
+            }
+          },
+          {
+            "type": "portmap",
+            "capabilities": {"portMappings": true}
+          }
+        ]
+      }
       '';
     };
   };
