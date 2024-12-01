@@ -56,6 +56,14 @@
     if (builtins.substring 0 2 x) == "--"
     then "${x}="
     else "${x} ") [
+    "--allocate-node-cidrs"
+    "true"
+    "--service-cluster-ip-range"
+    "2001:db8:1234:5678:8:3::/112"
+    "--node-cidr-mask-size"
+    "120"
+    "--cluster-cidr"
+    "2001:db8:1234:5678:8:2::/104"
     "--authorization-kubeconfig"
     controllerKubeconfigFile
     # "--authentication-kubeconfig"

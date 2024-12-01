@@ -9,6 +9,9 @@
     if (builtins.substring 0 2 x) == "--"
     then "${x}="
     else "${x} ") [
+    # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
+    # "--advertise-address"
+    # "2001:db8:1234:5678::1"
     # Need this for Cilium
     "--allow-privileged"
     "true"
@@ -58,7 +61,8 @@
     "${cfg.secretsPath}/service-account-key.pem"
     # TODO: Revisit
     "--service-cluster-ip-range"
-    "2403:580a:e4b1::/108"
+    "2001:db8:1234:5678:8:3::/112"
+    # "2403:580a:e4b1::/108"
     # Can't mix public and private
     # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"
     "--tls-cert-file"

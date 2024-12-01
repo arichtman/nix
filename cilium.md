@@ -8,6 +8,9 @@
 - https://github.com/containerd/containerd/issues/9139
 - https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
 - https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
+- https://sgryphon.gamertheory.net/2021/01/kubernetes-on-ipv6-only/
+- https://kubernetes.io/docs/concepts/services-networking/dual-stack/
+- https://documentation.ubuntu.com/canonical-kubernetes/main/src/snap/reference/ports-and-services/
 
 https://thelinuxcode.com/masquerade-with-iptables/
 https://nixos.wiki/wiki/Linux_kernel
