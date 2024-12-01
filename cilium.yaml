@@ -1,12 +1,43 @@
+# No kube-proxy
+kubeProxyReplacement: true
+# Enables healthz endpoint
+kubeProxyReplacementHealthzBindAddr: "[::]:10256"
+# Required to bypass the non-working default APIserver service without kube-proxy
+k8sServiceHost: fat-controller.local
+k8sServicePort: 6443
+# Set our networking stack
+ipv4:
+  enabled: false
+ipv6:
+  enabled: true
+
+# For development
 debug:
   enabled: true
 # cni:
 #   confPath: /run/cni/net.d
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
-# ipv4:
-#   enabled: false
-# ipv6:
-#   enabled: true
-kubeProxyReplacement: true
+# Disable SNAT as the node interface should have all pod IPv6 in addition to it's own
+# enableIPv6Masquerade: false
+# bpf:
+  # Enable cluster-external traffic to be routed to pods
+  # lbExternalClusterIP: true
+  # Use BPF instead of iptables masquerading
+  # masquerade: true
+
+# Set rules to route inter-node without hitting the router
+# Failing presently as IP pool being used is ULA CIDR,
+#   which contains the gateway LL address
+# failed to start: daemon creation failed: error while initializing daemon: failed while reinitializing datapath: failed to enable direct routes for ipv6: route to destination fd00::118 contains gateway fe80::4140:f9e8:ec8a:489e, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes" subsys=daemon
+# autoDirectNodeRoutes: true
+# routingMode: native
+# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+# ipam:
+#   operator:
+#     clusterPoolIPv6PodCIDRList:
+#     - "2403:580a:e4b1::/64"
+
+# Require v6 address since we're single stack effectively
+# k8s:
+#   requireIPv6PodCIDR: true
 # gatewayAPI:
 #   enabled: true

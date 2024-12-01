@@ -21,7 +21,6 @@ in
       boot.initrd.kernelModules = [
         "dm-snapshot" # Ref: https://nixos.wiki/wiki/LVM
       ];
-      boot.kernelModules = [];
       boot.extraModulePackages = [];
 
       services.qemuGuest.enable = true;

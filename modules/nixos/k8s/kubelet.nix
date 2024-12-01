@@ -104,7 +104,7 @@
     "--hostname-override"
     "${config.networking.hostName}.local"
     "--v" # TODO: Remove after debugging
-    "4"
+    "2"
   ];
 in {
   options.services.k8s-kubelet = {
@@ -121,7 +121,18 @@ in {
   config = lib.mkIf kubeletServiceConfig.enable {
     virtualisation.containerd = {
       enable = true;
+      # required to get it to pick up cilium-cni as placed by the agent
+      settings = {
+        plugins."io.containerd.grpc.v1.cri".cni = {
+          bin_dir = "/opt/cni/bin";
+        };
+      };
     };
+    # Open kubelet port to local addresses
+    networking.firewall.extraInputRules = ''
+      ip saddr { 192.168.1.0/24 } tcp dport 10250 accept
+      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept
+    '';
     systemd = {
       services.k8s-kubelet = {
         description = "Kubernetes Kubelet Service";
@@ -144,6 +155,7 @@ in {
         # Required for volumes, at least projected ones but probably emptyDir etc also
         path = with pkgs; [
           mount
+          umount
         ];
       };
       tmpfiles.settings = {
@@ -193,43 +205,43 @@ in {
       #     }
       #   }
       # '';
-      "cni/net.d/97-mixed.conflist".text = ''
-      {
-        "cniVersion": "1.0.0",
-        "name": "containerd-net",
-        "plugins": [
-          {
-            "type": "loopback"
-          },
-          {
-            "type": "bridge",
-            "bridge": "cni0",
-            "isGateway": true,
-            "ipMasq": true,
-            "promiscMode": true,
-            "ipam": {
-              "type": "host-local",
-              "ranges": [
-                [{
-                  "subnet": "10.88.0.0/16"
-                }],
-                [{
-                  "subnet": "2001:4860:4860::/64"
-                }]
-              ],
-              "routes": [
-                { "dst": "0.0.0.0/0" },
-                { "dst": "::/0" }
-              ]
-            }
-          },
-          {
-            "type": "portmap",
-            "capabilities": {"portMappings": true}
-          }
-        ]
-      }
-      '';
+      # "cni/net.d/97-mixed.conflist".text = ''
+      # {
+      #   "cniVersion": "1.0.0",
+      #   "name": "containerd-net",
+      #   "plugins": [
+      #     {
+      #       "type": "loopback"
+      #     },
+      #     {
+      #       "type": "bridge",
+      #       "bridge": "cni0",
+      #       "isGateway": true,
+      #       "ipMasq": true,
+      #       "promiscMode": true,
+      #       "ipam": {
+      #         "type": "host-local",
+      #         "ranges": [
+      #           [{
+      #             "subnet": "10.88.0.0/16"
+      #           }],
+      #           [{
+      #             "subnet": "2001:4860:4860::/64"
+      #           }]
+      #         ],
+      #         "routes": [
+      #           { "dst": "0.0.0.0/0" },
+      #           { "dst": "::/0" }
+      #         ]
+      #       }
+      #     },
+      #     {
+      #       "type": "portmap",
+      #       "capabilities": {"portMappings": true}
+      #     }
+      #   ]
+      # }
+      # '';
     };
   };
 }

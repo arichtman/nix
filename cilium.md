@@ -1,5 +1,6 @@
 # Cilium
 
+- https://docs.cilium.io/en/stable/helm-reference/
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
 - https://docs.cilium.io/en/stable/operations/troubleshooting/
@@ -90,6 +91,12 @@ We're at Kubernetes 1.31.2, Cillium 1.16 is compatible with 1.30.4 at latest.
 
 ### Agent failures
 
+#### IPv6 issues
+
+```
+failed to start: IPv6 is enabled and ip6tables modules initialization failed: could not load module ip6table_mangle: exit status 1 (try disabling IPv6 in Cilium or loading ip6_tables, ip6table_mangle, ip6table_raw and ip6table_filter kernel modules)\nfailed to stop: context deadline exceeded" subsys=daemon
+```
+
 #### Missing service account CA
 
 `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt` is unpopulated, apparently.
@@ -100,6 +107,8 @@ Fixed this by adding `--root-ca-certificate` to controller manager configuration
 
 Looks like it's trying to hit the API server on port 443, if this is machine, it's 6443.
 But this also smells like it might be an in-cluster IP, set by the service?
+
+This was solved by providing the master address and port to Cillium directly, allowing it to bypass the in-cluster service.
 
 ```
 $ sudo tail -f cilium-k2mkh_kube-system_config-2d981c7a3a549e59e21b73b99cb911302cf55d22ee00e038abf5815a7277ef91.log

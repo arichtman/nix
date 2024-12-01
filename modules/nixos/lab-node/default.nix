@@ -142,6 +142,7 @@ in
         };
       };
 
+      boot.kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
       networking = {
         # TODO: See if this ought to be richtman.au
         domain = "local";
