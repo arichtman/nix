@@ -43,7 +43,7 @@ groups:
 
     - alert: HostUnusualDiskReadRate
       expr: '(sum by (instance) (rate(node_disk_read_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
-      for: 5m
+      for: 10m
       labels:
         severity: warning
       annotations:
@@ -143,7 +143,7 @@ groups:
 
     - alert: HostCpuHighIowait
       expr: '(avg by (instance) (rate(node_cpu_seconds_total{mode="iowait"}[5m])) * 100 > 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
-      for: 0m
+      for: 10m
       labels:
         severity: warning
       annotations:
@@ -160,13 +160,13 @@ groups:
         description: "Time spent in IO is too high on {{ $labels.instance }}. Check storage for issues.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
     - alert: HostContextSwitchingHigh
-      expr: '(rate(node_context_switches_total[15m])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) / (rate(node_context_switches_total[1d])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) > 2'
-      for: 10m
+      expr: '(rate(node_context_switches_total[20m])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) / (rate(node_context_switches_total[1d])/count without(mode,cpu) (node_cpu_seconds_total{mode="idle"})) > 2'
+      for: 20m
       labels:
         severity: warning
       annotations:
         summary: Host context switching high (instance {{ $labels.instance }})
-        description: "Context switching is growing on the node (twice the daily average during the last 15m)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+        description: "Context switching is growing on the node (twice the daily average during the last 20m)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
     - alert: HostSwapIsFillingUp
       expr: '((1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
