@@ -16,8 +16,10 @@ in
     config = mkIf cfg.enabled {
       programs.ssh.enable = true;
       programs.ssh.matchBlocks = {
-        proxmox = {
-          hostname = "proxmox.internal";
+        "proxmox.*" = {
+          user = "root";
+        };
+        "opnsense.*" = {
           user = "root";
         };
         github = {
@@ -42,11 +44,11 @@ in
           user = "chanya";
           hostname = "ap.internal";
         };
-        "*.internal" = {
-          user = "nixos";
+        os = {
+          hostname = "opnsense.local";
         };
-        "*.local" = {
-          user = "nixos";
+        pm = {
+          hostname = "proxmox.local";
         };
         fc = {
           hostname = "fat-controller.local";
