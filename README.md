@@ -580,6 +580,13 @@ References:
 Trust chain system install:
 `sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
 
+#### Old MBP setup
+
+OPNsense/openssl's ciphers are too new, to install client certificate you may need to pkcs12 bundle legacy.
+`openssl pkcs12 -export -legacy -out Certificate.p12 -in certificate.pem -inkey key.pem`
+
+- [StackOverflow post](https://stackoverflow.com/a/74792849)
+
 #### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
