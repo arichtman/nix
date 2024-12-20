@@ -6,6 +6,16 @@
 }: let
   topConfig = config.services.spire;
   cfg = config.services.spire-server;
+  # Ref: https://github.com/NixOS/nixpkgs/blob/3566ab7246670a43abd2ffa913cc62dad9cdf7d5/nixos/modules/services/monitoring/prometheus/default.nix#L29C1-L38C20
+  # a wrapper that verifies that the configuration is valid
+  configCheck = file:
+    pkgs.runCommand "spire-agent-config-checked" {
+      preferLocalBuild = true;
+      nativeBuildInputs = [pkgs.spire-server];
+    } ''
+      ln -s ${file} $out
+      spire-server validate -config ${file} $out
+    '';
   # Ref: https://github.com/spiffe/spire/blob/main/conf/server/server_full.conf
   serverConfig = {
     server = {
@@ -56,6 +66,7 @@
     };
   };
   serverConfigFile = pkgs.writeText "spire-server-config" (builtins.toJSON serverConfig);
+  checkedConfigFile = configCheck serverConfigFile;
 in {
   options.services.spire-server = {
     enable = lib.options.mkOption {
@@ -84,13 +95,13 @@ in {
     systemd.services.spire-server = {
       description = "Spire server";
       # Required to activate the service.
-      wantedBy = ["spire.target" "multi-user.target"];
+      wantedBy = ["multi-user.target"];
       # Wait on networking.
       after = ["network.target"];
       serviceConfig = {
         # For managing resources of groups of services
         Slice = "spire.slice";
-        ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + serverConfigFile;
+        ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile;
         WorkingDirectory = "/var/lib/spire";
         # TODO: not sure if there's any nicer way to couple these to the user definition
         User = "spire-server";
