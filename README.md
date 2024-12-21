@@ -15,17 +15,17 @@ Y'know, I'm starting to feel pretty good about this.
 ### Bedrock (Networking)
 
 - Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
-- Enable mDNS bridging to VPN interfaces
-- Enable mDNS responses from OPNsense box
+- Test local DNS from VPNs
 - Look into roles anywhere for DDNS
   [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
 - Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
-  Switch to Inadyne DDNS client for that.
-- Configure secondary router to [repeat mDNS](https://www.snbforums.com/threads/mdns-repeater-with-guest-network-vlan.86503/),
-  [other thread](https://www.snbforums.com/threads/help-with-avahi-mdns-redirector-please.86537/).
-- Configure Proxmox IPv6 address. [docs](https://wiki.debian.org/NetworkConfiguration)
+  Switch to Inadyne DDNS client for that?
+- Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
 - Set up valid TLS for secondary router.
   I have successfully uploaded a valid TLS leaf certificate but it doesn't seem to be serving it.
+- Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
+- Decide on MACsec for lab security and isolation
+- ~~Enable mDNS responses from OPNsense box~~
 - ~~Enable IPv6 DNS server for Wireguard on MacOS.
   [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)~~
 - ~~Configure downstream router to trap DNS and forward to Unbound.~~
@@ -66,15 +66,16 @@ Y'know, I'm starting to feel pretty good about this.
 
 - Determine "foundational services" (and set up)
   - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
-  - NixOS store cache (Attic? [inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
-    [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)
+  - Deploy Spire for node identity
   - Secrets (Vault/OpenBao?)
   - Certificate authority? (step-ca?)
   - Identity (Authentik/Kanidm/Guacamole/Gluu)
-- Look into where makes sense to bootstrap secrets/vault/trust
 - Switch routing to *dynamic* subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
+- Look into different Nix store cache, maybe Attic
+- ~~NixOS store cache ([inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
+  [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)~~
 - ~~Deploy CrowdSec.~~
   Tried this, it seemed to negatively impact OPNsense/network stability.
 - ~~Enable mTLS to protect ingress.~~
@@ -97,7 +98,6 @@ Y'know, I'm starting to feel pretty good about this.
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
-- Work out graceful node shutdown to remove them from the API server
 - Find some kind of dynamic PV/storage option
   [post 1](https://akko.wtf/objects/79d8a9df-c1fe-4112-9d69-acc57977a0de)
   [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)

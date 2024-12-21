@@ -23,45 +23,59 @@
       bind_address = "[::1]";
       # bind_port = "";
       # ca_key_type = "";
-      ca_subject = {
-        country = ["AU"];
-        organization = ["Richtman"];
-        common_name = "Spire";
-      };
+      ca_subject = [
+        {
+          country = ["AU"];
+          organization = ["Richtman"];
+          common_name = "Spire";
+        }
+      ];
       # ca_ttl = "5m";
       data_dir = "./.data";
-      jwt_issue = "spire.services.richtman.au";
+      jwt_issuer = "spire.services.richtman.au";
       # TODO: get a writable directory for logs, maybe systemd tmpDir
       log_file = "/tmp/spire-server.log";
       # log_file = "/var/log/spire-server.log";
-      log_level = "DEBUG";
+      log_level = "debug";
       # agent_ttl = "5m";
       default_x509_svid_ttl = "5m";
       # default_jwt_svid_ttl = "5m";
       trust_domain = topConfig.trustDomain;
     };
     plugins = {
-      "CredentialComposer \"uniqueid\"" = {};
-      "DataStore \"sql\"" = {
-        plugin_data = {
-          # TODO: Revisit this, postgres might be better uniformity
-          #   though they may only support AWS options?
-          database_type = "sqlite3";
-          connection_string = "./.data/datastore.sqlite3";
-        };
-      };
-      "KeyManager \"disk\"" = {
-        plugin_data = {
-          keys_path = "/opt/spire/data/server/keys.json";
-        };
-      };
-      "KeyManager \"memory\"" = {
-        plugin_data = {};
-      };
+      CredentialComposer = [
+        {
+          uniqueid = {};
+        }
+      ];
+      DataStore = [
+        {
+          sql = {
+            plugin_data = {
+              # TODO: Revisit this, postgres might be better uniformity
+              #   though they may only support AWS options?
+              database_type = "sqlite3";
+              connection_string = "./.data/datastore.sqlite3";
+            };
+          };
+        }
+      ];
+      KeyManager = [
+        {
+          disk = {
+            plugin_data = {
+              keys_path = "./.data/keys.json";
+            };
+          };
+        }
+      ];
+      # "KeyManager \"memory\"" = {
+      #   plugin_data = {};
+      # };
     };
     telemetry = {
       Prometheus = {
-        port = 9090;
+        port = 9988;
       };
     };
   };
@@ -101,6 +115,7 @@ in {
       serviceConfig = {
         # For managing resources of groups of services
         Slice = "spire.slice";
+        # ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile + " -logLevel debug";
         ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile;
         WorkingDirectory = "/var/lib/spire";
         # TODO: not sure if there's any nicer way to couple these to the user definition

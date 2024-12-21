@@ -17,7 +17,7 @@
     "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 443 accept"
   ];
   services = {
-    # spire.trustDomain = "services.richtman.au";
+    # spire.trustDomain = "systems.richtman.au";
     # spire-server.enable = true;
     k8s.controller = true;
     caddyRP.enabled = true;
