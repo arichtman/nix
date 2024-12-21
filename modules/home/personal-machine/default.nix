@@ -22,6 +22,9 @@ in
         "opnsense.*" = {
           user = "root";
         };
+        "*.local" = {
+          user = "nixos";
+        };
         github = {
           hostname = "github.com";
           user = "git";
