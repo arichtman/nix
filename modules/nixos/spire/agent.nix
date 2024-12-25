@@ -9,13 +9,13 @@
   # Ref: https://github.com/spiffe/spire/blob/main/conf/agent/agent_full.conf
   agentConfig = {
     server = {
-      trust_domain = "";
-      bind_address = "";
-      bind_port = "";
+      trust_domain = topConfig.trustDomain;
+      bind_address = "[::1]";
+      # bind_port = "";
     };
     telemetry = {
       Prometheus = {
-        port = 9090;
+        port = 9989;
       };
     };
   };

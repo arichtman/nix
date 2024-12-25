@@ -75,6 +75,9 @@
     };
     telemetry = {
       Prometheus = {
+        # Unsure what this defaults to
+        # Ref: https://github.com/spiffe/spire/blob/v1.11.1/doc/telemetry/telemetry_config.md
+        # host = "[::1]";
         port = 9988;
       };
     };

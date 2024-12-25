@@ -96,6 +96,8 @@ in
         prometheus.exporters.node = {
           enable = true;
           openFirewall = true;
+          # I don't think this is strictly necessary for dual stack but eh
+          listenAddress = "[::]";
         };
         # Ref: https://github.com/avahi/avahi/blob/master/avahi-daemon/avahi-daemon.conf
         avahi = {

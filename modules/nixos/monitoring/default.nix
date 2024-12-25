@@ -95,11 +95,6 @@ in {
         }
       ];
       retentionTime = "14d";
-      exporters.node = {
-        enable = true;
-        # I don't think this is strictly necessary for dual stack but eh
-        listenAddress = "[::]";
-      };
       globalConfig = {
         scrape_interval = "30s";
       };
@@ -109,6 +104,7 @@ in {
         (mkLocalScrapeConfig "grafana" 3000)
         (mkLocalScrapeConfig "garage" 3903)
         (mkLocalScrapeConfig "kthxbye" 9099)
+        # (mkLocalScrapeConfig "spire-server" 9988)
         # Self-monitoring (fwiw)
         (mkLocalScrapeConfig "alertmanager" 9093)
         (mkLocalScrapeConfig "prometheus" 9090)
