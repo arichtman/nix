@@ -373,6 +373,7 @@ in
           eza # exa is unmaintained 🫣
           nerd-fonts.fira-code # This actually makes it available to Alacritty
           cyme # lsusb replacement
+          step-cli # Certificate tooling
           # Nix tooling
           nix-init
           nix-update
@@ -399,7 +400,6 @@ in
           jq-lsp
           buf
           nixd
-          nil
           ruff-lsp
           # diff tool
           # TODO: simplify when this hits unstable or whatever
