@@ -355,6 +355,7 @@ in
           # The essentials
           dig
           wget
+          netcat
           # Ref: https://github.com/ibraheemdev/modern-unix
           xh # curl replacement
           dog # dig replacement
