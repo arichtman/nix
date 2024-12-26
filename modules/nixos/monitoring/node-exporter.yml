@@ -268,7 +268,9 @@ groups:
         description: "Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} receive errors in the last two minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
     - alert: HostNetworkTransmitErrors
-      expr: '(rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
+      expr: '((rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) or vector(0)) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
+      # expr: '(rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
+      # expr: '(rate(node_network_transmit_errs_total{device!~"^wg\d+"}[2m]) / rate(node_network_transmit_packets_total{device!~"^wg\d+"}[2m]) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
       for: 2m
       labels:
         severity: warning
