@@ -13,3 +13,11 @@ result*
 *-pass.txt
 *.key
 *.pub
+
+# Some temporary config stuff
+*.hcl
+*.json
+*.yaml
+
+# background temp file
+nohup.out
