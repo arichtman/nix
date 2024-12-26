@@ -27,13 +27,14 @@ in
         tcpdump
         trippy
         btop
+        sysstat
       ];
       boot.tmp.cleanOnBoot = true;
       nix = {
         settings = {
-          trusted-public-keys = lib.mkAfter ["fat-controller.local:nIUqbWD1JiFbdLsKigseHZgj5T8e4Xja0vE0kS1AtHY="];
+          trusted-public-keys = lib.mkAfter ["fat-controller.systems.richtman.au:ULbki6cpX8A6Lvpx7XX7HuZ2qaEs0spWpvs+MOad204="];
           auto-optimise-store = true;
-          substituters = ["http://fat-controller.local:5000"];
+          substituters = ["http://fat-controller.systems.richtman.au:5000"];
         };
         optimise.automatic = true;
         gc.automatic = true;
@@ -85,6 +86,22 @@ in
       };
 
       services = {
+        # Required to enable IPv6 for nix-serve the binary cache
+        caddy = {
+          enable = true;
+          virtualHosts = {
+            ":5000" = {
+              # We have to bind to tcp6 specifically else it tries to do dual stack
+              #  which clashes with nix-serve already on 5000 @ v4
+              extraConfig = ''
+                bind tcp6/[::]
+                handle_path /* {
+                  reverse_proxy 127.0.0.1:5000
+                }
+              '';
+            };
+          };
+        };
         k8s.worker = true;
         openssh = {
           enable = true;
@@ -147,7 +164,7 @@ in
       boot.kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
       networking = {
         # TODO: See if this ought to be richtman.au
-        domain = "local";
+        domain = "systems.richtman.au";
         # TODO: Consider removal of networkmanager
         networkmanager.enable = true;
         nftables.enable = true;

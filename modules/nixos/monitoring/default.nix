@@ -50,11 +50,6 @@ in {
   #   ProtectHome = lib.mkForce "read-only";
   # };
   config.services = lib.mkIf config.services.monitoring.enable {
-    nix-serve = {
-      enable = true;
-      openFirewall = true;
-      secretKeyFile = "/var/lib/nix-serve/cache-priv-key.pem";
-    };
     kthxbye = {
       enable = true;
       port = 9099;
