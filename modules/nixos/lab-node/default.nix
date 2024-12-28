@@ -28,8 +28,8 @@ in
         trippy
         btop
         sysstat
+        linuxKernel.packages.linux_libre.perf
       ];
-      boot.tmp.cleanOnBoot = true;
       nix = {
         settings = {
           trusted-public-keys = lib.mkAfter ["fat-controller.systems.richtman.au:ULbki6cpX8A6Lvpx7XX7HuZ2qaEs0spWpvs+MOad204="];
@@ -86,22 +86,6 @@ in
       };
 
       services = {
-        # Required to enable IPv6 for nix-serve the binary cache
-        caddy = {
-          enable = true;
-          virtualHosts = {
-            ":5000" = {
-              # We have to bind to tcp6 specifically else it tries to do dual stack
-              #  which clashes with nix-serve already on 5000 @ v4
-              extraConfig = ''
-                bind tcp6/[::]
-                handle_path /* {
-                  reverse_proxy 127.0.0.1:5000
-                }
-              '';
-            };
-          };
-        };
         k8s.worker = true;
         openssh = {
           enable = true;
@@ -132,6 +116,15 @@ in
           nssmdns6 = true;
           nssmdns4 = true;
           ipv6 = true;
+          # Required to reduce context switch thrashing
+          # Ref: https://askubuntu.com/questions/1130175/avahi-daemon-uses-excessive-amounts-of-cpu
+          extraConfig = ''
+            [server]
+            ratelimit-interval-usec=500000
+            ratelimit-burst=500
+            [wide-area]
+            enable-wide-area=no
+          '';
         };
         # Required to respond to neighbor discovery protocol for IPv6 SLAAC
         # mDNS does the name-to-IP, ND does IP-to-MAC
@@ -161,7 +154,13 @@ in
         };
       };
 
-      boot.kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
+      boot = {
+        kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
+        # May be required for IPv6 neighbor discovery?
+        kernel.sysctl."net.ipv4.ip_forward" = 1;
+        kernel.sysctl."net.ipv6.ip_forward" = 1;
+        tmp.cleanOnBoot = true;
+      };
       networking = {
         # TODO: See if this ought to be richtman.au
         domain = "systems.richtman.au";
@@ -169,10 +168,14 @@ in
         networkmanager.enable = true;
         nftables.enable = true;
         # Only allow ingress from ranges I control
-        firewall.extraInputRules = ''
-          ip saddr { 192.168.1.0/24 } udp dport 5353 accept
-          ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept
-        '';
+        firewall.extraInputRules = lib.concatStringsSep "\n" [
+          # Allow my IPv4 private subnets into HTTPS
+          "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 443 accept"
+          # Allow anything in my primary prefix into HTTPS
+          "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 443 accept"
+          "ip saddr { 192.168.1.0/24 } udp dport 5353 accept"
+          "ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept"
+        ];
         # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
         # (the default) this is the recommended approach. When using systemd-networkd it's
         # still possible to use this option, but it's recommended to use it in conjunction

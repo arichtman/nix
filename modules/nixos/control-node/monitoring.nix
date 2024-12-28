@@ -37,22 +37,45 @@
     }
   ];
 in {
-  options.services.monitoring = {
-    enable = lib.options.mkOption {
-      description = "Enables my monitoring stack";
-      default = false;
-      type = lib.types.bool;
-    };
-  };
   # Not working, suspect tmpfs created for pod is permissions-wise out of reach of node exporter
   # Ref: https://github.com/prometheus/node_exporter/issues/2470#issuecomment-1247604030
   # config.systemd.services.prometheus-node-exporter.serviceConfig = lib.mkIf config.services.monitoring.enable {
   #   ProtectHome = lib.mkForce "read-only";
   # };
-  config.services = lib.mkIf config.services.monitoring.enable {
+  config.services = lib.mkIf config.control-node.enable {
     kthxbye = {
       enable = true;
       port = 9099;
+    };
+    caddy = {
+      enable = true;
+      virtualHosts = {
+        "prometheus.services.richtman.au:80" = {
+          # TODO: Find out what fuckery is causing /prometheus/ to redirect to /graph
+          # I tried setting Prom's web.external-url to the full thing with and without trailing slash.
+          extraConfig = ''
+            redir /graph /prometheus/graph
+            handle_path /prometheus* {
+              reverse_proxy localhost:9090
+            }
+          '';
+        };
+        "grafana.services.richtman.au:80" = {
+          extraConfig = ''
+            redir /login /grafana/login
+            handle_path /grafana* {
+              reverse_proxy localhost:3000
+            }
+          '';
+        };
+        "alertmanager.services.richtman.au:80" = {
+          extraConfig = ''
+            handle_path /alertmanager* {
+              reverse_proxy localhost:9093
+            }
+          '';
+        };
+      };
     };
     grafana = {
       enable = true;
@@ -74,8 +97,8 @@ in {
       enable = true;
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
-      webExternalUrl = "https://prometheus.services.richtman.au/";
-      ruleFiles = [./embedded-exporter.yml ./node-exporter.yml];
+      webExternalUrl = "https://prometheus.${config.control-node.serviceDomain}/";
+      ruleFiles = [./rules/embedded-exporter.yml ./rules/node-exporter.yml];
       alertmanagers = [
         {
           scheme = "http";
@@ -157,16 +180,6 @@ in {
               {
                 matchers = [
                   "alertname=\"PrometheusAlertmanagerE2eDeadManSwitch\""
-                ];
-                receiver = "null";
-              }
-              # Null route Wireguard errors
-              # The interface typically isn't transmitting anything so errors cause divide by zero +Inf firing
-              {
-                matchers = [
-                  "alertname=\"HostNetworkTransmitErrors\""
-                  "device=\"wg0\""
-                  "nodename=\"opnsense\""
                 ];
                 receiver = "null";
               }
