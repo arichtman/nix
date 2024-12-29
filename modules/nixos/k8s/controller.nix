@@ -23,7 +23,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${topConfig.secretsPath}/ca.pem";
-          server = "https://fat-controller.local:6443";
+          server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
     ];
@@ -56,14 +56,14 @@
     if (builtins.substring 0 2 x) == "--"
     then "${x}="
     else "${x} ") [
-    "--allocate-node-cidrs"
-    "true"
-    "--service-cluster-ip-range"
-    "2001:db8:1234:5678:8:3::/112"
+    # "--allocate-node-cidrs"
+    # "true"
+    # "--service-cluster-ip-range"
+    # "2001:db8:1234:5678:8:3::/112"
     "--node-cidr-mask-size"
     "120"
-    "--cluster-cidr"
-    "2001:db8:1234:5678:8:2::/104"
+    # "--cluster-cidr"
+    # "2001:db8:1234:5678:8:2::/104"
     "--authorization-kubeconfig"
     controllerKubeconfigFile
     # "--authentication-kubeconfig"

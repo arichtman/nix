@@ -14,7 +14,7 @@
           "localhost:${builtins.toString port}"
         ];
         labels = {
-          instance = "fat-controller.local";
+          instance = "fat-controller.systems.richtman.au";
         };
       }
     ];
@@ -26,7 +26,7 @@
       source_labels = ["__address__"];
       regex = ".*localhost.*";
       target_label = "instance";
-      replacement = "fat-controller.local";
+      replacement = "fat-controller.systems.richtman.au";
     }
     # Remove port numbers
     {
@@ -136,18 +136,19 @@ in {
                 "localhost:9100"
               ];
               labels = {
-                instance = "fat-controller.local";
+                instance = "fat-controller.systems.richtman.au";
               };
             }
             {
               targets = [
                 "opnsense.internal:9100"
                 "proxmox.internal:9100"
-                "patient-zero.local:9100"
-                "dr-singh.local:9100"
-                "smol-bat.local:9100"
-                "tweedledee.local:9100"
-                "tweedledum.local:9100"
+                "mum.systems.richtman.au:9100"
+                "patient-zero.systems.richtman.au:9100"
+                "dr-singh.systems.richtman.au:9100"
+                "smol-bat.systems.richtman.au:9100"
+                "tweedledee.systems.richtman.au:9100"
+                "tweedledum.systems.richtman.au:9100"
               ];
             }
           ];

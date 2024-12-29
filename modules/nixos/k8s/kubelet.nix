@@ -70,7 +70,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${kubeletSecretsPath}/ca.pem";
-          server = "https://fat-controller.local:6443";
+          server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
     ];
@@ -86,6 +86,7 @@
     current-context = "default";
   };
   kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
+  # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
   serviceArgs = lib.concatMapStrings (x:
     if (builtins.substring 0 2 x) == "--"
     then "${x}="
@@ -94,15 +95,17 @@
     kubeletConfigFile
     "--node-ip"
     "::"
-    "--kubeconfig"
-    kubeletKubeconfigFile
     "--config-dir"
     kubeletConfigDropinPath
-    # Seems to be necessary to allow the kubelet to register it's HostName address type
-    #   with the domain qualification.
-    # TODO: See about having the golang DNS resolution stack include mDNS :eyeroll:
+    # Seems to be necessary to allow the kubelet to register it's HostName address type with the domain qualification.
+    # I can't locate a cluster external domain setting or a dns search domain.
+    # GoLang running it's own DNS stack doesn't help here either.
     "--hostname-override"
-    "${config.networking.hostName}.local"
+    config.networking.fqdn
+    "--kubeconfig"
+    kubeletKubeconfigFile
+    "--node-labels"
+    "kubernetes.richtman.au/myval=true"
     "--v" # TODO: Remove after debugging
     "2"
   ];
@@ -180,31 +183,29 @@ in {
         };
       };
     };
-    # This is just to bootstrap us into being able to run containers,
-    #   since Cilium needs to run some to deploy itself.
-    # Linux itself requires the loopback device apparently,
-    #   and for this reason I think containerd won't actually launch containers if /etc/cni/net.d has no configurations
+    # This is just to bootstrap us into being able to run containers, since Cilium needs to run some to deploy itself.
+    # Linux itself requires the loopback device apparently, and for this reason I think containerd won't actually launch containers if /etc/cni/net.d has no configurations
     # This doesn't work tho - has issues finding the sandbox so can't actually run pods
     environment.etc = {
       # "cni/net.d/99-loopback.conf".text = ''
       #   {
-      #   	"cniVersion": "0.3.1",
+      # 	  "cniVersion": "1.0.0",
       #   	"name": "lo",
       #   	"type": "loopback"
       #   }
       # '';
       # Ref: https://github.com/containernetworking/plugins/tree/main/plugins/main/dummy
-      # "cni/net.d/98-dummy.conf".text = ''
-      #   {
-      #   	"cniVersion": "0.3.1",
-      #   	"name": "mynet",
-      #   	"type": "dummy",
-      #     "ipam": {
-      #       "type": "host-local",
-      #       "subnet": "10.1.2.0/24"
-      #     }
-      #   }
-      # '';
+      "cni/net.d/98-dummy.conf".text = ''
+        {
+        	"cniVersion": "1.0.0",
+        	"name": "mynet",
+        	"type": "dummy",
+          "ipam": {
+            "type": "host-local",
+            "subnet": "10.1.2.0/24"
+          }
+        }
+      '';
       # "cni/net.d/97-mixed.conflist".text = ''
       # {
       #   "cniVersion": "1.0.0",
@@ -242,6 +243,42 @@ in {
       #   ]
       # }
       # '';
+      # Ref: https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
+      # "cni/net.d/96-containerd-net.conflist".text = ''
+      #   {
+      #    "cniVersion": "1.0.0",
+      #    "name": "containerd-net",
+      #    "plugins": [
+      #      {
+      #        "type": "bridge",
+      #        "bridge": "cni0",
+      #        "isGateway": true,
+      #        "ipMasq": true,
+      #        "promiscMode": true,
+      #        "ipam": {
+      #          "type": "host-local",
+      #          "ranges": [
+      #            [{
+      #              "subnet": "10.88.0.0/16"
+      #            }],
+      #            [{
+      #              "subnet": "2001:db8:4860::/64"
+      #            }]
+      #          ],
+      #          "routes": [
+      #            { "dst": "0.0.0.0/0" },
+      #            { "dst": "::/0" }
+      #          ]
+      #        }
+      #      },
+      #      {
+      #        "type": "portmap",
+      #        "capabilities": {"portMappings": true},
+      #        "externalSetMarkChain": "KUBE-MARK-MASQ"
+      #      }
+      #    ]
+      #   }
+      #   '';
     };
   };
 }

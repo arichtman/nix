@@ -23,7 +23,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${topConfig.secretsPath}/ca.pem";
-          server = "https://fat-controller.local:6443";
+          server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
     ];

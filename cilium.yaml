@@ -3,7 +3,7 @@ kubeProxyReplacement: true
 # Enables healthz endpoint
 kubeProxyReplacementHealthzBindAddr: "[::]:10256"
 # Required to bypass the non-working default APIserver service without kube-proxy
-k8sServiceHost: fat-controller.local
+k8sServiceHost: fat-controller.systems.richtman.au
 k8sServicePort: 6443
 # Set our networking stack
 ipv4:

@@ -25,6 +25,9 @@ in
         "*.local" = {
           user = "nixos";
         };
+        "*.systems.richtman.au" = {
+          user = "nixos";
+        };
         github = {
           hostname = "github.com";
           user = "git";

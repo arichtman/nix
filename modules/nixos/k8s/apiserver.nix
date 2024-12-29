@@ -61,8 +61,8 @@
     "${cfg.secretsPath}/service-account-key.pem"
     # TODO: Revisit
     "--service-cluster-ip-range"
-    "2001:db8:1234:5678:8:3::/112"
-    # "2403:580a:e4b1::/108"
+    # "2001:db8:1234:5678:8:3::/112"
+    "2403:580a:e4b1::/108"
     # Can't mix public and private
     # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"
     "--tls-cert-file"

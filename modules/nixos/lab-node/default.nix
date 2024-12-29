@@ -104,7 +104,6 @@ in
         # Ref: https://github.com/avahi/avahi/blob/master/avahi-daemon/avahi-daemon.conf
         avahi = {
           enable = true;
-          # domainName = "internal";
           publish = {
             enable = true;
             domain = true;

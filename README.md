@@ -474,7 +474,7 @@ step certificate create cluster-admin cluster-admin.pem cluster-admin-key.pem \
   --set organization=system:masters
 # Construct the kubeconfig file
 # Here we're embedding certificates to avoid breaking stuff if we move or remove cert files
-kubectl config set-cluster home --server https://fat-controller.local:6443 --certificate-authority ca.pem --embed-certs=true
+kubectl config set-cluster home --server https://fat-controller.systems.richtman.au:6443 --certificate-authority ca.pem --embed-certs=true
 kubectl config set-credentials home-admin --client-certificate cluster-admin.pem --client-key cluster-admin-key.pem --embed-certs=true
 kubectl config set-context --user home-admin --cluster home home-admin
 ```
@@ -641,7 +641,7 @@ some _very_ wip notes about the desktop.
 Some diagnostic tests for mDNS:
 
 ```
-export HOST_NAME=fat-controller.local.
+export HOST_NAME=fat-controller.systems.richtman.au.
 # This is our bedrock of truth. It works consistently and can be easily viewed
 avahi-resolve-host-name $HOST_NAME
 tcpdump udp port 5353 # Optionally -Qin
