@@ -260,9 +260,10 @@ in
             bl = "blame";
             xclean = "clean --force -x --exclude '.env'";
           };
-          # Note: regex to select non-comments ^[^#\n].*
-          # TODO: Generate the file from fetchURL call, run regex, remove .envrc line?
-          ignores = import ./git/.gitignore.nix;
+          ignores = lib.arichtman.sourceGitignoreList {
+            languages = ["hugo" "rust" "linux" "macos" "csharp" "direnv" "python" "windows" "terraform" "dotnetcore" "terragrunt" "rust-analyzer" "node" "yarn"];
+            hash = "12gswbdnlsx1gzqxns6s6nzsc0kkvnprr44abc1v8l6in8rjyj57";
+          };
           signing = {
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";

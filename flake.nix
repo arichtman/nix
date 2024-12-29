@@ -39,6 +39,7 @@
     lib = inputs.snowfall-lib.mkLib {
       inherit inputs;
       src = ./.;
+      snowfall.namespace = "arichtman";
     };
     mkNixosConfiguration = name: {
       hostname = "${builtins.toString name}";
@@ -48,8 +49,6 @@
     };
   in
     lib.mkFlake {
-      package-namespace = "arichtman";
-
       # Workaround to https://github.com/NixOS/nixpkgs/issues/337036
       nix.package = inputs.nixpkgs.lix.overrideAttrs {
         doCheck = false;
