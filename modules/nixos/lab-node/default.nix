@@ -29,6 +29,7 @@ in
         btop
         sysstat
         linuxKernel.packages.linux_libre.perf
+        dig
       ];
       nix = {
         settings = {
