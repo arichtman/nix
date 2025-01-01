@@ -95,18 +95,17 @@ in {
     };
     prometheus = {
       enable = true;
+      # checkConfig = false;
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://prometheus.${config.control-node.serviceDomain}/";
       ruleFiles = [./rules/embedded-exporter.yml ./rules/node-exporter.yml];
       alertmanagers = [
         {
-          scheme = "http";
-          path_prefix = "/alertmanager";
           static_configs = [
             {
               targets = [
-                "localhost"
+                "localhost:9093"
               ];
             }
           ];

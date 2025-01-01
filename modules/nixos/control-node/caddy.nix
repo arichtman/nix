@@ -25,6 +25,9 @@
           "auto_https off"
           # For testing
           "debug"
+          # Set default response to error so invalid/unrouted requests are obvious
+          # Ref: https://caddy.community/t/why-caddy-emits-empty-200-ok-responses-by-default/17634
+          "respond 500"
         ];
       };
     };
