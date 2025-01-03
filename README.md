@@ -435,17 +435,11 @@ References:
 #### Trust chain setup
 
 Arguably this mingles with substratum, as PKI/trust/TLS is required or very desirable for VPN/HTTPS etc.
+SPIFFE/SPIRE will address this somewhat.
 
 1. Create root CA
    `xkcdpass --delimiter - --numwords 4 > root-ca.pass`
    `step certificate create "ariel@richtman.au" ./root-ca.pem ./root-ca-key.pem --profile root-ca --password-file ./root-ca.pass`
-1. Make node directories cause this is going to get messy
-   `<nodes.txt xargs mkdir`
-1. Create password files
-   `<nodes.txt xargs -I% sh -c 'xkcdpass --delimiter - --numwords 4 > "./$1/$1-pass.txt"' -- %`
-1. Secure them `chmod 400 *.pass`
-1. Create intermediate CAs
-   `<nodes.txt xargs -I% step certificate create % ./%/%.pem ./%/%-key.pem --profile intermediate-ca --ca ./root-ca.pem --ca-key ./root-ca-key.pem --ca-password-file root-ca-pass.txt --password-file ./%/%-pass.txt`
 1. Distribute the intermediate certificates and keys
 1. Secure the root CA, it's a bit hidden but Bitwarden _does_ take attachments.
 1. Publish the root CA, with my current setup this meant uploading it to s3.

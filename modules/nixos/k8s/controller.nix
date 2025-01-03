@@ -22,7 +22,7 @@
       {
         name = "default";
         cluster = {
-          certificate-authority = "${topConfig.secretsPath}/ca.pem";
+          certificate-authority = "${topConfig.secretsPath}/k8s-ca.pem";
           server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
@@ -63,6 +63,7 @@
     "--node-cidr-mask-size"
     "120"
     # "--cluster-cidr"
+    # "2403:580a:e4b1::/64"
     # "2001:db8:1234:5678:8:2::/104"
     "--authorization-kubeconfig"
     controllerKubeconfigFile
@@ -73,15 +74,15 @@
     # "--config"
     # controllerConfigFile
     "--client-ca-file"
-    "${topConfig.secretsPath}/ca.pem"
+    "${topConfig.secretsPath}/k8s-ca.pem"
     "--cluster-signing-cert-file"
-    "${topConfig.secretsPath}/ca.pem"
+    "${topConfig.secretsPath}/k8s-ca.pem"
     "--cluster-signing-key-file"
-    "${topConfig.secretsPath}/ca-key.pem"
+    "${topConfig.secretsPath}/k8s-ca-key.pem"
     "--kubeconfig"
     controllerKubeconfigFile
     "--root-ca-file"
-    "${topConfig.secretsPath}/ca.pem"
+    "${topConfig.secretsPath}/k8s-ca.pem"
     "--service-account-private-key-file"
     "${topConfig.secretsPath}/service-account-key.pem"
     "--tls-cert-file"

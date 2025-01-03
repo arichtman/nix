@@ -28,7 +28,7 @@
       rotateCertificates = false;
       authentication = {
         x509 = {
-          clientCAFile = "${kubeletSecretsPath}/ca.pem";
+          clientCAFile = "${kubeletSecretsPath}/k8s-ca.pem";
         };
         webhook = {
           enable = true;
@@ -69,7 +69,7 @@
       {
         name = "default";
         cluster = {
-          certificate-authority = "${kubeletSecretsPath}/ca.pem";
+          certificate-authority = "${kubeletSecretsPath}/k8s-ca.pem";
           server = "https://fat-controller.systems.richtman.au:6443";
         };
       }

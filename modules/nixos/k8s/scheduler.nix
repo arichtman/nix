@@ -22,7 +22,7 @@
       {
         name = "default";
         cluster = {
-          certificate-authority = "${topConfig.secretsPath}/ca.pem";
+          certificate-authority = "${topConfig.secretsPath}/k8s-ca.pem";
           server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
@@ -58,7 +58,7 @@
     "--config"
     schedulerConfigFile
     "--client-ca-file"
-    "${topConfig.secretsPath}/ca.pem"
+    "${topConfig.secretsPath}/k8s-ca.pem"
     "--tls-cert-file"
     "${topConfig.secretsPath}/scheduler-tls-cert-file.pem"
     "--tls-private-key-file"

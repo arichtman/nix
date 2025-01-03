@@ -1,3 +1,4 @@
+#helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium.yaml --version 1.16.5
 # No kube-proxy
 kubeProxyReplacement: true
 # Enables healthz endpoint
@@ -29,8 +30,8 @@ debug:
 #   which contains the gateway LL address
 # failed to start: daemon creation failed: error while initializing daemon: failed while reinitializing datapath: failed to enable direct routes for ipv6: route to destination fd00::118 contains gateway fe80::4140:f9e8:ec8a:489e, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes" subsys=daemon
 # autoDirectNodeRoutes: true
-# routingMode: native
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+routingMode: native
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
 # ipam:
 #   operator:
 #     clusterPoolIPv6PodCIDRList:

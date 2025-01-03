@@ -4,6 +4,7 @@ metadata:
   labels:
     run: test-loopback
   name: test-loopback
+  # namespace: default
 spec:
   containers:
   #   args:
@@ -31,7 +32,7 @@ spec:
     #   readOnly: true
   dnsPolicy: Default
   restartPolicy: Always
-  nodeName: mum.local
+  nodeName: mum.systems.richtman.au
   # automountServiceAccountToken: false
   # volumes:
   # - name: manual-token

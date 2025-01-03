@@ -173,6 +173,9 @@ in
           "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 443 accept"
           # Allow anything in my primary prefix into HTTPS
           "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 443 accept"
+          # Something for Cilium
+          "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 4240 accept"
+          # mDNS
           "ip saddr { 192.168.1.0/24 } udp dport 5353 accept"
           "ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept"
         ];
