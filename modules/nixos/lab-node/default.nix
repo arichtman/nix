@@ -36,6 +36,9 @@ in
           trusted-public-keys = lib.mkAfter ["fat-controller.systems.richtman.au:ULbki6cpX8A6Lvpx7XX7HuZ2qaEs0spWpvs+MOad204="];
           auto-optimise-store = true;
           substituters = ["http://fat-controller.systems.richtman.au:5000"];
+          download-buffer-size = 134217728;
+          build-max-jobs = 2;
+          cores = 0;
         };
         optimise.automatic = true;
         gc.automatic = true;
