@@ -94,6 +94,9 @@ in
         openssh = {
           enable = true;
         };
+        resolved = {
+          enable = true;
+        };
         journald.extraConfig = ''
           SystemMaxUse=100M
           MaxFileSec=7day
