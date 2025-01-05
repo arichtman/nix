@@ -36,9 +36,9 @@
         };
         # TODO: probably defaults false but may fix log access
         # Ref: https://github.com/kubernetes/kubernetes/issues/55872
-        # anonymous = {
-        #   enabled = false;
-        # };
+        anonymous = {
+          enabled = false;
+        };
       };
       authorization = {
         mode = "Webhook";
