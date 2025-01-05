@@ -19,11 +19,6 @@ debug:
 #   confPath: /run/cni/net.d
 # Disable SNAT as the node interface should have all pod IPv6 in addition to it's own
 # enableIPv6Masquerade: false
-# bpf:
-  # Enable cluster-external traffic to be routed to pods
-  # lbExternalClusterIP: true
-  # Use BPF instead of iptables masquerading
-  # masquerade: true
 
 # Set rules to route inter-node without hitting the router
 # Failing presently as IP pool being used is ULA CIDR,
@@ -32,13 +27,75 @@ debug:
 # autoDirectNodeRoutes: true
 routingMode: native
 ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
-# ipam:
-#   operator:
-#     clusterPoolIPv6PodCIDRList:
-#     - "2403:580a:e4b1::/64"
-
+ipam:
+  operator:
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/64"]
+    clusterPoolIPv6MaskSize: 64
+    autoCreateCiliumPodIPPools:
+      default:
+        ipv6:
+          cidrs:
+            - 2403:580a:e4b1::/64
+          maskSize: 64
+# Fully uninstall
+cni:
+  uninstall: true
+# ingressController:
+#   enabled: true
+#   default: true
+# gatewayAPI:
+#   enabled: true
 # Require v6 address since we're single stack effectively
 # k8s:
 #   requireIPv6PodCIDR: true
 # gatewayAPI:
 #   enabled: true
+cluster:
+  name: kubernetes
+rollOutCiliumPods: true
+---
+l2announcements:
+  # -- Enable L2 announcements
+  enabled: false
+  # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
+  # leaseDuration: 15s
+  # -- The interval at which the leader will renew the lease
+  # leaseRenewDeadline: 5s
+  # -- The timeout between retries if renewal fails
+  # leaseRetryPeriod: 2s
+# -- Configure L2 pod announcements
+l2podAnnouncements:
+  # -- Enable L2 pod announcements
+  enabled: false
+  # -- Interface used for sending Gratuitous ARP pod announcements
+  interface: "eth0"
+# -- Configure BGP
+bgp:
+  # -- Enable BGP support inside Cilium; embeds a new ConfigMap for BGP inside
+  # cilium-agent and cilium-operator
+  enabled: false
+  announce:
+    # -- Enable allocation and announcement of service LoadBalancer IPs
+    loadbalancerIP: false
+    # -- Enable announcement of node pod CIDR
+    podCIDR: false
+# -- This feature set enables virtual BGP routers to be created via
+# CiliumBGPPeeringPolicy CRDs.
+bgpControlPlane:
+  # -- Enables the BGP control plane.
+  enabled: false
+  # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
+  secretsNamespace:
+    # -- Create secrets namespace for BGP secrets.
+    create: false
+    # -- The name of the secret namespace to which Cilium agents are given read access
+    name: kube-system
+pmtuDiscovery:
+  # -- Enable path MTU discovery to send ICMP fragmentation-needed replies to
+  # the client.
+  enabled: false
+# bpf:
+  # Enable cluster-external traffic to be routed to pods
+  # lbExternalClusterIP: true
+  # Use BPF instead of iptables masquerading
+  # masquerade: true
