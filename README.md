@@ -21,10 +21,10 @@ Y'know, I'm starting to feel pretty good about this.
 - Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
   Switch to Inadyne DDNS client for that?
 - Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
-- Set up valid TLS for secondary router.
-  I have successfully uploaded a valid TLS leaf certificate but it doesn't seem to be serving it.
+- Renew TLS for secondary router.
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
-- Decide on MACsec for lab security and isolation
+- ~~Decide on MACsec for lab security and isolation~~
+  Hop-only so limited compared to IPSec and we have 2 subnets+, also requires key distribution.
 - ~~Enable mDNS responses from OPNsense box~~
 - ~~Enable IPv6 DNS server for Wireguard on MacOS.
   [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)~~
@@ -46,7 +46,7 @@ Y'know, I'm starting to feel pretty good about this.
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
 - Debug watchdog not stopping on control node reboot.
   [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
-- Work out watchdog on Opnsense BSD
+- Work out watchdog on OPNsense/BSD
 - Configure Topton N100 watchdog.
   BIOS setting located but microcode update seems to have stabilized the system.
 - Set up OpenAMT for out-of-band management.
@@ -89,22 +89,24 @@ Y'know, I'm starting to feel pretty good about this.
 
 ### Topsoil (Kubernetes)
 
-- Write my own k8s module (in progress)
 - Pull k8s module out into it's own flake/repo/overlay.
-- Swap kubernetes to IPv6
-- Set up IPv6 ingress and firewalling
-- BGP peer cluster to router?
+- Set up Cilium IPv6
+  BGP peer cluster to router?
   See crazy diagram for IPv6
+- Set up IPv6 public ingress and firewalling
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
-- Find some kind of dynamic PV/storage option
+- Find some kind of dynamic PV/storage option.
+  I'm thinking Longhorn.
   [post 1](https://akko.wtf/objects/79d8a9df-c1fe-4112-9d69-acc57977a0de)
   [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)
 - Play around with Timoni, Kluctl, etc
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
+- ~~Write my own k8s module~~
+  Basically working.
 - ~~Work out what's to replace addon-manager~~
   It's sig-addonmanager, I think.
   That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
@@ -484,30 +486,7 @@ kubectl config set-context --user home-admin --cluster home home-admin
 #### Cluster node roles
 
 For security reasons, it's not possible for nodes to self-select roles.
-We can label our nodes using this:
-
-```
-# Fill in the blanks
-k label no/fat-controller node-role.kubernetes.io/master=master
-k label no/fat-controller kubernetes.richtman.au/ephemeral=false
-
-k label no/mum node-role.kubernetes.io/worker=worker
-k label no/mum kubernetes.richtman.au/ephemeral=false
-
-k label no/patient-zero node-role.kubernetes.io/worker=worker
-k label no/patient-zero kubernetes.richtman.au/ephemeral=true
-k label no/dr-singh node-role.kubernetes.io/worker=worker
-k label no/dr-singh kubernetes.richtman.au/ephemeral=true
-k label no/smol-bat node-role.kubernetes.io/worker=worker
-k label no/smol-bat kubernetes.richtman.au/ephemeral=true
-k label no/tweedledee node-role.kubernetes.io/worker=worker
-k label no/tweedledee kubernetes.richtman.au/ephemeral=true
-k label no/tweedledum node-role.kubernetes.io/worker=worker
-k label no/tweedledum kubernetes.richtman.au/ephemeral=true
-
-# Now we can clean up shut down nodes
-k delete no -l kubernetes.richtman.au/ephemeral=true
-```
+We can label our nodes using `label.sh`.
 
 hmmm, deleting the nodes (reasonably) removes labels.
 ...and since they can't self-identify, we have to relabel every time.
@@ -521,14 +500,8 @@ Have the node self-delete (it'll self-register again anyway), and have the admin
 I wonder if there's any better way security-wise to have nodes be trusted with certain labels.
 Already they need apiServer-trusted client certificates, it'd be cool if the metadata on those could determine labels.
 
-#### Addon-manager
 
-Apparently this is deprecated as of years ago but is still shambling along.
-As much as I'd love to declaratively bootstrap the cluster it will be less headache to have a one-off CD app install and do the rest declaratively that way.
-Anywho - to make addon manager actually work, you need to drop a `.kube/config` file in `/var/lib/kubernetes`.
-
-Removing coredns shenanigans:
-`k delete svc/kube-dns deploy/coredns sa/coredns cm/coredns clusterrole/system:kube-dns clusterrolebinding/system:kube-dns`
+NB: Future Ariel says there may be a kubelet option to register with properties.
 
 #### Node CSRs piling up
 
@@ -794,34 +767,15 @@ References:
 ### Desktop Todo
 
 - Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
-- Switch to LibreWolf
 - Fix Firefox image pasting
 - Get CLI clipboard access
   [post](https://fosstodon.org/@ferki/112868797150769449)
 - Learn about universal blue/ostree and decide if I want to keep this
-- fix autoshift on my keyboard
 - find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix Zellij exits still leaving you in a Bash session.
 - Make Alacritty visible on the launch pad or whatever it's called
-- Fix CLI history suggestions
-- ~~Work out how to get my usual home setup on here (aliases, shell, apps etc)~~
-  I've mostly got a handle on how Nix + Home-manager are playing alongside Silverblue
-- ~~Fix Helix system clipboard yank~~
-  Just works in Alacritty?
-- ~~Fix zellij system clipboard copy~~
-  Works fine in Alacritty?
-- ~~Fix alacritty no suitable GL error~~
-  Did some dirty hax with `nixGLIntel`, whatever, it's a complex and long-standing OpenGL on non-Nix systems issue.
-- ~~Decide if I want to keep nushell~~
-  I don't. I'm sure it's cool but I need to work on too many systems and environments that won't be compatible.
-- ~~Remove the nushell banner~~
-- ~Work out how to switch my shell to nushell properly...
-  or not https://github.com/fedora-silverblue/issue-tracker/issues/307#issuecomment-1173092416
-  `/etc/shells` doesn't have it cause it's installed in user space by home-manager.
-  We can use `lchsh` or `usermod` but it's under our nix profile bin dir, not a simple location like `/usr/bin`~
-  It's justifiable like this.
 
 ## Nix References
 
