@@ -177,7 +177,7 @@ in
         firewall.extraInputRules = lib.concatStringsSep "\n" [
           "ip saddr { 192.168.1.0/24,192.168.2.0/24 } tcp dport 443 accept comment \"Allow private IPv4 subnets\""
           "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
-          "ip saddr { 192.168.1.0/24 } udp dport 5353 accept comment \"Allow mDNS\""
+          "ip saddr { 192.168.1.0/24 } udp dport 5353 accept comment \"Allow private IPv4 mDNS\""
           "ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept comment \"Allow IPv6 mDNS\""
         ];
         # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
