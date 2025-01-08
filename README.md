@@ -23,6 +23,8 @@ Y'know, I'm starting to feel pretty good about this.
 - Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
 - Renew TLS for secondary router.
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
+- ~~Configure block lists for public traffic.~~
+  Done, [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
 - ~~Decide on MACsec for lab security and isolation~~
   Hop-only so limited compared to IPSec and we have 2 subnets+, also requires key distribution.
 - ~~Enable mDNS responses from OPNsense box~~
@@ -289,6 +291,26 @@ resize2fs /dev/sda1
 
 #### Opnsense
 
+Features:
+
+- Traps outbound unsecured DNS
+  - Filters DNS
+  - Applies local overrides
+  - Upgrades queries to DoT
+- VPNs
+  - OpenVPN
+  - Wireguard
+- DDNS
+- ACME dynamic certificates
+- Reverse proxy to internal services
+- Security
+  - Blocks known mailicious IPs with subscribed lists
+- Internal prefix delegation
+- QEMU guest agent
+- TFTP server
+- Prometheus export
+- Wake-on-lan GUI
+
 ##### VM Setup
 
 1. Download iso and unpack
@@ -370,6 +392,10 @@ Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 
 Follow tutorial AKA forgot to document it.
 See also `wg0.conf` in this repo.
+
+##### Piblic traffic block lists
+
+[Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
 
 ##### Plugins
 
