@@ -7,6 +7,7 @@
       url = "github:snowfallorg/lib/v3.0.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     snowfall-thaw = {
       url = "github:snowfallorg/thaw";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,15 +22,21 @@
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     mac-app-util = {
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixgl.url = "github:nix-community/nixGL";
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    deploy-rs.url = "github:serokell/deploy-rs";
-    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     yaml2nix.url = "github:euank/yaml2nix";
     yaml2nix.inputs.nixpkgs.follows = "nixpkgs";
