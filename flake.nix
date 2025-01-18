@@ -38,8 +38,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    yaml2nix.url = "github:euank/yaml2nix";
-    yaml2nix.inputs.nixpkgs.follows = "nixpkgs";
+    yaml2nix = {
+      url = "github:euank/yaml2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-2.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs: let
     lib = inputs.snowfall-lib.mkLib {
@@ -55,20 +62,20 @@
     };
   in
     lib.mkFlake {
-      # Workaround to https://github.com/NixOS/nixpkgs/issues/337036
-      nix.package = inputs.nixpkgs.lix.overrideAttrs {
-        doCheck = false;
-        doInstallCheck = false;
-      };
+      nix.package = inputs.nixpkgs.lix;
 
       channels-config.allowUnfree = true;
 
       systems.modules.darwin = with inputs; [
         mac-app-util.darwinModules.default
       ];
+      systems.modules.nixos = [
+        inputs.lix-module.nixosModules.default
+      ];
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default
+        lix-module.overlays.default
       ];
       alias.shells = {
         default = "myshell";
