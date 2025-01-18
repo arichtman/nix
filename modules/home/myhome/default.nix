@@ -360,7 +360,8 @@ in
           netcat
           # Ref: https://github.com/ibraheemdev/modern-unix
           xh # curl replacement
-          dog # dig replacement
+          # TODO disabled due to build issues on x86_64-linux
+          # dog # dig replacement
           procs # ps replacement
           du-dust # du replacement
           duf # df replacement
