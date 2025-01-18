@@ -405,8 +405,7 @@ in
           nixd
           ruff-lsp
           # diff tool
-          # TODO: simplify when this hits unstable or whatever
-          inputs.pkgsMaster.legacyPackages.${system}.mergiraf
+          mergiraf
           # langs
           rustup
           #TODO: dont have these on mac, aarch64 at least
