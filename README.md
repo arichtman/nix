@@ -393,9 +393,20 @@ Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 Follow tutorial AKA forgot to document it.
 See also `wg0.conf` in this repo.
 
-##### Piblic traffic block lists
+##### Public traffic block lists
 
 [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
+
+##### Alacritty terminal
+
+```shell
+curl -sSL https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info -o alacritty.info
+infotocap alacritty.info >> /usr/share/misc/termcap
+cap_mkdb /usr/share/misc/termcap
+rm alacritty.info
+```
+
+[Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
 
 ##### Plugins
 
