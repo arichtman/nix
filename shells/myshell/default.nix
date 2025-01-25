@@ -24,7 +24,6 @@ in
           jq
           yq
           helix
-          pre-commit
           deploy-rs
           statix
           deadnix
@@ -43,10 +42,14 @@ in
           openssl
           # Flake tooling
           snowfallorg.thaw
+          # Pre-commit replacement
+          arichtman.prefligit
+          # Required for prefligit
+          uv
         ]
         ++ scripts;
       shellHook = ''
-        pre-commit install --install-hooks
+        prefligit install --install-hooks
         echo "Entering the nix  Z O N E"
       '';
     }
