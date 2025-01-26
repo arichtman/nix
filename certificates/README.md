@@ -18,7 +18,7 @@ step certificate create bruce-banner desktop.pem desktop-key.pem --template gran
   --set-file dn-defaults.json
 
 # Package for FireFox
-step certificate p12 desktop.pkcs desktop.pem desktop-key.pem --ca root-ca.pem --no-password --insecure
+step certificate p12 desktop.p12 desktop.pem desktop-key.pem --ca root-ca.pem --no-password --insecure
 
 step certificate create ariel@richtman.au client.pem client-key.pem --template granular-dn-leaf.tpl --not-after 1461h \
   --ca opnsense-ca.pem --ca-key opnsense-ca-key.pem --no-password --insecure --force --bundle \
