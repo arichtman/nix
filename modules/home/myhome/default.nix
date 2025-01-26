@@ -46,10 +46,13 @@
       gR = "g rebase";
       gRc = "gR --continue";
       gRa = "gR --abort";
+      gcp = "g cherry-pick";
+      gcpc = "gcp --continue";
+      gcpa = "gcp --abort";
       gr = "git remote";
       grg = "gr get-url";
       grs = "gr set-url";
-      gra = "gr add-url";
+      gra = "gr add";
       grpo = "gr prune origin";
       gau = "g add --update";
       gCnv = "gC --no-verify";
