@@ -27,3 +27,4 @@ t = ":run-shell-command cargo test"
 # Ref: https://github.com/helix-editor/helix/discussions/6815#discussioncomment-5729582
 [keys.normal.space]
 i = ":toggle lsp.display-inlay-hints"
+l = ":lsp-restart"
