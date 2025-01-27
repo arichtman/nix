@@ -270,7 +270,40 @@ in
             };
             ui = {
               default-command = "status";
+              editor = "hx";
+              # pager = "cat";
+              # TODO: configure mergiraf for JJ
+              diff.tool = "delta";
+              merge-editor = "mergiraf";
             };
+            merge-tools = {
+              mergiraf = {
+                merge-args = ["merge" "--output" "$output" "$base" "$left" "$right"];
+              };
+              delta = {
+                # Ref: https://github.com/jj-vcs/jj/issues/5250
+                diff-args = ["--line-numbers" "$left" "$right"];
+                diff-expected-exit-codes = [1];
+              };
+            };
+            signing = {
+              sign-all = true;
+              backend = "ssh";
+              key = "~/.ssh/id_ed25519.pub";
+            };
+            git = {
+              sign-on-push = true;
+            };
+            "--scope" = [
+              {
+                "--when" = {
+                  commands = ["status" "log"];
+                };
+                ui = {
+                  paginate = "never";
+                };
+              }
+            ];
           };
         };
         git = {
@@ -294,6 +327,7 @@ in
             hash = "12gswbdnlsx1gzqxns6s6nzsc0kkvnprr44abc1v8l6in8rjyj57";
             filterFunction = x: x != "Cargo.lock";
           };
+          attributes = import ./git/attributes.nix;
           signing = {
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";
@@ -327,9 +361,6 @@ in
             merge.mergiraf = {
               name = "mergiraf";
               driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P";
-            };
-            core = {
-              attributesfile = "~/.gitattributes";
             };
             url = {
               "https://github.com" = {insteadOf = "gh";};
@@ -434,8 +465,12 @@ in
           buf
           nixd
           ruff-lsp
+          # jj VCS
+          jujutsu
+          gg-jj
           # diff tool
           mergiraf
+          arichtman.mamediff
           # langs
           rustup
           #TODO: dont have these on mac, aarch64 at least
@@ -457,7 +492,6 @@ in
               source = ./terraform;
               recursive = true;
             };
-            ".config/git/.gitattributes".source = git/.gitattributes;
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
             # https://github.com/nix-community/home-manager/issues/2104
             ".terraform.d/plugin-cache/.keep".text = "";

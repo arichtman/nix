@@ -43,6 +43,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    fresh-jj = {
+      url = "github:jj-vcs/jj";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     lix-module = {
       url = "https://git.lix.systems/lix-project/nixos-module/archive/2.91.1-2.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -76,6 +81,7 @@
         nixgl.overlays.default
         snowfall-thaw.overlays.default
         lix-module.overlays.default
+        fresh-jj.overlays.default
       ];
       alias.shells = {
         default = "myshell";

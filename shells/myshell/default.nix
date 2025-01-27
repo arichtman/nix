@@ -20,6 +20,7 @@ in
         [
           # Minimal development stuff
           git
+          jj
           ripgrep
           jq
           yq
@@ -44,6 +45,8 @@ in
           snowfallorg.thaw
           # Pre-commit replacement
           arichtman.prefligit
+          # Experimental diff tool
+          arichtman.mamediff
           # Required for prefligit
           uv
         ]
