@@ -1,10 +1,4 @@
-{pkgs, ...}: let
-  myShellAliases = {
-    "brute-force-darwin-rebuild-switch" = "until darwin-rebuild switch --flake . ; do : ; done";
-    "brute-force-flake-update" = "until nix flake update --commit-lock-file ; do : ; done";
-    "brute-force-direnv-reload" = "until direnv reload ; do : ; done";
-  };
-in {
+{pkgs, ...}: {
   personal-machine.enabled = true;
   default-home = {
     username = "arichtman";
@@ -13,10 +7,5 @@ in {
       email = "10679234+arichtman@users.noreply.github.com";
       username = "Ariel Richtman";
     };
-  };
-  home = {
-    shellAliases = myShellAliases;
-    # Broken, I may never actually bother reinstalling this since it can't cope with my ereadder anyways
-    # packages = [ pkgs.calibre ];
   };
 }

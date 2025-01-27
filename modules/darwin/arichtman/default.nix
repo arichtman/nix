@@ -55,6 +55,8 @@ with lib;
         phinger-cursors
         wireguard-go
         wireguard-tools
+        # MacOS Appstore CLI
+        mas
       ];
 
       # Workaround to https://github.com/NixOS/nixpkgs/issues/337036
