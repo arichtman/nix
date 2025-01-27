@@ -3,7 +3,13 @@
   lib,
   ...
 }: {
-  imports = [./garage.nix ./caddy.nix ./nix-serve.nix ./monitoring.nix];
+  imports = [
+    ./garage.nix
+    ./caddy.nix
+    ./nix-serve.nix
+    ./monitoring.nix
+    ./website.nix
+  ];
   options.control-node = {
     enable = lib.options.mkOption {
       description = ''
