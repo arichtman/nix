@@ -32,7 +32,7 @@ spec:
     #   readOnly: true
   dnsPolicy: Default
   restartPolicy: Always
-  nodeName: mum.systems.richtman.au
+  # nodeName: mum.systems.richtman.au
   # automountServiceAccountToken: false
   # volumes:
   # - name: manual-token

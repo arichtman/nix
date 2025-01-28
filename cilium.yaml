@@ -25,18 +25,32 @@ debug:
 #   which contains the gateway LL address
 # failed to start: daemon creation failed: error while initializing daemon: failed while reinitializing datapath: failed to enable direct routes for ipv6: route to destination fd00::118 contains gateway fe80::4140:f9e8:ec8a:489e, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes" subsys=daemon
 # autoDirectNodeRoutes: true
+# https://github.com/cilium/cilium/issues/21538
+# https://github.com/cilium/cilium/issues/35822
+# https://github.com/cilium/cilium/issues/17240
 routingMode: native
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+# invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
+ipv6NativeRoutingCIDR: 2403:580a:e4b1:0::/64
+enableIPv6Masquerade: true
+# Those worked above, but now it's using fd00 range to try and reach stuff...
 ipam:
+  # mode: "cluster-pool" # Should be unnecessary
   operator:
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/64"]
-    clusterPoolIPv6MaskSize: 64
-    autoCreateCiliumPodIPPools:
-      default:
-        ipv6:
-          cidrs:
-            - 2403:580a:e4b1::/64
-          maskSize: 64
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
+    # clusterPoolIPv6MaskSize: 64
+    # clusterPoolIPv6MaskSize: 112
+    # autoCreateCiliumPodIPPools:
+    #   default:
+    #     ipv6:
+    #       cidrs:
+    #         - 2403:580a:e4b1::/64
+    #       maskSize: 112
+          # maskSize: 64
+# hubble:
+#   ui:
+#     enabled: true
+#   relay:
+#     enabled: true
 # Fully uninstall
 cni:
   uninstall: true

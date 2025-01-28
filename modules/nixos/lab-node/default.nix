@@ -179,6 +179,7 @@ in
           "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
           "ip saddr { 192.168.1.0/24 } udp dport 5353 accept comment \"Allow private IPv4 mDNS\""
           "ip6 saddr { 2403:580a:e4b1::/48 } udp dport 5353 accept comment \"Allow IPv6 mDNS\""
+          "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 4240 accept comment \"Allow IPv6 Cilium health\""
         ];
         # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
         # (the default) this is the recommended approach. When using systemd-networkd it's
