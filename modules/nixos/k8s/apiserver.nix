@@ -65,6 +65,8 @@
     "2403:580a:e4b1::/108"
     # Can't mix public and private
     # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"
+    # "command failed" err="[specified --service-cluster-ip-range[1] is too large; for 128-bit addresses, the mask must be >= 108, service IP family \"10.100.100.0/24\" must match public address family \"2403:580a:e4b1:0:3b67:89bb:45f8:3ba5\"]"
+    # "10.100.100.0/24,fd00::/108"
     "--tls-cert-file"
     "${cfg.secretsPath}/kube-apiserver-tls.pem"
     "--tls-private-key-file"

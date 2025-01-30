@@ -7,6 +7,19 @@ kubeProxyReplacementHealthzBindAddr: "[::]:10256"
 k8sServiceHost: fat-controller.systems.richtman.au
 k8sServicePort: 6443
 # Set our networking stack
+# Enabling IPv4 here means dual stack kubernetes, which requires kubelet argument --node-ip set.
+# nodeIp is not part of the kubelet config spec, so I can't dynamically put the IP in locally.
+# Both v4 and v6 are dynamic (DHCPv4 and SLAAC), though I can pin the MAC addresses in NixOS,
+# which nominally makes the v6 address stable, if not entirely static.
+# I'm also not sure --node-ip could cope with being a v6 in a dual-stack world, you'd think dual stack has
+# been stable since like 1.10 buuuuuut....
+# It /is/ possible to do this via the API server and resource properties BUT that's done by a cloud-provider
+# which is orchestrated by cloud-controller-manager. I have been unable to locate much documentation about
+# the API specification for cloud providers beyond GoLang code. I'm not even sure if it's HTTP, GRPC, or it
+# needs to be in GoLang entirely.
+# Ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/
+# Ref: https://github.com/kubernetes/cloud-provider/blob/master/cloud.go
+# Ref: https://search.nixos.org/options?from=0&size=100&sort=relevance&query=macaddress
 ipv4:
   enabled: false
 ipv6:
