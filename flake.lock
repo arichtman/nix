@@ -517,6 +517,7 @@
         "nixpkgs": "nixpkgs_2",
         "snowfall-lib": "snowfall-lib",
         "snowfall-thaw": "snowfall-thaw",
+        "valheim-server": "valheim-server",
         "yaml2nix": "yaml2nix"
       }
     },
@@ -633,6 +634,28 @@
       "original": {
         "owner": "snowfallorg",
         "repo": "thaw",
+        "type": "github"
+      }
+    },
+    "steam-fetcher": {
+      "inputs": {
+        "nixpkgs": [
+          "valheim-server",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733314589,
+        "narHash": "sha256-Yp03TmtYSQVlboJPiU3YbpVGCMGSIAMDk3LWjXw7b2Y=",
+        "owner": "hamburger1984",
+        "repo": "steam-fetcher",
+        "rev": "e1160be585d63793a6b40ea476d0cbd0c8f00f2b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hamburger1984",
+        "ref": "main",
+        "repo": "steam-fetcher",
         "type": "github"
       }
     },
@@ -756,6 +779,28 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "valheim-server": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "steam-fetcher": "steam-fetcher"
+      },
+      "locked": {
+        "lastModified": 1738461017,
+        "narHash": "sha256-7ICaG90qHMhGbxXBe9nk4cmkTiXo3uM62ITudJZJ2dQ=",
+        "owner": "arichtman",
+        "repo": "valheim-server-flake",
+        "rev": "d5a281bc9c95e7f82f178f5f49a9bb5878533e5a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "arichtman",
+        "ref": "headless",
+        "repo": "valheim-server-flake",
         "type": "github"
       }
     },

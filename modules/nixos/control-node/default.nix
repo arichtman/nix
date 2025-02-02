@@ -9,6 +9,7 @@
     ./nix-serve.nix
     ./monitoring.nix
     ./website.nix
+    ./valheim.nix
   ];
   options.control-node = {
     enable = lib.options.mkOption {
