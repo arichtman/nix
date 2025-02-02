@@ -49,8 +49,8 @@
     };
 
     valheim-server = {
-      # url = "github:aidalgol/valheim-server-flake";
-      url = "github:arichtman/valheim-server-flake/headless";
+      # url = "github:hamburger1984/valheim-server-flake";
+      url = "github:arichtman/valheim-server-flake/secretpw";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

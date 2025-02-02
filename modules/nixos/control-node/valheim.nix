@@ -20,8 +20,9 @@
       openFirewall = true;
       crossplay = true;
       noGraphics = true;
-      password = "mypass";
+      passwordEnvFile = "/var/lib/valheim/.config/password";
       adminList = config.services.valheim.permittedList;
+      public = false;
       permittedList = [
         "76561198838658491" # Me
         "76561198021270970" # G
