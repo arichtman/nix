@@ -16,7 +16,7 @@
     services.valheim = {
       enable = true;
       serverName = "hydrohobos";
-      worldName = "mycellium";
+      worldName = "jboner";
       openFirewall = true;
       crossplay = true;
       noGraphics = true;
