@@ -86,7 +86,10 @@
     current-context = "default";
   };
   kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
-  nodeRole = if config.services.k8s.controller then "master" else "worker";
+  nodeRole =
+    if config.services.k8s.controller
+    then "master"
+    else "worker";
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
   serviceArgs = lib.concatMapStrings (x:
     if (builtins.substring 0 2 x) == "--"
