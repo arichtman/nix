@@ -59,12 +59,6 @@ with lib;
         mas
       ];
 
-      # Workaround to https://github.com/NixOS/nixpkgs/issues/337036
-      nix.package = pkgs.lix.overrideAttrs {
-        doCheck = false;
-        doInstallCheck = false;
-      };
-
       # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
       system.activationScripts.postUserActivation.text = ''
         # Following line should allow us to avoid a logout/login cycle

@@ -167,8 +167,7 @@ in {
               name = "discord";
               discord_configs = [
                 {
-                  webhook_url = "";
-                  # webhook_url_file = "/var/lib/alertmanager/discord-webhook-url";
+                  webhook_url_file = "/var/lib/alertmanager/discord-webhook-url";
                 }
               ];
             }

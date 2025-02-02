@@ -20,7 +20,7 @@
           # As advised for auto-reload to not wait forever
           "grace_period 10s"
           # Enable for Prometheus
-          "servers { metrics }"
+          "metrics"
           # Disable TLS as we're internal
           "auto_https off"
           # For testing
