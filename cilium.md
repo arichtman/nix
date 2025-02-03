@@ -40,16 +40,67 @@ Networking stuff
 Offer to help
 https://hachyderm.io/@jpetazzo/112371149239851518
 
-- Scheduler's client certificate wasn't granting permissions
-- AddonManager has no manifests
-- AddonManager has no kubeconfig so can't auth
-- Kubelet was thinking flannel was installed because the Kubelet module writes a CNI config file if certain conditions are met.
-  I think we finally worked it out by setting `services.*kubernetes*.flannel.enabled = false;`, as opposed to `services.flannel.enabled`.
-- serviceAccount `default` missing from at least nameSpace `kube-system`
 - I can't run containers without a CNI, but Cilium operator wants to manage the `/etc/cni/net.d` config file
 - Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...
 
-helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium.yaml --atomic
+## Documentation read-through thoughts
+
+- Loopback is required on linux by the CNI, is it possible we are missing something in `/etc/cni.d/` for that?
+  ...but the DS agents usually move that file in favor of their generated config.
+  ...is it possible to have more than one `.conf` used? Or is there perhaps a containerd setting?
+  Loopback missing would explain our health check failures...
+- There's an option for direct `etcd` usage which is more efficient.
+  I'd like to do this but it may necessitate shipping client certificates to each node.
+  To do this dynamically off of Spire could be tricky, we'll park it for now.
+- Apparently network-manager doesn't fully clean up after itself without a reboot.
+  As irritating as it may be, perhaps doing this for iteration will yield clearer results.
+- Nodes register a bunch of stuff to the kvstore which should expire within 30 minutes of an agent going offline.
+  When iterating we might want to manually empty the kv store entries to get clean attempts.
+  If not directly using etcd it might manifest as CRDs, similar clearout required.
+- There's some kind of cross-node health check or other comms going on, I think this means opening TCP on 4240 or whatnot.
+- There's also mention of a heartbeat key being checked, which is set by the active operator.
+- There's some special and quite powerful stuff that can be run inside the agent pods for inspection and debugging - explore that.
+- Confirmed that tunneling is unsupported without IPv4 enabled on the cluster.
+  Took a look at enabling that and kubelet needs a cli launch argument with the node's IP(s).
+  It's unclear what providing *just* IPv4 would do to the v6 stack, plus it'd need to be hard-coded somewhat.
+  The flag isn't in the kubelet configuration file spec yet, so we can't make it dynamic with a drop-in file generated on boot.
+  All this means DHCPv4 isn't acceptable or we'd have to hack around it + Nix.
+  I'm not keen to put that much effort into it when I don't actually want an overlay network anyways.
+- We definitely want native routing mode, which implies some other arguments:
+  ```
+  routing-mode: native
+  ipv4-native-routing-cidr: x.x.x.x/y
+  direct-routing-skip-unreachable: true
+  auto-direct-node-routes: true
+  ```
+- There's some IP settings that need to be set on the k8s side, apiserver and controller manager.
+  - Kubelet:
+    - `node-ip`: presently set to `::` which uses default IPv6 address.
+    - `pod-cidr`: only mandatory in stand-alone mode. Removed as it takes from the apiserver in-cluster.
+  - Controller:
+    - `allocate-node-cidrs`: requires `cluster-cidr` but something about cloud provider? Off for now, we probably want Cilium doing this?
+    - `cidr-allocator-type`: default `RangeAllocator`, I think this is a granular detail not impacting present issues.
+    - `cluster-cidr`: range for _pods_ in _cluster_, no impact without `allocate-node-cidrs`. Thinking about it this option should almost definitely be off if we're going BGP.
+      If not BGP then this is set to the entire L2 subnet range?
+    - `configure-cloud-routes`: since I don't think Cilium is acting as a cloud provider, all this should be off or disabled.
+    - `node-cidr-mask-size`: bit confusing with the next one, think this setting is a hangover from single-stack.
+    - `node-cidr-mask-size-ipv6`: this defaults to 64 anyways, if we were setting the entire cluster to L2 subnet then maybe smaller?
+    - `service-cluster-ip-range`: also only active with `allocate-node-cidrs`.
+  - ApiServer:
+    - `service-cluster-ip-range`: cannot overlap at all with node IPs or pod IPs.
+      If the overlap check is logical, then this has to be a reserved range within the L2 /64 somehow.
+      No mention of it becoming optional based on cloud provider configuration.
+      Service cluster IPs are not ingress they should just be east-west indirection.
+      I bet the default kubernetes service for the apiserver takes the first one of these,
+      which means deleting it if we change this so the recreation picks up the new IP.
+- IPAM: since tunnel routing isn't in use, and we want dynamic CIDRs, we'll want multi-pool or CRD-backed.
+  Multi-pool is beta and allocates from a default pool or based on annotations. I don't see this as desirable for now.
+  CRD-backed allows offloading and relies on the `ciliumnodes.cilium.io` resources, can be laggy if lots of allocations happening at once due to max node update every 15 seconds.
+  It also looks like more manual configuration, even if automated. The cliumnodes resource doesn't pool but lists every individual IP available, which is not scalable to IPv6.
+  CRD-backed by cluster-pool IPAM is the default and looks simpler.
+  - Cluster-pool IPAM
+    - `ipam.operator.clusterPoolIPv6PodCIDRList`
+    - `ipam.operator.clusterPoolIPv6MaskSize`
 
 ## Issues
 
@@ -206,3 +257,12 @@ MountVolume.SetUp failed for volume "kube-api-access-r6z7b" : object "kube-syste
 Disabling automatic svc account token mounting removes the error.
 Manually mounting the token doesn't yield the error.
 [ref](https://stackoverflow.com/questions/69038012/mountvolume-setup-failed-for-volume-kube-api-access-fcz9j-object-default)
+
+#### Misc
+
+- Scheduler's client certificate wasn't granting permissions
+- AddonManager has no manifests
+- AddonManager has no kubeconfig so can't auth
+- Kubelet was thinking flannel was installed because the Kubelet module writes a CNI config file if certain conditions are met.
+  I think we finally worked it out by setting `services.*kubernetes*.flannel.enabled = false;`, as opposed to `services.flannel.enabled`.
+- serviceAccount `default` missing from at least nameSpace `kube-system`

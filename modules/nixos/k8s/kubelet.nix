@@ -45,8 +45,6 @@
       };
       clusterDomain = "internal";
       imageMaximumGCAge = "604800s";
-      # Going to override this setting in configDir anyways
-      # podCIDR = "";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...
       # address = "::";
