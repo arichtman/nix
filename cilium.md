@@ -99,8 +99,19 @@ https://hachyderm.io/@jpetazzo/112371149239851518
   It also looks like more manual configuration, even if automated. The cliumnodes resource doesn't pool but lists every individual IP available, which is not scalable to IPv6.
   CRD-backed by cluster-pool IPAM is the default and looks simpler.
   - Cluster-pool IPAM
+    - Leaves/relies on kubernetes doing node pod IP range delegation using the original node.v1 resource.
+    - `ipam : kubernetes` required, will auto-set `k8s-require-ipv6-pod-cidr`
     - `ipam.operator.clusterPoolIPv6PodCIDRList`
     - `ipam.operator.clusterPoolIPv6MaskSize`
+    - Controller manager needs `allocate-node-cidrs`
+- Since pod IPs are usually not publicly routable, SNAT is applied to any packets NOT in the node's pod cidr range.
+  `ipv6-native-routing-cidr` overrides this range of non-SNAT traffic.
+- eBPF v6 masquerading is beta `bfp.masquerade: true`. The output device (NIC, presumably) must be running the eBPF program.
+  There's an automatic device detection mechanism but it can be explicitly set using `devices` in Helm values.
+  `kubectl -n kube-system exec ds/cilium -- cilium-dbg status | grep Masquerading`.
+  All packets masqueraded if: NOT native-routing-cidr AND NOT other node IP.
+  `ip-masq-agent` settings expose granular configuration of same agent.
+- There is an iptables-based implementation which we'll skip. Rough enough following nftables and eBPF.
 
 ## Issues
 
