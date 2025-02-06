@@ -26,8 +26,9 @@
       ls = "exa";
       ll = "exa -las new";
       cls = "clear";
-      dea = "direnv allow";
-      der = "diren reload";
+      de = "direnv";
+      dea = "de allow";
+      der = "de reload";
       vi = "hx";
       vim = "hx";
       nano = "hx";
