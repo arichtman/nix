@@ -94,6 +94,7 @@ in
           dive
           lazydocker
           docker-credential-helpers
+          taplo
         ];
       };
     };

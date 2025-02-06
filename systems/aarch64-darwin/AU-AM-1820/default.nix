@@ -10,12 +10,9 @@
   ];
   # only looks to be on unstable but in wiki?
   # https://nixos.wiki/wiki/Fonts
-  # fonts.packages = [
-  #   pkgs.fira-code-nerdfont
-  # ];
   # TODO: What's the difference here, activation?
   fonts.packages = [
-    pkgs.fira-code-nerdfont
+    pkgs.nerd-fonts.fira-code
   ];
 
   system.stateVersion = 4;
