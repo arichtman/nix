@@ -70,6 +70,7 @@
       kl = "k logs";
       kg = "k get";
       kd = "k describe";
+      kD = "k delete";
       kgn = "kg node";
       kgp = "kg pod";
       kdn = "kd node";
