@@ -136,6 +136,18 @@ in {
         plugins."io.containerd.grpc.v1.cri".cni = {
           bin_dir = "/opt/cni/bin";
         };
+        plugins."io.containerd.cri.v1.runtime".containerd.runtimes.runc.options = {
+          SystemdCgroup = true;
+        };
+        # gVisor: https://gvisor.dev/
+        # Ref: https://gvisor.dev/docs/user_guide/containerd/configuration/
+        plugins."io.containerd.cri.v1.runtime".containerd.runtimes.gvisor = {
+          runtime_type = "io.containerd.runsc.v1";
+        };
+        # Kata Containers: https://katacontainers.io/
+        plugins."io.containerd.grpc.v1.cri".containerd.runtimes.kata = {
+          runtime_type = "io.containerd.kata.v2";
+        };
       };
     };
     # Open kubelet port to local addresses
@@ -145,28 +157,12 @@ in {
       ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9102 accept comment "Allow IPv6 Containerd monitoring"
     '';
     systemd = {
-      services.k8s-kubelet = {
-        description = "Kubernetes Kubelet Service";
-        # TODO: Add conditional here if not controller
-        after = ["containerd.service" "network.target" "kube-apiserver.service"];
-        wantedBy = ["kubernetes.target" "multi-user.target"];
-        serviceConfig = {
-          Slice = "kubernetes.slice";
-          # Until a drop-in directory becomes default we'll just nail the file exactly.
-          ExecStart = "${pkgs.kubernetes}/bin/kubelet " + serviceArgs;
-          WorkingDirectory = "/var/lib/kubelet";
-          # Must be run as root which is... odd
-          # I suppose the container runtime is what needs to be rootless
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-        unitConfig = {
-          StartLimitIntervalSec = 0;
-        };
-        # Required for volumes, at least projected ones but probably emptyDir etc also
-        path = with pkgs; [
-          mount
-          umount
+      services = {
+        containerd.path = with pkgs; [
+          # TODO: fiddling with this since the symlinks in /opt/cni/bin linked to nonexistent files
+          cni-plugins
+          kata-runtime
+          gvisor
         ];
         k8s-kubelet = {
           description = "Kubernetes Kubelet Service";

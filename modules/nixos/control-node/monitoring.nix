@@ -137,6 +137,13 @@ in {
         {
           job_name = "containerd";
           metrics_path = "v1/metrics";
+          metric_relabel_configs = [
+            {
+              source_labels = ["__name__"];
+              regex = "grpc_server_handled_total";
+              action = "drop";
+            }
+          ];
           static_configs = [
             {
               targets = mkForAllMachinesScrapeAddress 9102;
