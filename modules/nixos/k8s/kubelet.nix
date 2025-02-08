@@ -130,6 +130,9 @@ in {
       enable = true;
       # required to get it to pick up cilium-cni as placed by the agent
       settings = {
+        metrics = {
+          address = "[::]:9102";
+        };
         plugins."io.containerd.grpc.v1.cri".cni = {
           bin_dir = "/opt/cni/bin";
         };
@@ -137,8 +140,9 @@ in {
     };
     # Open kubelet port to local addresses
     networking.firewall.extraInputRules = ''
-      ip saddr { 192.168.1.0/24 } tcp dport 10250 accept
-      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept
+      ip saddr { 192.168.1.0/24 } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
+      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
+      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9102 accept comment "Allow IPv6 Containerd monitoring"
     '';
     systemd = {
       services.k8s-kubelet = {
@@ -164,6 +168,31 @@ in {
           mount
           umount
         ];
+        k8s-kubelet = {
+          description = "Kubernetes Kubelet Service";
+          # TODO: Add conditional here if not controller
+          after = ["containerd.service" "network.target" "kube-apiserver.service"];
+          wantedBy = ["kubernetes.target" "multi-user.target"];
+          serviceConfig = {
+            Slice = "kubernetes.slice";
+            # Until a drop-in directory becomes default we'll just nail the file exactly.
+            ExecStart = "${pkgs.kubernetes}/bin/kubelet " + serviceArgs;
+            WorkingDirectory = "/var/lib/kubelet";
+            # Must be run as root which is... odd
+            # I suppose the container runtime is what needs to be rootless
+            Restart = "on-failure";
+            RestartSec = 5;
+          };
+          unitConfig = {
+            StartLimitIntervalSec = 0;
+          };
+          path = with pkgs; [
+            # Required for volumes, at least projected ones but probably emptyDir etc also
+            mount
+            umount
+            cni-plugins
+          ];
+        };
       };
       tmpfiles.settings = {
         "kubelet-secrets" = {

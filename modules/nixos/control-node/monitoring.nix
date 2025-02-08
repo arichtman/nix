@@ -19,6 +19,15 @@
       }
     ];
   };
+  mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
+    "fat-controller"
+    "mum"
+    "patient-zero"
+    "dr-singh"
+    "smol-bat"
+    "tweedledee"
+    "tweedledum"
+  ]);
   promLocalHostRelabelConfigs = [
     # TODO: Work out why localhost relabel and label override aren't working
     # Relabel localhost so we don't have to open metrics to the world
@@ -125,6 +134,15 @@ in {
         # Self-monitoring (fwiw)
         (mkLocalScrapeConfig "alertmanager" 9093)
         (mkLocalScrapeConfig "prometheus" 9090)
+        {
+          job_name = "containerd";
+          metrics_path = "v1/metrics";
+          static_configs = [
+            {
+              targets = mkForAllMachinesScrapeAddress 9102;
+            }
+          ];
+        }
         {
           job_name = "machines";
           relabel_configs = promLocalHostRelabelConfigs;
