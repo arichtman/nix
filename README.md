@@ -91,7 +91,6 @@ Y'know, I'm starting to feel pretty good about this.
 
 ### Topsoil (Kubernetes)
 
-- Pull k8s module out into it's own flake/repo/overlay.
 - Set up Cilium IPv6
   BGP peer cluster to router?
   See crazy diagram for IPv6
@@ -99,14 +98,18 @@ Y'know, I'm starting to feel pretty good about this.
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
+- Add WASM runtime
 - Find some kind of dynamic PV/storage option.
   I'm thinking Longhorn.
   [post 1](https://akko.wtf/objects/79d8a9df-c1fe-4112-9d69-acc57977a0de)
   [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)
+  Maybe OpenEBS.
 - Play around with Timoni, Kluctl, etc
+- Add tracing endpoint for Containerd
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
+- Pull k8s module out into it's own flake/repo/overlay.
 - ~~Write my own k8s module~~
   Basically working.
 - ~~Work out what's to replace addon-manager~~
