@@ -119,26 +119,33 @@ in {
   config = lib.mkIf kubeletServiceConfig.enable {
     virtualisation.containerd = {
       enable = true;
+      args = {
+        log-level = "debug";
+      };
       # required to get it to pick up cilium-cni as placed by the agent
       settings = {
+        # version = lib.mkForce 3; # TODO: unclear if we should do this
         metrics = {
           address = "[::]:9102";
         };
+        # Was being ignored as unknown?
+        # Must set otherwise the module sets it to the Nix store, which Cilium can't write to
         plugins."io.containerd.grpc.v1.cri".cni = {
           bin_dir = "/opt/cni/bin";
         };
-        plugins."io.containerd.cri.v1.runtime".containerd.runtimes.runc.options = {
-          SystemdCgroup = true;
-        };
+        # TODO: Fix additional container runtimes
+        # plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options = {
+        #   SystemdCgroup = true;
+        # };
         # gVisor: https://gvisor.dev/
         # Ref: https://gvisor.dev/docs/user_guide/containerd/configuration/
-        plugins."io.containerd.cri.v1.runtime".containerd.runtimes.gvisor = {
-          runtime_type = "io.containerd.runsc.v1";
-        };
+        # plugins."io.containerd.grpc.v1.cri".containerd.runtimes.gvisor = {
+        #   runtime_type = "io.containerd.runsc.v1";
+        # };
         # Kata Containers: https://katacontainers.io/
-        plugins."io.containerd.grpc.v1.cri".containerd.runtimes.kata = {
-          runtime_type = "io.containerd.kata.v2";
-        };
+        # plugins."io.containerd.grpc.v1.cri".containerd.runtimes.kata = {
+        #   runtime_type = "io.containerd.kata.v2";
+        # };
       };
     };
     # Open kubelet port to local addresses
@@ -152,8 +159,9 @@ in {
         containerd.path = with pkgs; [
           # TODO: fiddling with this since the symlinks in /opt/cni/bin linked to nonexistent files
           cni-plugins
-          kata-runtime
-          gvisor
+          # TODO: Fix additional container runtimes
+          # kata-runtime
+          # gvisor
         ];
         k8s-kubelet = {
           description = "Kubernetes Kubelet Service";
@@ -203,5 +211,40 @@ in {
         };
       };
     };
+    environment.systemPackages = with pkgs; [
+      kubectl
+      k9s
+      kubernetes-helm
+      nerdctl
+      cri-tools
+      cni
+    ];
+    # Looks like the only difference is multi CNI
+    # environment.etc."cni/net.d/98-loopback.conf".text = ''
+    #   {
+    #   	"cniVersion": "1.1.0",
+    #   	"name": "lo",
+    #   	"type": "loopback"
+    #   }
+    # '';
+    # environment.etc."cni/net.d/99-loopback.conflist".text = ''
+    #   {
+    #   	"cniVersion": "1.1.0",
+    #     "cniVersions": [ "0.1.0", "0.2.0", "0.3.0", "0.3.1", "0.4.0", "1.0.0", "1.1.0" ],
+    #   	"name": "my-cni",
+    #     "plugins": [
+    #       {
+    #         "type": "loopback",
+    #         "dns": {
+    #           "nameservers": [ "9.9.9.9" ]
+    #         }
+    #       },
+    #       {
+    #         "type": "portmap",
+    #         "capabilities": {"portMappings": true}
+    #       }
+    #     ]
+    #   }
+    # '';
   };
 }

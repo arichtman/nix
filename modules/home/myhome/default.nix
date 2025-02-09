@@ -33,6 +33,7 @@
       vim = "hx";
       nano = "hx";
       pico = "hx";
+      hxv = "hx --vsplit";
       g = "git";
       gc = "g checkout";
       gC = "g commit";

@@ -18,18 +18,16 @@ in
       environment.systemPackages = with pkgs; [
         git
         helix
-        kubectl
         step-cli
-        k9s
         jq
         yq
-        kubernetes-helm
         tcpdump
         trippy
         btop
         sysstat
         linuxKernel.packages.linux_libre.perf
         dig
+        file
       ];
       nix = {
         settings = {

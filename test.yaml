@@ -16,23 +16,24 @@ spec:
     - containerPort: 80
     - containerPort: 8080
     - containerPort: 443
+    # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
     readinessProbe:
-      failureThreshold: 99
       httpGet:
-        host: "::1"
-        path: /
+        # host: localhost
         port: 80
-        scheme: HTTP
-      periodSeconds: 5
-      successThreshold: 1
-      timeoutSeconds: 3
+        # path: /
+        # scheme: HTTP
+      failureThreshold: 99
+      # periodSeconds: 5
+      # successThreshold: 1
+      # timeoutSeconds: 3
     # volumeMounts:
     # - name: manual-token
     #   mountPath: "/var/run/secrets/kubernetes.io/serviceaccount"
     #   readOnly: true
   dnsPolicy: Default
   restartPolicy: Always
-  # nodeName: mum.systems.richtman.au
+  nodeName: mum.systems.richtman.au
   # automountServiceAccountToken: false
   # volumes:
   # - name: manual-token

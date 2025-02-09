@@ -105,7 +105,9 @@ Y'know, I'm starting to feel pretty good about this.
   [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)
   Maybe OpenEBS.
 - Play around with Timoni, Kluctl, etc
-- Add tracing endpoint for Containerd
+- Add tracing endpoint for Containerd, maybe monitor better
+  [article](https://povilasv.me/how-to-monitor-containerd/)
+  [prom docs](https://prometheus.io/docs/guides/opentelemetry/)
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
