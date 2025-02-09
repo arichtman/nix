@@ -89,30 +89,21 @@
     then "master"
     else "worker";
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
-  serviceArgs = lib.concatMapStrings (x:
-    if (builtins.substring 0 2 x) == "--"
-    then "${x}="
-    else "${x} ") [
-    "--config"
-    kubeletConfigFile
-    "--node-ip"
-    "::"
-    "--config-dir"
-    kubeletConfigDropinPath
+  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+    config = kubeletConfigFile;
+    node-ip = "::";
+    config-dir = kubeletConfigDropinPath;
     # Seems to be necessary to allow the kubelet to register it's HostName address type with the domain qualification.
     # I can't locate a cluster external domain setting or a dns search domain.
     # GoLang running it's own DNS stack doesn't help here either.
-    "--hostname-override"
-    config.networking.fqdn
-    "--kubeconfig"
-    kubeletKubeconfigFile
+    hostname-override = config.networking.fqdn;
+    kubeconfig = kubeletKubeconfigFile;
     # Ref: https://kubernetes.io/docs/reference/labels-annotations-taints/
     # --node-labels in the 'kubernetes.io' namespace must begin with an allowed prefix
     # "--node-labels"
     # "node-role.kubernetes.io/${nodeRole}=${nodeRole}"
-    "--v" # TODO: Remove after debugging
-    "2"
-  ];
+    v = 2; # TODO: Remove after stabilizing
+  };
 in {
   options.services.k8s-kubelet = {
     enable = lib.options.mkOption {

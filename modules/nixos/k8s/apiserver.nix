@@ -5,73 +5,48 @@
   ...
 }: let
   cfg = config.services.k8s-apiserver;
-  serviceArgs = lib.concatMapStrings (x:
-    if (builtins.substring 0 2 x) == "--"
-    then "${x}="
-    else "${x} ") [
-    # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
+  # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
+  serviceArgs = lib.cli.toGNUCommandLineShell {} {
     # "--advertise-address"
     # "2001:db8:1234:5678::1"
-    # Need this for Cilium
-    "--allow-privileged"
-    "true"
+    # Need privileged for Cilium
+    allow-privileged = true;
     # TODO: This seems sane
-    "--anonymous-auth"
-    "false"
-    "--authorization-mode"
-    "RBAC,Node"
-    "--bind-address"
-    "::"
+    anonymous-auth = false;
+    authorization-mode = "RBAC,Node";
+    bind-address = "::";
     # TODO: Apparently this *won't* make it search for certificates relative to this.
     #   It's probably only used for generating self-signed certificates. Bleh
-    "--cert-dir"
-    "${cfg.secretsPath}"
-    "--client-ca-file"
-    "${cfg.secretsPath}/k8s-ca.pem"
-    "--etcd-cafile"
-    "${cfg.secretsPath}/etcd.pem"
-    "--etcd-certfile"
-    "${cfg.secretsPath}/kube-apiserver-etcd-client.pem"
-    "--etcd-keyfile"
-    "${cfg.secretsPath}/kube-apiserver-etcd-client-key.pem"
-    "--etcd-servers"
-    "https://[::1]:2379"
-    "--external-hostname"
-    config.networking.hostName
+    cert-dir = cfg.secretsPath;
+    client-ca-file = "${cfg.secretsPath}/k8s-ca.pem";
+    etcd-cafile = "${cfg.secretsPath}/etcd.pem";
+    etcd-certfile = "${cfg.secretsPath}/kube-apiserver-etcd-client.pem";
+    etcd-keyfile = "${cfg.secretsPath}/kube-apiserver-etcd-client-key.pem";
+    etcd-servers = "https://[::1]:2379";
+    external-hostname = config.networking.hostName;
     # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
     # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
-    "--feature-gates"
-    "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true"
-    "--runtime-config"
-    "certificates.k8s.io/v1alpha1/clustertrustbundles=true"
+    feature-gates = "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true";
+    runtime-config = "certificates.k8s.io/v1alpha1/clustertrustbundles=true";
     # TODO: deduplicate/couple this
-    "--kubelet-certificate-authority"
-    "${cfg.secretsPath}/k8s-ca.pem"
-    "--kubelet-client-certificate"
-    "${cfg.secretsPath}/kubelet-apiserver-client.pem"
-    "--kubelet-client-key"
-    "${cfg.secretsPath}/kubelet-apiserver-client-key.pem"
-    "--api-audiences"
-    "api,https://kubernetes.default.svc"
-    "--service-account-issuer"
-    "https://kubernetes.default.svc"
-    "--service-account-key-file"
-    "${cfg.secretsPath}/service-account.pem"
-    "--service-account-signing-key-file"
-    "${cfg.secretsPath}/service-account-key.pem"
+    kubelet-certificate-authority = "${cfg.secretsPath}/k8s-ca.pem";
+    kubelet-client-certificate = "${cfg.secretsPath}/kubelet-apiserver-client.pem";
+    kubelet-client-key = "${cfg.secretsPath}/kubelet-apiserver-client-key.pem";
+    api-audiences = "api,https://kubernetes.default.svc";
+    service-account-issuer = "https://kubernetes.default.svc";
+    service-account-key-file = "${cfg.secretsPath}/service-account.pem";
+    service-account-signing-key-file = "${cfg.secretsPath}/service-account-key.pem";
     # TODO: Revisit
-    "--service-cluster-ip-range"
+    service-cluster-ip-range = "2403:580a:e4b1::/108";
     # "2001:db8:1234:5678:8:3::/112"
-    "2403:580a:e4b1::/108"
     # Can't mix public and private
     # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"
     # "command failed" err="[specified --service-cluster-ip-range[1] is too large; for 128-bit addresses, the mask must be >= 108, service IP family \"10.100.100.0/24\" must match public address family \"2403:580a:e4b1:0:3b67:89bb:45f8:3ba5\"]"
     # "10.100.100.0/24,fd00::/108"
-    "--tls-cert-file"
-    "${cfg.secretsPath}/kube-apiserver-tls.pem"
-    "--tls-private-key-file"
-    "${cfg.secretsPath}/kube-apiserver-tls-key.pem"
-  ];
+    tls-cert-file = "${cfg.secretsPath}/kube-apiserver-tls.pem";
+    tls-private-key-file = "${cfg.secretsPath}/kube-apiserver-tls-key.pem";
+    v = 2; # TODO: remove when stabilized
+  };
 in {
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   # Ref: https://github.dev/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/cluster/kubernetes/default.nix
