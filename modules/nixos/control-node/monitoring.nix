@@ -146,12 +146,36 @@ in {
           ];
           static_configs = [
             {
+              targets = mkForAllMachinesScrapeAddress 9103;
+            }
+          ];
+        }
+        {
+          job_name = "node_processes";
+          static_configs = [
+            {
+              targets = mkForAllMachinesScrapeAddress 9256;
+            }
+          ];
+        }
+        {
+          job_name = "node_stats";
+          static_configs = [
+            {
               targets = mkForAllMachinesScrapeAddress 9102;
             }
           ];
         }
         {
-          job_name = "machines";
+          job_name = "node_services";
+          static_configs = [
+            {
+              targets = mkForAllMachinesScrapeAddress 9558;
+            }
+          ];
+        }
+        {
+          job_name = "nodes";
           relabel_configs = promLocalHostRelabelConfigs;
           honor_labels = false;
           static_configs = [
@@ -164,16 +188,12 @@ in {
               };
             }
             {
-              targets = [
-                "opnsense.internal:9100"
-                "proxmox.internal:9100"
-                "mum.systems.richtman.au:9100"
-                "patient-zero.systems.richtman.au:9100"
-                "dr-singh.systems.richtman.au:9100"
-                "smol-bat.systems.richtman.au:9100"
-                "tweedledee.systems.richtman.au:9100"
-                "tweedledum.systems.richtman.au:9100"
-              ];
+              targets =
+                [
+                  "opnsense.internal:9100"
+                  "proxmox.internal:9100"
+                ]
+                ++ mkForAllMachinesScrapeAddress 9100;
             }
           ];
         }

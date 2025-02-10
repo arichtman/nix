@@ -126,7 +126,7 @@ in {
       settings = {
         # version = lib.mkForce 3; # TODO: unclear if we should do this
         metrics = {
-          address = "[::]:9102";
+          address = "[::]:9103";
         };
         # Was being ignored as unknown?
         # Must set otherwise the module sets it to the Nix store, which Cilium can't write to
@@ -148,12 +148,23 @@ in {
         # };
       };
     };
+    # https://git.sr.ht/~goorzhel/nixos/tree/ebe64964039dff02049eeb85802f5a76a56fe668/item/profiles/k3s/common/net.nix#L54
     # Open kubelet port to local addresses
-    networking.firewall.extraInputRules = ''
-      ip saddr { 192.168.1.0/24 } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
-      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
-      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9102 accept comment "Allow IPv6 Containerd monitoring"
-    '';
+    networking.firewall = {
+      # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
+      #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded
+      # Ref: https://blog.goorzhel.com/istio-to-cilium-a-grand-yak-shave/
+      checkReversePath = "loose";
+      # Log them in case it becomes an issue later
+      logReversePathDrops = true;
+      extraReversePathFilterRules = ''
+      '';
+      extraInputRules = ''
+        ip saddr { 192.168.1.0/24 } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
+        ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
+        ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
+      '';
+    };
     systemd = {
       services = {
         containerd.path = with pkgs; [

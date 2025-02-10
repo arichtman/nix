@@ -99,6 +99,21 @@ in
           SystemMaxUse=100M
           MaxFileSec=7day
         '';
+        prometheus.exporters.process = {
+          enable = true;
+          openFirewall = true;
+          listenAddress = "[::]";
+        };
+        prometheus.exporters.statsd = {
+          enable = true;
+          openFirewall = true;
+          listenAddress = "[::]";
+        };
+        prometheus.exporters.systemd = {
+          enable = true;
+          openFirewall = true;
+          listenAddress = "[::]";
+        };
         prometheus.exporters.node = {
           enable = true;
           openFirewall = true;
