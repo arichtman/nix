@@ -37,7 +37,9 @@
     service-account-key-file = "${cfg.secretsPath}/service-account.pem";
     service-account-signing-key-file = "${cfg.secretsPath}/service-account-key.pem";
     # TODO: Revisit
-    service-cluster-ip-range = "2403:580a:e4b1::/108";
+    # service-cluster-ip-range = "2403:580a:e4b1::/108";
+    # Set services top of the subnet range
+    service-cluster-ip-range = "2403:580a:e4b1:0:ffff:ffff:ffff:0/112";
     # "2001:db8:1234:5678:8:3::/112"
     # Can't mix public and private
     # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"

@@ -52,49 +52,36 @@
   };
   controllerConfigFile = pkgs.writeText "controller-config" (builtins.toJSON controllerConfig);
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/
-  serviceArgs = lib.concatMapStrings (x:
-    if (builtins.substring 0 2 x) == "--"
-    then "${x}="
-    else "${x} ") [
-    # "--allocate-node-cidrs"
-    # "true"
-    # "--service-cluster-ip-range"
-    # "2001:db8:1234:5678:8:3::/112"
-    "--node-cidr-mask-size"
-    "120"
-    # "--cluster-cidr"
-    # "2403:580a:e4b1::/64"
+  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+    # Controls whether the following are used or not
+    allocate-node-cidrs = true;
+    # region maybeIgnored
+    # Match the API server
+    service-cluster-ip-range = "2403:580a:e4b1:0:ffff:ffff:ffff:0/112";
+    cluster-cidr = "2403:580a:e4b1::/65";
     # "2001:db8:1234:5678:8:2::/104"
-    "--authorization-kubeconfig"
-    controllerKubeconfigFile
+    # endregion
+    # Docs indicate this one isn't controlled
+    # Not convinced it's not just an oversight
+    node-cidr-mask-size = "112";
+    authorization-kubeconfig = controllerKubeconfigFile;
     # "--authentication-kubeconfig"
     # controllerKubeconfigFile
-    "--bind-address"
-    "::"
+    bind-address = "::";
     # "--config"
     # controllerConfigFile
-    "--client-ca-file"
-    "${topConfig.secretsPath}/k8s-ca.pem"
-    "--cluster-signing-cert-file"
-    "${topConfig.secretsPath}/k8s-ca.pem"
-    "--cluster-signing-key-file"
-    "${topConfig.secretsPath}/k8s-ca-key.pem"
-    "--kubeconfig"
-    controllerKubeconfigFile
-    "--root-ca-file"
-    "${topConfig.secretsPath}/k8s-ca.pem"
-    "--service-account-private-key-file"
-    "${topConfig.secretsPath}/service-account-key.pem"
-    "--tls-cert-file"
-    "${topConfig.secretsPath}/controllermanager-tls-cert-file.pem"
-    "--tls-private-key-file"
-    "${topConfig.secretsPath}/controllermanager-tls-private-key-file.pem"
-    "--use-service-account-credentials"
-    "true"
+    client-ca-file = "${topConfig.secretsPath}/k8s-ca.pem";
+    cluster-signing-cert-file = "${topConfig.secretsPath}/k8s-ca.pem";
+    cluster-signing-key-file = "${topConfig.secretsPath}/k8s-ca-key.pem";
+    kubeconfig = controllerKubeconfigFile;
+    root-ca-file = "${topConfig.secretsPath}/k8s-ca.pem";
+    service-account-private-key-file = "${topConfig.secretsPath}/service-account-key.pem";
+    tls-cert-file = "${topConfig.secretsPath}/controllermanager-tls-cert-file.pem";
+    tls-private-key-file = "${topConfig.secretsPath}/controllermanager-tls-private-key-file.pem";
+    use-service-account-credentials = true;
     # TODO: for development
-    "--v"
-    "2"
-  ];
+    v = 2;
+  };
 in {
   options.services.k8s-controller = {
     enable = lib.options.mkOption {

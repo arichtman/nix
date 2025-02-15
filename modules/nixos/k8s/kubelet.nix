@@ -154,6 +154,7 @@ in {
       # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
       #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded
       # Ref: https://blog.goorzhel.com/istio-to-cilium-a-grand-yak-shave/
+      # TODO: Write netfilter rules instead of opening this
       checkReversePath = "loose";
       # Log them in case it becomes an issue later
       logReversePathDrops = true;

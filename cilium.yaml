@@ -1,4 +1,4 @@
-#helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium.yaml --version 1.16.5
+#helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium.yaml --version 1.17.1
 # No kube-proxy
 kubeProxyReplacement: true
 # Enables healthz endpoint
@@ -26,8 +26,12 @@ ipv6:
   enabled: true
 
 # For development
+envoy:
+  enabled: false
 debug:
   enabled: true
+# Attempting to match where the cilium-agent is actually listening
+# healthPort: 9890
 # cni:
 #   confPath: /run/cni/net.d
 # Disable SNAT as the node interface should have all pod IPv6 in addition to it's own
@@ -37,19 +41,21 @@ debug:
 # Failing presently as IP pool being used is ULA CIDR,
 #   which contains the gateway LL address
 # failed to start: daemon creation failed: error while initializing daemon: failed while reinitializing datapath: failed to enable direct routes for ipv6: route to destination fd00::118 contains gateway fe80::4140:f9e8:ec8a:489e, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes" subsys=daemon
-# autoDirectNodeRoutes: true
+autoDirectNodeRoutes: true
 # https://github.com/cilium/cilium/issues/21538
 # https://github.com/cilium/cilium/issues/35822
 # https://github.com/cilium/cilium/issues/17240
 routingMode: native
 # invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
 ipv6NativeRoutingCIDR: 2403:580a:e4b1:0::/64
+# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/65
 enableIPv6Masquerade: true
 # Those worked above, but now it's using fd00 range to try and reach stuff...
 ipam:
   # mode: "cluster-pool" # Should be unnecessary
-  operator:
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
+  mode: "kubernetes"
+  # operator:
+  #   clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
     # clusterPoolIPv6MaskSize: 64
     # clusterPoolIPv6MaskSize: 112
     # autoCreateCiliumPodIPPools:
@@ -65,8 +71,8 @@ ipam:
 #   relay:
 #     enabled: true
 # Fully uninstall
-cni:
-  uninstall: true
+# cni:
+#   uninstall: true
 # ingressController:
 #   enabled: true
 #   default: true
