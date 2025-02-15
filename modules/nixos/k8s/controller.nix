@@ -58,12 +58,19 @@
     # region maybeIgnored
     # Match the API server
     service-cluster-ip-range = "2403:580a:e4b1:0:ffff:ffff:ffff:0/112";
-    cluster-cidr = "2403:580a:e4b1::/65";
+    # node cidr must be within 16, and since performance is a concern, not IP exhaustion, scale down
+    # cluster-cidr = "2403:580a:e4b1::/65";
+    cluster-cidr = "2403:580a:e4b1:0:ffff:ffff::/96";
     # "2001:db8:1234:5678:8:2::/104"
     # endregion
     # Docs indicate this one isn't controlled
     # Not convinced it's not just an oversight
-    node-cidr-mask-size = "112";
+    # The vanilla one didn't seem to be taking, no cidrs were being assigned to node status addresses
+    # node-cidr-mask-size = "112";
+    # Too different from cluster cidr mask
+    # Ref: https://github.com/kubernetes/kubernetes/blob/4e7e14203db8cde906604b057b1b2a8a15e8a50d/pkg/controller/nodeipam/ipam/cidrset/cidr_set.go#L56
+    # node-cidr-mask-size-ipv6 = "112";
+    node-cidr-mask-size-ipv6 = "112";
     authorization-kubeconfig = controllerKubeconfigFile;
     # "--authentication-kubeconfig"
     # controllerKubeconfigFile

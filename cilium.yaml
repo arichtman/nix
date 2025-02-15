@@ -65,6 +65,9 @@ ipam:
     #         - 2403:580a:e4b1::/64
     #       maskSize: 112
           # maskSize: 64
+operator:
+  rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
+  replicas: 1
 # hubble:
 #   ui:
 #     enabled: true
