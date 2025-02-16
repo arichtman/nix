@@ -1,0 +1,3 @@
+# helm upgrade --install coredns coredns/coredns --namespace kube-system --values coredns.yaml --version 1.39.0
+serviceAccount:
+  create: true

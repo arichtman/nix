@@ -41,3 +41,20 @@ spec:
   #     sources:
   #     - serviceAccountToken:
   #         path: "token"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: mytest
+  name: mytest-svc
+  namespace: kube-system
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: mytest
+  # type: ClusterIP
+  type: LoadBalancer

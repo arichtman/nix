@@ -43,7 +43,9 @@
       authorization = {
         mode = "Webhook";
       };
-      clusterDomain = "internal";
+      # ClusterDNS didn't seem to affect /etc/resolv.conf in the pods. Was clearly in the config file passed to kubelet on launch
+      # clusterDomain = "internal";
+      # clusterDNS = [ "2403:580a:e4b1:0:aab8:e0ff:fe00:91ef" ];
       imageMaximumGCAge = "604800s";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...
