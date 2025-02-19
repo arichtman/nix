@@ -53,7 +53,7 @@ in
         # Annoyingly, the precedence order of git config means the default user still overrides
         shellAliases = {
           "set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
-          tfpla = "tf providers lock -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
+          tfpla = "tf providers lock -enable-plugin-cache -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
         };
         file = {
           ".config/git/personal".text = ''
