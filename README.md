@@ -626,6 +626,8 @@ create /run? y
   1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
 1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
 
+To do: look into [Nix VMs on Mac](https://paretosecurity.com/blog/being-a-happy-nixer-on-a-mac/)
+
 ### Universal Blue
 
 some _very_ wip notes about the desktop.
