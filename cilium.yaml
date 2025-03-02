@@ -30,6 +30,12 @@ envoy:
   enabled: false
 # debug:
 #   enabled: true
+# Ref: https://github.com/cilium/cilium/blob/main/.github/workflows/tests-smoke-ipv6.yaml
+# To test
+# ingressController:
+#   enabled: true
+# nodeinit:
+#   enabled: true
 # Attempting to match where the cilium-agent is actually listening
 # healthPort: 9890
 # cni:
