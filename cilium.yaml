@@ -28,8 +28,8 @@ ipv6:
 # For development
 envoy:
   enabled: false
-debug:
-  enabled: true
+# debug:
+#   enabled: true
 # Attempting to match where the cilium-agent is actually listening
 # healthPort: 9890
 # cni:
@@ -48,17 +48,23 @@ autoDirectNodeRoutes: true
 routingMode: native
 # invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
 ipv6NativeRoutingCIDR: 2403:580a:e4b1:0::/64
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/65
+# ipv6NativeRoutingCIDR: 2403:580a:e4b1:0:ffff:ffff::/96
 enableIPv6Masquerade: true
 # Those worked above, but now it's using fd00 range to try and reach stuff...
 ipam:
-  # mode: "cluster-pool" # Should be unnecessary
-  mode: "kubernetes"
-  # operator:
-  #   clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
-    # clusterPoolIPv6MaskSize: 64
+  mode: "cluster-pool" # Should be unnecessary
+  # mode: "kubernetes"
+  operator:
+    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
+    # Ref: https://github.com/cilium/cilium/issues/20756
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0:aaaa:aaaa::/96"]
+    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
+    # clusterPoolIPv6MaskSize: 64 # default 120
     # clusterPoolIPv6MaskSize: 112
-    # autoCreateCiliumPodIPPools:
+    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
+    clusterPoolIPv6MaskSize: 80
+    # autoCreateCiliumPodIPPools: # may only be for multi-pool ipam mode
     #   default:
     #     ipv6:
     #       cidrs:
