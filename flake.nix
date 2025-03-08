@@ -50,7 +50,7 @@
 
     valheim-server = {
       # url = "github:hamburger1984/valheim-server-flake";
-      url = "github:arichtman/valheim-server-flake/secretpw";
+      url = "github:arichtman/valheim-server-flake/patch-0-220-3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

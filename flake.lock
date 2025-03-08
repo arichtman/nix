@@ -577,16 +577,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1733314589,
-        "narHash": "sha256-Yp03TmtYSQVlboJPiU3YbpVGCMGSIAMDk3LWjXw7b2Y=",
-        "owner": "hamburger1984",
+        "lastModified": 1714795926,
+        "narHash": "sha256-PkgC9jqoN6cJ8XYzTA2PlrWs7aPJkM3BGiTxNqax0cA=",
+        "owner": "nix-community",
         "repo": "steam-fetcher",
-        "rev": "e1160be585d63793a6b40ea476d0cbd0c8f00f2b",
+        "rev": "12f66eafb7862d91b3e30c14035f96a21941bd9c",
         "type": "github"
       },
       "original": {
-        "owner": "hamburger1984",
-        "ref": "main",
+        "owner": "nix-community",
         "repo": "steam-fetcher",
         "type": "github"
       }
@@ -707,16 +706,16 @@
         "steam-fetcher": "steam-fetcher"
       },
       "locked": {
-        "lastModified": 1738481123,
-        "narHash": "sha256-teJbn9ApfS+rLneK8yKDAHWEupQOs68qxhaeY14eBlU=",
+        "lastModified": 1741429595,
+        "narHash": "sha256-tAnJOid9NwC3qZShqpuWfRvayh+2awo5PBtcgGvn1MQ=",
         "owner": "arichtman",
         "repo": "valheim-server-flake",
-        "rev": "56110d53c3ce2619f3176c74b381a5405ee005ef",
+        "rev": "c09eaaa1b70ef04033c75f6c4f9161f433c13bd9",
         "type": "github"
       },
       "original": {
         "owner": "arichtman",
-        "ref": "secretpw",
+        "ref": "patch-0-220-3",
         "repo": "valheim-server-flake",
         "type": "github"
       }
