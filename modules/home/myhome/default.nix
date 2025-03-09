@@ -290,7 +290,7 @@ in
               };
             };
             signing = {
-              sign-all = true;
+              behaviour = "own";
               backend = "ssh";
               key = "~/.ssh/id_ed25519.pub";
             };
