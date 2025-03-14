@@ -300,6 +300,14 @@ in
             "--scope" = [
               {
                 "--when" = {
+                  repositories = ["~/repos/gl/"];
+                };
+                user = {
+                  email = "ariel.richtman@silverrailtech.com";
+                };
+              }
+              {
+                "--when" = {
                   commands = ["status" "log"];
                 };
                 ui = {
