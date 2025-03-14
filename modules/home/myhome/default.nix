@@ -458,10 +458,22 @@ in
           nix-your-shell
           # Kube stuff
           kubectl
+          kubectl-neat
+          kubectl-tree
+          kubectl-ktop
+          kubectl-df-pv
+          kubectl-graph
+          kubectl-klock
+          kubectl-gadget
+          kubectl-images
+          kubectl-doctor
+          kubectl-explore
+          kubectl-view-secret
           # Lang servers
           nil # nix
           marksman # md
           terraform-ls # tf
+          gopls
           # rust-analyzer # rust
           lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
           alejandra # nix formatter
