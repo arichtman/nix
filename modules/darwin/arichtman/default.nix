@@ -16,7 +16,6 @@ with lib;
         sharedModules = [inputs.mac-app-util.homeManagerModules.default];
       };
 
-      nix.configureBuildUsers = true;
       nix.extraOptions = ''
         auto-optimise-store = true
         experimental-features = nix-command flakes
@@ -25,8 +24,6 @@ with lib;
       #TODO: Do we even want Rosetta?
       #TODO: Work out how to only add extraplatforms to aarch64
       # extra-platforms = x86_64-darwin aarch64-darwin
-
-      services.nix-daemon.enable = true;
 
       # Required or /run/current-system/sw isn't put on PATH
       #TODO: pull config out from default-home?

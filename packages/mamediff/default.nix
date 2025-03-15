@@ -10,8 +10,8 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "sile";
     repo = pname;
-    rev = "0.1.2";
-    hash = "sha256-mx8oqBPMSJNFZTBaWpmCkepe2A0pHulUQ82mk6DLkL4=";
+    rev = "v0.2.1";
+    hash = "sha256-kZeBPxg8B2tO4XFKxnWr2eIPgPssZTlKD8a/o3xCAOU=";
     # hash = lib.fakeHash;
   };
   # Ref: https://github.com/NixOS/nixpkgs/issues/61618#issuecomment-499377463
@@ -19,7 +19,8 @@ rustPlatform.buildRustPackage rec {
   #   export HOME=`mktemp -d`
   # '';
   doCheck = false;
-  cargoHash = "sha256-66aRYlS3AmMHJ3Rq9ZopLEWhEGw5UEAhv1+rUYcJaB4=";
+  cargoHash = "sha256-xScSh26YWNsoOxrj7/qsWGX1EMGdvazsRTZx6w1wLsE=";
+  useFetchCargoVendor = true;
   meta = with lib; {
     mainProgram = pname;
     description = "A TUI editor for managing unstaged and staged Git diffs";
