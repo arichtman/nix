@@ -2,6 +2,7 @@
   description = "Ariel's machine configs";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-release.url = "github:nixos/nixpkgs/release-24.11";
 
     snowfall-lib = {
       url = "github:snowfallorg/lib/v3.0.2";
@@ -43,14 +44,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    fresh-jj = {
-      url = "github:jj-vcs/jj";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     valheim-server = {
       # url = "github:hamburger1984/valheim-server-flake";
-      url = "github:arichtman/valheim-server-flake/patch-0-220-3";
+      url = "github:arichtman/valheim-server-flake/assertions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -79,7 +75,6 @@
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default
-        fresh-jj.overlays.default
         valheim-server.overlays.default
       ];
       alias.shells = {

@@ -19,7 +19,7 @@ rustPlatform.buildRustPackage rec {
   #   export HOME=`mktemp -d`
   # '';
   doCheck = false;
-  cargoHash = "sha256-xScSh26YWNsoOxrj7/qsWGX1EMGdvazsRTZx6w1wLsE=";
+  cargoHash = "sha256-0QnuH3PIeENAkkx/GquL7jFsk8eVykgYL76NEQzg2sQ=";
   useFetchCargoVendor = true;
   meta = with lib; {
     mainProgram = pname;

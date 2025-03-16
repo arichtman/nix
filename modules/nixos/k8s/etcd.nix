@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   mainK8sConfig = config.services.k8s;
 in {
   # In theory, you may wish to run another etcd in parallel,
@@ -7,6 +11,8 @@ in {
   config.services.etcd = {
     # Auto-on if controller
     enable = mainK8sConfig.controller;
+    # TODO: remove this when etcd fix their borked test
+    package = inputs.nixpkgs-release.legacyPackages.x86_64-linux.etcd;
     # TODO: mkCert perhaps?
     # For now, assume certain well-known paths for certificates
     # For now, use the existing Kubernetes location.
