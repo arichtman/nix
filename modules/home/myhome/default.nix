@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   cfg = config.default-home;
@@ -231,11 +230,6 @@ in
           enableZshIntegration = true;
         };
         bat.enable = true;
-        thefuck = {
-          enable = true;
-          enableBashIntegration = true;
-          enableZshIntegration = true;
-        };
         command-not-found.enable = true;
         direnv = {
           enable = true;
