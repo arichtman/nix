@@ -268,7 +268,7 @@ in
             ui = {
               default-command = "status";
               editor = "hx";
-              # pager = "cat";
+              paginate = "never";
               # TODO: configure mergiraf for JJ
               diff.tool = "delta";
               merge-editor = "mergiraf";
@@ -298,14 +298,6 @@ in
                 };
                 user = {
                   email = "ariel.richtman@silverrailtech.com";
-                };
-              }
-              {
-                "--when" = {
-                  commands = ["status" "log"];
-                };
-                ui = {
-                  paginate = "never";
                 };
               }
             ];
@@ -347,8 +339,13 @@ in
             rebase = {
               updateRefs = true;
               autoStash = true;
+              autoSquash = true;
             };
-            fetch.prune = true;
+            fetch = {
+              prune = true;
+              pruneTags = true;
+              all = true;
+            };
             merge.autoStash = true;
             init.defaultBranch = "main";
             pull = {
@@ -362,6 +359,7 @@ in
             push = {
               autoSetupRemote = true;
               default = "current";
+              followTags = true;
             };
             merge.mergiraf = {
               name = "mergiraf";
@@ -371,6 +369,16 @@ in
               "https://github.com" = {insteadOf = "gh";};
               "https://gitlab.com" = {insteadOf = "gl";};
               "https://codeberg.org" = {insteadOf = "cb";};
+            };
+            # Ref: https://blog.gitbutler.com/how-git-core-devs-configure-git/
+            column.ui = "auto";
+            branch.sort = "-committerdate";
+            tag.sort = "version:refname";
+            help.autocorrect = "prompt";
+            commit.verbose = true;
+            rerere = {
+              enabled = true;
+              autoUpdate = true;
             };
           };
         };
