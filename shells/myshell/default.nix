@@ -20,7 +20,7 @@ in
         [
           # Minimal development stuff
           git
-          jj
+          jujutsu
           ripgrep
           jq
           yq
