@@ -269,6 +269,7 @@ in
               default-command = "status";
               editor = "hx";
               paginate = "never";
+              # pager = "bat";
               # TODO: configure mergiraf for JJ
               diff.tool = "delta";
               merge-editor = "mergiraf";
@@ -298,6 +299,22 @@ in
                 };
                 user = {
                   email = "ariel.richtman@silverrailtech.com";
+                };
+              }
+              {
+                "--when" = {
+                  repositories = ["~/repos/cb/"];
+                };
+                user = {
+                  email = "ariel@richtman.au";
+                };
+              }
+              {
+                "--when" = {
+                  commands = ["diff"];
+                };
+                ui = {
+                  paginate = "auto";
                 };
               }
             ];
