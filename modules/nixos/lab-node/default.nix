@@ -196,6 +196,7 @@ in
           # "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 4240 accept comment \"Allow IPv6 Cilium health\""
           # TODO: hail mary in case it's nftables dropping stuff
           "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
+          # "ip6 saddr { 2403:580a:e4b1::/48 } udp dport 53 accept comment \"Allow IPv6 DNS\""
         ];
         # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
         # (the default) this is the recommended approach. When using systemd-networkd it's

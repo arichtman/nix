@@ -41,8 +41,15 @@ envoy:
 # cni:
 #   confPath: /run/cni/net.d
 # Disable SNAT as the node interface should have all pod IPv6 in addition to it's own
-# enableIPv6Masquerade: false
+enableIPv6Masquerade: false
 
+# enableIPv6BIGTCP: true
+# Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
+# bpf:
+  # Enable cluster-external traffic to be routed to pods
+  # lbExternalClusterIP: true
+  # Use BPF instead of iptables masquerading
+  # masquerade: true
 # Set rules to route inter-node without hitting the router
 # Failing presently as IP pool being used is ULA CIDR,
 #   which contains the gateway LL address
@@ -55,7 +62,7 @@ routingMode: native
 # invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
 ipv6NativeRoutingCIDR: 2403:580a:e4b1:0::/64
 # ipv6NativeRoutingCIDR: 2403:580a:e4b1:0:ffff:ffff::/96
-enableIPv6Masquerade: true
+# enableIPv6Masquerade: true
 # Those worked above, but now it's using fd00 range to try and reach stuff...
 ipam:
   mode: "cluster-pool" # Should be unnecessary
@@ -142,8 +149,3 @@ pmtuDiscovery:
   # -- Enable path MTU discovery to send ICMP fragmentation-needed replies to
   # the client.
   enabled: false
-# bpf:
-  # Enable cluster-external traffic to be routed to pods
-  # lbExternalClusterIP: true
-  # Use BPF instead of iptables masquerading
-  # masquerade: true

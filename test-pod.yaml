@@ -31,7 +31,7 @@ spec:
     # - name: manual-token
     #   mountPath: "/var/run/secrets/kubernetes.io/serviceaccount"
     #   readOnly: true
-  dnsPolicy: Default
+  dnsPolicy: ClusterFirst
   restartPolicy: Always
   nodeName: mum.systems.richtman.au
   # automountServiceAccountToken: false

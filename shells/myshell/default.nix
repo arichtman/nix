@@ -43,6 +43,7 @@ in
           openssl
           # Flake tooling
           snowfallorg.thaw
+          nixtract
           # Pre-commit replacement
           arichtman.prefligit
           # Experimental diff tool
