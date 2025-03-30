@@ -29,7 +29,7 @@ in
 
       # ---- HARDWARE -----
       # Note: This really only works for very homogenous machines.
-      # Luckily all my physical nodes are the same!
+      # Luckily all my physical nodes are about the same!
 
       boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
       boot.kernelModules = ["kvm-intel"];

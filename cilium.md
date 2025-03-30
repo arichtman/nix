@@ -1,5 +1,11 @@
 # Cilium
 
+Manually adding the pod IP to the node's host interface works,
+but there's no option I can see to make Cilium do this.
+
+Try changing the cilium CIDR to a separate /64 like the VPNs
+Write a controller daemonset watching cilium CR for pod IPAM?
+
 - https://docs.cilium.io/en/stable/helm-reference/
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
@@ -27,6 +33,7 @@ https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some
 
 More cilium v6 stuff
 https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/
+https://functional.cafe/@arianvp/112994181771306904
 
 Networking stuff
 
@@ -40,8 +47,6 @@ Networking stuff
 Offer to help
 https://hachyderm.io/@jpetazzo/112371149239851518
 
-- I can't run containers without a CNI, but Cilium operator wants to manage the `/etc/cni/net.d` config file
-- Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...
 
 ## Documentation read-through thoughts
 
@@ -115,6 +120,46 @@ https://hachyderm.io/@jpetazzo/112371149239851518
 
 ## Issues
 
+### Pods unable to reach outside cluster
+
+Turns out return traffic is stuck.
+Router is sending Neighbor Solicitations for the pod IP but no response.
+Enabling promiscuous mode on the node interfaces, or assigning the pod IP to the node interface solves this.
+
+Promiscuous mode is not a good idea to leave on, will tax the CPU too much and be noisy.
+Assigning pod IPs to host interface _could_ be automated but smells.
+
+Solution: Attempt Cilium's native BGP advertising and l2 neighbor discovery features.
+
+### Cyclic dependency with certificates
+
+Attempts to use the in-cluster default service `kubernetes` fail TLS checks because the IP and name don't match.
+Api server certificate needs IP SAN of well-known default service IP from cluster service IP pool.
+which is in 2 x config files, neither of which support drop-ins iirc.
+
+Solution: For now, manually add the IP when signing the certificate.
+In future we'll try signing for DNS that would resolve in-cluster.
+
+### Host machine DNS configuration is unsuitable for in-cluster
+
+CoreDNS config file from host needs IPv4 address removed.
+Tangentially, router ipv6 DNS trapping needs resolution.
+
+Solution: For now, allow the fallback/timeouts to v6.
+In future, possibly disable IPv4 DNS on the host machines.
+
+### Default Kubernetes service not working
+
+Default kubernetes service not working, unclear what the issue is.
+Could be east-west traffic, could be n-s.
+
+### BGP configuration is static
+
+BGP config CR needs router information which is not ideal static.
+[Issue](https://github.com/cilium/cilium/issues/37315) is open to fix this though.
+
+Solution: CIDR is already too hard-coded everywhere, just wait.
+
 ### Host name resolution
 
 Machines are DHCPv4 and SLAAC, which I've worked with by enabling mDNS and Neighbor Solicitation.
@@ -133,7 +178,7 @@ nor does Unbound seem to have or expose an API.
 DHCPv4 leases auto registered to router DNS resolver.
 This used to be the case with ISC DHCPv4 server but that's deprecated and Kea DHCPv4 doesn't have it.
 
-For now I have manually added A record overrides for the machines.
+Solution: For now I have manually added AAAA record overrides for the machines.
 
 ### Log pulling
 
@@ -143,16 +188,26 @@ Without kube-proxy, `kubectl logs` wants to go directly to the node and reach `1
 This is not open.
 I'm assuming that the absence of kube-proxy is causing this, and otherwise it'd go via the API server or kubelets or something.
 
+Solution: open port for ISP-delegated prefix which includes LAN and VPN CIDRs.
+
 #### Permissions
 
 Even when directly on the node with the pod, `kubectl logs` fails.
 `Error from server (Forbidden): Forbidden (user=system:node:fat-controller, verb=get, resource=nodes, subresource=proxy) ( pods/log cilium-envoy-w2hhk)`
 It's unclear _why_ a node wouldn't be allowed to do this out of the box.
 
+Turns out the API server's client certificate was set to auth as a node, but it needs admin to be able to proxy.
+
+Solution: Adjust DN on the certificate to `system:masters:${NODE_NAME}`
+(the node name is arbitrary but easier for auditing/traceability).
+
 ### Versions
 
 We're at Kubernetes 1.31.2, Cillium 1.16 is compatible with 1.30.4 at latest.
 [compatibility table](https://docs.cilium.io/en/stable/network/kubernetes/compatibility/)
+
+Solution: Cilium released 1.17.x, just keep rolling.
+If need be we can pin Kubernetes.
 
 ### Agent failures
 
@@ -162,18 +217,20 @@ We're at Kubernetes 1.31.2, Cillium 1.16 is compatible with 1.30.4 at latest.
 failed to start: IPv6 is enabled and ip6tables modules initialization failed: could not load module ip6table_mangle: exit status 1 (try disabling IPv6 in Cilium or loading ip6_tables, ip6table_mangle, ip6table_raw and ip6table_filter kernel modules)\nfailed to stop: context deadline exceeded" subsys=daemon
 ```
 
+Solution: Add kernel modules; "ip6table_mangle" "ip6table_raw" "ip6table_filter".
+
 #### Missing service account CA
 
 `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt` is unpopulated, apparently.
 
-Fixed this by adding `--root-ca-certificate` to controller manager configuration.
+Solution: Add `--root-ca-certificate` to controller manager configuration.
 
 #### Wrong APIserver networking
 
 Looks like it's trying to hit the API server on port 443, if this is machine, it's 6443.
 But this also smells like it might be an in-cluster IP, set by the service?
 
-This was solved by providing the master address and port to Cillium directly, allowing it to bypass the in-cluster service.
+Solution: Provide the master address and port to Cillium directly via Helm values, allowing it to bypass the in-cluster service.
 
 ```
 $ sudo tail -f cilium-k2mkh_kube-system_config-2d981c7a3a549e59e21b73b99cb911302cf55d22ee00e038abf5815a7277ef91.log
@@ -195,11 +252,13 @@ $ sudo tail -f cilium-k2mkh_kube-system_config-2d981c7a3a549e59e21b73b99cb911302
 $sudo tail -f cilium-envoy-nfdbn_kube-system_cilium-envoy-08165263e156b0e0422df322b140d8290ab67c9bd9d18a9ddf8223c9f498a8fb.log
 2024-11-30T02:06:52.509632542Z stderr F [2024-11-30 02:06:52.509][7][warning][config] [external/envoy/source/extensions/config_subscription/grpc/grpc_stream.h:193] StreamClusters gRPC config stream to xds-grpc-cilium closed since 1022s ago: 14, upstream connect error or disconnect/reset before headers. reset reason: remote connection failure, transport failure reason: immediate connect error: No such file or directory
 ```
+
 ### Orphaned pods
 
 ```
 "Orphaned pod found, but volumes are not cleaned up" podUID="00fa5fc0-0b96-4090-b0a5-3e3b869b4e3b"
 ```
+
 ### Unable to launch pods
 
 #### NetworkNotReady
@@ -207,7 +266,8 @@ $sudo tail -f cilium-envoy-nfdbn_kube-system_cilium-envoy-08165263e156b0e0422df3
 Containerd is complaining that there's nothing in `/etc/cni/net.d`, hence the containers never start.
 [issue about requiring loopback](https://github.com/containerd/containerd/issues/8006)
 
-Fixed eventually by deploying dummy config.
+Fixed eventually by deploying dummy config, I'm not sure what causes it but it seems it can get "stuck" and
+you can't run cilium to create your CNI config but you don't actually want any other config.
 
 dummy CNI config [ref](https://github.com/containernetworking/plugins/tree/main/plugins/main/dummy):
 
@@ -265,15 +325,19 @@ dummy CNI config [ref](https://github.com/containernetworking/plugins/tree/main/
 MountVolume.SetUp failed for volume "kube-api-access-r6z7b" : object "kube-system"/"kube-root-ca.crt" not registered
 ```
 
-Disabling automatic svc account token mounting removes the error.
+Solution: Disabling automatic svc account token mounting removes the error.
 Manually mounting the token doesn't yield the error.
 [ref](https://stackoverflow.com/questions/69038012/mountvolume-setup-failed-for-volume-kube-api-access-fcz9j-object-default)
 
 #### Misc
 
 - Scheduler's client certificate wasn't granting permissions
-- AddonManager has no manifests
-- AddonManager has no kubeconfig so can't auth
+- No longer using AddonManager
+  ~~AddonManager has no manifests~~
+- No longer using AddonManager
+  ~~AddonManager has no kubeconfig so can't auth~~
 - Kubelet was thinking flannel was installed because the Kubelet module writes a CNI config file if certain conditions are met.
   I think we finally worked it out by setting `services.*kubernetes*.flannel.enabled = false;`, as opposed to `services.flannel.enabled`.
+  Also had to clear out the `/etc/cni/net.d` from remainder CNI configuration.
 - serviceAccount `default` missing from at least nameSpace `kube-system`
+- Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...

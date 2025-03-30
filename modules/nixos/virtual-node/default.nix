@@ -29,7 +29,7 @@ in
       # mDNS does the name-to-IP, ND does IP-to-MAC
       services.radvd = {
         enable = true;
-        # Leftover from testing, remove before flight
+        # TODO: Leftover from testing, remove before flight
         # prefix ::/64 {};
         # debugLevel = 4;
         config = ''
