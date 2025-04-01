@@ -31,7 +31,7 @@
         virtualHosts = {
           ":80" = {
             extraConfig = ''
-              respond "No upstream configured" 500 {
+              respond "No upstream configured" 204 {
                 close
               }
             '';
