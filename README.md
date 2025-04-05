@@ -21,7 +21,16 @@ Y'know, I'm starting to feel pretty good about this.
 - Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
   Switch to Inadyne DDNS client for that?
 - Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
-- Renew TLS for secondary router.
+- Review `net.inet.tcp.tso` for VM safety/perf
+- Troubleshoot OpenVPN
+  [ref](https://www.reddit.com/r/OPNsenseFirewall/comments/1adzr5y/openvpn_setup_instances_getting_ipv6_address_error/)
+  [ref](https://forum.opnsense.org/index.php?topic=42672.0)
+- Troubleshoot IPv6 DNS trapping
+  [ref](https://forums.freebsd.org/threads/rdr-with-ipv6.72863/)
+- Troubleshoot cross-subnet IPv6 (missing ICMP redirect?)
+  [ref](https://man.freebsd.org/cgi/man.cgi?query=inet6)
+  [ref](https://forum.opnsense.org/index.php?topic=32856.0)
+- ~~Renew TLS for secondary router.~~
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
 - ~~Configure block lists for public traffic.~~
   Done, [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
@@ -34,7 +43,7 @@ Y'know, I'm starting to feel pretty good about this.
 - ~~Properly set up the access point as a downstream router (with PD)~~
   Done! Sweaty, slightly stressful afternoon but worth it.
 - ~~Set up VPN in OPNsense~~
-  WG and OpenVPN working.
+  WG and ~~OpenVPN working~~.
   Might do IPsec too or further tuning.
 - ~~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~~
    Implemented along with reverse-proxy trapping.

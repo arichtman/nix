@@ -1,9 +1,5 @@
 # Certificates
 
-TODO: work out why Mull on Android isn't prompting for or presenting the certificate.
-Might be that the CA has to be same
-[ref](https://superuser.com/questions/1043415/firefox-doesnt-ask-me-for-a-certificate-when-visiting-a-site-that-needs-one)
-
 ```
 # Mobile client certificate
 step certificate create poco-f4-gt client.pem client-key.pem --template granular-dn-leaf.tpl --not-after 1461h \
