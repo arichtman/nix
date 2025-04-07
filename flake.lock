@@ -632,16 +632,16 @@
         "steam-fetcher": "steam-fetcher"
       },
       "locked": {
-        "lastModified": 1742114087,
-        "narHash": "sha256-s8t7janCaEgVRbjg6bJQsEPf/+1kqMsHuuUGyhHKgeM=",
+        "lastModified": 1744061401,
+        "narHash": "sha256-islY8WOjZpWdsEbcTjCDfR1vCCfLQT1eMHIvwTSyInI=",
         "owner": "arichtman",
         "repo": "valheim-server-flake",
-        "rev": "449527dadeebb05f0078d7019d3d56b8cb450009",
+        "rev": "7330e7805e8d1ac733069fd9cc40f521a64d56d2",
         "type": "github"
       },
       "original": {
         "owner": "arichtman",
-        "ref": "assertions",
+        "ref": "patch-0-220-5",
         "repo": "valheim-server-flake",
         "type": "github"
       }

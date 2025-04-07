@@ -46,7 +46,7 @@
 
     valheim-server = {
       # url = "github:hamburger1984/valheim-server-flake";
-      url = "github:arichtman/valheim-server-flake/assertions";
+      url = "github:arichtman/valheim-server-flake/patch-0-220-5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
