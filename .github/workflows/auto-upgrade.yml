@@ -21,7 +21,8 @@ jobs:
     - name: Update stuff
       run: |
         nix flake update
-        nix develop --command pre-commit autoupdate
+        # autoupdate not implemented yet
+        # nix develop --command prefligit autoupdate
         # git submodule update --remote
     - uses: peter-evans/create-pull-request@v6
       with:
