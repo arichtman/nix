@@ -98,7 +98,7 @@
       '';
     }
     # TODO: If the OpenGL-non NixOS system thing ever gets resolved...
-    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nohup nixGLNvidia alacritty &";}
+    // lib.optionalAttrs (cfg.isThatOneWeirdMachine || (pkgs.stdenv.hostPlatform.isDarwin && !pkgs.stdenv.hostPlatform.isAarch)) {alac = "nohup nixGLNvidia alacritty &";}
     # Have to put here as modules are Nix config and not home-manager (?)
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin darwinAliases;
   darwinAliases = {
@@ -110,6 +110,8 @@
     brute-force-darwin-rebuild-switch = "until drs ; do : ; done";
     brute-force-flake-update = "until nix flake update --commit-lock-file ; do : ; done";
     brute-force-direnv-reload = "until direnv reload ; do : ; done";
+    # Ope, looks like Alacritty launch is cooked on x86_64 Darwin
+    alac = "open -a alacritty; exit 0";
   };
   # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
   # List of binaries to create a symlink to in `~/.cargo/bin`.
@@ -208,7 +210,7 @@ in
                   action = "DecreaseFontSize";
                 }
               ]
-              ++ lib.optional (!cfg.isThatOneWeirdMachine) zeroKeyReset;
+              ++ lib.optional (!cfg.isThatOneWeirdMachine && pkgs.stdenv.isAarch64) zeroKeyReset;
           };
         };
         zellij = {
