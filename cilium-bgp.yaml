@@ -6,31 +6,33 @@ metadata:
 spec:
   # nodeSelector:
   #   matchLabels:
-  #     rack: rack0
+  #     node-role.kubernetes.io/worker: worker
   bgpInstances:
   - name: "richtman.au"
+    # routerID: "65551"
     localASN: 65551
     peers:
     - name: "primary-router"
       peerASN: 65551
-      peerAddress: home.richtman.au
-      # peerAddress: 2403:580a:e4b1::aab8:e0ff:fe00:91ef
+      # Not allowed DNS names I think
+      # peerAddress: home.richtman.au
+      peerAddress: 2403:580a:e4b1::aab8:e0ff:fe00:91ef
       peerConfigRef:
-        name: "richtman.au"
+        name: "primary-router"
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPPeerConfig
 metadata:
-  name: cilium-peer
+  name: primary-router
 spec:
-  timers:
-    holdTimeSeconds: 9
-    keepAliveTimeSeconds: 3
-  authSecretRef: bgp-auth-secret
+  # timers:
+  #   holdTimeSeconds: 9
+  #   keepAliveTimeSeconds: 3
+  # authSecretRef: bgp-auth-secret
   # ebgpMultihop: 4
   gracefulRestart:
     enabled: true
-    restartTimeSeconds: 15
+    # restartTimeSeconds: 15
   families:
     - afi: ipv6
       safi: unicast
@@ -47,10 +49,10 @@ metadata:
 spec:
   advertisements:
     - advertisementType: "PodCIDR"
-      attributes:
-        communities:
-          standard: [ "65551:99" ]
-        localPreference: 99
+      # attributes:
+      #   communities:
+      #     standard: [ "65551:99" ]
+      #   localPreference: 99
     - advertisementType: "Service"
       service:
         addresses:
@@ -60,6 +62,13 @@ spec:
         # selector:
         #   matchExpressions:
         #     - { key: bgp, operator: In, values: [ blue ]}
+    # - advertisementType: "CiliumPodIPPool"
+    #   selector:
+    #   matchExpressions:
+    #   - {key: somekey, operator: NotIn, values: ['never-used-value']}
+    # OR! ***
+    #     matchLabels:
+    #       advertise: "bgp"
 ---
 apiVersion: v1
 kind: Secret

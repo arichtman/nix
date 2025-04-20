@@ -1,11 +1,5 @@
 # Cilium
 
-Manually adding the pod IP to the node's host interface works,
-but there's no option I can see to make Cilium do this.
-
-Try changing the cilium CIDR to a separate /64 like the VPNs
-Write a controller daemonset watching cilium CR for pod IPAM?
-
 - https://docs.cilium.io/en/stable/helm-reference/
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
@@ -46,7 +40,6 @@ Networking stuff
 
 Offer to help
 https://hachyderm.io/@jpetazzo/112371149239851518
-
 
 ## Documentation read-through thoughts
 
@@ -119,6 +112,51 @@ https://hachyderm.io/@jpetazzo/112371149239851518
 - There is an iptables-based implementation which we'll skip. Rough enough following nftables and eBPF.
 
 ## Issues
+
+### Failing BGP sessions
+
+Looks like 2 nodes are stuck at _Waiting for peer OPEN_ - mum and fat-controller.
+I wonder if this is anything to do with them being on the Proxmox SDN...
+
+### Dynamic peering
+
+OPNsense may allow adding an entire network segment for peering.
+FRR seems to have dynamic peering - need to look into that.
+
+### Dynamic router IDs
+
+In single-stack IPv6 Cilium can't (or won't) derive unique router IDs for the nodes.
+The router ID *has* to be IPv4 format, `0.0.0.0` is disallowed, and they can't overlap/clash - each node's router ID has to be unique.
+Annotating the nodes manually kinda sucks.
+
+### Unknown dynamic capability
+
+FRR logs show (on startup/establishment) _Unknown capability code - 75 - ignoring_ (or thereabouts).
+This looks to be Software Version.
+Non-critical but annoying.
+
+Ref: https://www.iana.org/assignments/capability-codes/capability-codes.xhtml
+
+### Cilium not showing/initiating any BGP peers
+
+When you run `cilium bgp peers` it's empty.
+Checked `CiliumBGPNodeConfig` and all the nodes are selected so have a CR instance.
+Checked conditions on the `CiliumBGPNodeConfig`s and the checks are okay.
+Cilium-agent however is complaining it doesn't have a router ID.
+This was something you could YAML before but `CiliumBGPPeeringPolicy` which had it is deprecated.
+We _could_ set it on `CiliumBGPNodeConfigOverride`, but this seems like a hassle as each CR can only target one node (I think).
+
+Solution: manually add peers to OPNsense as `remote-as internal` with BFD enabled.
+Manually annotate nodes with router IDs.
+
+PS: the BGP peer group feature on OPNsense doesn't quite have enough options to deduplicate the config well.
+
+Refs:
+
+- Cilium docs on setting router ID;
+  [old](https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-v1/#overriding-router-id)
+  [Current](https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-v2/#bgp-configuration-override)
+- [FRR docs on router ID](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-router-id-A.B.C.D)
 
 ### Pods unable to reach outside cluster
 
@@ -258,6 +296,26 @@ $sudo tail -f cilium-envoy-nfdbn_kube-system_cilium-envoy-08165263e156b0e0422df3
 ```
 "Orphaned pod found, but volumes are not cleaned up" podUID="00fa5fc0-0b96-4090-b0a5-3e3b869b4e3b"
 ```
+
+### Dual stack
+
+Enabling IPv4 Cilium means dual stack kubernetes, which requires the Kubelet argument `--node-ip` set.
+`nodeIp` is also not part of the Kubelet config spec at `v1beta1`, so I can't dynamically put the IP in locally.
+
+Both v4 and v6 are dynamic (DHCPv4 and SLAAC), though I can pin the MAC addresses in NixOS,
+which nominally makes the v6 address stable, if not entirely static.
+
+I'm also not sure `--node-ip` could cope with being a v6 in a dual-stack world, you'd think dual stack has
+been stable since like 1.10 buuuuuut....
+
+It /is/ possible to do this via the API server and resource properties BUT that's done by a cloud-provider
+which is orchestrated by cloud-controller-manager. I have been unable to locate much documentation about
+the API specification for cloud providers beyond GoLang code. I'm not even sure if it's HTTP, GRPC, or it
+needs to be in GoLang entirely.
+
+Ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/
+Ref: https://github.com/kubernetes/cloud-provider/blob/master/cloud.go
+Ref: https://search.nixos.org/options?from=0&size=100&sort=relevance&query=macaddress
 
 ### Unable to launch pods
 
