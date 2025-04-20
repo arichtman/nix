@@ -59,7 +59,8 @@ Y'know, I'm starting to feel pretty good about this.
   [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
 - Work out watchdog on OPNsense/BSD
 - Configure Topton N100 watchdog.
-  BIOS setting located but microcode update seems to have stabilized the system.
+  ~~BIOS setting located but microcode update seems to have stabilized the system.~~
+  Nope, still borked.
 - Set up OpenAMT for out-of-band management.
 - ~~Set up PXE booting off of OPNsense
   [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
@@ -84,6 +85,7 @@ Y'know, I'm starting to feel pretty good about this.
 - Switch routing to *dynamic* subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
+- Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
 - Look into different Nix store cache, maybe Attic
 - ~~NixOS store cache ([inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
   [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)~~
@@ -101,8 +103,10 @@ Y'know, I'm starting to feel pretty good about this.
 ### Topsoil (Kubernetes)
 
 - Set up Cilium IPv6
-  BGP peer cluster to router?
-  See crazy diagram for IPv6
+- BGP peer cluster to router. Sortof working, 2 nodes failing.
+- Do dynamically-delegated prefixes for node pod CIDRs.
+  Honestly I'm not sure this is a value-add but it would be cool.
+  See diagram below.
 - Set up IPv6 public ingress and firewalling
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
