@@ -3,7 +3,6 @@
   lib,
   ...
 }: let
-  # Source: https://samber.github.io/awesome-prometheus-alerts/
   mkLocalScrapeConfig = name: port: {
     job_name = builtins.toString name;
     relabel_configs = promLocalHostRelabelConfigs;
@@ -127,6 +126,8 @@ in {
       scrapeConfigs = [
         # TODO: Maybe wire these up to the actual service config?
         (mkLocalScrapeConfig "caddy" 2019)
+        # See impl for why non-default port
+        (mkLocalScrapeConfig "etcd" 2399)
         (mkLocalScrapeConfig "grafana" 3000)
         (mkLocalScrapeConfig "garage" 3903)
         (mkLocalScrapeConfig "kthxbye" 9099)

@@ -25,5 +25,10 @@ in {
     listenClientUrls = [
       "https://[::1]:2379"
     ];
+    extraConf = {
+      # Default port + TLS = demands mTLS as it can't figure the HTTP routing based on `/metrics` early enough
+      # Default port + no TLS = binding clashes
+      LISTEN_METRICS_URLS = "http://[::1]:2399";
+    };
   };
 }
