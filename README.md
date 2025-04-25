@@ -25,11 +25,14 @@ Y'know, I'm starting to feel pretty good about this.
 - Troubleshoot OpenVPN
   [ref](https://www.reddit.com/r/OPNsenseFirewall/comments/1adzr5y/openvpn_setup_instances_getting_ipv6_address_error/)
   [ref](https://forum.opnsense.org/index.php?topic=42672.0)
-- Troubleshoot IPv6 DNS trapping
-  [ref](https://forums.freebsd.org/threads/rdr-with-ipv6.72863/)
-- Troubleshoot cross-subnet IPv6 (missing ICMP redirect?)
+- Loopback interface was low-level filtering out the packets, set destination to actual LAN IPv6 and it worked.
+  ~~Troubleshoot IPv6 DNS trapping
+  [ref](https://forums.freebsd.org/threads/rdr-with-ipv6.72863/)~~
+- Obviated as secondary router is now in pure access point/bridge mode.
+  Even with the sysctl setting on it wasn't doing it though.
+  ~~Troubleshoot cross-subnet IPv6 (missing ICMP redirect?)
   [ref](https://man.freebsd.org/cgi/man.cgi?query=inet6)
-  [ref](https://forum.opnsense.org/index.php?topic=32856.0)
+  [ref](https://forum.opnsense.org/index.php?topic=32856.0)~~
 - ~~Renew TLS for secondary router.~~
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
 - ~~Configure block lists for public traffic.~~
@@ -323,6 +326,8 @@ Features:
 - Reverse proxy to internal services
 - Security
   - Blocks known mailicious IPs with subscribed lists
+    - FireHOL
+    - Spamhaus
 - Internal prefix delegation
 - QEMU guest agent
 - TFTP server
@@ -376,7 +381,10 @@ Features:
    - enable DNSSEC
    - enable DHCP lease registration
    - Disallow system nameservers in DoT and add records with blank domains+port 853
-   - Enable blocklist and use OISD Ads only (to be experimented with)
+   - Enable blocklists
+     - OIDS Ads
+     - Steven Black
+     - Hagezi Multi Pro++
    - Enable data capture
 
 ##### Firewall Configuration
@@ -396,9 +404,16 @@ Features:
       - Unbound host override bing.com to something
       - Check this returns the override `dig +trace @4.4.4.4 bing.com`
    - Ad blocking https://d3ward.github.io/toolz/adblock.html
+1. Block bad IPs
+   1. Add aliases for IP lists (see references)
+   1. Add firewall rules:
+      Either floating destination FireHOL level 3 + Spamhaus OR
+      WAN outbound FireHOL Level 1 + WAN inbound all bad IPs
 
 - [Unbound DoT tutorial](https://homenetworkguy.com/how-to/configure-dns-over-tls-unbound-opnsense/)
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
+- [OPNsense forum thread](https://forum.opnsense.org/index.php?topic=17596.0)
+- [Blocking blog post](https://www.allthingstech.ch/using-opnsense-and-ip-blocklists-to-block-malicious-traffic)
 
 ##### OpenVPN
 
