@@ -598,9 +598,9 @@ Using tasker
 Profile: AutoPrivateDNS
          State: Wifi Connected [ SSID:sugar_monster_house MAC:* IP:* Active:Any ]
      Enter: Anon
-         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:opportunistic Use Root:Off Read Setting To: ]
+         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:off Use Root:Off Read Setting To: ]
      Exit: Anon
-         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:hostname Use Root:Off Read Setting To: ]
+         A1: Custom Setting [ Type:Global Name:private_dns_mode Value:opportunistic Use Root:Off Read Setting To: ]
 ```
 
 `nix shell nixpkgs#android-tools -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS`
