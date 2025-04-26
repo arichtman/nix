@@ -26,7 +26,6 @@ Some settings we might need for naked pods
 https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/
 
 More cilium v6 stuff
-https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/
 https://functional.cafe/@arianvp/112994181771306904
 
 Networking stuff
@@ -43,26 +42,48 @@ https://hachyderm.io/@jpetazzo/112371149239851518
 
 ## BGP troubleshooting
 
-[FRR docs](https://docs.frrouting.org/en/latest/bgp.html)
-
 OPNsense config file location `/usr/local/etc/frr/frr.conf`
-OPNsense run BGP commands `vtysh -c 'show bgp summary' `
+OPNsense run BGP commands `vtysh -c 'show bgp summary'`.
+Other commands include: `debug bgp updates`, `show ip bgp neighbor`
+
+Convenience commands:
 
 ```
+# See what Cilium thinks should be peering
 cilium bgp peers
+# Obvs
 cilium bgp routes available ipv6 unicast
 cilium bgp routes advertised ipv6 unicast
+# Check CR statuses for errrors, general misconfig
 kd CiliumBGPClusterConfig cilium-bgp
 kd CiliumBGPPeerConfig primary-router
 kd CiliumBGPNodeConfig $n
+# Check operator and agent logs
 kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | cut -d' ' -f1) | grep "subsys=bgp-cp-operator"
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "subsys=bgp-cp-operator"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "subsys=bgp-control-plane"
 ```
+
+bgp listen range 2403:580a:e4b1::/48 peer-group LAN
+bgp listen range 2403:580a:e4b1::/64 peer-group LAN
+
+### AFI/SAFI overlap
+
+Error: `Configured AFI/SAFIs do not overlap with received MP capabilities`
+
+Solution (so far):
+
+- Removed ipv4 enablement
+- Changed default from v4 to v6
+- Indented `redistribute connected`
+- Added `neigbor LAN activate` to address-family ipv6 unicast block
 
 ### References
 
+- [AFI/SAFI overlap thread](https://lists.frrouting.org/pipermail/frog/2019-June/000559.html)
+- [Cisco BGP basics troubleshooting](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/218027-troubleshoot-border-gateway-protocol-bas.html#toc-hId-1112382406)
 - [GH feature request issue (closed-stale)](https://github.com/opnsense/plugins/issues/4015)
 - [Useful MR to model after](https://github.com/opnsense/plugins/pull/4611/files)
+- [FRR docs](https://docs.frrouting.org/en/latest/bgp.html)
 - [FRR range config](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-listen-range-A.B.C.D-M-X-X-X-X-M-peer-group-PGNAME)
 - [VTYSH trick](https://book.konstantinsecurity.com/readme/architect/kubernetes/exposing-services/cilium-bgp)
 - [Dynamic BGP with FRR](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
@@ -70,6 +91,7 @@ kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-he
   [1](https://forum.opnsense.org/index.php?topic=41669.msg204870#msg204870)
   [2](https://forum.opnsense.org/index.php?topic=42191.0)
 - [Blog with ranged FRR config](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
+- [Blog but using Bird](https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/)
 
 buncha static IP solutions
 
@@ -187,6 +209,7 @@ We _could_ set it on `CiliumBGPNodeConfigOverride`, but this seems like a hassle
 
 Solution: manually add peers to OPNsense as `remote-as internal` with BFD enabled.
 Manually annotate nodes with router IDs.
+`kubectl annotate node $n cilium.io/bgp-virtual-router.65551="router-id=192.168.255.1"`
 
 PS: the BGP peer group feature on OPNsense doesn't quite have enough options to deduplicate the config well.
 
