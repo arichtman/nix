@@ -41,6 +41,45 @@ Networking stuff
 Offer to help
 https://hachyderm.io/@jpetazzo/112371149239851518
 
+## BGP troubleshooting
+
+[FRR docs](https://docs.frrouting.org/en/latest/bgp.html)
+
+OPNsense config file location `/usr/local/etc/frr/frr.conf`
+OPNsense run BGP commands `vtysh -c 'show bgp summary' `
+
+```
+cilium bgp peers
+cilium bgp routes available ipv6 unicast
+cilium bgp routes advertised ipv6 unicast
+kd CiliumBGPClusterConfig cilium-bgp
+kd CiliumBGPPeerConfig primary-router
+kd CiliumBGPNodeConfig $n
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | cut -d' ' -f1) | grep "subsys=bgp-cp-operator"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "subsys=bgp-cp-operator"
+```
+
+### References
+
+- [GH feature request issue (closed-stale)](https://github.com/opnsense/plugins/issues/4015)
+- [Useful MR to model after](https://github.com/opnsense/plugins/pull/4611/files)
+- [FRR range config](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-listen-range-A.B.C.D-M-X-X-X-X-M-peer-group-PGNAME)
+- [VTYSH trick](https://book.konstantinsecurity.com/readme/architect/kubernetes/exposing-services/cilium-bgp)
+- [Dynamic BGP with FRR](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
+- Couple of OPNsense forum threads
+  [1](https://forum.opnsense.org/index.php?topic=41669.msg204870#msg204870)
+  [2](https://forum.opnsense.org/index.php?topic=42191.0)
+- [Blog with ranged FRR config](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
+
+buncha static IP solutions
+
+https://blog.miraco.la/bgp-cilium-and-frr-top-of-rack-for-all
+https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090
+https://blog.mosibi.nl/all/2021/12/27/cilium-bpg.html
+https://rajsingh.info/p/cilium-unifi/
+https://allanjohn909.medium.com/harnessing-the-power-of-cilium-a-guide-to-bgp-integration-with-gateway-api-on-ipv4-7b0d058a1c0d
+https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf
+
 ## Documentation read-through thoughts
 
 - Loopback is required on linux by the CNI, is it possible we are missing something in `/etc/cni.d/` for that?

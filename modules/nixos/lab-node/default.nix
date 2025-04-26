@@ -175,7 +175,12 @@ in
       };
 
       boot = {
+        # TODO: May not require xt_socket
+        # Ref: https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090
+        # kernel.sysctl.net.core.devconf_inherit_init_net = 1;
+        # kernel.sysctl.net.netfilter.nf_conntrack_max = 196608;
         kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
+        # ++ [ "xt_socket"];
         # May be required for IPv6 neighbor discovery?
         kernel.sysctl."net.ipv4.ip_forward" = 1;
         kernel.sysctl."net.ipv6.ip_forward" = 1;

@@ -95,11 +95,11 @@ operator:
 # Fully uninstall
 # cni:
 #   uninstall: true
-# ingressController:
-#   enabled: true
-#   default: true
-# gatewayAPI:
-#   enabled: true
+ingressController:
+  enabled: false
+  default: false
+gatewayAPI:
+  enabled: true
 # Require v6 address since we're single stack effectively
 # k8s:
 #   requireIPv6PodCIDR: true
