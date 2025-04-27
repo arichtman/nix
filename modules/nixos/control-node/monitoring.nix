@@ -138,6 +138,7 @@ in {
         {
           job_name = "containerd";
           metrics_path = "v1/metrics";
+          # This totally fucked my cardinality
           metric_relabel_configs = [
             {
               source_labels = ["__name__"];

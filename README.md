@@ -5,8 +5,7 @@
 A home for my system configurations using Nix Flakes
 Be warned, I'm still learning and experimenting.
 
-~~Nothing here should be construed as a model of good work!... yet.~~
-Y'know, I'm starting to feel pretty good about this.
+![As-is network and systems diagram](./assets/bedrock.drawio.svg "As-is networking diagram")
 
 ## Features and Todo
 
@@ -14,45 +13,49 @@ Y'know, I'm starting to feel pretty good about this.
 
 ### Bedrock (Networking)
 
+Features:
+
+- ACME certificates for TLS on services
+- Reverse proxy with mTLS protection to internal services
+- Private CA TLS certificates for direct service access (k8s, OPNsense, Proxmox, access point)
+- Wireguard VPN remote access
+- Unencrypted client DNS trapped, filtered, and upgraded to DoT
+- Malicious traffic dropped with dynamic list updates
+- DDNS
+- QEMU guest agent
+- Prometheus metrics export
+- Wake-on-LAN GUI
+
+Todo:
+
 - Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
 - Test local DNS from VPNs
-- Look into roles anywhere for DDNS
-  [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_non-aws.html)
-- Find a DDNS provider that supports the generic update mechanism, not proprietary API (obsoletes IAM roles anywhere).
+- Find a DDNS provider that supports the generic update mechanism, not a proprietary API.
   Switch to Inadyne DDNS client for that?
 - Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
 - Review `net.inet.tcp.tso` for VM safety/perf
-- Troubleshoot OpenVPN
+- Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
+- Enable mDNS responses from OPNsense box permanently
+- Tune Wireguard
+- Add IPsec
+- Fix/add OpenVPN
   [ref](https://www.reddit.com/r/OPNsenseFirewall/comments/1adzr5y/openvpn_setup_instances_getting_ipv6_address_error/)
   [ref](https://forum.opnsense.org/index.php?topic=42672.0)
-- Loopback interface was low-level filtering out the packets, set destination to actual LAN IPv6 and it worked.
-  ~~Troubleshoot IPv6 DNS trapping
-  [ref](https://forums.freebsd.org/threads/rdr-with-ipv6.72863/)~~
-- Obviated as secondary router is now in pure access point/bridge mode.
-  Even with the sysctl setting on it wasn't doing it though.
-  ~~Troubleshoot cross-subnet IPv6 (missing ICMP redirect?)
-  [ref](https://man.freebsd.org/cgi/man.cgi?query=inet6)
-  [ref](https://forum.opnsense.org/index.php?topic=32856.0)~~
-- ~~Renew TLS for secondary router.~~
-- Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
-- ~~Configure block lists for public traffic.~~
-  Done, [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
-- ~~Decide on MACsec for lab security and isolation~~
-  Hop-only so limited compared to IPSec and we have 2 subnets+, also requires key distribution.
-- ~~Enable mDNS responses from OPNsense box~~
-- ~~Enable IPv6 DNS server for Wireguard on MacOS.
-  [StackExchange post](https://apple.stackexchange.com/questions/309430/ipv6-dns-resolution-on-macos-high-sierra)~~
-- ~~Configure downstream router to trap DNS and forward to Unbound.~~
-- ~~Properly set up the access point as a downstream router (with PD)~~
-  Done! Sweaty, slightly stressful afternoon but worth it.
-- ~~Set up VPN in OPNsense~~
-  WG and ~~OpenVPN working~~.
-  Might do IPsec too or further tuning.
-- ~~Think about DoH https://homenetworkguy.com/how-to/configure-dns-over-https-dnscrypt-proxy-opnsense/~~
-   Implemented along with reverse-proxy trapping.
-- ~~Set up valid TLS for OPNsense and Proxmox~~
+- Figure out why DNAT of DNS traffic to loopback doesn't work and has to be LAN IP address
+- Figure out how to make the configuration work when the v6 prefix changes
+- Add compatibility option/translation layer for IPv6->IPv4
+- Remove IPv4
 
 ### Substratum (Virtualization and Systems)
+
+Features:
+
+- iPXE/TFTP with Netboot for multi-option
+- Automatic disk resize on NixOS VMs
+- Mix of VMs and physical nodes
+- Standardized configuration and configuration management of all nodes
+
+Todo:
 
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Swap my user to a lower privilege one on Proxmox and OPNsense
@@ -61,23 +64,20 @@ Y'know, I'm starting to feel pretty good about this.
 - Debug watchdog not stopping on control node reboot.
   [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
 - Work out watchdog on OPNsense/BSD
-- Configure Topton N100 watchdog.
-  ~~BIOS setting located but microcode update seems to have stabilized the system.~~
-  Nope, still borked.
+- Either stabilize or hardware watchdog Topton N100
 - Set up OpenAMT for out-of-band management.
-- ~~Set up PXE booting off of OPNsense
-  [gist](https://gist.github.com/azhang/d8304d8dd4b4c165b67ab57ae7e1ede0)~~
-  IPv4 PXE working.
-- ~~Set up iPXE or something so multiple options.
-  [iPXE](https://ipxe.org/)
-  [netboot](https://netboot.xyz/)~~
-  iPXE working.
-- ~~See about nixos on-boot auto disk resize (and add to template!)~~
-  Virtual nodes auto-resizing, physical nodes no point.
-- ~~`system.autoUpgrade.enable` make it Wednesday morning, after our scheduled CI flake updates~~
-  Without rollback and strong CI this feels risky, I might do this manually for a while until I'm confident
 
 ### Subsoil (Foundational Services)
+
+Features:
+
+- Caddy reverse proxy
+- Prometheus/Alertmanager/Grafana monitoring stack
+- Garage S3 cluster
+- Valheim server
+- Nix binary cache
+
+Todo:
 
 - Determine "foundational services" (and set up)
   - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
@@ -89,24 +89,20 @@ Y'know, I'm starting to feel pretty good about this.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
 - Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
-- Look into different Nix store cache, maybe Attic
-- ~~NixOS store cache ([inbuilt one?](https://nixos.wiki/wiki/Binary_Cache))
-  [deploy-rs instructions](https://github.com/serokell/deploy-rs/tree/master/examples/system)~~
-- ~~Deploy CrowdSec.~~
-  Tried this, it seemed to negatively impact OPNsense/network stability.
-- ~~Enable mTLS to protect ingress.~~
-  ~~Configure secondary reverse proxy to services.~~
-- ~~Deploy reverse proxy with ACME/LetsEncrypt.~~
-- ~~Enable DNS-01 challenge for reverse proxy so internal domain SANs can be added.~~
-- ~~Use subdomain routing to access foundational services~~
-- ~~Apply WAF protection.~~
-- ~~Monitoring (Prometheus, Grafana, Alertmanager)~~
-- ~~Object storage (Garage)~~
+- Look into different Nix store cache, maybe Attic or Harmonia
 
 ### Topsoil (Kubernetes)
 
+Features:
+
+- Custom, bare-metal deployment configuration
+- Private CA certificates
+- Single-stack IPv6 with native routing/no overlay
+- Dynamic BGP peering of nodes with router/OPNsense
+
+Todo:
+
 - Set up Cilium IPv6
-- BGP peer cluster to router. Sortof working, 2 nodes failing.
 - Do dynamically-delegated prefixes for node pod CIDRs.
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
@@ -127,17 +123,8 @@ Y'know, I'm starting to feel pretty good about this.
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
-- Pull k8s module out into it's own flake/repo/overlay.
-- ~~Write my own k8s module~~
-  Basically working.
-- ~~Work out what's to replace addon-manager~~
-  It's sig-addonmanager, I think.
-  That can be a static pod on the control plane and in turn bootstrap FluxCD/Cilium.
-- ~~Look into reducing apiserver kubelet permissions to `kubeadm:cluster-admins`~~
-  Node authorization enabled so clients with signed `O=cluster:nodes:$NAME` are working.
-- ~~Pull common kubernetes config out into another module~~
-- ~~Possibly rewrite the Kubernetes module(s)~~
-- ~~Fix addonManager not finding anything to apply~~
+- Pull k8s module out into it's own flake/repo/overlay?
+- Use sig-addonmanager to bootstrap a CD tool and a CNI
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
@@ -153,9 +140,14 @@ Y'know, I'm starting to feel pretty good about this.
 
 ## Implementation Notes
 
-### Bedrock
+See also:
 
-![Annoyingly complicated networking](./assets/bedrock.drawio.svg "As-is networking diagram")
+[DNS](/dns.md)
+[CoreDNS](/coredns.md)
+[Cilium](/cilium.md)
+[MacOS](/mac.md)
+
+### Bedrock
 
 ### Substratum
 
@@ -312,28 +304,6 @@ resize2fs /dev/sda1
 
 #### Opnsense
 
-Features:
-
-- Traps outbound unsecured DNS
-  - Filters DNS
-  - Applies local overrides
-  - Upgrades queries to DoT
-- VPNs
-  - OpenVPN
-  - Wireguard
-- DDNS
-- ACME dynamic certificates
-- Reverse proxy to internal services
-- Security
-  - Blocks known mailicious IPs with subscribed lists
-    - FireHOL
-    - Spamhaus
-- Internal prefix delegation
-- QEMU guest agent
-- TFTP server
-- Prometheus export
-- Wake-on-lan GUI
-
 ##### VM Setup
 
 1. Download iso and unpack
@@ -414,6 +384,8 @@ Features:
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
 - [OPNsense forum thread](https://forum.opnsense.org/index.php?topic=17596.0)
 - [Blocking blog post](https://www.allthingstech.ch/using-opnsense-and-ip-blocklists-to-block-malicious-traffic)
+- [Fedi posts about it](https://chaos.social/@JeGr/114406585868980716) [alt server](https://eigenmagic.net/deck/@JeGr@chaos.social/114406575249856820)
+[Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
 
 ##### OpenVPN
 
@@ -426,11 +398,9 @@ Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 Follow tutorial AKA forgot to document it.
 See also `wg0.conf` in this repo.
 
-##### Public traffic block lists
-
-[Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
-
 ##### Alacritty terminal
+
+To enable Alacritty to function mostly normally, specifically on hosts like OPNsense:
 
 ```shell
 curl -sSL https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info -o alacritty.info
@@ -444,10 +414,9 @@ rm alacritty.info
 ##### Plugins
 
 - NextCloud backup, configure with an app key.
-- FRR BGP, BGP run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
-  (Not immediately in use, for Cillium later)
-- Prometheus exporter.
-  (Not immediately in use, for foundatinoal monitoring later)
+- FRR BGP, BGP for Cilium.
+  Run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
+- Prometheus exporter for monitoring.
 - DynamicDNS client, configure with AWS Access Key.
 - AMD microcode updates (unsure how wise this is given hypervisor is Intel)
   OPNsense already had this set up when I installed it but check post-install instructions.
@@ -459,8 +428,8 @@ rm alacritty.info
   This defaulted to `127.0.0.1` which may have worked but I didn't test.
 - ACME client [tutorial](https://forum.opnsense.org/index.php?topic=24778.0)
 - Install `os-wol` to wake on lan.
-  Add all physical machines to the list of known, you can use Kea DHCP leases to find all the MACs in one place.
-- optionally: themes
+  Add all physical machines to the list of known, you can use ISC DHCP leases to find all the MACs in one place.
+- optionally: themes (rebellion)
 
 Notes:
 
@@ -570,8 +539,8 @@ Have the node self-delete (it'll self-register again anyway), and have the admin
 I wonder if there's any better way security-wise to have nodes be trusted with certain labels.
 Already they need apiServer-trusted client certificates, it'd be cool if the metadata on those could determine labels.
 
-
-NB: Future Ariel says there may be a kubelet option to register with properties.
+There is a way to tell the Kubelet to register with labels but it's limited to a specific group.
+I doubt the Kubelet has an option to open that up and since we're getting denied even starting the binary it's probably not settable on the APIserver.
 
 #### Node CSRs piling up
 
@@ -590,7 +559,7 @@ Add to nomicon
 - fakesha256
 - nix-prefetch-url > hash.txt
 
-## Mobile setup
+## Android phone setup
 
 Using tasker
 
@@ -663,178 +632,16 @@ some _very_ wip notes about the desktop.
 - Installer with nVidia drivers worked ok in simplified mode
 - Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
 - Bluetooth pair the speaker though you may have to change the codec in settings > sound
-- i ran `bluetoothctl trust $MAC` to try and start off autoconnect
-- rpm-ostree upgrade/rebase to Fedora 39 breaks the display driving again.
+- I ran `bluetoothctl trust $MAC` to try and start off autoconnect
 - I fiddled about in display settings to get orientation of monitors correct
-- ran the determinant systems nix installer
-- added `trusted-users = @wheel` to `/etc/nix/nix.conf`
+- Used the Determinate Systems Nix installer
+- Added `trusted-users = @wheel` to `/etc/nix/nix.conf`
 - Used `nix shell helix home-manager` to bootstrap
 - `home-manager switch --flake . -b backup`
 - Installed my root certificate
   `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
   `sudo update-ca-trust`
 - Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
-
-#### DNS
-
-Some diagnostic tests for mDNS:
-
-```
-export HOST_NAME=fat-controller.systems.richtman.au.
-# This is our bedrock of truth. It works consistently and can be easily viewed
-avahi-resolve-host-name $HOST_NAME
-tcpdump udp port 5353 # Optionally -Qin
-# Supposedly a good test according to Arch wiki, has not once worked for me.
-getent ahosts $HOST_NAME
-# Sometimes worked but timed out on a 3rd imaginary server. Most verbose but leaks mDNS queries.
-dig $HOST_NAME
-# Sometimes worked but not very helpful output.
-host $HOST_NAME
-
-# Convenience aliases
-alias rollall='sudo systemctl restart NetworkManager systemd-resolved systemd-networkd; sudo systemctl daemon-reload'
-
-alias dtest4='dig -4 $HOST_NAME'
-alias dtest6='dig -6 $HOST_NAME'
-alias htest4='host -4 $HOST_NAME'
-alias htest6='host -6 $HOST_NAME'
-alias etest='getent ahosts $HOST_NAME'
-
-alltest() {
-  dtest4
-  dtest6
-  htest4
-  htest6
-  etest
-}
-
-alias nm=nmcli
-alias rc=resolvectl
-alias as=authselect
-```
-
-So, turns out this whole resolution chain is a mess, some things use nsswitch, others don't etc.
-We want consistent behaviour and caching, so we need the local stub resolver.
-We want it even more if we're switching networks and VPNs as it can hold all the logic for changing shit.
-
-Here's some locations and commands for config.
-I tried valiantly to enable it at connection level and in nsswitch but ultimately there was always something that disobeyed the rules.
-
-`/etc/nsswitch.conf`:
-
-This should be managed by `authselect`.
-Don't ask why.
-Fun fact: apparently the `sssd` daemon totally doesn't need to be running for this to work.
-Why is DNS is entwined with an auth config management tool?
-Because go fuck yourself, that's why.
-~ Poettering, probably.
-
-```sh
-authselect list
-authselect current
-authselect show sssd
-# Yields some options
-authselect select sssd with-mdns4 with-mdns6
-```
-
-`/etc/resolv.conf`:
-
-This one is managed by NetworkManager.
-Why is that capitalized?
-NFI.
-Go fuck yourself!
-~ Probably Poettering, again.
-
-I tried manually managing this one, no dice (to do that, stop NetworkManager, and remove the symlink).
-Leave it symlinked to `/run/systemd/resolve/stub-resolve.conf`.
-That's the managed file that will always point at the local stub resolver.
-We can manage the actual settings with `nmcli`.
-mDNS is configured per connection, not interface, which I guess makes sense for laptops/WiFi.
-
-```sh
-nmcli connection show
-# I tried this as 2 (resolve+publish) and I think it clashes with the stub resolver
-nmcli conn mod enp3s0 connection.mdns 2
-nmcli conn mod sugar_monster_house connection.mdns 2
-# Yea it breaks v4 resolution somehow
-# Not sure about this one... In theory we lose the domains config as well as our Unbound upstream,
-#   but resolved should have us covered? domain search might need to happen at the origin call site though.
-nmcli conn mod enp3s0 ipv4.ignore-auto-dns no
-nmcli conn mod enp3s0 ipv6.ignore-auto-dns no
-```
-
-Oh, the stub resolver doesn't actually run on `localhost:53`.
-It's `127.0.0.53` (and actually `.54` also, according to `man 8 systemd-resolved.service`).
-Can ya guess why?
-Yup. Had enough self-love yet?
-Keep reading.
-
-`/etc/systemd/network/*.network`:
-
-You can write files like:
-
-```ini
-[Network]
-DHCP=yes
-Domain=local internal
-```
-
-Except when I experimented `resolvectl` didn't edit the file and editing the file didn't show in `resolvectl` output.
-So go figure.
-
-I honestly can't keep track of what this is relative to _NetworkManager_.
-There is a service, `systemd-networkd`.
-By the way, `systemd-resolved` *used* to be controlled by `systemd-resolve`.
-It's now `resolvectl`.
-Guess I'm not mad about that one.
-Now the fact that mDNS is configured per _interface_ and not _connection_ like before?
-Get fuuuuuucked.
-Oh and the daemon only listens on IPv4 (at least by default).
-GFY!
-
-```sh
-sudo resolvectl mdns enp0s3 yes
-sudo resolvectl domain enp0s3 local internal
-echo 'DNSStubListenerExtra=[::1]:53' | sudo tee -a /etc/systemd/resolved.conf
-```
-
-`/etc/NetworkManager`:
-
-Whatever.
-
-What worked in the end?
-Well, still getting some odd behaviour with `host` and IPv6 but...
-No files in `/etc/systemd/network`.
-Disable `networkd`.
-Resolvectl set +mdns.
-Symlinked `/etc/resolv.conf` to the `resolved` stub file.
-Configured `resolved`.
-Avahi daemon enabled and running with defaults.
-
-```
-sudo systemctl disable --now systemd-networkd
-sudo systemctl mask systemd-networkd
-sudo systemctl daemon-reload
-```
-
-Final `/etc/systemd/resolved.conf`:
-
-```ini
-[Resolve]
-DNS=192.168.1.1,2403:580a:e4b1:0:aab8:e0ff:fe00:91ef
-Domains=local internal
-MulticastDNS=yes
-DNSStubListenerExtra=[::1]:53
-```
-
-References:
-
-- [Some helpful soul](https://infosec.exchange/@ds/112663636510469329)
-- [StackOverflow answer](https://unix.stackexchange.com/a/442599)
-- [Arch wiki page](https://wiki.archlinux.org/title/Domain_name_resolution)
-- [Blog post](https://wlog.viltstigen.se/articles/2021/05/02/mdns-for-linux/)
-- [Arch forum thread](https://bbs.archlinux.org/viewtopic.php?id=271103)
-- So many more misc. pages
 
 ### Desktop Todo
 
