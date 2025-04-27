@@ -2,7 +2,8 @@
 
 **Stay frosty like Tony**
 
-A home for my system configurations using Nix Flakes
+A home for my system configurations and home lab using Nix Flakes.
+
 Be warned, I'm still learning and experimenting.
 
 ![As-is network and systems diagram](./assets/bedrock.drawio.svg "As-is networking diagram")
@@ -28,23 +29,25 @@ Features:
 
 Todo:
 
-- Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
-- Test local DNS from VPNs
-- Find a DDNS provider that supports the generic update mechanism, not a proprietary API.
+- [ ] Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
+- [ ] Test local DNS from VPNs
+- [ ] Find a DDNS provider that supports the generic update mechanism, not a proprietary API.
   Switch to Inadyne DDNS client for that?
-- Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
-- Review `net.inet.tcp.tso` for VM safety/perf
-- Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
-- Enable mDNS responses from OPNsense box permanently
-- Tune Wireguard
-- Add IPsec
-- Fix/add OpenVPN
+- [ ] Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
+- [ ] Review `net.inet.tcp.tso` for VM safety/perf
+- [ ] Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
+- [ ] Enable mDNS responses from OPNsense box permanently
+- [ ] Tune Wireguard
+- [ ] Add IPsec
+- [ ] Fix/add OpenVPN
   [ref](https://www.reddit.com/r/OPNsenseFirewall/comments/1adzr5y/openvpn_setup_instances_getting_ipv6_address_error/)
   [ref](https://forum.opnsense.org/index.php?topic=42672.0)
-- Figure out why DNAT of DNS traffic to loopback doesn't work and has to be LAN IP address
-- Figure out how to make the configuration work when the v6 prefix changes
-- Add compatibility option/translation layer for IPv6->IPv4
-- Remove IPv4
+- [ ] Figure out why DNAT of DNS traffic to loopback doesn't work and has to be LAN IP address
+- [ ] Figure out how to make the configuration work when the v6 prefix changes
+- [ ] Add compatibility option/translation layer for IPv6->IPv4
+- [ ] Remove IPv4
+- [ ] Host an authoritative DNS
+- [ ] See about getting my own AS and IPv6 prefix
 
 ### Substratum (Virtualization and Systems)
 
@@ -57,15 +60,15 @@ Features:
 
 Todo:
 
-- Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
-- Swap my user to a lower privilege one on Proxmox and OPNsense
-- See about more modern watchdog options - apparently this one is ancient 32 bit PCI
+- [ ] Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
+- [ ] Swap my user to a lower privilege one on Proxmox and OPNsense
+- [ ] See about more modern watchdog options - apparently this one is ancient 32 bit PCI
   [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
-- Debug watchdog not stopping on control node reboot.
+- [ ] Debug watchdog not stopping on control node reboot.
   [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
-- Work out watchdog on OPNsense/BSD
-- Either stabilize or hardware watchdog Topton N100
-- Set up OpenAMT for out-of-band management.
+- [ ] Work out watchdog on OPNsense/BSD
+- [ ] Either stabilize or hardware watchdog Topton N100
+- [ ] Set up OpenAMT for out-of-band management.
 
 ### Subsoil (Foundational Services)
 
@@ -79,17 +82,16 @@ Features:
 
 Todo:
 
-- Determine "foundational services" (and set up)
-  - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
-  - Deploy Spire for node identity
-  - Secrets (Vault/OpenBao?)
-  - Certificate authority? (step-ca?)
-  - Identity (Authentik/Kanidm/Guacamole/Gluu)
-- Switch routing to *dynamic* subdomains.
-- Add Uptime Kuma publicly
-- Deploy external dead man's switch and route Alertmanager to it.
-- Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
-- Look into different Nix store cache, maybe Attic or Harmonia
+- [ ] Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
+- [ ] Spire for node identity
+- [ ] Secrets (Vault/OpenBao?)
+- [ ] Certificate authority? (step-ca?)
+- [ ] Identity (Authentik/Kanidm/Guacamole/Gluu)
+- [ ] Switch routing to *dynamic* subdomains.
+- [ ] Add Uptime Kuma publicly
+- [ ] Deploy external dead man's switch and route Alertmanager to it.
+- [ ] Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
+- [ ] Look into different Nix store cache, maybe Attic or Harmonia
 
 ### Topsoil (Kubernetes)
 
@@ -102,29 +104,29 @@ Features:
 
 Todo:
 
-- Set up Cilium IPv6
-- Do dynamically-delegated prefixes for node pod CIDRs.
+- [ ] Set up Cilium IPv6
+- [ ] Do dynamically-delegated prefixes for node pod CIDRs.
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
-- Set up IPv6 public ingress and firewalling
-- Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
-- Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
-- See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
-- Add WASM runtime
-- Find some kind of dynamic PV/storage option.
+- [ ] Set up IPv6 public ingress and firewalling
+- [ ] Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
+- [ ] Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
+- [ ] See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
+- [ ] Add WASM runtime
+- [ ] Find some kind of dynamic PV/storage option.
   I'm thinking Longhorn.
   [post 1](https://akko.wtf/objects/79d8a9df-c1fe-4112-9d69-acc57977a0de)
   [post 2](https://akko.wtf/objects/1e198a8c-4850-4179-9f81-172a20af100b)
   Maybe OpenEBS.
-- Play around with Timoni, Kluctl, etc
-- Add tracing endpoint for Containerd, maybe monitor better
+- [ ] Play around with Timoni, Kluctl, etc
+- [ ] Add tracing endpoint for Containerd, maybe monitor better
   [article](https://povilasv.me/how-to-monitor-containerd/)
   [prom docs](https://prometheus.io/docs/guides/opentelemetry/)
-- "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
-- Write a custom cloud provider using SSH and WoL.
-- Adjust the custom cloud provider to use OpenAMT.
-- Pull k8s module out into it's own flake/repo/overlay?
-- Use sig-addonmanager to bootstrap a CD tool and a CNI
+- [ ] "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
+- [ ] Write a custom cloud provider using SSH and WoL.
+- [ ] Adjust the custom cloud provider to use OpenAMT.
+- [ ] Pull k8s module out into it's own flake/repo/overlay?
+- [ ] Use sig-addonmanager to bootstrap a CD tool and a CNI
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
@@ -142,10 +144,10 @@ Todo:
 
 See also:
 
-[DNS](/dns.md)
-[CoreDNS](/coredns.md)
-[Cilium](/cilium.md)
-[MacOS](/mac.md)
+- [DNS](/dns.md)
+- [CoreDNS](/coredns.md)
+- [Cilium](/cilium.md)
+- [MacOS](/mac.md)
 
 ### Bedrock
 
