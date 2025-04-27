@@ -48,7 +48,7 @@
       # Ref: https://coredns.io/plugins/loop/#troubleshooting-loops-in-kubernetes-clusters
       resolvConf = "/run/systemd/resolve/resolv.conf";
       # Did not seem to impact /etc/resolv.conf, did not seem to take in the kubelet logs either
-      # clusterDNS = ["2403:580a:e4b1:0:aab8:e0ff:fe00:91ef"];
+      clusterDNS = ["2403:580a:e4b1:1:ffff:ffff:ffff:10"];
       imageMaximumGCAge = "604800s";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...

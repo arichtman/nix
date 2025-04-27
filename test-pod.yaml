@@ -4,43 +4,19 @@ metadata:
   labels:
     run: mytest
   name: mytest
-  # namespace: default
 spec:
   containers:
-  #   args:
-  #   - sleep
-  #   - "3000"
   - image: docker.io/nginx:latest
     name: mytest
     ports:
     - containerPort: 80
-    - containerPort: 8080
-    - containerPort: 443
-    # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
     readinessProbe:
       httpGet:
-        # host: localhost
         port: 80
-        # path: /
-        # scheme: HTTP
       failureThreshold: 99
-      # periodSeconds: 5
-      # successThreshold: 1
-      # timeoutSeconds: 3
-    # volumeMounts:
-    # - name: manual-token
-    #   mountPath: "/var/run/secrets/kubernetes.io/serviceaccount"
-    #   readOnly: true
   dnsPolicy: ClusterFirst
   restartPolicy: Always
   nodeName: mum.systems.richtman.au
-  # automountServiceAccountToken: false
-  # volumes:
-  # - name: manual-token
-  #   projected:
-  #     sources:
-  #     - serviceAccountToken:
-  #         path: "token"
 ---
 apiVersion: v1
 kind: Service
@@ -55,5 +31,4 @@ spec:
     targetPort: 80
   selector:
     run: mytest
-  # type: ClusterIP
-  type: LoadBalancer
+  type: ClusterIP

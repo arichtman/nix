@@ -31,7 +31,7 @@ step certificate create kube-apiserver-etcd-client kube-apiserver-etcd-client.pe
 step certificate create kube-apiserver kube-apiserver-tls.pem kube-apiserver-tls-key.pem --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem \
   --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_NAME}" --san "${NODE_FQDN}" --san "${NODE_LOCAL_FQDN}" --san localhost \
-  --san 127.0.0.1 --san ::1 --san 10.0.0.1 \
+  --san 127.0.0.1 --san ::1 --san "10.0.0.1" --san "2403:580a:e4b1:1:ffff:ffff:ffff:1"\
   --san kubernetes --san kubernetes.default --san kubernetes.default.svc \
   --san kubernetes.default.svc.cluster --san "kubernetes.default.svc.cluster.${NODE_FQDN}"
 
