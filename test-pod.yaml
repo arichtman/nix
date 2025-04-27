@@ -48,7 +48,6 @@ metadata:
   labels:
     run: mytest
   name: mytest-svc
-  namespace: kube-system
 spec:
   ports:
   - port: 8080

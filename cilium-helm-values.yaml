@@ -59,8 +59,8 @@ autoDirectNodeRoutes: true
 routingMode: native
 # invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
 # Disabling in favor of nonclashing CIDR
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1:0::/64
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
 # ipv6NativeRoutingCIDR: 2403:580a:e4b1:0:ffff:ffff::/96
 # enableIPv6Masquerade: true
 # Those worked above, but now it's using fd00 range to try and reach stuff...
@@ -70,7 +70,7 @@ ipam:
   operator:
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
     # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0:aaaa:aaaa::/96"]
     # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
     # clusterPoolIPv6MaskSize: 64 # default 120

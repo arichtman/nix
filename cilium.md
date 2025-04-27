@@ -59,8 +59,8 @@ kd CiliumBGPClusterConfig cilium-bgp
 kd CiliumBGPPeerConfig primary-router
 kd CiliumBGPNodeConfig $n
 # Check operator and agent logs
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | cut -d' ' -f1) | grep "subsys=bgp-cp-operator"
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "subsys=bgp-control-plane"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | cut -d' ' -f1) | grep "bgp"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "bgp"
 ```
 
 bgp listen range 2403:580a:e4b1::/48 peer-group LAN
@@ -173,16 +173,6 @@ https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf
 - There is an iptables-based implementation which we'll skip. Rough enough following nftables and eBPF.
 
 ## Issues
-
-### Failing BGP sessions
-
-Looks like 2 nodes are stuck at _Waiting for peer OPEN_ - mum and fat-controller.
-I wonder if this is anything to do with them being on the Proxmox SDN...
-
-### Dynamic peering
-
-OPNsense may allow adding an entire network segment for peering.
-FRR seems to have dynamic peering - need to look into that.
 
 ### Dynamic router IDs
 
