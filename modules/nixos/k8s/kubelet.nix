@@ -31,7 +31,7 @@
           clientCAFile = "${kubeletSecretsPath}/k8s-ca.pem";
         };
         webhook = {
-          enable = true;
+          enabled = true;
           cacheTTL = "10s";
         };
         # TODO: probably defaults false but may fix log access
@@ -107,7 +107,11 @@
     # --node-labels in the 'kubernetes.io' namespace must begin with an allowed prefix
     # "--node-labels"
     # "node-role.kubernetes.io/${nodeRole}=${nodeRole}"
-    v = 2; # TODO: Remove after stabilizing
+    # Used for debugging
+    # v = 1;
+    # We're not using iptables
+    # I think this causes the warnings about iptables not on PATH
+    make-iptables-util-chains = false;
   };
 in {
   options.services.k8s-kubelet = {
