@@ -189,6 +189,9 @@ in
       networking = {
         # TODO: See if this ought to be richtman.au
         domain = "systems.richtman.au";
+        search = [
+          config.networking.domain
+        ];
         # TODO: Consider removal of networkmanager
         networkmanager.enable = true;
         nftables.enable = true;
