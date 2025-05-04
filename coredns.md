@@ -1,8 +1,25 @@
 # CoreDNS
 
-Basic Helm install it complains that the ClusterIP of the default kubernetes service isn't in the TLS SAN.
-This happens in the GoLang `client-go` Kubernetes client on v0.31.2.
-Mind that as it's rather ancient.
+We generally want CoreDNS since it'll reduce a pile of chatter hitting the Unbound resolver on the router,
+
+Convenience test commands
+
+```shell
+helm upgrade --install coredns coredns/coredns --namespace kube-system --values coredns-helm-values.yaml --version 1.37.0
+k run --rm test -it --image docker.io/nicolaka/netshoot --overrides='{"apiVersion": "v1", "spec": {"nodeSelector": { "kubernetes.io/hostname": "mum.systems.richtman.au" }}}' -- /bin/bash
+```
+
+## Issues
+
+### Untrusted API-server TLS
+
+CoreDNS's default configuration assumes the use of the default namespace Kubernetes service to locate the API server.
+This may be overridable with the API server's domain name.
+TODO: Revisit CoreDNS with control node's FQDN.
+Before I had a cyclic dependency resolving it but I think that's sorted elsewhere.
+
+With this default configuration it complains that the ClusterIP of the default kubernetes service isn't in the TLS SAN.
+This happens in the GoLang `client-go` Kubernetes client on v0.31.2 (ancient).
 
 There *are* options for automated certificate rotation in Kubernetes.
 However it's pretty much limited to "in-cluster" stuff, so mostly Kubelet client certificates to the API server.
@@ -18,30 +35,30 @@ It's fairly reliable at this point that the initial default kubernetes service w
 IP from the provided service IP CIDR. I have seen other algorithms though for at least I think pod IP selection.
 Short story, I don't like it but I'll deal for now.
 
-If I set the `endpoint` property on the Kubernetes plugin block to the FQDN, it falls in a loop.
-It's trying to hit `127.0.0.53:53` which is presumably the Kubelet's default/host `resolv.conf`.
-
-Kubelet will by default basically copy the node `resolv.conf` to all pods, unless their `DNSPolicy` is set **or**
-the Kubelet config includes `resolvConf:/--resolv-conf` settings pointing to a different file.
-Of course the node default `resolv.conf` is pointing at the local stub resolver to reduce network noise.
-
-We generally want CoreDNS since it'll make a pile of chatter hitting the Unbound resolver on the router,
-as well as making _external-dns_ operator critical path as we'd have to orchestrate those overrides.
-I'm not even so sure it's a good idea putting that load on the management API of Unbound...
-
----
-
-I wasn't able to locate in the CoreDNS code how it's ignoring the hostname for the API server.
+It seemse like CoreDNS was ignorting the hostname for the API server.
+I wasn't able to locate in the CoreDNS code how or why.
 I worked around it by adding the default kubernetes service IP to the SANs on the API server TLS cert.
 It's still weird but whatever ...for now.
 
-CoreDNS had a DNS loop that was caused by `resolv.conf` pointing at localhost.
-This was also fouling other pods as loopback traffic from pod network namespaces doesn't work with the local stub resolver.
-I'm not sure if that was a case of inbound, stub resolver not listening/responding, or the return pathing.
-I solved this by adjusting the kubelete `resolvConf` value to the "true" `resolv.conf` in `/run/systemd/resolve/`.
+### Unavailable upstream
 
-CoreDNS was complaining about not being able to reach the router DNS service.
-Pings and such both ways seem fine from debug of CoreDNS pod and the router, so perhaps it was old error messages.
+By default, Kubelet will by default copy the node's `/etc/resolv.conf` to pods.
+Of course the node default `resolv.conf` is pointing at the local stub resolver to reduce network noise.
+Since the pods are in a network namespace, `localhost:53` isn't available.
+
+The Kubelet config includes `resolvConf:/--resolv-conf` settings  for pointing to a different file.
+This allows us to (albeit statically) set a valid upstream of the router's LAN IP, where Unbound is running.
+Adjust the kubelet `resolvConf` value to the "true" `resolv.conf` in `/run/systemd/resolve/`.
+
+Actually, give the DNS trapping we're doing pretty much any destination IP should land there.
+TODO: Hard-code any IP that will hit the router
+
+### DNS loop/circular dependency
+
+Kubernetes has a few `DNSPolicy` options, `Default`, which is not actually the default,
+is an escape hatch to bootstrap cluster DNS.
+
+### Dual/Single stack
 
 CoreDNS is still taking the IPv4 upstream from `resolv.conf` as the host has it.
 Except our v4 is completely not catered for or configured in routing AFAIK.
@@ -49,26 +66,37 @@ This causes failures that don't really matter when doing lookups.
 Not sure what approach I want to take here, probably configuring `systemd-resolved` to single stack.
 Or replacing `systemd-resolved` entirely, it has some behaviours I'm not enjoying.
 
-I tried setting `clusterDNS` for the kubelet config but it didn't show as taking in the logs from the config file.
-It may be bugged and need to be a flag.
-It may also have no impact is `resolvConf` is *not* set to an empty string to disable it.
-Makes some sense as the logic of munging DNS settings into `resolv.conf` is muddy and well out of scope for Kubelet.
+### Unqualified domain resolution
 
-Consistency in the Kubelet behaviour around `resolvConf` is an issue.
-If /all/ pods get the same one, how do we set the upstream *only* for CoreDNS pods?
-Presently normal pods are getting a `resolv.conf` that has them hitting the router DNS service as well.
+Search domains are propagated to pods from the host.
+If you configure the Kubelet's `clusterDomain` though it'll add the ones you need for unqualified name resolution to work.
+It's a convenience thing but it is nice.
+
+### Kubelet configuration not taking
+
+On startup the Kubelet spews out what its configuration is (at v>=1, anyways).
+Turns out this is *only* the CLI arguments, and not the config file data.
+Set `v>=3` to see a dump of the read file.
+...still doesn't show what the realized config is >:(
+
+## Thoughts
+
+### Exposing services as DNS records
+
+If we implement services as actual DNS entries, it makes _external-dns_ operator critical path as we'd have to orchestrate those overrides.
+I'm not even so sure it would be a good idea putting that load on the management API of Unbound...
+
+### Resolution consistency
+
+Consistency in DNS resolution is always an issue, dig != nslookup != getent != GoLang DNS...
 You'd almost expect the CNI to have an option to force-route DNS traffic...
-There is a pod spec option for `dnsPolicy`.
-Obviously we don't want to have to set that for every pod so maybe CoreDNS should be the exception.
-It's not in the official Helm chart though.
 
-Minor good news is it looks like you can edit `resolv.conf` in the debug pod without it being immediately reverted.
+## Minor notes
+
+You can edit `resolv.conf` in the debug pod without it being immediately reverted.
 Removing the IPv4 resolution address fixed the errors when doing lookups.
 
 When changing the Kubelet `resolvConf` setting you need to re-roll any existing pods, it won't update their files otherwise.
-
-I'm not certain what the impact of the search domain in `resolv.conf` being `internal` is, CoreDNS (and many things) seem primed for `cluster.local`.
-This may explain why lookups against CoreDNS only returned values if the full-full `$svc.$ns.svc.cluster.local` was used.
 
 ## References
 
