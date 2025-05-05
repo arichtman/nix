@@ -26,6 +26,7 @@ Features:
 - QEMU guest agent
 - Prometheus metrics export
 - Wake-on-LAN GUI
+- Configuration backed up to two locations
 
 Todo:
 
@@ -63,11 +64,9 @@ Todo:
 - Convert nodes to use ssh certificates for client authentication and server certificates instead of TOFU
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
-  [post about hw one](https://aus.social/@Unixbigot/112962997893280387)
 - Debug watchdog not stopping on control node reboot.
-  [troubleshooting post](https://www.baeldung.com/linux/watchdog-message-explained)
-- Work out watchdog on OPNsense/BSD
 - Either stabilize or hardware watchdog Topton N100
+- Work out watchdog on OPNsense/BSD
 - Set up OpenAMT for out-of-band management.
 
 ### Subsoil (Foundational Services)
@@ -75,7 +74,7 @@ Todo:
 Features:
 
 - Caddy reverse proxy
-- Prometheus/Alertmanager/Grafana monitoring stack
+- Prometheus+Alertmanager+Grafana monitoring stack
 - Garage S3 cluster
 - Valheim server
 - Nix binary cache
@@ -101,14 +100,17 @@ Features:
 - Private CA certificates
 - Single-stack IPv6 with native routing/no overlay
 - Dynamic BGP peering of nodes with router/OPNsense
+- CoreDNS inside cluster
 
 Todo:
 
-- Set up Cilium IPv6
+- External-DNS, Certificate-Manager, FluxCD
+- Figure cluster bootstrapping out
 - Do dynamically-delegated prefixes for node pod CIDRs.
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
 - Set up IPv6 public ingress and firewalling
+- Make FRR BGP config persist on OPNsense
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
@@ -248,7 +250,6 @@ References:
 - [Servethehome net passthru tutorial](https://www.servethehome.com/how-to-pass-through-pcie-nics-with-proxmox-ve-on-intel-and-amd/)
 - [Reddit BIOS post](https://www.reddit.com/r/homelab/comments/1bzlicc/updating_bios_on_cwwk_n100_nas_motherboard/)
 - [Actual BIOS download](https://pan.x86pi.cn/BIOS%E6%9B%B4%E6%96%B0/1.Intel%E8%BF%B7%E4%BD%A0%E4%B8%BB%E6%9C%BA%E7%B3%BB%E5%88%97BIOS/1.%E7%AC%AC12%E4%BB%A3AlderLake-U-P-N%E5%85%A8%E7%B3%BB%E5%88%97/1.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N95-N100-N200-N305%E7%B3%BB%E5%88%97-V1-V2/1.%E7%AC%AC12%E4%BB%A3AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91%E7%B3%BB%E5%88%97-V1/AlderLake-N%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N100-N200-I3-N305-V1_%E5%87%BA%E5%8E%82%E9%BB%98%E8%AE%A4%E5%8E%9F%E5%A7%8B%E7%89%88/CW-AL-4L-V1.0(%E5%85%88%E9%94%8B%E5%9B%9B%E7%BD%91N95-N100-N200-I3-N305-V1%E5%87%BA%E5%8E%82%E9%BB%98%E8%AE%A4%E5%8E%9F%E5%A7%8B%E7%89%88%E6%9C%AC)23.04.28.iso)
-- [Watchdog post](https://forum.proxmox.com/threads/watchdog-will-not-trigger-on-intel-system.152238/)
 - [Grub forum post](https://forum.proxmox.com/threads/update-installed-system-booted-in-efi-mode-but-grub-efi-amd64-meta-package-not-installed.137324/)
 - [Arch wiki on CPU scaling](https://wiki.archlinux.org/title/CPU_frequency_scaling)
 - [Proxmox performance tuning](https://sumguy.com/understanding-and-optimizing-performance-in-proxmox-ve/)
