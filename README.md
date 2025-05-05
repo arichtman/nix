@@ -78,14 +78,16 @@ Features:
 - Garage S3 cluster
 - Valheim server
 - Nix binary cache
+- Kanidm identity management
 
 Todo:
 
 - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
+- Configure what can be for Otel
 - Spire for node identity
 - Secrets (Vault/OpenBao?)
 - Certificate authority? (step-ca?)
-- Identity (Authentik/Kanidm/Guacamole/Gluu)
+- More identity integration
 - Switch routing to *dynamic* subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
