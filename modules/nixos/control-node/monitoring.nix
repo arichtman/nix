@@ -47,9 +47,9 @@
 in {
   # Not working, suspect tmpfs created for pod is permissions-wise out of reach of node exporter
   # Ref: https://github.com/prometheus/node_exporter/issues/2470#issuecomment-1247604030
-  # config.systemd.services.prometheus-node-exporter.serviceConfig = lib.mkIf config.services.monitoring.enable {
-  #   ProtectHome = lib.mkForce "read-only";
-  # };
+  config.systemd.services.prometheus-node-exporter.serviceConfig = lib.mkIf config.control-node.enable {
+    ProtectHome = lib.mkForce "read-only";
+  };
   config.services = lib.mkIf config.control-node.enable {
     kthxbye = {
       enable = true;
