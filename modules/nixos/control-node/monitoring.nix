@@ -64,7 +64,7 @@ in {
           extraConfig = ''
             redir /graph /prometheus/graph
             handle_path /prometheus* {
-              reverse_proxy localhost:9090
+              reverse_proxy localhost:${toString config.services.prometheus.port}
             }
           '';
         };
@@ -72,14 +72,14 @@ in {
           extraConfig = ''
             redir /login /grafana/login
             handle_path /grafana* {
-              reverse_proxy localhost:3000
+              reverse_proxy localhost:${toString config.services.grafana.settings.server.http_port}
             }
           '';
         };
         "alertmanager.services.richtman.au:80" = {
           extraConfig = ''
             handle_path /alertmanager* {
-              reverse_proxy localhost:9093
+              reverse_proxy localhost:${toString config.services.prometheus.alertmanager.port}
             }
           '';
         };
@@ -94,7 +94,7 @@ in {
           {
             name = "prometheus";
             type = "prometheus";
-            url = "http://localhost:9090";
+            url = "http://localhost:${toString config.services.prometheus.port}";
             isDefault = true;
             editable = false;
           }
@@ -113,7 +113,7 @@ in {
           static_configs = [
             {
               targets = [
-                "localhost:9093"
+                "localhost:${toString config.services.prometheus.alertmanager.port}"
               ];
             }
           ];
@@ -128,13 +128,13 @@ in {
         (mkLocalScrapeConfig "caddy" 2019)
         # See impl for why non-default port
         (mkLocalScrapeConfig "etcd" 2399)
-        (mkLocalScrapeConfig "grafana" 3000)
+        (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
         (mkLocalScrapeConfig "garage" 3903)
-        (mkLocalScrapeConfig "kthxbye" 9099)
+        (mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
         # (mkLocalScrapeConfig "spire-server" 9988)
         # Self-monitoring (fwiw)
-        (mkLocalScrapeConfig "alertmanager" 9093)
-        (mkLocalScrapeConfig "prometheus" 9090)
+        (mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
+        (mkLocalScrapeConfig "prometheus" config.services.prometheus.port)
         {
           job_name = "containerd";
           metrics_path = "v1/metrics";
