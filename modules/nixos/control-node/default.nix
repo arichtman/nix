@@ -13,13 +13,7 @@
     ./kanidm.nix
   ];
   options.control-node = {
-    enable = lib.options.mkOption {
-      description = ''
-        Whether this is a controller
-      '';
-      default = false;
-      type = lib.types.bool;
-    };
+    enable = lib.mkEnableOption "Whether this is a controller";
     serviceDomain = lib.options.mkOption {
       description = "FQDN of services";
       default = "services.richtman.au";

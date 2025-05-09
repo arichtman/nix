@@ -91,13 +91,7 @@
     v = 2;
   };
 in {
-  options.services.k8s-controller = {
-    enable = lib.options.mkOption {
-      description = "Enable k8s controller";
-      default = false;
-      type = lib.types.bool;
-    };
-  };
+  options.services.k8s-controller.enable = lib.mkEnableOption "Enable k8s controller";
   config = lib.mkIf cfg.enable {
     systemd.services.k8s-controller = {
       description = "Kubernetes controller Service";

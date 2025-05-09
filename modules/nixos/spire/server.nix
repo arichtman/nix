@@ -85,13 +85,7 @@
   serverConfigFile = pkgs.writeText "spire-server-config" (builtins.toJSON serverConfig);
   checkedConfigFile = configCheck serverConfigFile;
 in {
-  options.services.spire-server = {
-    enable = lib.options.mkOption {
-      description = "Enable Spire server";
-      default = false;
-      type = lib.types.bool;
-    };
-  };
+  options.services.spire-server.enable = lib.mkEnableOption "Enable Spire server";
   config = lib.mkIf cfg.enable {
     users = {
       users = {

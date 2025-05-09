@@ -8,13 +8,7 @@
   cfg = config.work-home;
 in
   with lib; {
-    options.work-home = with types; {
-      enabled = mkOption {
-        type = bool;
-        description = "Enable work home configuration";
-        default = false;
-      };
-    };
+    options.work-home.enabled = lib.mkEnableOption "Enable work home configuration";
     config = mkIf cfg.enabled {
       programs = {
         ssh = {

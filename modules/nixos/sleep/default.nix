@@ -23,13 +23,7 @@ in
   with lib; {
     options = {
       services.sleep-at-night = {
-        enable = mkOption {
-          default = false;
-          type = with types; bool;
-          description = ''
-            Cron-triggered system sleep.
-          '';
-        };
+        enable = lib.mkEnableOption "Cron-triggered system sleep.";
         weekends = mkOption {
           type = with types; enum ["always" "never" "only"];
           default = "always";

@@ -114,11 +114,7 @@
   };
 in {
   options.services.k8s-kubelet = {
-    enable = lib.options.mkOption {
-      description = "Enable Kubelet server";
-      default = false;
-      type = lib.types.bool;
-    };
+    enable = lib.mkEnableOption "Enable Kubelet server";
     config = lib.options.mkOption {
       type = lib.types.listOf lib.types.attrs;
       default = [];

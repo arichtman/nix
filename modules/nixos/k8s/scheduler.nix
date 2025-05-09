@@ -59,13 +59,7 @@
     v = 2; # TODO: remove when stabilized
   };
 in {
-  options.services.k8s-scheduler = {
-    enable = lib.options.mkOption {
-      description = "Enable k8s scheduler";
-      default = false;
-      type = lib.types.bool;
-    };
-  };
+  options.services.k8s-scheduler.enable = lib.mkEnableOption "Enable k8s scheduler";
   config = lib.mkIf cfg.enable {
     systemd.services.k8s-scheduler = {
       description = "Kubernetes Scheduler Service";

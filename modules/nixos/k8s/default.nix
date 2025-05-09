@@ -8,20 +8,8 @@
 in {
   imports = [./etcd.nix ./apiserver.nix ./kubelet.nix ./scheduler.nix ./controller.nix];
   options.services.k8s = {
-    controller = lib.options.mkOption {
-      description = ''
-        Whether this is a controller
-      '';
-      default = false;
-      type = lib.types.bool;
-    };
-    worker = lib.options.mkOption {
-      description = ''
-        Whether this is a worker
-      '';
-      default = false;
-      type = lib.types.bool;
-    };
+    controller = lib.mkEnableOption "Whether this is a controller";
+    worker = lib.mkEnableOption "Whether this is a worker";
     # TODO: Should this be a config option? I only really wanted it consistent/DRY
     secretsPath = lib.options.mkOption {
       description = "Path to secrets";

@@ -6,13 +6,7 @@
   cfg = config.personal-machine;
 in
   with lib; {
-    options.personal-machine = with types; {
-      enabled = mkOption {
-        type = bool;
-        description = "Configure as a personal use machine";
-        default = false;
-      };
-    };
+    options.personal-machine.enabled = lib.mkEnableOption "Configure as a personal use machine";
     config = mkIf cfg.enabled {
       programs.ssh.enable = true;
       programs.ssh.matchBlocks = {

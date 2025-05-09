@@ -162,11 +162,7 @@ in
           description = "Username to use in git config";
         };
       };
-      isThatOneWeirdMachine = mkOption {
-        type = bool;
-        description = "IYKYK";
-        default = false;
-      };
+      isThatOneWeirdMachine = mkEnableOption "IYKYK";
     };
     config = {
       nix.extraOptions = "keep-going = true";

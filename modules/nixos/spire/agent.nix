@@ -21,13 +21,7 @@
   };
   agentConfigFile = pkgs.writeText "spire-agent-config" (builtins.toJSON agentConfig);
 in {
-  options.services.spire-agent = {
-    enable = lib.options.mkOption {
-      description = "Enable Spire agent";
-      default = false;
-      type = lib.types.bool;
-    };
-  };
+  options.services.spire-agent.enable = lib.mkEnableOption "Enable Spire agent";
   config =
     lib.mkIf cfg.enable {
     };

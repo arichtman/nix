@@ -54,11 +54,7 @@ in {
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   # Ref: https://github.dev/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/cluster/kubernetes/default.nix
   options.services.k8s-apiserver = {
-    enable = lib.options.mkOption {
-      description = "Enable API server";
-      default = false;
-      type = lib.types.bool;
-    };
+    enable = lib.mkEnableOption "Enable API server";
     config = lib.options.mkOption {
       type = lib.types.listOf lib.types.attrs;
       default = [];

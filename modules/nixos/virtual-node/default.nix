@@ -6,13 +6,7 @@
   cfg = config.virtual-node;
 in
   with lib; {
-    options.virtual-node = with types; {
-      enable = mkOption {
-        type = bool;
-        description = "Virtualized node system configuration";
-        default = false;
-      };
-    };
+    options.virtual-node.enable = lib.mkEnableOption "Virtualized node system configuration";
     config = mkIf cfg.enable {
       boot.loader.grub.enable = true;
       boot.loader.grub.device = "/dev/sda";
