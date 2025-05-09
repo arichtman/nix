@@ -131,7 +131,7 @@ in {
         (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
         (mkLocalScrapeConfig "garage" 3903)
         (mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
-        # (mkLocalScrapeConfig "spire-server" 9988)
+        (mkLocalScrapeConfig "spire-server" 9988)
         # Self-monitoring (fwiw)
         (mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
         (mkLocalScrapeConfig "prometheus" config.services.prometheus.port)

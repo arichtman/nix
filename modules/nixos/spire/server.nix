@@ -21,7 +21,7 @@
     server = {
       admin_ids = ["spiffe://${topConfig.trustDomain}/admin"];
       bind_address = "[::1]";
-      # bind_port = "";
+      bind_port = topConfig.port;
       # ca_key_type = "";
       ca_subject = [
         {
@@ -32,13 +32,14 @@
       ];
       # ca_ttl = "5m";
       data_dir = "./.data";
+      # TODO: figure out why it's putting the socket in /tmp
       jwt_issuer = "spire.services.richtman.au";
       # TODO: get a writable directory for logs, maybe systemd tmpDir
       log_file = "/tmp/spire-server.log";
       # log_file = "/var/log/spire-server.log";
       log_level = "debug";
       # agent_ttl = "5m";
-      default_x509_svid_ttl = "5m";
+      # default_x509_svid_ttl = "5m";
       # default_jwt_svid_ttl = "5m";
       trust_domain = topConfig.trustDomain;
     };
@@ -87,6 +88,15 @@
 in {
   options.services.spire-server.enable = lib.mkEnableOption "Enable Spire server";
   config = lib.mkIf cfg.enable {
+    services.caddy.virtualHosts = {
+      "spire.services.richtman.au:80" = {
+        extraConfig = ''
+          handle_path /spire* {
+            reverse_proxy localhost:8081
+          }
+        '';
+      };
+    };
     users = {
       users = {
         spire-server = {
@@ -112,8 +122,8 @@ in {
       serviceConfig = {
         # For managing resources of groups of services
         Slice = "spire.slice";
-        # ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile + " -logLevel debug";
-        ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile;
+        ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile + " -logLevel debug";
+        # ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile;
         WorkingDirectory = "/var/lib/spire";
         # TODO: not sure if there's any nicer way to couple these to the user definition
         User = "spire-server";
