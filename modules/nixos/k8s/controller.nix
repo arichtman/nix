@@ -57,10 +57,10 @@
     # allocate-node-cidrs = true;
     # region maybeIgnored
     # Match the API server
-    # service-cluster-ip-range = "2403:580a:e4b1:0:ffff:ffff:ffff:0/112";
+    # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:0:ffff:ffff:ffff:0/112";
     # node cidr must be within 16, and since performance is a concern, not IP exhaustion, scale down
-    # cluster-cidr = "2403:580a:e4b1::/65";
-    # cluster-cidr = "2403:580a:e4b1:0:ffff:ffff::/96";
+    # cluster-cidr = "${lib.arichtman.net.ip6.prefix}::/65";
+    # cluster-cidr = "${lib.arichtman.net.ip6.prefix}:0:ffff:ffff::/96";
     # "2001:db8:1234:5678:8:2::/104"
     # endregion
     # Docs indicate this one isn't controlled

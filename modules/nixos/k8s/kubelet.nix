@@ -47,7 +47,7 @@
       clusterDomain = "cluster.local";
       # Ref: https://coredns.io/plugins/loop/#troubleshooting-loops-in-kubernetes-clusters
       resolvConf = "/run/systemd/resolve/resolv.conf";
-      clusterDNS = ["2403:580a:e4b1:1:ffff:ffff:ffff:10"];
+      clusterDNS = ["${lib.arichtman.net.ip6.prefix}:1:ffff:ffff:ffff:10"];
       imageMaximumGCAge = "604800s";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...
@@ -165,9 +165,9 @@ in {
       extraReversePathFilterRules = ''
       '';
       extraInputRules = ''
-        ip saddr { 192.168.1.0/24 } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
-        ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
-        ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
+        ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
+        ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
+        ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
       '';
     };
     systemd = {

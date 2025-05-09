@@ -37,13 +37,13 @@
     service-account-key-file = "${cfg.secretsPath}/service-account.pem";
     service-account-signing-key-file = "${cfg.secretsPath}/service-account-key.pem";
     # TODO: Revisit
-    # service-cluster-ip-range = "2403:580a:e4b1::/108";
+    # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}::/108";
     # Set services top of the subnet range
     # Seems like Cilium cannot manage this
-    service-cluster-ip-range = "2403:580a:e4b1:1:ffff:ffff:ffff:0/112";
+    service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:1:ffff:ffff:ffff:0/112";
     # "2001:db8:1234:5678:8:3::/112"
     # Can't mix public and private
-    # "10.100.100.0/24,2403:580a:e4b1:fffd::/64"
+    # "10.100.100.0/24,${lib.arichtman.net.ip6.prefix}:fffd::/64"
     # "command failed" err="[specified --service-cluster-ip-range[1] is too large; for 128-bit addresses, the mask must be >= 108, service IP family \"10.100.100.0/24\" must match public address family \"2403:580a:e4b1:0:3b67:89bb:45f8:3ba5\"]"
     # "10.100.100.0/24,fd00::/108"
     tls-cert-file = "${cfg.secretsPath}/kube-apiserver-tls.pem";
@@ -102,8 +102,8 @@ in {
     networking.nftables.enable = true;
     # Only allow ingress from ranges I control
     networking.firewall.extraInputRules = ''
-      ip saddr { 192.168.1.0/24 } tcp dport 6443 accept
-      ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 6443 accept
+      ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 6443 accept
+      ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 6443 accept
     '';
   };
 }

@@ -12,6 +12,18 @@
       sha256 = hash;
     };
 in {
+  net = {
+    ip6 = {
+      prefix = "2403:580a:e4b1";
+      # TODO: figure out why arichtman doesn't exist on this lib
+      # prefixCIDR = "${lib.arichtman.net.ip6.prefix}::/48";
+      prefixCIDR = "2403:580a:e4b1::/48";
+      subnet = "2403:580a:e4b1::/64";
+    };
+    ip4 = {
+      subnet = "192.168.1.0/24";
+    };
+  };
   # Pass-through the function in case people want plain gitignores
   inherit downloadGitignore;
   sourceGitignoreList = arguments @ {
@@ -24,10 +36,9 @@ in {
     rawText = builtins.readFile gitignoreFile;
     splitList = builtins.split "\n" rawText;
     pureList = builtins.filter (x: x != []) splitList;
-    filteredList = builtins.filter filterFunction pureList;
   in
-    filteredList;
-  allAttrsSet = x: (builtins.all (v: lib.stringLength v > 0) (lib.attrValues x));
+    builtins.filter filterFunction pureList;
+
   getPublicKeys = forge: username: fileHash:
   # For some reason we get not one but two trailing empty lines
   # I really just _can't_ anymore with nixLang at this time so, whatever.

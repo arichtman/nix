@@ -20,8 +20,6 @@ in
         };
       };
     };
-    # TODO: Figure out why my internal library isn't accessible
-    # config = mkIf (lib.arichtman.allAttrsSet cfg.volumes) {
     config = mkIf (builtins.all (v: stringLength v > 0) (attrValues cfg.volumes)) {
       # Bootloader.
       boot.loader.systemd-boot.enable = true;

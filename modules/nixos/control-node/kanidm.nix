@@ -27,8 +27,8 @@
       };
     };
     networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
-      "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 8443 accept comment \"Allow HTTPS for auth\""
-      "ip6 saddr { 2403:580a:e4b1::/48 } tcp dport 3636 accept comment \"Allow LDAP\""
+      "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 8443 accept comment \"Allow HTTPS for auth\""
+      "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 3636 accept comment \"Allow LDAP\""
     ];
     systemd.services."kanidm" = {
       serviceConfig = {
