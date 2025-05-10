@@ -6,10 +6,11 @@
   config = lib.mkIf config.control-node.enable {
     services = {
       step-ca = {
-        # enable = true;
-        # address = "::1";
+        enable = true;
+        address = "[::]";
         port = 7443;
-        intermediatePasswordFile = "";
+        intermediatePasswordFile = "/var/lib/step-ca/secrets/intermediate_password";
+        settings = import ./step-ca/ca.nix;
       };
     };
     networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
