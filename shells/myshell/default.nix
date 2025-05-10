@@ -36,7 +36,7 @@ in
           cilium-cli
           hubble
           # SPIFFE
-          spire-server
+          spire
           # Certificates and secrets
           xkcdpass
           step-cli

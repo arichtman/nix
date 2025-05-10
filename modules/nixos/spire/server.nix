@@ -9,7 +9,7 @@
   # Ref: https://github.com/NixOS/nixpkgs/blob/3566ab7246670a43abd2ffa913cc62dad9cdf7d5/nixos/modules/services/monitoring/prometheus/default.nix#L29C1-L38C20
   # a wrapper that verifies that the configuration is valid
   configCheck = file:
-    pkgs.runCommand "spire-agent-config-checked" {
+    pkgs.runCommand "spire-server-config-checked" {
       preferLocalBuild = true;
       nativeBuildInputs = [pkgs.spire-server];
     } ''
@@ -20,7 +20,7 @@
   serverConfig = {
     server = {
       admin_ids = ["spiffe://${topConfig.trustDomain}/admin"];
-      bind_address = "[::1]";
+      bind_address = "[::]";
       bind_port = topConfig.port;
       # ca_key_type = "";
       ca_subject = [
@@ -36,7 +36,6 @@
       # Can't use env var here as it fails checks
       # log_file = "$LOGS_DIRECTORY/server.log";
       jwt_issuer = "spire.services.richtman.au";
-      log_level = "debug";
       # agent_ttl = "5m";
       # default_x509_svid_ttl = "5m";
       # default_jwt_svid_ttl = "5m";
@@ -71,11 +70,11 @@
         }
       ];
     };
+    # Ref: https://github.com/spiffe/spire/blob/v1.12.0/doc/telemetry/telemetry_config.md
     telemetry = {
       Prometheus = {
-        # Unsure what this defaults to
-        # Ref: https://github.com/spiffe/spire/blob/v1.11.1/doc/telemetry/telemetry_config.md
-        # host = "[::1]";
+        # Required to avoid default IPv4-only binding
+        host = "[::]";
         port = 9988;
       };
     };
@@ -85,15 +84,6 @@
 in {
   options.services.spire-server.enable = lib.mkEnableOption "Enable Spire server";
   config = lib.mkIf cfg.enable {
-    services.caddy.virtualHosts = {
-      "spire.services.richtman.au:80" = {
-        extraConfig = ''
-          handle_path /spire* {
-            reverse_proxy localhost:${toString topConfig.port}
-          }
-        '';
-      };
-    };
     systemd.services.spire-server = {
       description = "Spire server";
       # Required to activate the service.
@@ -108,7 +98,7 @@ in {
           "run"
           # Log directory is dynamic, so don't put it in config or the check fails
           "-logFile"
-          "%L/spire/server.log"
+          "%L/spire-server/server.log"
           # TODO: find out why this env var isn't populated
           # Might be the execution context is pure sh or execv so no expansion
           # "$LOGS_DIRECTORY/server.log"
@@ -116,18 +106,19 @@ in {
           "-expandEnv"
           "-config"
           checkedConfigFile
+          # TODO: remove before flight
           "-logLevel"
           "debug"
         ];
         DynamicUser = true;
         Restart = "on-failure";
         RestartSec = 5;
-        LogsDirectory = "spire";
-        StateDirectory = "spire";
+        LogsDirectory = "spire-server";
+        StateDirectory = "spire-server";
         # Required as default 0022 is considered too permissive
         UMask = "0027";
-        # RuntimeDirectory = "spire";
-        # TODO: Socket seems to be intended to be exposed.
+        # Note: The socket both seems and doesn't to be intended to be exposed.
+        # It's created by default under a /private/ directory but it's needed for health checks
         # This does not fix it, but entering the process mount namespace makes healthcheck pass
         # PrivateTmp = false;
       };
@@ -135,5 +126,8 @@ in {
         StartLimitIntervalSec = 5;
       };
     };
+    networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
+      "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport ${toString topConfig.port} accept comment \"Allow Spire inbound\""
+    ];
   };
 }
