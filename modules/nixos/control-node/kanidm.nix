@@ -5,7 +5,6 @@
   ...
 }: {
   config = lib.mkIf config.control-node.enable {
-    # Ref: https://git.dblsaiko.net/systems/tree/configurations/vineta/kanidm.nix
     services = {
       kanidm = {
         enableServer = true;
@@ -30,7 +29,8 @@
       "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 8443 accept comment \"Allow HTTPS for auth\""
       "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 3636 accept comment \"Allow LDAP\""
     ];
-    systemd.services."kanidm" = {
+    # Ref: https://git.dblsaiko.net/systems/tree/configurations/vineta/kanidm.nix
+    systemd.services.kanidm = {
       serviceConfig = {
         # move /var/lib/kanidm from RO to RW
         BindReadOnlyPaths = lib.mkForce [
