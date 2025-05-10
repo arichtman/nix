@@ -6,6 +6,7 @@
     "commonName": {{toJson .Subject.CommonName }}
 	},
 	"keyUsage": ["certSign", "crlSign"],
+	"sans": {{ toJson .SANs }},
 	"basicConstraints": {
 		"isCA": true,
 		"maxPathLen": 0

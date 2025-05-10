@@ -27,3 +27,19 @@ step certificate inspect client.pem
 step certificate p12 client.p12 client.pem client-key.pem --ca opnsense-ca.pem
 mv client.p12 ~/Downloads
 ```
+
+## Step-CA
+
+```
+# On node
+step certificate create "Smallstep" intermediate.csr intermediate_ca_key --csr --san fat-controller.systems.richtman.au --san fat-controller.internal --san fat-controller.local --san ca.richtman.au
+# Check SANs
+step certificate inspect intermediate.csr
+# On signing location
+step certificate sign --template ./granular-dn-intermediate.tpl --set-file ./dn-defaults.json intermediate.csr root-ca.pem root-ca-key.pem > intermediate.pem
+# Check SANs
+step certificate inspect intermediate.pem
+# Transport certificate to node
+```
+
+Ref: https://smallstep.com/docs/tutorials/intermediate-ca-new-ca/
