@@ -88,7 +88,6 @@
         # TODO: DRY this up
         nodes = {
           fat-controller = mkNixosConfiguration "fat-controller";
-          mum = mkNixosConfiguration "mum";
           patient-zero = mkNixosConfiguration "patient-zero";
           dr-singh = mkNixosConfiguration "dr-singh";
           smol-bat = mkNixosConfiguration "smol-bat";

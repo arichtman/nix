@@ -6,7 +6,7 @@ Convenience test commands
 
 ```shell
 helm upgrade --install coredns coredns/coredns --namespace kube-system --values coredns-helm-values.yaml --version 1.37.0
-k run --rm test -it --image docker.io/nicolaka/netshoot --overrides='{"apiVersion": "v1", "spec": {"nodeSelector": { "kubernetes.io/hostname": "mum.systems.richtman.au" }}}' -- /bin/bash
+k run --rm test -it --image docker.io/nicolaka/netshoot --overrides='{"apiVersion": "v1", "spec": {"nodeSelector": { "kubernetes.io/hostname": "patient-zero.systems.richtman.au" }}}' -- /bin/bash
 ```
 
 ## Issues

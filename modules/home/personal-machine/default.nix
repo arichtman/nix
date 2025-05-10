@@ -53,9 +53,6 @@ in
         fc = {
           hostname = "fat-controller.local";
         };
-        mum = {
-          hostname = "mum.local";
-        };
         pz = {
           hostname = "patient-zero.local";
         };

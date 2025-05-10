@@ -20,7 +20,6 @@
   };
   mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
     "fat-controller"
-    "mum"
     "patient-zero"
     "dr-singh"
     "smol-bat"
