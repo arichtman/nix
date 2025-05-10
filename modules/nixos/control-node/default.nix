@@ -11,6 +11,7 @@
     ./website.nix
     ./valheim.nix
     ./kanidm.nix
+    ./step-ca.nix
   ];
   options.control-node = {
     enable = lib.mkEnableOption "Whether this is a controller";
