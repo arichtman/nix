@@ -51,8 +51,8 @@ groups:
         description: "Disk is probably reading too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
     - alert: HostUnusualDiskWriteRate
-      expr: '(sum by (instance) (rate(node_disk_written_bytes_total[2m])) / 1024 / 1024 > 50) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
-      for: 2m
+      expr: '(sum by (instance) (rate(node_disk_written_bytes_total[5m])) / 1024 / 1024 > 50) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
+      for: 5m
       labels:
         severity: warning
       annotations:
