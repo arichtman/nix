@@ -31,12 +31,11 @@
         }
       ];
       # ca_ttl = "5m";
-      data_dir = "./.data";
-      # TODO: figure out why it's putting the socket in /tmp
+      # If this is not set in config file checks fail
+      data_dir = "$STATE_DIRECTORY";
+      # Can't use env var here as it fails checks
+      # log_file = "$LOGS_DIRECTORY/server.log";
       jwt_issuer = "spire.services.richtman.au";
-      # TODO: get a writable directory for logs, maybe systemd tmpDir
-      log_file = "/tmp/spire-server.log";
-      # log_file = "/var/log/spire-server.log";
       log_level = "debug";
       # agent_ttl = "5m";
       # default_x509_svid_ttl = "5m";
@@ -56,7 +55,8 @@
               # TODO: Revisit this, postgres might be better uniformity
               #   though they may only support AWS options?
               database_type = "sqlite3";
-              connection_string = "./.data/datastore.sqlite3";
+              # Note: Does not default to data_dir or has weird interactions with DynamicUser/systemd exec context
+              connection_string = "$STATE_DIRECTORY/datastore.sqlite3";
             };
           };
         }
@@ -65,14 +65,11 @@
         {
           disk = {
             plugin_data = {
-              keys_path = "./.data/keys.json";
+              keys_path = "$STATE_DIRECTORY/keys.json";
             };
           };
         }
       ];
-      # "KeyManager \"memory\"" = {
-      #   plugin_data = {};
-      # };
     };
     telemetry = {
       Prometheus = {
@@ -92,26 +89,10 @@ in {
       "spire.services.richtman.au:80" = {
         extraConfig = ''
           handle_path /spire* {
-            reverse_proxy localhost:8081
+            reverse_proxy localhost:${toString topConfig.port}
           }
         '';
       };
-    };
-    users = {
-      users = {
-        spire-server = {
-          # TODO: See about using DynamicUser and StateDirectory
-          description = "Spire server user";
-          # TODO: See about automatic group creation
-          group = "spire";
-          home = "/var/lib/spire";
-          createHome = true; # TODO: make this a systemd tmpfile like etcd's dir?
-          homeMode = "755";
-          isSystemUser = true;
-        };
-      };
-      # Required to create the kubernetes group
-      groups.spire = {};
     };
     systemd.services.spire-server = {
       description = "Spire server";
@@ -122,18 +103,36 @@ in {
       serviceConfig = {
         # For managing resources of groups of services
         Slice = "spire.slice";
-        ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile + " -logLevel debug";
-        # ExecStart = "${pkgs.spire-server}/bin/spire-server run " + "-config " + checkedConfigFile;
-        WorkingDirectory = "/var/lib/spire";
-        # TODO: not sure if there's any nicer way to couple these to the user definition
-        User = "spire-server";
-        Group = "spire";
-        # AmbientCapabilities = "cap_net_bind_service";
+        ExecStart = lib.concatStringsSep " " [
+          "${pkgs.spire-server}/bin/spire-server"
+          "run"
+          # Log directory is dynamic, so don't put it in config or the check fails
+          "-logFile"
+          "%L/spire/server.log"
+          # TODO: find out why this env var isn't populated
+          # Might be the execution context is pure sh or execv so no expansion
+          # "$LOGS_DIRECTORY/server.log"
+          # Required to use systemd dynamic user state dir
+          "-expandEnv"
+          "-config"
+          checkedConfigFile
+          "-logLevel"
+          "debug"
+        ];
+        DynamicUser = true;
         Restart = "on-failure";
         RestartSec = 5;
+        LogsDirectory = "spire";
+        StateDirectory = "spire";
+        # Required as default 0022 is considered too permissive
+        UMask = "0027";
+        # RuntimeDirectory = "spire";
+        # TODO: Socket seems to be intended to be exposed.
+        # This does not fix it, but entering the process mount namespace makes healthcheck pass
+        # PrivateTmp = false;
       };
       unitConfig = {
-        StartLimitIntervalSec = 0;
+        StartLimitIntervalSec = 5;
       };
     };
   };
