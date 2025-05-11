@@ -408,14 +408,20 @@ See also `wg0.conf` in this repo.
 
 To enable Alacritty to function mostly normally, specifically on hosts like OPNsense:
 
+`/usr/local/etc/rc.syshook.d/early/60-alacritty-terminal`:
+
 ```shell
+#!/bin/sh
+# Configures terminal for Alacritty
+
 curl -sSL https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info -o alacritty.info
 infotocap alacritty.info >> /usr/share/misc/termcap
 cap_mkdb /usr/share/misc/termcap
 rm alacritty.info
 ```
 
-[Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
+- [Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
+- [Hooks docs](https://docs.opnsense.org/development/backend/autorun.html)
 
 ##### Plugins
 
@@ -425,8 +431,6 @@ rm alacritty.info
   `curl -L https://github.com/arichtman/nix/raw/refs/heads/main/frr.conf -o /usr/local/etc/frr/frr.conf && service frr restart`
 - Prometheus exporter for monitoring.
 - DynamicDNS client, configure with AWS Access Key.
-- AMD microcode updates (unsure how wise this is given hypervisor is Intel)
-  OPNsense already had this set up when I installed it but check post-install instructions.
 - tftp plugin (unmaintained but workable)
   [src](https://github.com/opnsense/plugins/tree/master/ftp/tftp).
   Make directory `/usr/local/tftp` and download `netboot.xyz.kpxe`.
