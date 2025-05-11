@@ -283,6 +283,7 @@ UUID=b35130d3-6351-4010-87dd-6f2dac34cfba /mnt/pve/Backup ext4 defaults,nofail,x
 #### Re-IDing a Proxmox VM
 
 I used this to shift OPNsense to 999 and any templates to >=1000.
+
 1. Stop VM
 1. Get storage group name `lvs -a`
 1. Rename disk `lvrename prod vm-100-disk-0 vm-999-disk-0`
@@ -421,6 +422,7 @@ rm alacritty.info
 - NextCloud backup, configure with an app key.
 - FRR BGP, BGP for Cilium.
   Run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
+  `curl -L https://github.com/arichtman/nix/raw/refs/heads/main/frr.conf -o /usr/local/etc/frr/frr.conf && service frr restart`
 - Prometheus exporter for monitoring.
 - DynamicDNS client, configure with AWS Access Key.
 - AMD microcode updates (unsure how wise this is given hypervisor is Intel)
