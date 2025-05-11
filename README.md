@@ -421,6 +421,38 @@ rm alacritty.info
 - [Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
 - [Hooks docs](https://docs.opnsense.org/development/backend/autorun.html)
 
+##### Convenience
+
+Symlink some common directories.
+
+```sh
+mkdir ~/workdir
+ln -s /usr/local/etc/rc.syshook.d/ ~/workdir/hooks
+ln -s /usr/local/etc/frr/ ~/workdir/frr
+ln -s /var/log/frr/latest.log ~/workdir/frr.log
+ln -s /etc/rc.conf.d/ ~/workdir/rcconf
+```
+
+##### BGP
+
+Run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
+BGP plugin does not expose option to listen on a network, so we use hooks to just blat the config file.
+
+Prerequisite is downloading `frr.conf` into home.
+
+`/usr/local/etc/rc.syshook.d/start/99-frr-conf`:
+
+```shell
+#!/bin/sh
+# Overwrites FRR configuration and restarts it
+
+cp ~/frr.conf /usr/local/etc/frr/frr.conf
+service frr restart
+```
+
+- [Forum thread](https://forum.opnsense.org/index.php?topic=14280)
+- [Plugins source code](https://github.com/opnsense/plugins)
+
 ##### Plugins
 
 - NextCloud backup, configure with an app key.
