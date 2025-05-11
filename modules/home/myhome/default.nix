@@ -179,6 +179,14 @@ in
       programs = {
         readline.enable = true;
         readline.extraConfig = "set enable-bracketed-paste off";
+        ripgrep = {
+          enable = true;
+          # Session variable RIPGREP_CONFIG_PATH doesn't actually get set this way,
+          #   meaning this doesn't work and then clashes with my manual implementation.
+          # arguments = [
+          #   "--glob='!*.svg'"
+          # ];
+        };
         alacritty = {
           enable = true;
           settings = {
@@ -439,6 +447,8 @@ in
           DIRENV_LOG_FORMAT = "";
           AWS_EC2_METADATA_DISABLED = "true";
           EDITOR = "hx";
+          # Required as our config file placement is tidier but nonstandard
+          RIPGREP_CONFIG_PATH = "$HOME/.config/.ripgreprc";
           # This is annoying, ideally I'd set them all in .terraformrc but some options don't seem to be available
           TF_CLI_ARGS_plan = "-compact-warnings";
           TF_CLI_ARGS_apply = "-compact-warnings";
@@ -446,83 +456,83 @@ in
           TF_CLI_CONFIG_FILE = "$HOME/.config/terraform/.terraformrc";
         };
 
-        packages = with pkgs; [
-          # The essentials
-          dig
-          wget
-          netcat
-          # Ref: https://github.com/ibraheemdev/modern-unix
-          xh # curl replacement
-          # TODO disabled due to build issues on x86_64-linux
-          # dog # dig replacement
-          procs # ps replacement
-          du-dust # du replacement
-          duf # df replacement
-          sd # sed replacement
-          gping # ping replacement
-          broot # tree + tui navigation
-          choose # cut/awk replacement
-          ripgrep # find replacement
-          jless # json tui
-          helix # editor/ide
-          nnn # file manager
-          yazi # file manager
-          eza # exa is unmaintained 🫣
-          nerd-fonts.fira-code # This actually makes it available to Alacritty
-          cyme # lsusb replacement
-          step-cli # Certificate tooling
-          # Nix tooling
-          nix-init
-          nix-update
-          nix-index
-          nurl
-          nix-bash-completions
-          nix-your-shell
-          # Kube stuff
-          kubectl
-          kubectl-neat
-          kubectl-tree
-          kubectl-ktop
-          kubectl-df-pv
-          kubectl-graph
-          kubectl-klock
-          kubectl-gadget
-          kubectl-images
-          kubectl-doctor
-          kubectl-explore
-          kubectl-view-secret
-          # Lang servers
-          nil # nix
-          marksman # md
-          terraform-ls # tf
-          gopls
-          # rust-analyzer # rust
-          lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
-          alejandra # nix formatter
-          dprint # markdown formatting (it does more though)
-          helm-ls
-          yaml-language-server
-          ansible-language-server
-          vscode-langservers-extracted
-          dockerfile-language-server-nodejs
-          docker-compose-language-service
-          jq-lsp
-          buf
-          nixd
-          ruff-lsp
-          # jj VCS
-          jujutsu
-          gg-jj
-          # diff tool
-          mergiraf
-          arichtman.mamediff
-          # langs
-          rustup
-          #TODO: dont have these on mac, aarch64 at least
-          # trippy
-          jujutsu # VCS tool
-          # Ref: https://terminaltrove.com
-        ];
+        packages = with pkgs;
+          [
+            # The essentials
+            dig
+            wget
+            netcat
+            # Ref: https://github.com/ibraheemdev/modern-unix
+            xh # curl replacement
+            dog # dig replacement
+            procs # ps replacement
+            du-dust # du replacement
+            duf # df replacement
+            sd # sed replacement
+            gping # ping replacement
+            trippy # Ping TUI
+            broot # tree + tui navigation
+            choose # cut/awk replacement
+            jless # json tui
+            helix # editor/ide
+            nnn # file manager
+            yazi # file manager
+            eza # exa is unmaintained
+            nerd-fonts.fira-code # This actually makes it available to Alacritty
+            cyme # lsusb replacement
+            step-cli # Certificate tooling
+            # Nix tooling
+            nix-init
+            nix-update
+            nix-index
+            nurl
+            nix-bash-completions
+            nix-your-shell
+            # Kube stuff
+            kubectl
+            kubectl-neat
+            kubectl-tree
+            kubectl-ktop
+            kubectl-df-pv
+            kubectl-graph
+            kubectl-klock
+            kubectl-gadget
+            kubectl-images
+            kubectl-doctor
+            kubectl-explore
+            kubectl-view-secret
+            # Lang servers
+            nil # nix
+            marksman # md
+            terraform-ls # tf
+            gopls
+            # rust-analyzer # rust
+            lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
+            alejandra # nix formatter
+            dprint # markdown formatting (it does more though)
+            helm-ls
+            yaml-language-server
+            ansible-language-server
+            vscode-langservers-extracted
+            dockerfile-language-server-nodejs
+            docker-compose-language-service
+            jq-lsp
+            buf
+            nixd
+            ruff-lsp
+            # jj VCS
+            jujutsu
+            gg-jj
+            # diff tool
+            mergiraf
+            arichtman.mamediff
+            # langs
+            rustup
+            #TODO: dont have these on mac, aarch64 at least
+            # trippy
+            # Ref: https://terminaltrove.com
+          ]
+          ++ lib.optionals (!pkgs.stdenv.isAarch64) [trippy];
         file =
           # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
           createCargoBinSymlinks config.lib.file.mkOutOfStoreSymlink cargoSymlinkBins
@@ -531,6 +541,7 @@ in
               source = ./helix;
               recursive = true;
             };
+            ".config/.ripgreprc".text = "--glob='!*.svg'";
             ".cargo/config.toml".source = cargo/config.toml;
             ".cargo/env".source = dummyCargoEnvFile;
             ".config/terraform" = {
