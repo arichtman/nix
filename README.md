@@ -406,9 +406,7 @@ See also `wg0.conf` in this repo.
 
 ##### Alacritty terminal
 
-To enable Alacritty to function mostly normally, specifically on hosts like OPNsense:
-
-`/usr/local/etc/rc.syshook.d/early/60-alacritty-terminal`:
+`/usr/local/etc/rc.syshook.d/update/99-alacritty-terminal`:
 
 ```shell
 #!/bin/sh
@@ -426,9 +424,7 @@ rm alacritty.info
 ##### Plugins
 
 - NextCloud backup, configure with an app key.
-- FRR BGP, BGP for Cilium.
-  Run `sysctl kern.ipc.maxsockbuf=16777216` as plugin post-install message suggests.
-  `curl -L https://github.com/arichtman/nix/raw/refs/heads/main/frr.conf -o /usr/local/etc/frr/frr.conf && service frr restart`
+- Git backup. Create an uninitialized repository and provide API key and HTTPS URL.
 - Prometheus exporter for monitoring.
 - DynamicDNS client, configure with AWS Access Key.
 - tftp plugin (unmaintained but workable)
@@ -440,7 +436,7 @@ rm alacritty.info
 - ACME client [tutorial](https://forum.opnsense.org/index.php?topic=24778.0)
 - Install `os-wol` to wake on lan.
   Add all physical machines to the list of known, you can use ISC DHCP leases to find all the MACs in one place.
-- optionally: themes (rebellion)
+- Optionally: themes (rebellion)
 
 Notes:
 
@@ -454,6 +450,14 @@ We're doing pretty well on space too but I'm less short on that.
 References:
 
 - [Reddit performance comment](https://www.reddit.com/r/OPNsenseFirewall/comments/guo2iz/comment/fskpk76)
+
+#### Disaster Recovery / Restoring from Backup
+
+1. Access Proxmox [directly](https://proxmox.internal:8006)
+1. Visit Backup storage and confirm thre is an intact and appropriate snapshot image to restore.
+1. Disable VM protection and delete it.
+1. Select backup image and restore to VM ID `999`.
+   Enable start on boot and disable unique feature.
 
 ### Virtualized NixOS Node Bootstrap
 
