@@ -421,6 +421,21 @@ rm alacritty.info
 - [Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
 - [Hooks docs](https://docs.opnsense.org/development/backend/autorun.html)
 
+##### NAT64
+
+Install and configure Tayga according to [the docs](https://docs.opnsense.org/manual/how-tos/tayga.html)
+
+- IPv6 NAT64 Interface Address: `2403:580a:e4b1::6464`
+- IPv6 Address: `2403:580a:e4b1::4646`
+- IPv4 Pool: `192.168.253.0/24` # Can't overlap VPNs
+- IPv4 Address: `192.168.253.1`
+- IPv4 NAT64 Interface Address: `192.168.252.255`
+
+- [NAT64 IP calculator](https://www.bitlug.com/act/app/embed.html)
+- [YouTube tutorial](https://www.youtube.com/watch?v=WZSdpY_VgyY)
+- [Troubleshooting forum thread](https://forum.opnsense.org/index.php?topic=43685.0)
+- [Tayga GitHub issue comment](https://github.com/opnsense/plugins/issues/2094#issuecomment-765002787)
+
 ##### Plugins
 
 - NextCloud backup, configure with an app key.
