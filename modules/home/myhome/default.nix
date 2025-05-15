@@ -466,6 +466,7 @@ in
             xh # curl replacement
             dog # dig replacement
             procs # ps replacement
+            eget # github binary pull tool
             du-dust # du replacement
             duf # df replacement
             sd # sed replacement
