@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        host: [ fat-controller, mum, patient-zero ]
+        host: [ fat-controller, patient-zero ]
     steps:
     - uses: actions/checkout@v4
       with:
