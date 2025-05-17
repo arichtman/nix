@@ -50,13 +50,6 @@ with lib;
       system.activationScripts.postUserActivation.text = ''
         # Following line should allow us to avoid a logout/login cycle
         /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-        # Ref https://slack.com/intl/en-au/help/articles/360035635174-Deploy-Slack-for-macOS
-        # defaults write /Users/$USER/Library/Preferences/com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
-        # TODO: Is this really the best place for this?
-        # Ref https://rickheil.com/disabling-slack-updates-in-v4-0/
-        defaults write com.tinyspeck.slackmacgap SlackNoAutoUpdates -bool YES
-        # Ref https://github.com/rxhanson/Rectangle#common-known-issues
-        defaults write com.googlecode.iterm2 DisableWindowSizeSnap -integer 1
       '';
       # TODO: Investigate difference between defaults and custom user preferences
       # TODO: Check out all config options
