@@ -121,7 +121,7 @@ https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf
 - There's some special and quite powerful stuff that can be run inside the agent pods for inspection and debugging - explore that.
 - Confirmed that tunneling is unsupported without IPv4 enabled on the cluster.
   Took a look at enabling that and kubelet needs a cli launch argument with the node's IP(s).
-  It's unclear what providing *just* IPv4 would do to the v6 stack, plus it'd need to be hard-coded somewhat.
+  It's unclear what providing _just_ IPv4 would do to the v6 stack, plus it'd need to be hard-coded somewhat.
   The flag isn't in the kubelet configuration file spec yet, so we can't make it dynamic with a drop-in file generated on boot.
   All this means DHCPv4 isn't acceptable or we'd have to hack around it + Nix.
   I'm not keen to put that much effort into it when I don't actually want an overlay network anyways.
@@ -177,7 +177,7 @@ https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf
 ### Dynamic router IDs
 
 In single-stack IPv6 Cilium can't (or won't) derive unique router IDs for the nodes.
-The router ID *has* to be IPv4 format, `0.0.0.0` is disallowed, and they can't overlap/clash - each node's router ID has to be unique.
+The router ID _has_ to be IPv4 format, `0.0.0.0` is disallowed, and they can't overlap/clash - each node's router ID has to be unique.
 Annotating the nodes manually kinda sucks.
 
 ### Unknown dynamic capability
@@ -383,12 +383,12 @@ dummy CNI config [ref](https://github.com/containernetworking/plugins/tree/main/
 
 ```json
 {
-	"name": "mynet",
-	"type": "dummy",
-	"ipam": {
-		"type": "host-local",
-		"subnet": "10.1.2.0/24"
-	}
+  "name": "mynet",
+  "type": "dummy",
+  "ipam": {
+    "type": "host-local",
+    "subnet": "10.1.2.0/24"
+  }
 }
 ```
 
@@ -423,7 +423,7 @@ dummy CNI config [ref](https://github.com/containernetworking/plugins/tree/main/
     },
     {
       "type": "portmap",
-      "capabilities": {"portMappings": true}
+      "capabilities": { "portMappings": true }
     }
   ]
 }

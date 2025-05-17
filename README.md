@@ -88,7 +88,7 @@ Todo:
 - Secrets (Vault/OpenBao?)
 - Certificate authority? (step-ca?)
 - More identity integration
-- Switch routing to *dynamic* subdomains.
+- Switch routing to _dynamic_ subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
 - Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
@@ -229,10 +229,11 @@ Pre-requisites:
      - Disable beep
      - Enable fast boot
      - Enable network stack
-  - Chipset:
-    - PCH-IO:
-      - Enable Wake on lan and BT
-      - Enable TCO timer
+   - Chipset:
+     - PCH-IO:
+       - Enable Wake on lan and BT
+       - Enable TCO timer
+
 1. Install Prometheus node exporter, `apt install prometheus-node-exporter`.
 1. Install Avahi daemon to enable mDNS, `apt install avahi-daemon`.
 1. Install grub package so actual grub binaries get updates, `apt install grub-efi-amd64`.
@@ -368,17 +369,17 @@ resize2fs /dev/sda1
 1. Firewall
    - Add aliases for static boxes, localhost
    - Create a NAT port-forward:
-      - LAN interface
-      - IPv4+6
-      - TCP+UDP
-      - Invert
-      - Destination LAN net
-      - from dns to dns
-      - Redirect target Localhost:53
+     - LAN interface
+     - IPv4+6
+     - TCP+UDP
+     - Invert
+     - Destination LAN net
+     - from dns to dns
+     - Redirect target Localhost:53
 1. Test
    - DNS redirection:
-      - Unbound host override bing.com to something
-      - Check this returns the override `dig +trace @4.4.4.4 bing.com`
+     - Unbound host override bing.com to something
+     - Check this returns the override `dig +trace @4.4.4.4 bing.com`
    - Ad blocking https://d3ward.github.io/toolz/adblock.html
 1. Block bad IPs
    1. Add aliases for IP lists (see references)
@@ -390,8 +391,9 @@ resize2fs /dev/sda1
 - [DNS tutorial](https://homenetworkguy.com/how-to/redirect-all-dns-requests-to-local-dns-resolver/)
 - [OPNsense forum thread](https://forum.opnsense.org/index.php?topic=17596.0)
 - [Blocking blog post](https://www.allthingstech.ch/using-opnsense-and-ip-blocklists-to-block-malicious-traffic)
-- [Fedi posts about it](https://chaos.social/@JeGr/114406585868980716) [alt server](https://eigenmagic.net/deck/@JeGr@chaos.social/114406575249856820)
-[Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
+- [Fedi posts about it](https://chaos.social/@JeGr/114406585868980716)
+  [alt server](https://eigenmagic.net/deck/@JeGr@chaos.social/114406575249856820)
+  [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
 
 ##### OpenVPN
 
@@ -616,7 +618,7 @@ OPNsense/openssl's ciphers are too new, to install client certificate you may ne
    There was some mention that it auto-installs if you try running x86_64 binaries.
 1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
 1. Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
-  `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
+   `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
 1. Nix-Darwin build and run installer
 
 ```
@@ -632,10 +634,11 @@ create /run? y
 # a nix-channel call will now fail
 ```
 
-1. Bootstrapping
-  1. do the xcode-install method
-  1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
-  1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
+Bootstrapping:
+
+1. do the xcode-install method
+1. Build manually once `nix build github:arichtman/nix#darwinConfigurations.macbook-pro-work.system`
+1. Switch manually once `./result/sw/bin/darwin-rebuild switch --flake .#macbook-pro-work`
 1. If bootstrapped, build according to flake `./result/sw/bin/darwin-rebuild switch --flake github:arichtman/nix`
 
 To do: look into [Nix VMs on Mac](https://paretosecurity.com/blog/being-a-happy-nixer-on-a-mac/)

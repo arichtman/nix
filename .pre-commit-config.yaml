@@ -30,9 +30,13 @@ repos:
   rev: v1.3.0
   hooks:
   - id: deadnix
-  # Disabled due to breaking updates
-  # TODO: revert to main project when this is merged
-  # https://github.com/oppiliappan/statix/pull/81
+- repo: https://github.com/spinergie/pre-commit-dprint
+  rev: ''  # Use the sha / tag you want to point at
+  hooks:
+  - id: dprint
+# Disabled due to breaking updates
+# TODO: revert to main project when this is merged
+# https://github.com/oppiliappan/statix/pull/81
 # - repo: https://github.com/Matthieu-LAURENT39/statix/
 #   rev: pre-commit
 #   hooks:

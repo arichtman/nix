@@ -107,7 +107,7 @@ So go figure.
 
 I honestly can't keep track of what this is relative to _NetworkManager_.
 There is a service, `systemd-networkd`.
-By the way, `systemd-resolved` *used* to be controlled by `systemd-resolve`.
+By the way, `systemd-resolved` _used_ to be controlled by `systemd-resolve`.
 It's now `resolvectl`.
 Guess I'm not mad about that one.
 Now the fact that mDNS is configured per _interface_ and not _connection_ like before?

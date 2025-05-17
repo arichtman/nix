@@ -3,12 +3,14 @@
   json = {
     indentWidth = 2;
   };
-  plugins = pkgs.dprint-plugins.getPluginList (
-    plugins: [
-      pkgs.dprint-plugins.dprint-plugin-toml
-      pkgs.dprint-plugins.dprint-plugin-markdown
-      pkgs.dprint-plugins.dprint-plugin-json
-      pkgs.dprint-plugins.dprint-plugin-dockerfile
-    ]
-  );
+  plugins = with pkgs;
+    dprint-plugins.getPluginList (
+      plugins:
+        with dprint-plugins; [
+          dprint-plugin-toml
+          dprint-plugin-markdown
+          dprint-plugin-json
+          dprint-plugin-dockerfile
+        ]
+    );
 }

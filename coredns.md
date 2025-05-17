@@ -21,7 +21,7 @@ Before I had a cyclic dependency resolving it but I think that's sorted elsewher
 With this default configuration it complains that the ClusterIP of the default kubernetes service isn't in the TLS SAN.
 This happens in the GoLang `client-go` Kubernetes client on v0.31.2 (ancient).
 
-There *are* options for automated certificate rotation in Kubernetes.
+There _are_ options for automated certificate rotation in Kubernetes.
 However it's pretty much limited to "in-cluster" stuff, so mostly Kubelet client certificates to the API server.
 Suse had a recent-ish project for it too, FYI.
 
@@ -46,7 +46,7 @@ By default, Kubelet will by default copy the node's `/etc/resolv.conf` to pods.
 Of course the node default `resolv.conf` is pointing at the local stub resolver to reduce network noise.
 Since the pods are in a network namespace, `localhost:53` isn't available.
 
-The Kubelet config includes `resolvConf:/--resolv-conf` settings  for pointing to a different file.
+The Kubelet config includes `resolvConf:/--resolv-conf` settings for pointing to a different file.
 This allows us to (albeit statically) set a valid upstream of the router's LAN IP, where Unbound is running.
 Adjust the kubelet `resolvConf` value to the "true" `resolv.conf` in `/run/systemd/resolve/`.
 
@@ -75,7 +75,7 @@ It's a convenience thing but it is nice.
 ### Kubelet configuration not taking
 
 On startup the Kubelet spews out what its configuration is (at v>=1, anyways).
-Turns out this is *only* the CLI arguments, and not the config file data.
+Turns out this is _only_ the CLI arguments, and not the config file data.
 Set `v>=3` to see a dump of the read file.
 ...still doesn't show what the realized config is >:(
 
