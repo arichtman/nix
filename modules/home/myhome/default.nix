@@ -415,7 +415,7 @@ in
             jq-lsp
             buf
             nixd
-            ruff-lsp
+            ruff
             # jj VCS
             jujutsu
             gg-jj
@@ -433,6 +433,13 @@ in
             rsync
             dockutil
             gawk
+          ]
+          ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
+            yubikey-manager
+            yubioath-flutter
+            yubikey-touch-detector
+            yubikey-manager-qt
+            yubikey-personalization-gui
           ];
         file =
           # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix

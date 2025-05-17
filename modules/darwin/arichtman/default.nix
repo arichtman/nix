@@ -22,8 +22,7 @@ with lib;
       '';
 
       #TODO: Do we even want Rosetta?
-      #TODO: Work out how to only add extraplatforms to aarch64
-      # extra-platforms = x86_64-darwin aarch64-darwin
+      # extra-platforms = lib.mkIf pkgs.stdenv.isAarch64 x86_64-darwin;
 
       # Required or /run/current-system/sw isn't put on PATH
       #TODO: pull config out from default-home?
@@ -31,23 +30,14 @@ with lib;
       # TODO: trim
       environment.systemPackages = with pkgs; [
         # TODO: unavailable/supported on aarch64
-        # yubioath-flutter
-        # yubikey-touch-detector
-        # yubikey-manager-qt
-        # yubikey-personalization-gui
         # Disabled due to framework not found CoreServices
         # yubico-pam
-        yubikey-manager
         curl # TODO: Maybe make a default-system module?
         git
         btop
-        # Required for some c dependencies for rustc/cargo
-        darwin.apple_sdk.frameworks.CoreServices
-        darwin.apple_sdk.frameworks.Security
         pkg-config
         openssl
         # Other shit
-        gimp
         rectangle
         phinger-cursors
         wireguard-go
