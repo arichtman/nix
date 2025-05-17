@@ -406,6 +406,12 @@ in
             lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
             alejandra # nix formatter
             dprint # markdown formatting (it does more though)
+            # pkgs.dprint-plugins.getPluginList (plugins: [
+            #   dprint-plugins.dprint-plugin-toml
+            #   dprint-plugins.dprint-plugin-markdown
+            #   dprint-plugins.dprint-plugin-json
+            #   dprint-plugins.dprint-plugin-dockerfile
+            # ])
             helm-ls
             yaml-language-server
             ansible-language-server
@@ -459,7 +465,8 @@ in
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
             # https://github.com/nix-community/home-manager/issues/2104
             ".terraform.d/plugin-cache/.keep".text = "";
-            ".dprint.jsonc".source = dprint/.dprint.jsonc;
+            ".dprint.jsonc".text = builtins.toJSON (import ./dprint.nix {inherit pkgs;});
+            # ".dprint.jsonc".text = builtins.toJSON (pkgs.callPackage ./dprint.nix {inherit pkgs; });
           };
         sessionPath = ["/home/${cfg.username}/.cargo/bin"];
 
