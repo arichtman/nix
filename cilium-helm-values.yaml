@@ -1,8 +1,11 @@
 # helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.17.3
+# helm upgrade --install cilium ./cilium-1.17.3.tgz --namespace kube-system --values cilium-helm-values.yaml
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all
 # kubectl annotate node $n cilium.io/bgp-virtual-router.65551="router-id=192.168.255.${i}" --overwrite
 
+cluster:
+  name: kubernetes
 # No kube-proxy
 kubeProxyReplacement: true
 # Enables healthz endpoint
@@ -16,145 +19,51 @@ ipv4:
 ipv6:
   enabled: true
 
-# This makes kubectl logs and execs default nicely
-podAnnotations:
-  kubectl.kubernetes.io/default-container: cilium-agent
-# For development
-envoy:
-  enabled: false
-# debug:
-#   enabled: true
-# Ref: https://github.com/cilium/cilium/blob/main/.github/workflows/tests-smoke-ipv6.yaml
-# To test
-# ingressController:
-#   enabled: true
-# nodeinit:
-#   enabled: true
-# Attempting to match where the cilium-agent is actually listening
-# healthPort: 9890
-# cni:
-#   confPath: /run/cni/net.d
-# Disable SNAT as the node interface should have all pod IPv6 in addition to it's own
-# This may be required as nodes aren't replying to neighbor solicitations for pod IPs
-# Required enabled to enable eBPF masquerading mode
-# enableIPv6Masquerade: true
-
-enableIPv6BIGTCP: true
-# Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
-bpf:
-  # Enable cluster-external traffic to be routed to pods
-  # lbExternalClusterIP: true
-  # Use BPF instead of iptables masquerading
-  # Masquerading is off for anything in the IPv6 native routing CIDR though
-  #   which means it's not SNATing pod outbound traffic.
-  masquerade: true
-# Set rules to route inter-node without hitting the router
-# Failing presently as IP pool being used is ULA CIDR,
-#   which contains the gateway LL address
-# failed to start: daemon creation failed: error while initializing daemon: failed while reinitializing datapath: failed to enable direct routes for ipv6: route to destination fd00::118 contains gateway fe80::4140:f9e8:ec8a:489e, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes" subsys=daemon
-autoDirectNodeRoutes: true
-# https://github.com/cilium/cilium/issues/21538
-# https://github.com/cilium/cilium/issues/35822
-# https://github.com/cilium/cilium/issues/17240
-routingMode: native
-# invalid daemon configuration: native routing cidr must be configured with option --ipv6-native-routing-cidr in combination with --enable-ipv6=true --enable-ipv6-masquerade=true --enable-ip-masq-agent=false --routing-mode=native" subsys=daemon
-# Disabling in favor of nonclashing CIDR
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1:0:ffff:ffff::/96
-# enableIPv6Masquerade: true
-# Those worked above, but now it's using fd00 range to try and reach stuff...
-ipam:
-  mode: "cluster-pool" # Should be unnecessary
-  # mode: "kubernetes"
-  operator:
-    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
-    # Ref: https://github.com/cilium/cilium/issues/20756
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
-    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0:aaaa:aaaa::/96"]
-    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:0::/112"]
-    # clusterPoolIPv6MaskSize: 64 # default 120
-    # clusterPoolIPv6MaskSize: 112
-    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
-    clusterPoolIPv6MaskSize: 80
-    # autoCreateCiliumPodIPPools: # may only be for multi-pool ipam mode
-    #   default:
-    #     ipv6:
-    #       cidrs:
-    #         - 2403:580a:e4b1::/64
-    #       maskSize: 112
-          # maskSize: 64
-operator:
-  rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
-  replicas: 1
-# hubble:
-#   ui:
-#     enabled: true
-#   relay:
-#     enabled: true
-# Fully uninstall
-# cni:
-#   uninstall: true
-ingressController:
-  enabled: false
-  default: false
-gatewayAPI:
-  enabled: true
-# Require v6 address since we're single stack effectively
-# k8s:
-#   requireIPv6PodCIDR: true
-cluster:
-  name: kubernetes
+# -- Roll out cilium agent pods automatically when configmap is updated.
 rollOutCiliumPods: true
-# Seems removed, might be more granular now
-# Also looks like agents are already hostNetwork
-# hostNetwork:
-#   enabled: true
-# ---
-# Bah, already enabled
 l2NeighDiscovery:
   enabled: true
-# l2 announcements are IPv4 only at this time
-l2announcements:
-  # -- Enable L2 announcements
-  enabled: true
-  # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
-  # leaseDuration: 15s
-  # -- The interval at which the leader will renew the lease
-  # leaseRenewDeadline: 5s
-  # -- The timeout between retries if renewal fails
-  # leaseRetryPeriod: 2s
-# This fails on a couple fronts:
-#   1. Pods don't have IPv4 IPs, so nothing to gARP
-#   2. Interface name varies for VMs
-# -- Configure L2 pod announcements
-l2podAnnouncements:
-  # -- Enable L2 pod announcements
-  enabled: false
-  # -- Interface used for sending Gratuitous ARP pod announcements
-  interface: "eno1"
-# -- Configure BGP
-bgp:
-  # -- Enable BGP support inside Cilium; embeds a new ConfigMap for BGP inside
-  # cilium-agent and cilium-operator
-  enabled: true
-  announce:
-    # -- Enable allocation and announcement of service LoadBalancer IPs
-    loadbalancerIP: true
-    # -- Enable announcement of node pod CIDR
-    podCIDR: true
+
 # -- This feature set enables virtual BGP routers to be created via
 # CiliumBGPPeeringPolicy CRDs.
 bgpControlPlane:
   # -- Enables the BGP control plane.
   enabled: true
-  # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
-  secretsNamespace:
-    # -- Create secrets namespace for BGP secrets.
-    create: false
-    # -- The name of the secret namespace to which Cilium agents are given read access
-    name: kube-system
-pmtuDiscovery:
-  # -- Enable path MTU discovery to send ICMP fragmentation-needed replies to
-  # the client.
+
+# This makes kubectl logs and execs default nicely
+podAnnotations:
+  kubectl.kubernetes.io/default-container: cilium-agent
+enableIPv6BIGTCP: true
+# Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
+bpf:
+  # Use BPF instead of iptables masquerading
+  # Masquerading is off for anything in the IPv6 native routing CIDR though
+  #   which means it's not SNATing pod outbound traffic.
+  masquerade: true
+autoDirectNodeRoutes: true
+# https://github.com/cilium/cilium/issues/21538
+# https://github.com/cilium/cilium/issues/35822
+# https://github.com/cilium/cilium/issues/17240
+routingMode: native
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+ipam:
+  mode: "cluster-pool" # Should be unnecessary
+  operator:
+    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
+    # Ref: https://github.com/cilium/cilium/issues/20756
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
+    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
+    clusterPoolIPv6MaskSize: 80
+
+#region Development
+envoy:
   enabled: false
+# Fully uninstall
+# cni:
+#   uninstall: true
+# debug:
+#   enabled: true
+operator:
+  rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
+  replicas: 1
+#endregion

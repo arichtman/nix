@@ -1,3 +1,5 @@
+# Working directory for investigating upstream code and Helm charts
+wip/
 # Direnv cache
 .direnv/
 

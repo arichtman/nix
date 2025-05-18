@@ -16,7 +16,7 @@ spec:
       failureThreshold: 99
   dnsPolicy: ClusterFirst
   restartPolicy: Always
-  nodeName: mum.systems.richtman.au
+  nodeName: patient-zero.systems.richtman.au
 ---
 apiVersion: v1
 kind: Service

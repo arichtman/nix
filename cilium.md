@@ -1,5 +1,18 @@
 # Cilium
 
+To do:
+
+- Fix in-cluster API server access by default service
+- Ensure in-cluster traffic doesn't traverse the router
+- Figure out a way to locally use either Helm or JSONschema to identify unused input values
+- Rename cluster
+- Enable Hubble (relay seems to fail without CoreDNS)
+- See about sending traces somewhere
+- Re-enable default operator HA
+- Install Gateway API CRDs and enable Cilium support
+- Look into pmtuDiscovery
+- Enable Grafana dashboard in values
+
 - https://docs.cilium.io/en/stable/helm-reference/
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
 - https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
