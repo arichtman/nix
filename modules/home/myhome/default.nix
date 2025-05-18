@@ -425,21 +425,18 @@ in
             arichtman.mamediff
             # langs
             rustup
-            #TODO: dont have these on mac, aarch64 at least
-            # trippy
             # Ref: https://terminaltrove.com
           ]
           ++ lib.optionals (!pkgs.stdenv.isAarch64) [
             trippy
             rsync
-            dockutil
+            # dockutil
             gawk
           ]
           ++ lib.optionals (!pkgs.stdenv.hostPlatform.isDarwin) [
             yubikey-manager
             yubioath-flutter
             yubikey-touch-detector
-            yubikey-manager-qt
             yubikey-personalization-gui
           ];
         file =
