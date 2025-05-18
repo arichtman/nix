@@ -397,21 +397,16 @@ in
             kubectl-doctor
             kubectl-explore
             kubectl-view-secret
+            stern
             # Lang servers
             nil # nix
-            marksman # md
+            markdown-oxide # md
             terraform-ls # tf
             gopls
             # rust-analyzer # rust
-            lldb_18 # Rust debugging - TODO, switch to lldb proper after v18 so lldb-dap is available
+            lldb
             alejandra # nix formatter
-            dprint # markdown formatting (it does more though)
-            # pkgs.dprint-plugins.getPluginList (plugins: [
-            #   dprint-plugins.dprint-plugin-toml
-            #   dprint-plugins.dprint-plugin-markdown
-            #   dprint-plugins.dprint-plugin-json
-            #   dprint-plugins.dprint-plugin-dockerfile
-            # ])
+            dprint # formatting (esp MD)
             helm-ls
             yaml-language-server
             ansible-language-server
