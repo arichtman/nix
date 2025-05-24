@@ -447,7 +447,7 @@ in
               source = ./helix;
               recursive = true;
             };
-            ".config/.ripgreprc".text = "--glob='!**/*.svg'";
+            ".config/.ripgreprc".text = "--glob=!**/*.svg";
             ".cargo/config.toml".source = cargo/config.toml;
             ".cargo/env".source = dummyCargoEnvFile;
             ".config/terraform" = {
