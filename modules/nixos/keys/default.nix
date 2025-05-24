@@ -40,11 +40,9 @@ in
       # };
     };
     config = mkIf cfg.enable {
-      # TODO: un-hardcode user?
-      # Ref: https://hachyderm.io/@jakehamilton/110810308164205009
-      # Ref: https://github.com/jakehamilton/config/blob/579827c699d9c78bd42e73f543eafb05a0d6c374/modules/user/default.nix#L30
-      # Ref: https://github.com/jakehamilton/config/blob/da5c75ce9c21d282745af5efb14b06fde2364f42/modules/nixos/home/default.nix#L32
-      # users.users.${user.name}.openssh.authorizedKeys.keys = arichtman.getPublicKeys "github" cfg.github.username cfg.github.fileHash;
-      users.users.nixos.openssh.authorizedKeys.keys = arichtman.getPublicKeys "github" cfg.github.username cfg.github.fileHash;
+      users.users.nixos.openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxGxm6tCZlV3vJ6+yAkmQKcqVagfhgaf2aHzVQHvay+"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMB0EONXbHFqCgHpvJDtFVrDyJeNVHb+XeweP+vYHf0F"
+      ];
     };
   }
