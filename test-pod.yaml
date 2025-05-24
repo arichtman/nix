@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    run: mytest
-  name: mytest
+    run: my-test
+  name: my-test
 spec:
   containers:
   - image: docker.io/nginx:latest
-    name: mytest
+    name: my-test
     ports:
     - containerPort: 80
     readinessProbe:
@@ -22,7 +22,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: mytest
+    run: my-test
   name: mytest-svc
 spec:
   ports:
@@ -30,5 +30,5 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    run: mytest
+    run: my-test
   type: ClusterIP
