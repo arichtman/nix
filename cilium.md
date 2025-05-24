@@ -12,6 +12,9 @@ To do:
 - Install Gateway API CRDs and enable Cilium support
 - Look into pmtuDiscovery
 - Enable Grafana dashboard in values
+- Netkit or BPF host routing
+- CiliumEndpointSlice
+- Exclude labels from identity
 
 - https://docs.cilium.io/en/stable/helm-reference/
 - https://docs.cilium.io/en/stable/installation/k8s-install-helm/
