@@ -131,7 +131,8 @@ in {
         (mkLocalScrapeConfig "garage" 3903)
         (mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
         (mkLocalScrapeConfig "spire-server" 9988)
-        (mkLocalScrapeConfig "spire-agent" 9989)
+        # TODO: Renable when agent is working
+        # (mkLocalScrapeConfig "spire-agent" 9989)
         # Self-monitoring (fwiw)
         (mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
         (mkLocalScrapeConfig "prometheus" config.services.prometheus.port)

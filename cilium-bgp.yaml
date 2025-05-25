@@ -38,7 +38,7 @@ spec:
       safi: unicast
       advertisements:
         matchLabels:
-          advertise: "bgp"
+          advertise: bgp
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPAdvertisement

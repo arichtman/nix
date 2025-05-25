@@ -23,6 +23,8 @@ in
         yq
         tcpdump
         trippy
+        bpftools
+        ethtool
         btop
         sysstat
         linuxKernel.packages.linux_libre.perf
@@ -50,6 +52,11 @@ in
         isNormalUser = true;
         description = "nixos";
         extraGroups = ["networkmanager" "wheel"];
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJt9zJAxzYEK7Y2FYmwkT4cnYr/e4lO2w/ivNL74Pp6B"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxGxm6tCZlV3vJ6+yAkmQKcqVagfhgaf2aHzVQHvay+"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMB0EONXbHFqCgHpvJDtFVrDyJeNVHb+XeweP+vYHf0F"
+        ];
       };
 
       security = {
@@ -59,17 +66,6 @@ in
         sudo.wheelNeedsPassword = false;
       };
 
-      myKeys = {
-        enable = true;
-        github = {
-          username = "arichtman";
-          fileHash = "13h76hlfhnfzd7yjilhwkb9hx5kgmknm30xhq3sqkh6v5h1i1kyv";
-        };
-        gitlab = {
-          username = "arichtman-srt";
-          fileHash = "0xq3xxszpgrcha861b2p05hlddm4aa9s2vsr5ri1ak059lwshkc8";
-        };
-      };
       # Set your time zone.
       time.timeZone = "UTC";
 
@@ -92,6 +88,8 @@ in
         k8s.worker = true;
         openssh = {
           enable = true;
+          # TODO: Disable before opening to internet
+          # settings.PasswordAuthentication = false;
         };
         resolved = {
           enable = true;

@@ -85,6 +85,7 @@ Todo:
 - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
 - Configure what can be for Otel
 - Spire for node identity
+- Stop Spire agent dying if stale join token
 - Secrets (Vault/OpenBao?)
 - Certificate authority? (step-ca?)
 - More identity integration
