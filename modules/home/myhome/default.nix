@@ -384,6 +384,7 @@ in
             nurl
             nix-bash-completions
             nix-your-shell
+            nix-tree
             # Kube stuff
             kubectl
             kubectl-neat
@@ -409,11 +410,12 @@ in
             dprint # formatting (esp MD)
             helm-ls
             yaml-language-server
-            ansible-language-server
+            # ansible-language-server seems to crash
             vscode-langservers-extracted
             dockerfile-language-server-nodejs
             docker-compose-language-service
             jq-lsp
+            yq
             buf
             nixd
             ruff
