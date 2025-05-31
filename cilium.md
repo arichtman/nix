@@ -32,6 +32,8 @@ To do:
 - https://kubernetes.io/docs/concepts/services-networking/dual-stack/
 - [Some settings we might need for naked pods](https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/)
 - [More cilium v6 stuff](https://functional.cafe/@arianvp/112994181771306904)
+- [bpftool intro blog](https://thegraynode.io/posts/bpftool_introduction/)
+- [jsa4000's home lab notes](https://jsa4000.github.io/homelab-ops/layers/networking/cilium/)
 
 Networking stuff
 

@@ -33,7 +33,7 @@ step certificate create kube-apiserver kube-apiserver-tls.pem kube-apiserver-tls
   --san "${NODE_NAME}" --san "${NODE_FQDN}" --san "${NODE_LOCAL_FQDN}" --san localhost \
   --san 127.0.0.1 --san ::1 --san "10.0.0.1" --san "2403:580a:e4b1:1:ffff:ffff:ffff:1"\
   --san kubernetes --san kubernetes.default --san kubernetes.default.svc \
-  --san kubernetes.default.svc.cluster --san "kubernetes.default.svc.cluster.${NODE_FQDN}"
+  --san kubernetes.default.svc.cluster --san "kubernetes.default.svc.cluster.local"
 
 # service account token signing
 openssl req -new -x509 -days 365 -newkey rsa:4096 -keyout service-account-key.pem -sha256 \

@@ -2,7 +2,6 @@
 # helm upgrade --install cilium ./cilium-1.17.3.tgz --namespace kube-system --values cilium-helm-values.yaml
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all
-# cat nodes.txt | xargs -I% kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite
 # cat nodes.txt | xargs -I% bash -c 'kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite'
 # kgn -o custom-columns=Node:.metadata.name,Id:".metadata.annotations.cilium\.io/bgp-virtual-router\.65551"
 
@@ -42,12 +41,16 @@ bpf:
   # Masquerading is off for anything in the IPv6 native routing CIDR though
   #   which means it's not SNATing pod outbound traffic.
   masquerade: true
+  # Allow cluster external access to ClusterIP services.
+  lbExternalClusterIP: true
 autoDirectNodeRoutes: true
 # https://github.com/cilium/cilium/issues/21538
 # https://github.com/cilium/cilium/issues/35822
 # https://github.com/cilium/cilium/issues/17240
 routingMode: native
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+externalIPs:
+  enabled: true
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
 ipam:
   mode: "cluster-pool" # Should be unnecessary
   operator:

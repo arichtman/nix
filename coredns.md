@@ -2,13 +2,6 @@
 
 We generally want CoreDNS since it'll reduce a pile of chatter hitting the Unbound resolver on the router,
 
-Convenience test commands
-
-```shell
-helm upgrade --install coredns ./coredns-1.40.0.tgz --namespace kube-system --values coredns-helm-values.yaml --version 1.40.0
-k run --rm test -it --image docker.io/nicolaka/netshoot --overrides='{"apiVersion": "v1", "spec": {"nodeSelector": { "kubernetes.io/hostname": "patient-zero.systems.richtman.au" }}}' -- /bin/bash
-```
-
 ## Issues
 
 ### Untrusted API-server TLS
