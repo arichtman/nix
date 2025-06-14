@@ -5,5 +5,5 @@ step certificate create cluster-admin admin-client.pem admin-client-key.pem \
   --not-after 8760h --set organization=system:masters \
   $@
 
-kubectl config set-credentials home-admin --client-certificate=admin-client.pem --client-key=admin-client-key.pem --embed-certs
-kubectl config set-cluster home --server=https://fat-controller.systems.richtman.au:6443 --certificate-authority=k8s-ca.pem --embed-certs
+# Set our local int ca
+cp --force k8s-ca.pem admin-client.pem admin-client-key.pem ~/.kube
