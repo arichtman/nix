@@ -20,7 +20,7 @@
   agentConfig = {
     agent = {
       trust_domain = topConfig.trustDomain;
-      server_address = "fat-controller.systems.richtman.au";
+      server_address = "${config.networking.hostName}.systems.richtman.au";
       # server_address = "spire.services.richtman.au";
       server_port = 8081;
       # Required until figure out trust bundle sourcing
@@ -28,7 +28,7 @@
       # Things might come up wonky
       retry_bootstrap = true;
       # trust_bundle_format = "spiffe";
-      # trust_bundle_url = "https://fat-controller.systems.richtman.au:8081";
+      # trust_bundle_url = "https://${config.networking.hostName}.systems.richtman.au:8081";
     };
     # Ref: https://github.com/spiffe/spire/blob/v1.12.0/doc/telemetry/telemetry_config.md
     telemetry = {

@@ -13,7 +13,6 @@
       {
         name = "scheduler";
         user = {
-          # TODO: This could probably be the dedicated ClusterRole for scheduler
           client-certificate = "${topConfig.secretsPath}/scheduler-apiserver-client.pem";
           client-key = "${topConfig.secretsPath}/scheduler-apiserver-client-key.pem";
         };
@@ -24,7 +23,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${topConfig.secretsPath}/k8s-ca.pem";
-          server = "https://fat-controller.systems.richtman.au:6443";
+          server = "https://${config.networking.hostName}.systems.richtman.au:6443";
         };
       }
     ];

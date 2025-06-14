@@ -13,13 +13,13 @@
           "localhost:${builtins.toString port}"
         ];
         labels = {
-          instance = "fat-controller.systems.richtman.au";
+          instance = "${config.networking.hostName}.systems.richtman.au";
         };
       }
     ];
   };
   mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
-    "fat-controller"
+    "${config.networking.hostName}"
     "patient-zero"
     "dr-singh"
     "smol-bat"
@@ -33,7 +33,7 @@
       source_labels = ["__address__"];
       regex = ".*localhost.*";
       target_label = "instance";
-      replacement = "fat-controller.systems.richtman.au";
+      replacement = "${config.networking.hostName}.systems.richtman.au";
     }
     # Remove port numbers
     {
@@ -187,7 +187,7 @@ in {
                 "localhost:9100"
               ];
               labels = {
-                instance = "fat-controller.systems.richtman.au";
+                instance = "${config.networking.hostName}.systems.richtman.au";
               };
             }
             {

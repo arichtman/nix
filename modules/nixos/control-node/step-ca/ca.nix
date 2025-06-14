@@ -1,4 +1,4 @@
-{
+{config}: {
   root = "/var/lib/step-ca/certs/root_ca.crt";
   federatedRoots = null;
   crt = "/var/lib/step-ca/certs/intermediate_ca.crt";
@@ -6,9 +6,9 @@
   address = "[::]:7443";
   insecureAddress = "";
   dnsNames = [
-    "fat-controller.systems.richtman.au"
-    "fat-controller.local"
-    "fat-controller.internal"
+    "${config.networking.hostName}.systems.richtman.au"
+    "${config.networking.hostName}.local"
+    "${config.networking.hostName}.internal"
     "ca.richtman.au"
   ];
   logger = {
