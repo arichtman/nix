@@ -48,7 +48,27 @@
         kubeconfig = controllerKubeconfigFile;
       };
     };
-    CSRSigningController = {};
+    CSRSigningController = {
+      clusterSigningCertFile = "${topConfig.secretsPath}/k8s-ca.pem";
+      clusterSigningKeyFile = "${topConfig.secretsPath}/k8s-ca-key.pem";
+      # kubeletServingSignerConfiguration = {
+      #   certFile = "";
+      #   keyFile = "";
+      # };
+      # kubeletClientSignerConfiguration = {
+      #   certFile = "";
+      #   keyFile = "";
+      # };
+      # kubeAPIServerClientSignerConfiguration = {
+      #   certFile = "";
+      #   keyFile = "";
+      # };
+      # legacyUnknownSignerConfiguration = {
+      #   certFile = "";
+      #   keyFile = "";
+      # };
+      # clusterSigningDuration = "1h";
+    };
   };
   controllerConfigFile = pkgs.writeText "controller-config" (builtins.toJSON controllerConfig);
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/
@@ -73,11 +93,14 @@
     # Unsure if we want this one
     configure-cloud-routes = false;
     authorization-kubeconfig = controllerKubeconfigFile;
-    # "--authentication-kubeconfig"
-    # controllerKubeconfigFile
+    # TODO: looks like either the kubekubeconfig is missing a value or mis-pointed?
+    #  configmap_cafile_content.go:246] "Unhandled Error" err="kube-system/extension-apiserver-authentication failed with : missing content for CA bundle \"client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file\"" logger="UnhandledError"
+    #  configmap_cafile_content.go:246] "Unhandled Error" err="key failed with : missing content for CA bundle \"client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file\"" logger="UnhandledError"
+    # authentication-kubeconfig = controllerKubeconfigFile;
     bind-address = "::";
-    # "--config"
-    # controllerConfigFile
+    # Note: Although feature kube:StructuredAuthenticationConfiguration is default enabled in 1.33 there's no actual CLI flag for it
+    #   and it's not worth digging into the k8s source to see if there's a default path. We can wait.
+    # config = controllerConfigFile;
     client-ca-file = "${topConfig.secretsPath}/k8s-ca.pem";
     cluster-signing-cert-file = "${topConfig.secretsPath}/k8s-ca.pem";
     cluster-signing-key-file = "${topConfig.secretsPath}/k8s-ca-key.pem";
@@ -87,8 +110,6 @@
     tls-cert-file = "${topConfig.secretsPath}/controllermanager-tls-cert-file.pem";
     tls-private-key-file = "${topConfig.secretsPath}/controllermanager-tls-private-key-file.pem";
     use-service-account-credentials = true;
-    # TODO: for development
-    v = 2;
   };
 in {
   options.services.k8s-controller.enable = lib.mkEnableOption "Enable k8s controller";

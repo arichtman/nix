@@ -28,6 +28,8 @@ step certificate p12 client.p12 client.pem client-key.pem --ca opnsense-ca.pem
 mv client.p12 ~/Downloads
 ```
 
+[Well-known Kubernetes users and groups](https://github.com/kubernetes/kubernetes/blob/v1.33.0/staging/src/k8s.io/apiserver/pkg/authentication/user/user.go#L71)
+
 ## Step-CA
 
 ```

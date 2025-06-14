@@ -88,10 +88,6 @@
     current-context = "default";
   };
   kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
-  nodeRole =
-    if config.services.k8s.controller
-    then "master"
-    else "worker";
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
   serviceArgs = lib.cli.toGNUCommandLineShell {} {
     config = kubeletConfigFile;
@@ -102,16 +98,13 @@
     # GoLang running it's own DNS stack doesn't help here either.
     hostname-override = config.networking.fqdn;
     kubeconfig = kubeletKubeconfigFile;
-    # Ref: https://kubernetes.io/docs/reference/labels-annotations-taints/
-    # --node-labels in the 'kubernetes.io' namespace must begin with an allowed prefix
-    # "--node-labels"
-    # "node-role.kubernetes.io/${nodeRole}=${nodeRole}"
-    # Used for debugging
-    # v = 1;
     # We're not using iptables
     # I think this causes the warnings about iptables not on PATH
     make-iptables-util-chains = false;
   };
+  # https://kubernetes.io/docs/reference/labels-annotations-taints/
+  # --node-labels in the 'kubernetes.io' namespace must begin with an allowed prefix (kubelet.kubernetes.io, node.kubernetes.io) or be in the specifically allowed set (beta.kubernetes.io/arch, beta.kubernetes.io/instance-type, beta.kubernetes.io/os, failure-domain.beta.kubernetes.io/region, failure-domain.beta.kubernetes.io/zone, kubernetes.io/arch, kubernetes.io/hostname, kubernetes.io/os, node.kubernetes.io/instance-type, topology.kubernetes.io/region, topology.kubernetes.io/zone)
+  # } // lib.attrsets.optionalAttrs (config.services.k8s.controller) {node-labels = "node-role.kubernetes.io/control-plane";});
 in {
   options.services.k8s-kubelet = {
     enable = lib.mkEnableOption "Enable Kubelet server";
