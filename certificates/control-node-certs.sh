@@ -55,7 +55,7 @@ step certificate create kube-controllermanager controllermanager-tls-cert-file.p
 # Scheduler apiserver client
 step certificate create system:kube-scheduler scheduler-apiserver-client.pem scheduler-apiserver-client-key.pem \
   --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json \
-  --not-after 8760h
+  --not-after 8760h --set organization=system:kube-scheduler
 
 # Scheduler TLS
 step certificate create scheduler scheduler-tls-cert-file.pem scheduler-tls-private-key-file.pem --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem \
@@ -64,9 +64,9 @@ step certificate create scheduler scheduler-tls-cert-file.pem scheduler-tls-priv
   --san 127.0.0.1 --san ::1
 
 # APIserver client to kubelet
-step certificate create "system:masters:${NODE_NAME}" kubelet-apiserver-client.pem kubelet-apiserver-client-key.pem \
+step certificate create "system:apiserver:${NODE_NAME}" kubelet-apiserver-client.pem kubelet-apiserver-client-key.pem \
   --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json \
-  --not-after 8760h --set organization=system:masters
+  --not-after 8760h --set organization=system:apiserver
 
 # Copy everything over, using ~ so we don't hit permissions issues
 rsync service-account*.pem "${NODE_FQDN}:/home/nixos/secrets"
@@ -91,9 +91,9 @@ ssh "${NODE_FQDN}" sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
 ssh "${NODE_FQDN}" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
 # Set ownership of etcd stuff specifically
 ssh "${NODE_FQDN}" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
+# Bounce all services
+ssh "${NODE_FQDN}" sudo systemctl restart k8s-scheduler k8s-controller k8s-apiserver etcd
 # Wipe all service accounts since we've rolled the key for them
 # Ideally do it by label/annotation but they don't have the same autoupdate stuff written as clusterroles
 # kubectl delete serviceaccount --all
 kubectl delete serviceaccount --namespace kube-system --all
-# Bounce all services
-ssh "${NODE_FQDN}" sudo systemctl restart k8s-scheduler k8s-controller k8s-apiserver etcd
