@@ -14,8 +14,8 @@
         name = "scheduler";
         user = {
           # TODO: This could probably be the dedicated ClusterRole for scheduler
-          client-certificate = "${topConfig.secretsPath}/kubelet-apiserver-client.pem";
-          client-key = "${topConfig.secretsPath}/kubelet-apiserver-client-key.pem";
+          client-certificate = "${topConfig.secretsPath}/scheduler-apiserver-client.pem";
+          client-key = "${topConfig.secretsPath}/scheduler-apiserver-client-key.pem";
         };
       }
     ];
