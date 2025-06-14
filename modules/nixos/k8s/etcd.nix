@@ -18,7 +18,7 @@ in {
     # For now, use the existing Kubernetes location.
     # TODO: ascertain where this should be placed
     # TODO: work out secrets management
-    trustedCaFile = "${mainK8sConfig.secretsPath}/etcd.pem";
+    trustedCaFile = "${mainK8sConfig.secretsPath}/etcd-ca.pem";
     certFile = "${mainK8sConfig.secretsPath}/etcd-tls.pem";
     keyFile = "${mainK8sConfig.secretsPath}/etcd-tls-key.pem";
     clientCertAuth = true;

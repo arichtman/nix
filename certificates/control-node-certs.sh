@@ -16,14 +16,14 @@ export NODE_FQDN="${NODE_NAME}.${NODE_DOMAIN}"
 export NODE_LOCAL_FQDN="${NODE_NAME}.local"
 
 # etcd TLS
-step certificate create etcd etcd-tls.pem etcd-tls-key.pem --ca ../etcd.pem --ca-key ../etcd-key.pem \
+step certificate create etcd etcd-tls.pem etcd-tls-key.pem --ca ../etcd-ca.pem --ca-key ../etcd-ca-key.pem \
   --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_NAME}" --san "${NODE_LOCAL_FQDN}" --san "${NODE_FQDN}" --san localhost \
   --san 127.0.0.1 --san ::1
 
 # apiserver client to etcd
 step certificate create kube-apiserver-etcd-client kube-apiserver-etcd-client.pem kube-apiserver-etcd-client-key.pem \
-  --ca ../etcd.pem --ca-key ../etcd-key.pem --insecure --no-password --not-after 8120h \
+  --ca ../etcd-ca.pem --ca-key ../etcd-ca-key.pem --insecure --no-password --not-after 8120h \
   --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json
 
 # apiserver TLS

@@ -19,7 +19,7 @@
     #   It's probably only used for generating self-signed certificates. Bleh
     cert-dir = cfg.secretsPath;
     client-ca-file = "${cfg.secretsPath}/k8s-ca.pem";
-    etcd-cafile = "${cfg.secretsPath}/etcd.pem";
+    etcd-cafile = "${cfg.secretsPath}/etcd-ca.pem";
     etcd-certfile = "${cfg.secretsPath}/kube-apiserver-etcd-client.pem";
     etcd-keyfile = "${cfg.secretsPath}/kube-apiserver-etcd-client-key.pem";
     etcd-servers = "https://[::1]:2379";
