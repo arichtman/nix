@@ -59,6 +59,8 @@ in
       isThatOneWeirdMachine = mkEnableOption "IYKYK";
     };
     config = {
+      # Silence annoying news message
+      news.display = "silent";
       nix.extraOptions = "keep-going = true";
       # TODO: Remember what the f*** this fixes and update this comment
       xdg.systemDirs = mkIf pkgs.stdenv.isLinux {
@@ -449,6 +451,7 @@ in
               source = ./helix;
               recursive = true;
             };
+            # It's odd this isn't a more structured config file
             ".config/.ripgreprc".text = "--glob=!**/*.svg";
             ".cargo/config.toml".source = cargo/config.toml;
             ".cargo/env".source = dummyCargoEnvFile;
@@ -460,7 +463,6 @@ in
             # https://github.com/nix-community/home-manager/issues/2104
             ".terraform.d/plugin-cache/.keep".text = "";
             ".dprint.jsonc".text = builtins.toJSON (import ./dprint.nix {inherit pkgs;});
-            # ".dprint.jsonc".text = builtins.toJSON (pkgs.callPackage ./dprint.nix {inherit pkgs; });
           };
         sessionPath = ["/home/${cfg.username}/.cargo/bin"];
 
