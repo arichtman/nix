@@ -30,8 +30,8 @@
     runtime-config = "certificates.k8s.io/v1alpha1/clustertrustbundles=true";
     # TODO: deduplicate/couple this
     kubelet-certificate-authority = "${cfg.secretsPath}/k8s-ca.pem";
-    kubelet-client-certificate = "${cfg.secretsPath}/kubelet-apiserver-client.pem";
-    kubelet-client-key = "${cfg.secretsPath}/kubelet-apiserver-client-key.pem";
+    kubelet-client-certificate = "${cfg.secretsPath}/kube-apiserver-kubelet-client.pem";
+    kubelet-client-key = "${cfg.secretsPath}/kube-apiserver-kubelet-client-key.pem";
     api-audiences = "api,https://kubernetes.default.svc";
     service-account-issuer = "https://kubernetes.default.svc";
     service-account-key-file = "${cfg.secretsPath}/service-account.pem";

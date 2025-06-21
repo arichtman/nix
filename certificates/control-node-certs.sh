@@ -64,9 +64,10 @@ step certificate create scheduler scheduler-tls-cert-file.pem scheduler-tls-priv
   --san 127.0.0.1 --san ::1
 
 # APIserver client to kubelet
-step certificate create "system:apiserver:${NODE_NAME}" kubelet-apiserver-client.pem kubelet-apiserver-client-key.pem \
+step certificate create "system:apiserver" kube-apiserver-kubelet-client.pem kube-apiserver-kubelet-client-key.pem \
   --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json \
-  --not-after 8760h --set organization=system:apiserver
+  --not-after 8760h --set organization=system:masters
+  # TODO: Tune back down to `system:apiserver` once resolved actions on nodes/proxy
 
 # Copy everything over, using ~ so we don't hit permissions issues
 rsync service-account*.pem "${NODE_FQDN}:/home/nixos/secrets"

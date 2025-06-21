@@ -72,7 +72,8 @@
         name = "default";
         cluster = {
           certificate-authority = "${kubeletSecretsPath}/k8s-ca.pem";
-          server = "https://${config.networking.hostName}.systems.richtman.au:6443";
+          # TODO: un-hardcode
+          server = "https://fat-controller.systems.richtman.au:6443";
         };
       }
     ];
