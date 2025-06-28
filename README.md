@@ -296,13 +296,6 @@ I used this to shift OPNsense to 999 and any templates to >=1000.
 
 - [Proxmox vmid change knowledge base article](https://bobcares.com/blog/change-vmid-proxmox/)
 
-#### Adding watchdog to a proxmox VM
-
-1. Add `watchdog: model=i6300esb,action=reset` to the conf file in `/etc/pve/qemu-server/`.
-1. Stop and start the VM.
-
-- [Proxmox watchdog tutorial](https://it-notes.dragas.net/2018/09/16/proxmox-enable-and-use-watchdog-to-reboot-stuck-servers/)
-
 #### Virtual node disk resize
 
 ```bash

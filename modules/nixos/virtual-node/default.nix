@@ -17,8 +17,18 @@ in
       ];
       boot.extraModulePackages = [];
 
-      services.qemuGuest.enable = true;
-      services.lvm.boot.thin.enable = true;
+      services = {
+        qemuGuest.enable = true;
+        lvm.boot.thin.enable = true;
+        watchdogd = {
+          enable = true;
+          settings = {
+            supervisor = {
+              enabled = true;
+            };
+          };
+        };
+      };
       # Required to respond to neighbor discovery protocol for IPv6 SLAAC
       # mDNS does the name-to-IP, ND does IP-to-MAC
       services.radvd = {
@@ -27,7 +37,7 @@ in
         # prefix ::/64 {};
         # debugLevel = 4;
         config = ''
-          interface ens18 {
+          interface ens16 {
             AdvSendAdvert on;
           };
         '';
