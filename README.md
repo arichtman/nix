@@ -36,7 +36,6 @@ Todo:
   Switch to Inadyne DDNS client for that?
 - Host authoritative DNS server, maybe Hickory.
   See [ns-global](https://ns-global.zone/) for some resiliency.
-- Configure Proxmox IPv6 SLAAC. [docs](https://wiki.debian.org/NetworkConfiguration)
 - Review `net.inet.tcp.tso` for VM safety/perf
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
 - Enable mDNS responses from OPNsense box permanently
