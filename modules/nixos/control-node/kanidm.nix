@@ -9,7 +9,11 @@
       kanidm = {
         enableServer = true;
         # enablePam = true;
-        package = pkgs.kanidm_1_5;
+        unixSettings = {
+          pam_allowed_login_groups = ["all_access"];
+        };
+        enableClient = true;
+        package = pkgs.kanidm_1_6;
         serverSettings = {
           origin = "https://${config.services.kanidm.serverSettings.domain}";
           domain = "id.richtman.au";
@@ -22,6 +26,19 @@
 
         clientSettings = {
           uri = config.services.kanidm.serverSettings.domain;
+        };
+        provision = {
+          enable = true;
+          persons = {
+            arichtman = {
+              mailAddresses = ["ariel@richtman.au"];
+              legalName = "Richtman, Ariel";
+              displayName = "Ariel";
+            };
+          };
+          groups = {
+            all_access.members = ["arichtman"];
+          };
         };
       };
     };
