@@ -140,3 +140,4 @@ modprobe ipmi_si
 - [SO about iTCO_wdt](https://stackoverflow.com/questions/78746159/how-to-use-intel-tco-watchdog-with-itco-wdt)
 - [Systemd-system.conf](https://www.man7.org/linux/man-pages/man5/systemd-system.conf.5.html)
 - [Random Ubuntu 12 tutorial](https://github.com/miniwark/miniwark-howtos/blob/master/setup_the_hardware_watchdog_timer_on-ubuntu_12.04.md)
+- [Zencoffee blog](https://blog.zencoffee.org/2023/08/watchdogs-in-kvm-proxmox/)
