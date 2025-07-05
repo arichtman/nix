@@ -86,9 +86,10 @@ in
 
       services = {
         k8s.worker = true;
+        # TODO: Troubleshoot
         # Allows unofficial well-known FHS paths to work
         # Ref: https://fzakaria.com/2025/02/27/nix-pragmatism-nix-ld-and-envfs.html
-        envfs.enable = true;
+        # envfs.enable = true;
         openssh = {
           enable = true;
           # TODO: Disable before opening to internet

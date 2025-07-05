@@ -183,14 +183,6 @@ in {
           honor_labels = false;
           static_configs = [
             {
-              targets = [
-                "localhost:9100"
-              ];
-              labels = {
-                instance = "${config.networking.hostName}.systems.richtman.au";
-              };
-            }
-            {
               targets =
                 [
                   "opnsense.internal:9100"

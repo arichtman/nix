@@ -36,9 +36,6 @@
               displayName = "Ariel";
             };
           };
-          groups = {
-            all_access.members = ["arichtman"];
-          };
         };
       };
     };
