@@ -4,6 +4,7 @@
 [[language]]
 name = "rust"
 indent = { tab-width = 2, unit = " " }
+formatter = { command = "rustfmt" }
 
 # https://medium.com/@CaffeineForCode/helix-setup-for-markdown-b29d9891a812
 [[language]]
