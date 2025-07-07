@@ -584,12 +584,15 @@ Profile: AutoPrivateDNS
          A1: Custom Setting [ Type:Global Name:private_dns_mode Value:hostname Use Root:Off Read Setting To: ]
 ```
 
+Secure setting `accessibility_display_daltonizer_enabled` to `0` or `1` for color toggle.
+
 `nix shell nixpkgs#android-tools -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS`
 
 References:
 
 - [StackExchange](https://android.stackexchange.com/a/239471)
 - [AdGuard instructions for secret settings](https://adguard.com/kb/adguard-for-android/solving-problems/firefox-certificates/)
+- [HN post](https://news.ycombinator.com/item?id=40465686)
 
 ## Desktops
 
