@@ -189,7 +189,8 @@ in
               delta = {
                 # Ref: https://github.com/jj-vcs/jj/issues/5250
                 diff-args = ["--line-numbers" "$left" "$right"];
-                diff-expected-exit-codes = [1];
+                # Ref: https://github.com/dandavison/delta/issues/1921#issuecomment-3054296748
+                diff-expected-exit-codes = [0 1];
               };
             };
             signing = {
