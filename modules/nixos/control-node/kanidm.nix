@@ -27,8 +27,10 @@
         clientSettings = {
           uri = config.services.kanidm.serverSettings.domain;
         };
+        # TODO: Was causing service startup failures, 403 denial on attempting to modify this user, specifically legal name.
+        # I think it's to do with idm_admin not being allowed to modify certain fields?
         provision = {
-          enable = true;
+          enable = false;
           persons = {
             arichtman = {
               mailAddresses = ["ariel@richtman.au"];

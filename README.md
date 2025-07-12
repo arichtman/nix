@@ -418,6 +418,16 @@ rm alacritty.info
 - [Blog](https://www.mcarlin.com/blogs/alacritty-freebsd-termcap/)
 - [Hooks docs](https://docs.opnsense.org/development/backend/autorun.html)
 
+##### Nginx for Kanidm
+
+Nginx configuration on OPNsense requires modification for Kanidm Oauth to work!
+1. Inspect the generated configuration file, either via SSH or Web console
+1. Locate the `server` block for the Kanidm HTTP server
+1. There should be a line like `include $UUID_post/*.conf`, note the directory name.
+1. Create such a directory in `/usr/local/etc/nginx`, and add a `.conf` file with the following:
+   `proxy_pass_header X-KANIDM-OPID;`
+1. Restart the nginx service
+
 ##### Plugins
 
 - NextCloud backup, configure with an app key.
