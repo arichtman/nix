@@ -24,6 +24,7 @@ in {
       subnet = "192.168.1.0/24";
     };
   };
+  nixosNodes = builtins.split "\n" (builtins.readFile "./nodes.txt");
   # Pass-through the function in case people want plain gitignores
   inherit downloadGitignore;
   sourceGitignoreList = arguments @ {

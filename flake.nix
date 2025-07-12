@@ -56,12 +56,18 @@
       src = ./.;
       snowfall.namespace = "arichtman";
     };
+    # Bit of a bummer we can't use lib.arichtman here but Snowfall entirely needs to come out so...
+    # Should yield [ "node-name" "other-node-name" ]
+    nixosNodes = builtins.split "\n" (builtins.readFile ./nodes.txt);
     mkNixosConfiguration = name: {
       hostname = "${builtins.toString name}";
       profiles.system = {
         path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
       };
     };
+    # Map should yield [ { "node-name" = { hostname = ...;};} {"other-node-name" = { hostname = ...;};}]
+    # ListToAttrs should merge across the list elements into a single attrset...
+    mkNixosNodeConfigurations = builtins.listToAttrs (builtins.map (n: {n = mkNixosConfiguration n;}) nixosNodes);
   in
     lib.mkFlake {
       channels-config.allowUnfree = true;
@@ -85,15 +91,16 @@
         sshUser = "nixos";
         user = "root";
         remoteBuild = true;
+        nodes = mkNixosNodeConfigurations;
         # TODO: DRY this up
-        nodes = {
-          fat-controller = mkNixosConfiguration "fat-controller";
-          patient-zero = mkNixosConfiguration "patient-zero";
-          dr-singh = mkNixosConfiguration "dr-singh";
-          smol-bat = mkNixosConfiguration "smol-bat";
-          tweedledee = mkNixosConfiguration "tweedledee";
-          tweedledum = mkNixosConfiguration "tweedledum";
-        };
+        # nodes = {
+        #   fat-controller = mkNixosConfiguration "fat-controller";
+        #   patient-zero = mkNixosConfiguration "patient-zero";
+        #   dr-singh = mkNixosConfiguration "dr-singh";
+        #   smol-bat = mkNixosConfiguration "smol-bat";
+        #   tweedledee = mkNixosConfiguration "tweedledee";
+        #   tweedledum = mkNixosConfiguration "tweedledum";
+        # };
       };
 
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
