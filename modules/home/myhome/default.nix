@@ -314,7 +314,7 @@ in
           autosuggestion.enable = true;
           autocd = true;
           syntaxHighlighting.enable = true;
-          initExtra = ''
+          initContent = ''
             function gedditdafuckouttahere () {
               git submodule deinit --force $1 ;
               rm -fr .git/modules/$1 ;
