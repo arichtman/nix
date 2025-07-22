@@ -117,6 +117,11 @@ in
           openFirewall = true;
           listenAddress = "[::]";
         };
+        prometheus.exporters.ebpf = {
+          enable = true;
+          openFirewall = true;
+          listenAddress = "[::]";
+        };
         prometheus.exporters.node = {
           enable = true;
           openFirewall = true;
