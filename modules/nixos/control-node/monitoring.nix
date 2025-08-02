@@ -192,6 +192,37 @@ in {
             }
           ];
         }
+        # Ref: https://github.com/prometheus-pve/prometheus-pve-exporter#prometheus-configuration
+        {
+          job_name = "pve";
+          metrics_path = "/pve";
+          # params = {
+          #   module = ["default"];
+          #   cluster = ["1"];
+          #   node = ["1"];
+          # };
+          # relabel_configs = [
+          #   {
+          #     source_labels = ["__address__"];
+          #     target_label = "__param_target";
+          #   }
+          #   {
+          #     source_labels = ["__param_target"];
+          #     target_label = "instance";
+          #   }
+          #   {
+          #     target_label = "__address__";
+          #     replacement = "proxmox.internal";
+          #   }
+          # ];
+          static_configs = [
+            {
+              targets = [
+                "proxmox.internal:9221"
+              ];
+            }
+          ];
+        }
       ]; # Ref: https://wiki.nixos.org/wiki/Prometheus
       alertmanager = {
         enable = true;

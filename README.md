@@ -241,6 +241,7 @@ Pre-requisites:
 1. Install grub package so actual grub binaries get updates, `apt install grub-efi-amd64`.
 1. Optionally comment out the Cron job on reboot that sets it to power save.
 1. Disable IPMI service since we don't have support, `systemctl disable openipmi`.
+1. Optionally install the PVE Prometheus exporter.
 
 If I check /etc/grub.d/000_ proxmox whatever it says `update-grub` isn't the way and to use `proxmox-boot-tool refresh`.
 It also looks like there's a specific proxmox grub config file under `/etc/default/grub.d/proxmox-ve.cfg`.
@@ -259,6 +260,8 @@ References:
 - [Arch wiki on CPU scaling](https://wiki.archlinux.org/title/CPU_frequency_scaling)
 - [Proxmox performance tuning](https://sumguy.com/understanding-and-optimizing-performance-in-proxmox-ve/)
 - [Proxmox CPU selection tutorial](https://www.yinfor.com/2023/06/how-i-choose-vm-cpu-type-in-proxmox-ve.html)
+- [PVE Prometheus Exporter install](https://community.hetzner.com/tutorials/proxmox-prometheus-metrics)
+- [PVE Prom Exporter TLS verify issue](https://github.com/prometheus-pve/prometheus-pve-exporter/issues/320)
 
 #### Proxmox Disk Setup
 
