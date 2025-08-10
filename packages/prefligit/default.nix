@@ -16,7 +16,6 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-U2Z3R4MfBxjecDo3foSOQaNgMilOqx5JAaj04SM6jMk=";
   };
   cargoHash = "sha256-CcGqEcZi1u2KJpEnkkizt+vjG3D0Zh7AWl8u04+ytvo=";
-  useFetchCargoVendor = true;
   meta = with lib; {
     description = "pre-commit re-implemented in Rust";
     homepage = "https://github.com/j178/prefligit";

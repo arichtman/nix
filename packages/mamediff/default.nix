@@ -20,7 +20,6 @@ rustPlatform.buildRustPackage rec {
   # '';
   doCheck = false;
   cargoHash = "sha256-0QnuH3PIeENAkkx/GquL7jFsk8eVykgYL76NEQzg2sQ=";
-  useFetchCargoVendor = true;
   meta = with lib; {
     mainProgram = pname;
     description = "A TUI editor for managing unstaged and staged Git diffs";
