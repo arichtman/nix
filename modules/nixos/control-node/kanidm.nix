@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  arichtman,
   ...
 }: {
   config = lib.mkIf config.control-node.enable {
@@ -13,8 +14,9 @@
           pam_allowed_login_groups = ["all_access"];
         };
         enableClient = true;
-        package = pkgs.kanidm_1_6;
+        package = pkgs.arichtman.kanidm-debug;
         serverSettings = {
+          log_level = "debug";
           origin = "https://${config.services.kanidm.serverSettings.domain}";
           domain = "id.richtman.au";
           bindaddress = "[::]:8443";
