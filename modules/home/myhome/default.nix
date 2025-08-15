@@ -85,7 +85,7 @@ in
         };
         alacritty = {
           enable = true;
-          package = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) (pkgs.callPackage ./alacritty-patched.nix {inherit pkgs;});
+          package = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) null; # Deliberately unset the package cause Alacritty is just shitful to use/manage when Nix-installed
           settings = {
             window.option_as_alt = "Both";
             general.live_config_reload = true;
@@ -119,6 +119,10 @@ in
           enableBashIntegration = true;
           enableZshIntegration = true;
           settings = {};
+        };
+        helix = {
+          enable = true;
+          defaultEditor = true;
         };
         starship = {
           enable = true;
@@ -377,7 +381,6 @@ in
             broot # tree + tui navigation
             choose # cut/awk replacement
             jless # json tui
-            helix # editor/ide
             nnn # file manager
             yazi # file manager
             eza # exa is unmaintained
@@ -411,7 +414,6 @@ in
             markdown-oxide # md
             terraform-ls # tf
             gopls
-            # rust-analyzer # rust
             lldb
             alejandra # nix formatter
             dprint # formatting (esp MD)
