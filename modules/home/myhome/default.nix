@@ -118,7 +118,8 @@ in
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
-          settings = {};
+          attachExistingSession = true;
+          exitShellOnExit = true;
         };
         helix = {
           enable = true;

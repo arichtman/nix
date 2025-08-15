@@ -675,15 +675,12 @@ some _very_ wip notes about the desktop.
 ### Desktop Todo
 
 - Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
-- Fix Firefox image pasting
 - Get CLI clipboard access
   [post](https://fosstodon.org/@ferki/112868797150769449)
 - Learn about universal blue/ostree and decide if I want to keep this
-- find the proper fix to not sourcing the nix-daemon script that sets `PATH` correctly
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix Zellij exits still leaving you in a Bash session.
-- Make Alacritty visible on the launch pad or whatever it's called
 
 ## Nix References
 
