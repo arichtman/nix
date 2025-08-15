@@ -134,6 +134,22 @@ in
           enable = true;
           enableBashIntegration = true;
           enableZshIntegration = true;
+          # TODO: get working
+          # Ref: https://github.com/jj-vcs/jj/wiki/Starship
+          settings = {
+            format = "$all\${custom.jj}";
+            custom = {
+              jj = {
+                command = "prompt";
+                format = "$output";
+                symbol = "🥋 ";
+                ignore_timeout = true;
+                shell = ["starship-jj" "--ignore-working-copy" "starship"];
+                use_stdin = false;
+                detect_folders = [".jj"];
+              };
+            };
+          };
         };
         # Let Home Manager install and manage itself.
         home-manager.enable = true;
