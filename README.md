@@ -697,13 +697,9 @@ some _very_ wip notes about the desktop.
 - I ran `bluetoothctl trust $MAC` to try and start off autoconnect
 - I fiddled about in display settings to get orientation of monitors correct
 - `sudo visudo` and swap the commented lines for wheel to enable `NOPASSWD`.
-- Added `trusted-users = @wheel` to `/etc/nix/nix.conf`
-- Used `nix shell helix home-manager` to bootstrap
-- `home-manager switch --flake . -b backup`
-- Installed my root certificate
-  `sudo curl https://www.richtman.au/root-ca.pem -o /etc/pki/ca-trust/source/anchors/root-ca.pem`
-  `sudo update-ca-trust`
-- Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
+- Suppress/fix warnings about running Nix commands as myself:
+  Added `trusted-users = @wheel` to `/etc/nix/nix.custom.conf` (DetSys thing not to use `/etc/nix/nix.conf`).
+  Note: might be able to specify this at install time...
 - Enable composefs transient root, then install DetSys Nix (for SELinux support).
   `/etc/ostree/prepare-root.conf`:
 
@@ -716,6 +712,15 @@ some _very_ wip notes about the desktop.
 
   Then `sudo rpm-ostree initramfs-etc --reboot --track=/etc/ostree/prepare-root.conf`.
   [Reference](https://github.com/coreos/rpm-ostree/issues/337#issuecomment-2856321727)
+- Used `nix develop` to bootstrap
+- `home-manager switch --flake . -b backup`
+- Installed my root certificate
+  `sudo curl https://www.richtman.au/root-ca.pem -o /etc/pki/ca-trust/source/anchors/root-ca.pem`
+  `sudo update-ca-trust`
+- Set my shell to Zsh `sudo usermod --shell $(which zsh) arichtman`.
+  Note: not sure how this is going, obvs that path isn't in `/etc/shells`, but I can't see any `bash-default-shell` in `rpm-ostree`.
+  Reboot and see if it applies on login.
+- Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
 
 ### Desktop Todo
 
