@@ -86,7 +86,12 @@ in {
     };
     grafana = {
       enable = true;
-      settings = {};
+      settings = {
+        server = {
+          # Note: This must be set for Oauth to work, otherwise the redirect URL is insecure and localhost on port 3000
+          root_url = "https://grafana.${config.control-node.serviceDomain}/";
+        };
+      };
       provision = {
         enable = true;
         datasources.settings.datasources = [

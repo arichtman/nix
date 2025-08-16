@@ -521,6 +521,39 @@ garage layout assign --zone garage.services.richtman.au --capacity 128GB $(garag
 garage layout apply --version 1
 ```
 
+#### Kanidm setup
+
+```bash
+export KANIDM_URL=https://id.richtman.au
+export GRAFANA_FQDN=grafana.services.richtman.au
+kanidm system oauth2 create grafana $GRAFANA_FQDN https://$GRAFANA_FQDN
+kanidm system oauth2 set-landing-url grafana "https://${GRAFANA_FQDN}/login/generic_oauth"
+
+kanidm group create 'grafana_superadmins'
+kanidm group create 'grafana_admins'
+kanidm group create 'grafana_editors'
+kanidm group create 'grafana_users'
+
+kanidm system oauth2 update-scope-map grafana grafana_users email openid profile groups
+kanidm system oauth2 enable-pkce grafana
+
+kanidm system oauth2 update-claim-map-join 'grafana' 'grafana_role' array
+kanidm system oauth2 update-claim-map 'grafana' 'grafana_role' 'grafana_superadmins' 'GrafanaAdmin'
+kanidm system oauth2 update-claim-map 'grafana' 'grafana_role' 'grafana_admins' 'Admin'
+kanidm system oauth2 update-claim-map 'grafana' 'grafana_role' 'grafana_editors' 'Editor'
+
+# Note: I'm not sure I need *all* of these
+kanidm group add-members grafana_superadmins arichtman
+kanidm group add-members grafana_admins arichtman
+kanidm group add-members grafana_editors arichtman
+kanidm group add-members grafana_users arichtman
+
+kanidm system oauth2 get grafana
+kanidm system oauth2 show-basic-secret grafana
+```
+
+Grafana side: [Official docs examples](https://kanidm.github.io/kanidm/stable/integrations/oauth2/examples.html#grafana)
+
 #### Topsoil
 
 - [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
