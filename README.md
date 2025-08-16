@@ -627,7 +627,7 @@ OPNsense/openssl's ciphers are too new, to install client certificate you may ne
 1. Optionally install rosetta `softwareupdate --install-rosetta --agree-to-license`
    I didn't explicitly install it but it's on there somehow now.
    There was some mention that it auto-installs if you try running x86_64 binaries.
-1. Determinant systems install nix `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install`
+1. Determinant systems install nix
 1. Until this is resolved https://github.com/LnL7/nix-darwin/issues/149
    `sudo mv /etc/nix/nix.conf /etc/nix/.nix-darwin.bkp.nix.conf`
 1. Nix-Darwin build and run installer
@@ -663,14 +663,26 @@ some _very_ wip notes about the desktop.
 - Bluetooth pair the speaker though you may have to change the codec in settings > sound
 - I ran `bluetoothctl trust $MAC` to try and start off autoconnect
 - I fiddled about in display settings to get orientation of monitors correct
-- Used the Determinate Systems Nix installer
+- `sudo visudo` and swap the commented lines for wheel to enable `NOPASSWD`.
 - Added `trusted-users = @wheel` to `/etc/nix/nix.conf`
 - Used `nix shell helix home-manager` to bootstrap
 - `home-manager switch --flake . -b backup`
 - Installed my root certificate
-  `sudo curl https://www.richtman.au/root-ca.pem -o source/anchors/root-ca.pem`
+  `sudo curl https://www.richtman.au/root-ca.pem -o /etc/pki/ca-trust/source/anchors/root-ca.pem`
   `sudo update-ca-trust`
 - Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
+- Enable composefs transient root, then install DetSys Nix (for SELinux support).
+  `/etc/ostree/prepare-root.conf`:
+
+  ```toml
+  [composefs]
+  enabled = yes
+  [root]
+  transient = true
+  ```
+
+  Then `sudo rpm-ostree initramfs-etc --reboot --track=/etc/ostree/prepare-root.conf`.
+  [Reference](https://github.com/coreos/rpm-ostree/issues/337#issuecomment-2856321727)
 
 ### Desktop Todo
 
@@ -681,6 +693,7 @@ some _very_ wip notes about the desktop.
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix Zellij exits still leaving you in a Bash session.
+- Fix failing `systemd-remount-fs.service`
 
 ## Nix References
 
