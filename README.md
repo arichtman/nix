@@ -720,6 +720,17 @@ some _very_ wip notes about the desktop.
 - Set my shell to Zsh `sudo usermod --shell $(which zsh) arichtman`.
   Note: not sure how this is going, obvs that path isn't in `/etc/shells`, but I can't see any `bash-default-shell` in `rpm-ostree`.
   Reboot and see if it applies on login.
+- Fix failure to wake from sleep.
+  `/usr/lib/systemd/system/service.d/50-keep-warm.conf`:
+
+  ```toml
+  # Disable freezing of user sessions to work around kernel bugs.
+  # See https://bugzilla.redhat.com/show_bug.cgi?id=2321268
+  [Service]
+  Environment=SYSTEMD_SLEEP_FREEZE_USER_SESSIONS=0
+  ```
+
+  [Reference](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8292#note_2445334)
 - Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
 
 ### Desktop Todo
@@ -730,7 +741,7 @@ some _very_ wip notes about the desktop.
 - Learn about universal blue/ostree and decide if I want to keep this
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
-- Fix Zellij exits still leaving you in a Bash session.
+- Fix failing Alacritty launchpad launch
 - Fix failing `systemd-remount-fs.service`
 
 ## Nix References
