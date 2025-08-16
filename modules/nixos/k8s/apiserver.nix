@@ -5,14 +5,34 @@
   ...
 }: let
   cfg = config.services.k8s-apiserver;
+  # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1beta1/
+  authConfig = {
+    apiVersion = "apiserver.config.k8s.io/v1beta1";
+    kind = "AuthenticationConfiguration";
+    # TODO: Kanidm
+    # jwt = {
+    #   issuer = "";
+    #   claimMappings = {};
+    # };
+    anonymous = {
+      enabled = true;
+      conditions = [
+        {path = "/livez";}
+        {path = "/readyz";}
+        {path = "/healthz";}
+      ];
+    };
+  };
+  authConfigFile = pkgs.writeText "auth-config" (builtins.toJSON authConfig);
   # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   serviceArgs = lib.cli.toGNUCommandLineShell {} {
     # "--advertise-address"
     # "2001:db8:1234:5678::1"
     # Need privileged for Cilium
     allow-privileged = true;
+    authentication-config = authConfigFile;
     # TODO: This seems sane
-    anonymous-auth = false;
+    # anonymous-auth = false;
     authorization-mode = "RBAC,Node";
     bind-address = "::";
     # TODO: Apparently this *won't* make it search for certificates relative to this.
@@ -51,7 +71,6 @@
     v = 2; # TODO: remove when stabilized
   };
 in {
-  # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   # Ref: https://github.dev/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/cluster/kubernetes/default.nix
   options.services.k8s-apiserver = {
     enable = lib.mkEnableOption "Enable API server";
