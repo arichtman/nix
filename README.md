@@ -89,7 +89,15 @@ Todo:
 - Stop Spire agent dying if stale join token
 - Secrets (Vault/OpenBao?)
 - Certificate authority? (step-ca?)
-- More identity integration
+- More identity integration.
+  Done:
+    - Grafana
+  To-do:
+    - Proxmox (may be limited to authentication)
+    - Step-CA [ref](https://smallstep.com/docs/step-ca/provisioners/#oauthoidc-single-sign-on)
+    - OPNsense (LDAP only)
+  Not possible:
+    - Garage
 - Switch routing to _dynamic_ subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
