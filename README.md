@@ -84,6 +84,7 @@ Features:
 Todo:
 
 - Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
+- Add rules for k8s apiserver, maybe [mixins](https://github.com/kubernetes-monitoring/kubernetes-mixin/)
 - Configure what can be for Otel
 - Spire for node identity
 - Stop Spire agent dying if stale join token
@@ -122,7 +123,6 @@ Todo:
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
 - Set up IPv6 public ingress and firewalling
-- Make FRR BGP config persist on OPNsense
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
@@ -141,6 +141,7 @@ Todo:
 - Adjust the custom cloud provider to use OpenAMT.
 - Pull k8s module out into it's own flake/repo/overlay?
 - Use sig-addonmanager to bootstrap a CD tool and a CNI
+- Add SLOs to service monitoring [sloth](https://sloth.dev/)
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
