@@ -1,0 +1,33 @@
+# Ref: https://platform9.com/docs/kubernetes/kubernetes-monitoring
+groups:
+  - name: kube-apiserver
+    rules:
+      # - alert: KubeAPIServerDown
+      #   expr: up{job="kube-apiserver"} offset 5m == 0
+      #   for: 1m
+      #   labels:
+      #     severity: critical
+      #     type: k8s
+      #   annotations:
+      #     description: Kubernetes API server down on cluster {{ $labels.cluster }}
+      #     summary: "Cluster {{ $labels.cluster }}: Kube api server down on host {{ $labels.host }}"
+
+      - alert: KubernetesApiServerErrors
+        expr: sum(rate(apiserver_request_total{code=~"(4|5).."}[1m] offset 5m )) by (cluster, host) / sum(rate(apiserver_request_total[1m] offset 5m )) by (cluster, host) * 100 > 3
+        for: 2m
+        labels:
+          severity: critical
+          type: k8s
+        annotations:
+          summary: Kubernetes API server errors on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Kubernetes API server is experiencing high error rate on host {{ $labels.host }}"
+
+      - alert: KubernetesApiClientErrors
+        expr: (sum(rate(rest_client_requests_total{code=~"(4|5).."}[1m] offset 5m )) by (cluster, host) / sum(rate(rest_client_requests_total[1m] offset 5m )) by (cluster, host)) * 100 > 1
+        for: 2m
+        labels:
+          severity: critical
+          type: k8s
+        annotations:
+          summary: Kubernetes API client errors on cluster {{ $labels.cluster }}
+          description: "Cluster {{ $labels.cluster }}: Kubernetes API client is experiencing high error rate on host {{ $labels.host }}"

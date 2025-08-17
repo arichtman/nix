@@ -111,7 +111,7 @@ in {
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://prometheus.${config.control-node.serviceDomain}/";
-      ruleFiles = [./rules/embedded-exporter.yml ./rules/node-exporter.yml ./rules/etcd-contrib.yml];
+      ruleFiles = [./rules/embedded-exporter.yaml ./rules/node-exporter.yaml ./rules/etcd-contrib.yaml ./rules/k8s.yaml];
       alertmanagers = [
         {
           static_configs = [
