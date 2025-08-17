@@ -32,6 +32,7 @@ in
           kubectl
           kubectx
           kubernetes-helm
+          kubelogin-oidc # Plugin for k8s auth
           # Cilium
           cilium-cli
           hubble

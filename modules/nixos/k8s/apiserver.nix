@@ -9,11 +9,33 @@
   authConfig = {
     apiVersion = "apiserver.config.k8s.io/v1beta1";
     kind = "AuthenticationConfiguration";
-    # TODO: Kanidm
-    # jwt = {
-    #   issuer = "";
-    #   claimMappings = {};
-    # };
+    jwt = [
+      {
+        issuer = {
+          url = "https://id.richtman.au/oauth2/openid/k8s";
+          audiences = ["k8s"];
+          # audienceMatchPolicy = "MatchAny";
+        };
+        claimMappings = {
+          username = {
+            claim = "preferred_username";
+            prefix = ""; # Prefix is required, even if empty
+            # expression = "";
+          };
+          groups = {
+            claim = "groups";
+            prefix = "";
+          };
+          # uid = {};
+          # extra = [
+          #   {
+          #     key = "admin";
+          #     valueExpression = ''(has(claims.is_admin) && claims.is_admin) ? "true":""'';
+          #   }
+          # ];
+        };
+      }
+    ];
     anonymous = {
       enabled = true;
       conditions = [

@@ -729,6 +729,8 @@ some _very_ wip notes about the desktop.
 - Set my shell to Zsh `sudo usermod --shell $(which zsh) arichtman`.
   Note: not sure how this is going, obvs that path isn't in `/etc/shells`, but I can't see any `bash-default-shell` in `rpm-ostree`.
   Reboot and see if it applies on login.
+- Install system level layers with zsh and alacritty.
+  `sudo rpm-ostree install -y --idempotent zsh alacritty`
 - Fix failure to wake from sleep.
   `/usr/lib/systemd/system/service.d/50-keep-warm.conf`:
 
