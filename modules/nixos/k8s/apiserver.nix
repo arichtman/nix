@@ -20,6 +20,7 @@
         {path = "/livez";}
         {path = "/readyz";}
         {path = "/healthz";}
+        {path = "/metrics";} # Note: this still needs RBAC bindings else `system:anonymous` can't perform Get on it
       ];
     };
   };

@@ -1,7 +1,9 @@
 # Kubernetes Auth
 
 Some things to fiddle with later.
-Should fix or allow adding Prometheus target.
+
+~Should fix or allow adding Prometheus target.~
+Anonymous auth now working for `/healthz`, `/livez`, `/readyz`, and `/metrics`.
 
 - [k8s docs on auth config](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#using-authentication-configuration)
 - [beta announcement](https://kubernetes.io/blog/2024/04/25/structured-authentication-moves-to-beta/)

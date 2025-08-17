@@ -134,6 +134,23 @@ in {
         (mkLocalScrapeConfig "etcd" 2399)
         (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
         (mkLocalScrapeConfig "garage" 3903)
+        # Had to do manually since scheme is https
+        {
+          job_name = "k8s_apiserver";
+          relabel_configs = promLocalHostRelabelConfigs;
+          honor_labels = false;
+          scheme = "https";
+          static_configs = [
+            {
+              targets = [
+                "localhost:6443"
+              ];
+              labels = {
+                instance = "${config.networking.hostName}.systems.richtman.au";
+              };
+            }
+          ];
+        }
         (mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
         (mkLocalScrapeConfig "spire-server" 9988)
         # TODO: Renable when agent is working
