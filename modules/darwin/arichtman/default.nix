@@ -46,54 +46,58 @@ with lib;
         mas
       ];
 
-      # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
-      system.activationScripts.postUserActivation.text = ''
-        # Following line should allow us to avoid a logout/login cycle
-        /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-      '';
       # TODO: Investigate difference between defaults and custom user preferences
       # TODO: Check out all config options
-      system = {
-        startup.chime = false;
-        keyboard = {
-          enableKeyMapping = true;
-          remapCapsLockToControl = true;
-        };
-        defaults = {
-          NSGlobalDomain = {
-            _HIHideMenuBar = true;
-            AppleShowAllExtensions = true;
-            AppleShowAllFiles = true;
-            NSAutomaticCapitalizationEnabled = false;
-            NSAutomaticDashSubstitutionEnabled = false;
-            NSAutomaticPeriodSubstitutionEnabled = false;
-            NSAutomaticQuoteSubstitutionEnabled = false;
-            NSAutomaticSpellingCorrectionEnabled = false;
-            NSNavPanelExpandedStateForSaveMode = true;
-            NSNavPanelExpandedStateForSaveMode2 = true;
+      system =
+        {
+          # primaryUser = lib.mkIf false "arichtman";
+          # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
+          activationScripts.postUserActivation.text = ''
+            # Following line should allow us to avoid a logout/login cycle
+            /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+          '';
+          startup.chime = false;
+          keyboard = {
+            enableKeyMapping = true;
+            remapCapsLockToControl = true;
           };
+          defaults = {
+            NSGlobalDomain = {
+              _HIHideMenuBar = true;
+              AppleShowAllExtensions = true;
+              AppleShowAllFiles = true;
+              NSAutomaticCapitalizationEnabled = false;
+              NSAutomaticDashSubstitutionEnabled = false;
+              NSAutomaticPeriodSubstitutionEnabled = false;
+              NSAutomaticQuoteSubstitutionEnabled = false;
+              NSAutomaticSpellingCorrectionEnabled = false;
+              NSNavPanelExpandedStateForSaveMode = true;
+              NSNavPanelExpandedStateForSaveMode2 = true;
+            };
 
-          dock = {
-            autohide = true;
-            orientation = "bottom";
-            mineffect = "genie";
-            mru-spaces = false;
-            show-process-indicators = true;
-            showhidden = true;
+            dock = {
+              autohide = true;
+              orientation = "bottom";
+              mineffect = "genie";
+              mru-spaces = false;
+              show-process-indicators = true;
+              showhidden = true;
+            };
+            finder = {
+              AppleShowAllExtensions = true;
+              FXEnableExtensionChangeWarning = false;
+              CreateDesktop = true;
+              QuitMenuItem = true;
+            };
+            trackpad = {
+              Clicking = true;
+              TrackpadThreeFingerDrag = true;
+              Dragging = true;
+            };
           };
-          finder = {
-            AppleShowAllExtensions = true;
-            FXEnableExtensionChangeWarning = false;
-            CreateDesktop = true;
-            QuitMenuItem = true;
-          };
-          trackpad = {
-            Clicking = true;
-            TrackpadThreeFingerDrag = true;
-            Dragging = true;
-          };
-        };
-      };
+        }
+        // lib.optionalAttrs false {primaryUser = "arichtman";};
+      # lib.optionalAttrs (lib.strings.versionAtLeast lib.trivial.version "24.11") { primaryUser =  "arichtman"; };
       nix.settings.trusted-users = [
         "@admin"
       ];
