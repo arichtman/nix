@@ -6,7 +6,12 @@ name = "rust"
 indent = { tab-width = 2, unit = " " }
 formatter = { command = "rustfmt" }
 
-# https://medium.com/@CaffeineForCode/helix-setup-for-markdown-b29d9891a812
+# Ref: https://medium.com/@CaffeineForCode/helix-setup-for-markdown-b29d9891a812
 [[language]]
 name = "markdown"
 formatter = { command = "dprint", args = ["fmt", "--stdin", "md"] }
+
+# Ref: https://github.com/helix-editor/helix/discussions/11653#discussioncomment-14138703
+[[language]]
+name = "git-commit"
+language-servers = [ "harper-ls" ]

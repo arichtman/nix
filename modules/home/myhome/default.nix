@@ -440,6 +440,7 @@ in
             nixfmt-rfc-style
             helm-ls
             yaml-language-server
+            harper # Git commit English
             # ansible-language-server seems to crash
             vscode-langservers-extracted
             dockerfile-language-server-nodejs
