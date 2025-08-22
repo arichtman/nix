@@ -82,6 +82,40 @@ in {
             }
           '';
         };
+        "tempo.services.richtman.au:80" = {
+          extraConfig = ''
+            handle_path /tempo* {
+              reverse_proxy localhost:3200
+            }
+          '';
+        };
+      };
+    };
+    tempo = {
+      enable = true;
+      settings = {
+        http_api_prefix = "/tempo";
+        server = {
+          # http_listen_address = "localhost";
+          http_listen_port = 3200;
+          # http_listen_address = lib.arichtman.net.ip6.prefixCIDR;
+          # http_listen_address = "[${lib.arichtman.net.ip6.prefixCIDR}]";
+          http_listen_address = "::";
+          # grpc_listen_address = lib.arichtman.net.ip6.prefixCIDR;
+          grpc_listen_address = "::";
+        };
+        storage = {
+          trace = {
+            # backend = config.systemd.services.tempo.serviceConfig.WorkingDirectory;
+            backend = "local";
+            local = {
+              path = "/var/lib/tempo";
+            };
+            wal = {
+              path = "/var/lib/tempo/wal";
+            };
+          };
+        };
       };
     };
     grafana = {
@@ -133,6 +167,7 @@ in {
         # See impl for why non-default port
         (mkLocalScrapeConfig "etcd" 2399)
         (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
+        (mkLocalScrapeConfig "tempo" 3200)
         (mkLocalScrapeConfig "garage" 3903)
         # Had to do manually since scheme is https
         {
