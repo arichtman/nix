@@ -83,7 +83,7 @@ Features:
 
 Todo:
 
-- Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, InfluxDB, etc)
+- Advanced monitoring (Mimir, Tempo, Loki, Trickster, Victoria Metrics, etc)
 - Add rules for k8s apiserver, maybe [mixins](https://github.com/kubernetes-monitoring/kubernetes-mixin/)
 - Configure what can be for Otel
 - Spire for node identity
@@ -123,6 +123,8 @@ Todo:
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
 - Set up IPv6 public ingress and firewalling
+- Enable [k8s native tracing](https://kubernetes.io/docs/concepts/cluster-administration/system-traces/)
+- Enable `KubeletPSI` feature
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
 - Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
