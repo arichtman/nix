@@ -9,7 +9,7 @@
         # Ref: https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#provision-the-data-source
         name = "tempo";
         type = "tempo";
-        url = "http://localhost:${toString config.services.tempo.settings.server.http_listen_port}";
+        url = "http://localhost6:${toString config.services.tempo.settings.server.http_listen_port}";
         jsonData = {
           tracesToMetrics = {
             datasourceUid = "prometheus";
@@ -65,9 +65,15 @@
         server = {
           # Otherwise this tries to bind to 80, which is taken of course.
           http_listen_port = 3200;
+          # You would THINK v6 localhost only works, but it doesn't.
+          # Somehow back-end it makes the IP into a v4 localhost, which of course we're not bound to.
+          # Same dealio with the frontend query worker I think
+          # Fuck this noise it can just be firewalled
           # Localhost only for security, all our Grafana queries go thru Grafana anyhow
-          http_listen_address = "::1";
-          grpc_listen_address = "::1";
+          # Possibly useful in future
+          # Ref: https://github.com/grafana/tempo/blob/main/docs/sources/tempo/configuration/network/ipv6.md
+          http_listen_address = "::";
+          grpc_listen_address = "::";
           # Annoyingly it says "lookup: no such host" which, no duh, I just want it to bind to my delegated prefix
           # http_listen_address = "${lib.arichtman.net.ip6.prefixCIDR}";
         };
@@ -92,9 +98,9 @@
             };
           };
         };
-        querier = {
-          frontend_worker = {frontend_address = "[::]:9095";};
-        };
+        # querier = {
+        #   frontend_worker = {frontend_address = "[::]:9095";};
+        # };
         metrics_generator = {
           processor = {
             span_metrics = {

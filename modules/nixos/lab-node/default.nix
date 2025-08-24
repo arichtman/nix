@@ -191,6 +191,10 @@ in
       networking = {
         # TODO: See if this ought to be richtman.au
         domain = "systems.richtman.au";
+        hosts = {
+          "127.0.0.1" = ["localhost4"];
+          "::1" = ["localhost6"];
+        };
         search = [
           config.networking.domain
         ];
