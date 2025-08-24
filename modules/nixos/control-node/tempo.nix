@@ -75,8 +75,8 @@
           receivers = {
             otlp = {
               protocols = {
-                http = {endpoint = "[${lib.arichtman.net.ip6.prefixCIDR}]:4318";};
-                grpc = {endpoint = "[${lib.arichtman.net.ip6.prefixCIDR}]:4317";};
+                http = {endpoint = "[::]:4318";};
+                grpc = {endpoint = "[::]:4317";};
               };
             };
           };
