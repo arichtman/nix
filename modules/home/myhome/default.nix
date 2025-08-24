@@ -61,6 +61,11 @@ in
     config = {
       # Silence annoying news message
       news.display = "silent";
+      # Trying to fix desktop issues with untrusted user being disallowed --store argument
+      # warning: ignoring the client-specified setting 'store', because it is a restricted setting and you are not a trusted user
+      nix.settings = {
+        allowed-users = ["@wheel"];
+      };
       nix.extraOptions = "keep-going = true";
       # TODO: Remember what the f*** this fixes and update this comment
       xdg.systemDirs = mkIf pkgs.stdenv.isLinux {
@@ -416,7 +421,7 @@ in
             lldb
             alejandra # nix formatter
             dprint # formatting (esp MD)
-            nixfmt
+            nixfmt-rfc-style
             helm-ls
             yaml-language-server
             # ansible-language-server seems to crash
