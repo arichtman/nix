@@ -416,6 +416,7 @@ in
             lldb
             alejandra # nix formatter
             dprint # formatting (esp MD)
+            nixfmt
             helm-ls
             yaml-language-server
             # ansible-language-server seems to crash
