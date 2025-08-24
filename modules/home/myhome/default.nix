@@ -379,10 +379,8 @@ in
             sd # sed replacement
             gping # ping replacement
             trippy # Ping TUI
-            broot # tree + tui navigation
             choose # cut/awk replacement
             jless # json tui
-            nnn # file manager
             yazi # file manager
             eza # exa is unmaintained
             nerd-fonts.fira-code # This actually makes it available to Alacritty
