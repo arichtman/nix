@@ -4,9 +4,9 @@ Configuring Kanidm as an Oauth provider for cluster identity.
 
 Todo:
 
-- Look at mapping additional roles to groups to see if we can stack permissions or have secondary properties.
 - Investigate additional properties for use in ABAC.
-- Revisit Kanidm setup and minimize/hone it.
+- ~Look at mapping additional roles to groups to see if we can stack permissions.~
+  Able to bind multiple roles based on groups, haven't investigated if permissions stack though.
 - ~Should fix or allow adding Prometheus target.~
   Anonymous auth now working for `/healthz`, `/livez`, `/readyz`, and `/metrics`.
 
@@ -23,6 +23,7 @@ kanidm group create k8s_users
 kanidm system oauth2 update-scope-map k8s k8s_users openid email profile groups
 # Add our user
 kanidm group add-members k8s_users arichtman
+# Repeat for k8s_admins group
 
 # verify our work
 kanidm system oauth2 get k8s
