@@ -38,7 +38,6 @@ Todo:
   See [ns-global](https://ns-global.zone/) for some resiliency.
 - Review `net.inet.tcp.tso` for VM safety/perf
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
-- Enable mDNS responses from OPNsense box permanently
 - Tune Wireguard
 - Add IPsec
 - Fix/add OpenVPN

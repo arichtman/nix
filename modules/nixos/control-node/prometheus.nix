@@ -103,6 +103,8 @@ in {
           job_name = "containerd";
           metrics_path = "v1/metrics";
           # This totally fucked my cardinality
+          # Hindsight not sure why, should just be a counter
+          # Maybe the labels on the gRPC server change a lot
           metric_relabel_configs = [
             {
               source_labels = ["__name__"];

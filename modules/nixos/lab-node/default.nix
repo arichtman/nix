@@ -123,33 +123,7 @@ in
           # I don't think this is strictly necessary for dual stack but eh
           listenAddress = "[::]";
         };
-        # Ref: https://github.com/avahi/avahi/blob/master/avahi-daemon/avahi-daemon.conf
-        avahi = {
-          enable = true;
-          publish = {
-            enable = true;
-            domain = true;
-            # TODO: testing all enabled
-            workstation = true;
-            userServices = true;
-            hinfo = true;
-            addresses = true;
-          };
-          nssmdns6 = true;
-          nssmdns4 = true;
-          ipv6 = true;
-          # Required to reduce context switch thrashing
-          # Ref: https://askubuntu.com/questions/1130175/avahi-daemon-uses-excessive-amounts-of-cpu
-          extraConfig = ''
-            [server]
-            ratelimit-interval-usec=500000
-            ratelimit-burst=500
-            [wide-area]
-            enable-wide-area=no
-          '';
-        };
         # Required to respond to neighbor discovery protocol for IPv6 SLAAC
-        # mDNS does the name-to-IP, ND does IP-to-MAC
         radvd = {
           enable = true;
           # Leftover from testing, remove before flight
@@ -205,12 +179,8 @@ in
         firewall.extraInputRules = lib.concatStringsSep "\n" [
           "ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 443 accept comment \"Allow private IPv4 subnets\""
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
-          "ip saddr { ${lib.arichtman.net.ip4.subnet} } udp dport 5353 accept comment \"Allow private IPv4 mDNS\""
-          "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } udp dport 5353 accept comment \"Allow IPv6 mDNS\""
-          # "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4240 accept comment \"Allow IPv6 Cilium health\""
           # TODO: hail mary in case it's nftables dropping stuff
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
-          # "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } udp dport 53 accept comment \"Allow IPv6 DNS\""
         ];
         # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
         # (the default) this is the recommended approach. When using systemd-networkd it's

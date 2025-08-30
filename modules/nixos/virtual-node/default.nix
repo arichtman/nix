@@ -30,12 +30,8 @@ in
         };
       };
       # Required to respond to neighbor discovery protocol for IPv6 SLAAC
-      # mDNS does the name-to-IP, ND does IP-to-MAC
       services.radvd = {
-        enable = true;
-        # TODO: Leftover from testing, remove before flight
-        # prefix ::/64 {};
-        # debugLevel = 4;
+        # Fat controller has a pass-thru NIC that's different name-wise
         config = ''
           interface ens16 {
             AdvSendAdvert on;

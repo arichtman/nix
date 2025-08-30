@@ -1,6 +1,16 @@
 # DNS
 
-Some diagnostic tests for mDNS:
+## Summary
+
+- mDNS is noisy, slow, and nearly impossible to ensure is in the name resolution path for all cases.
+- Stub resolvers are desirable for reducing noise and load on the router's DNS
+- OPNsense has DDNS, Proxmox remains on mDNS for now.
+  Lab nodes presently have static, public DNS AAAA records.
+  Future plans are to configure DDNS on all lab nodes.
+
+## mDNS
+
+Some diagnostic tests:
 
 ```bash
 export HOST_NAME=fat-controller.systems.richtman.au.
@@ -35,6 +45,8 @@ alias nm=nmcli
 alias rc=resolvectl
 alias as=authselect
 ```
+
+## Resolution pathing
 
 So, turns out this whole resolution chain is a mess, some things use nsswitch, others don't etc.
 We want consistent behaviour and caching, so we need the local stub resolver.
@@ -85,6 +97,8 @@ nmcli conn mod sugar_monster_house connection.mdns 2
 nmcli conn mod enp3s0 ipv4.ignore-auto-dns no
 nmcli conn mod enp3s0 ipv6.ignore-auto-dns no
 ```
+
+## Stub resolvers
 
 Oh, the stub resolver doesn't actually run on `localhost:53`.
 It's `127.0.0.53` (and actually `.54` also, according to `man 8 systemd-resolved.service`).
