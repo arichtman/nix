@@ -10,59 +10,40 @@ Todo:
 - ~Should fix or allow adding Prometheus target.~
   Anonymous auth now working for `/healthz`, `/livez`, `/readyz`, and `/metrics`.
 
-```
-kanidm system oauth2 create-public k8s fat-controller.systems.richtman.au https://fat-controller.systems.richtman.au:6443
-# Can probably set this properly in initial create call
-kanidm system oauth2 set-displayname k8s Kubernetes
-# Port kept changing and was localhost for step-cli to catch the token
-kanidm system oauth2 enable-localhost-redirects k8s
-
-# Create and map group
-kanidm group create k8s_users
-# Set the client to map the scopes we need the claims of
-kanidm system oauth2 update-scope-map k8s k8s_users openid email profile groups
-# Add our user
-kanidm group add-members k8s_users arichtman
-# Repeat for k8s_admins group
-
-# verify our work
-kanidm system oauth2 get k8s
-```
-
-`~/.kube/config`:
-
-```yaml
-- name: oauth
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1beta1
-      command: kubectl
-      args:
-      - oidc-login
-      - get-token
-      - --oidc-issuer-url
-      - https://id.richtman.au/oauth2/openid/k8s
-      - --oidc-client-id
-      - k8s
-      - --oidc-extra-scope
-      - 'openid profile groups email'
-```
-
 Note: maybe instead of extra scopes we do `--oidc-use-access-token` see [issue](https://github.com/int128/kubelogin/issues/1083).
 
-Note: I suspect step-cli is dead on this one on two counts:
-Firstly, we'll need to contruct another JSON output compatible with `client.authentication.k8s.io/v1beta1`.
-Secondly, it seems to do not only no caching, but no refreshing either.
+[CEL playground](https://playcel.undistro.io/) input
 
-```
-gh () { step --config step.json oauth $@ ; }
-export K8=https://fat-controller.systems.richtman.au:6443
-export STEP_PROVIDER=https://id.richtman.au/oauth2/openid/k8s
-export STEP_CLIENT_ID=k8s
-export STEP_SCOPE=openid,profile,groups,email
-export STEP_LISTEN='localhost:0'
-step oauth > token
-curl $K8 -H "$(gh --header)" -k
+[CEL spec](https://github.com/google/cel-spec/blob/v0.24.0/doc/langdef.md)
+
+```yaml
+claims:
+  email: foo@richtman.au
+  preferred_username: foo@id.richtman.au
+  email_verified: true
+  groups:
+    - "idm_admins@id.richtman.au"
+    - "idm_unix_admins@id.richtman.au"
+    - "idm_oauth2_admins@id.richtman.au"
+    - "idm_radius_service_admins@id.richtman.au"
+    - "idm_account_policy_admins@id.richtman.au"
+    - "idm_people_admins@id.richtman.au"
+    - "idm_service_account_admins@id.richtman.au"
+    - "idm_application_admins@id.richtman.au"
+    - "idm_mail_service_admins@id.richtman.au"
+    - "idm_group_admins@id.richtman.au"
+    - "idm_all_persons@id.richtman.au"
+    - "idm_all_accounts@id.richtman.au"
+    - "idm_high_privilege@id.richtman.au"
+    - "idm_people_self_name_write@id.richtman.au"
+    - "idm_client_certificate_admins@id.richtman.au"
+    - "ext_idm_provisioned_entities@id.richtman.au"
+    - "grafana_superadmins@id.richtman.au"
+    - "grafana_admins@id.richtman.au"
+    - "grafana_editors@id.richtman.au"
+    - "grafana_users@id.richtman.au"
+    - "k8s_users@id.richtman.au"
+    - "k8s_admins@id.richtman.au"
 ```
 
 ## References
