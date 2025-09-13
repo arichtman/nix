@@ -44,6 +44,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-versions = {
+      url = "github:vic/nix-versions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     valheim-server = {
       # url = "github:hamburger1984/valheim-server-flake";
       url = "github:arichtman/valheim-server-flake/patch-0-220-5";

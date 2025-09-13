@@ -1,6 +1,7 @@
 {
   pkgs,
   mkShell,
+  inputs,
   ...
 }: let
   # Ref: https://github.com/direnv/direnv/issues/73#issuecomment-2478178424
@@ -18,6 +19,7 @@ in
       meta.platforms = ["aarch64-darwin" "x86_64-linux" "x86_64-darwin"];
       packages = with pkgs;
         [
+          inputs.nix-versions.packages.${system}.nix-versions
           # Minimal development stuff
           git
           jujutsu
