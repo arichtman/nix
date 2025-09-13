@@ -45,28 +45,35 @@ in
           hostname = "ap.internal";
         };
         os = {
-          hostname = "opnsense.local";
+          hostname = "opnsense.internal";
         };
         pm = {
-          hostname = "proxmox.local";
+          hostname = "proxmox.internal";
         };
+        # All the user repetition is dumb but it wasn't hitting the "*.systems.richtman.au" match on my MBP
         fc = {
-          hostname = "fat-controller.local";
+          hostname = "fat-controller.systems.richtman.au";
+          user = "nixos";
         };
         pz = {
-          hostname = "patient-zero.local";
+          hostname = "patient-zero.systems.richtman.au";
+          user = "nixos";
         };
         ds = {
-          hostname = "dr-singh.local";
+          hostname = "dr-singh.systems.richtman.au";
+          user = "nixos";
         };
         sb = {
-          hostname = "smol-bat.local";
+          hostname = "smol-bat.systems.richtman.au";
+          user = "nixos";
         };
         tm = {
-          hostname = "tweedledum.local";
+          hostname = "tweedledum.systems.richtman.au";
+          user = "nixos";
         };
         te = {
-          hostname = "tweedledee.local";
+          hostname = "tweedledee.systems.richtman.au";
+          user = "nixos";
         };
       };
     };
