@@ -23,8 +23,9 @@ in
         watchdogd = {
           enable = true;
           settings = {
-            supervisor = {
+            loadavg = {
               enabled = true;
+              logmark = true;
             };
           };
         };
