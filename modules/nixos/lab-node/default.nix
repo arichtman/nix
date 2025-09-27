@@ -112,6 +112,9 @@ in
           openFirewall = true;
           listenAddress = "[::]";
         };
+        # Ref: https://github.com/NixOS/nixpkgs/issues/408800
+        # Ref: https://discourse.nixos.org/t/systemd-exporter-couldnt-get-dbus-connection-read-unix-run-dbus-system-bus-socket-recvmsg-connection-reset-by-peer/64367/4
+        dbus.implementation = "broker";
         prometheus.exporters.systemd = {
           enable = true;
           openFirewall = true;
