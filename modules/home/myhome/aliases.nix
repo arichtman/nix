@@ -24,27 +24,41 @@ in {
   };
   myAliases =
     {
+      nfu = "nix flake update --commit-lock-file";
+      sci = "step certificate inspect";
+      # Linux
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
       "....." = "cd ../../../..";
       j = "jobs";
+      shl = "echo $SHLVL";
       ee = "exit 0";
       sc = "sudo systemctl";
       jc = "journalctl -xeu";
       nm = "sudo nmcli";
       rc = "sudo resolvectl";
-      ls = "exa";
-      ll = "exa -las new";
+      ls = "eza";
+      ll = "eza -las new";
       cls = "clear";
+      # Direnv
       de = "direnv";
       dea = "de allow";
       der = "de reload";
+      # Editors
       vi = "hx";
       vim = "hx";
       nano = "hx";
       pico = "hx";
       hxv = "hx --vsplit";
+      # Jujutsu
+      jgf = "jj git fetch";
+      jgP = "jj git push";
+      jl = "jj log";
+      js = "jj status";
+      jC = "jj commit";
+      jd = "jj describe";
+      # Git
       g = "git";
       gc = "g checkout";
       gC = "g commit";
@@ -72,8 +86,7 @@ in {
       gCam = "gC --amend";
       gCC = "gC --amend --no-verify";
       gbl = "g blame -wCCC";
-      nfu = "nix flake update --commit-lock-file";
-      sci = "step certificate inspect";
+      # Kubectl
       #TODO: feels odd putting aliases in without installing the program but I like to keep the
       #  environments separate between repos?
       k = "kubectl";
@@ -90,6 +103,7 @@ in {
       kcns = "kc set-context --current --namespace";
       kcgc = "kc get-contexts";
       kcc = "kc use-context";
+      # Terraform + Terragrunt
       tg = "terragrunt";
       tgv = "terragrunt validate";
       tgi = "terragrunt init";
@@ -102,7 +116,6 @@ in {
       tfp = "terraform plan";
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
-      shl = "echo $SHLVL";
       # flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
       phonesetup = ''        nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb tcpip 5555 \
                       && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
