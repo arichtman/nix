@@ -32,7 +32,6 @@ in
           deadnix
           # Kubernetes stuff
           kubectl
-          kubectx
           kubernetes-helm
           kubelogin-oidc # Plugin for k8s auth
           # Cilium

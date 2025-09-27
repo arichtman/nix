@@ -428,6 +428,7 @@ in
             kubectl-doctor
             kubectl-explore
             kubectl-view-secret
+            kubelogin-oidc
             stern
             # Lang servers
             nil # nix

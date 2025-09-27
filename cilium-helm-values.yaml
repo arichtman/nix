@@ -1,5 +1,6 @@
 # helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.17.3
 # helm upgrade --install cilium ./cilium-1.17.3.tgz --namespace kube-system --values cilium-helm-values.yaml
+# kubectl delete node $(kubectl get nodes | grep NotReady | awk '{print $1;}')
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all
 # cat nodes.txt | xargs -I% bash -c 'kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite'
@@ -35,6 +36,7 @@ bgpControlPlane:
 podAnnotations:
   kubectl.kubernetes.io/default-container: cilium-agent
 enableIPv6BIGTCP: true
+enableIPv6Masquerade: true
 # Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
 bpf:
   # Use BPF instead of iptables masquerading
@@ -56,7 +58,8 @@ ipam:
   operator:
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
 
