@@ -1,0 +1,12 @@
+autoscalingGroups:
+- name: default
+  maxSize: 1
+  minSize: 0
+
+cloudConfigPath:
+cloudProvider: externalgrpc
+
+# prometheusRule:
+#   enabled: true
+# serviceMonitor:
+#   enabled: true
