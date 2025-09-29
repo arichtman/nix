@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
   - id: check-added-large-files
   - id: check-yaml
@@ -23,17 +23,19 @@ repos:
     args:
       - "--autofix"
 - repo: https://github.com/kamadorueda/alejandra
-  rev: 3.1.0
+  rev: 4.0.0
   hooks:
   - id: alejandra-system
 - repo: https://github.com/astro/deadnix
-  rev: v1.3.0
+  rev: v1.3.1
   hooks:
   - id: deadnix
 - repo: https://github.com/spinergie/pre-commit-dprint
-  rev: ''  # Use the sha / tag you want to point at
+  rev: 'v0.50.1'  # Use the sha / tag you want to point at
   hooks:
   - id: dprint
+    # Ref: https://github.com/spinergie/pre-commit-dprint/issues/1
+    args: ['--allow-no-files']
 # Disabled due to breaking updates
 # TODO: revert to main project when this is merged
 # https://github.com/oppiliappan/statix/pull/81

@@ -47,15 +47,13 @@ in
           snowfallorg.thaw
           nixtract
           # Pre-commit replacement
-          arichtman.prefligit
+          arichtman.prek
           # Experimental diff tool
           arichtman.mamediff
-          # Required for prefligit
-          uv
         ]
         ++ scripts;
       shellHook = ''
-        prefligit install --install-hooks
+        prek install --install-hooks
         echo "Entering the nix  Z O N E"
       '';
     }
