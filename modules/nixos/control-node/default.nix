@@ -8,7 +8,6 @@
     ./garage.nix
     ./nix-serve.nix
     ./website.nix
-    ./valheim.nix
     ./kanidm.nix
     ./step-ca.nix
     ./monitoring.nix
