@@ -317,15 +317,16 @@ in
               name = "mergiraf";
               driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P";
             };
-            url = {
-              "https://github.com" = {insteadOf = "gh";};
-              "https://gitlab.com" = {insteadOf = "gl";};
-              "https://codeberg.org" = {insteadOf = "cb";};
-              # Ref: https://is-a.cat/@ar/114307233150170664
-              "git@github.com:" = {insteadOf = "https://github.com/";};
-              "git@codeberg.org:" = {insteadOf = "https://codeberg.org/";};
-              "git@gitlab.com:" = {insteadOf = "https://gitlab.com/";};
-            };
+            url =
+              {
+                "https://github.com" = {insteadOf = "gh";};
+                "https://gitlab.com" = {insteadOf = "gl";};
+                "https://codeberg.org" = {insteadOf = "cb";};
+                # Ref: https://is-a.cat/@ar/114307233150170664
+                "git@codeberg.org:" = {insteadOf = "https://codeberg.org/";};
+                "git@gitlab.com:" = {insteadOf = "https://gitlab.com/";};
+              }
+              // lib.optionalAttrs (!pkgs.stdenv.hostPlatform.isAarch) {"git@github.com:" = {insteadOf = "https://github.com/";};};
             # Ref: https://blog.gitbutler.com/how-git-core-devs-configure-git/
             column.ui = "auto";
             branch.sort = "-committerdate";
