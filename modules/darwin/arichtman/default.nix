@@ -50,12 +50,12 @@ with lib;
       # TODO: Check out all config options
       system =
         {
-          # primaryUser = lib.mkIf false "arichtman";
+          primaryUser = "arichtman";
           # Ref https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
-          activationScripts.postUserActivation.text = ''
-            # Following line should allow us to avoid a logout/login cycle
-            /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-          '';
+          # activationScripts.postUserActivation.text = ''
+          #   # Following line should allow us to avoid a logout/login cycle
+          #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+          # '';
           startup.chime = false;
           keyboard = {
             enableKeyMapping = true;
