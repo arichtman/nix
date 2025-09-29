@@ -345,7 +345,7 @@ in
           autosuggestion.enable = true;
           autocd = true;
           syntaxHighlighting.enable = true;
-          initExtra = ''
+          initContent = ''
             function gedditdafuckouttahere () {
               git submodule deinit --force $1 ;
               rm -fr .git/modules/$1 ;
@@ -445,7 +445,7 @@ in
             harper # Git commit English
             # ansible-language-server seems to crash
             vscode-langservers-extracted
-            dockerfile-language-server-nodejs
+            dockerfile-language-server
             docker-compose-language-service
             jq-lsp
             yq
