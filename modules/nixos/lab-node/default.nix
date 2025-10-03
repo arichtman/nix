@@ -27,7 +27,7 @@ in
         ethtool
         btop
         sysstat
-        linuxKernel.packages.linux_libre.perf
+        perf
         dig
         file
         pwru

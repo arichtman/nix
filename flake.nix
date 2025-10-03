@@ -48,12 +48,6 @@
       url = "github:vic/nix-versions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    valheim-server = {
-      # url = "github:hamburger1984/valheim-server-flake";
-      url = "github:arichtman/valheim-server-flake/patch-0-220-5";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs = inputs: let
     lib = inputs.snowfall-lib.mkLib {
@@ -74,13 +68,9 @@
       systems.modules.darwin = with inputs; [
         mac-app-util.darwinModules.default
       ];
-      systems.modules.nixos = [
-        inputs.valheim-server.nixosModules.default
-      ];
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default
-        valheim-server.overlays.default
       ];
       alias.shells = {
         default = "myshell";
