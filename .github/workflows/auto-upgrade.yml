@@ -11,19 +11,16 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
-        # Bit torn, submodule pull and update should be a no-op, then I can keep my CI files standard
-        # submodules: recursive
     - uses: DeterminateSystems/nix-installer-action@main
     - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Update stuff
       run: |
         nix flake update
-        # autoupdate not implemented yet
-        # nix develop --command prefligit autoupdate
-        # git submodule update --remote
+        autoupdate not implemented yet
+        nix develop --command prek autoupdate
     - uses: peter-evans/create-pull-request@v6
       with:
         branch: auto-updates

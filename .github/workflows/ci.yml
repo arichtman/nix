@@ -11,9 +11,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-13, macos-14, ubuntu-latest ]
+        os: [ macos-14-large, ubuntu-latest ]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
     - uses: DeterminateSystems/nix-installer-action@main
@@ -26,7 +26,7 @@ jobs:
       matrix:
         host: [ fat-controller, patient-zero ]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
     - uses: DeterminateSystems/nix-installer-action@main
@@ -36,9 +36,9 @@ jobs:
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
 
   check_x86_64-darwin:
-    runs-on: macos-13
+    runs-on: macos-14-large
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
     - uses: DeterminateSystems/nix-installer-action@main
@@ -46,9 +46,9 @@ jobs:
       run: nix build .#darwinConfigurations.macbookpro.system
 
   check_aarch64-darwin:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 1
     - uses: DeterminateSystems/nix-installer-action@main
