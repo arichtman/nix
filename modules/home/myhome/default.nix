@@ -205,7 +205,7 @@ in
               paginate = "never";
               # pager = "bat";
               # TODO: configure mergiraf for JJ
-              diff.tool = "delta";
+              diff-formatter = "delta";
               merge-editor = "mergiraf";
             };
             merge-tools = {
