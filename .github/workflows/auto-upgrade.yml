@@ -19,7 +19,6 @@ jobs:
     - name: Update stuff
       run: |
         nix flake update
-        autoupdate not implemented yet
         nix develop --command prek autoupdate
     - uses: peter-evans/create-pull-request@v6
       with:
