@@ -107,19 +107,16 @@
     service-account-issuer = "https://kubernetes.default.svc";
     service-account-key-file = "${cfg.secretsPath}/service-account.pem";
     service-account-signing-key-file = "${cfg.secretsPath}/service-account-key.pem";
-    # TODO: Revisit
-    # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}::/108";
-    # Set services top of the subnet range
+    # Set services top of the delegated prefix range
     # Seems like Cilium cannot manage this
-    service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:1:ffff:ffff:ffff:0/112";
-    # "2001:db8:1234:5678:8:3::/112"
-    # Can't mix public and private
-    # "10.100.100.0/24,${lib.arichtman.net.ip6.prefix}:fffd::/64"
-    # "command failed" err="[specified --service-cluster-ip-range[1] is too large; for 128-bit addresses, the mask must be >= 108, service IP family \"10.100.100.0/24\" must match public address family \"2403:580a:e4b1:0:3b67:89bb:45f8:3ba5\"]"
-    # "10.100.100.0/24,fd00::/108"
+    # Note: 1.33+ has resources for this https://kubernetes.io/docs/tasks/network/reconfigure-default-service-ip-ranges/
+    # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:ffff::0/64";
+    # Ref: https://www.unique-local-ipv6.com/
+    # Note: APIserver cannot create an IP Allocator for greater than /64 for whatever reason
+    service-cluster-ip-range = "fda6:3c52:d12b::/64";
     tls-cert-file = "${cfg.secretsPath}/kube-apiserver-tls.pem";
     tls-private-key-file = "${cfg.secretsPath}/kube-apiserver-tls-key.pem";
-    v = 2; # TODO: remove when stabilized
+    # v = 2; # TODO: remove when stabilized
   };
 in {
   # Ref: https://github.dev/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/cluster/kubernetes/default.nix

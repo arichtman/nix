@@ -52,7 +52,8 @@ autoDirectNodeRoutes: true
 routingMode: native
 externalIPs:
   enabled: true
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
+# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
+ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
 ipam:
   mode: "cluster-pool" # Should be unnecessary
   operator:

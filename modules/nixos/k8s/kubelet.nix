@@ -47,7 +47,7 @@
       clusterDomain = "cluster.local";
       # Ref: https://coredns.io/plugins/loop/#troubleshooting-loops-in-kubernetes-clusters
       resolvConf = "/run/systemd/resolve/resolv.conf";
-      clusterDNS = ["${lib.arichtman.net.ip6.prefix}:1:ffff:ffff:ffff:10"];
+      clusterDNS = ["${lib.arichtman.net.ip6.prefix}:ffff::10"];
       imageMaximumGCAge = "604800s";
       # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
       # Also we may have multiple interfaces so...

@@ -2,6 +2,6 @@
 # helm pull coredns/coredns --version 1.40.0
 # helm upgrade --namespace kube-system --install coredns ./coredns-1.40.0.tgz --namespace kube-system --values coredns-helm-values.yaml
 service:
-  clusterIP: 2403:580a:e4b1:1:ffff:ffff:ffff:10
+  clusterIP: fda6:3c52:d12b::10
 serviceAccount:
   create: true
