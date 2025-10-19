@@ -91,13 +91,13 @@ Todo:
 - Certificate authority? (step-ca?)
 - More identity integration.
   Done:
-    - Grafana
-  To-do:
-    - Proxmox (may be limited to authentication)
-    - Step-CA [ref](https://smallstep.com/docs/step-ca/provisioners/#oauthoidc-single-sign-on)
-    - OPNsense (LDAP only)
-  Not possible:
-    - Garage
+  - Grafana
+    To-do:
+  - Proxmox (may be limited to authentication)
+  - Step-CA [ref](https://smallstep.com/docs/step-ca/provisioners/#oauthoidc-single-sign-on)
+  - OPNsense (LDAP only)
+    Not possible:
+  - Garage
 - Switch routing to _dynamic_ subdomains.
 - Add Uptime Kuma publicly
 - Deploy external dead man's switch and route Alertmanager to it.
@@ -360,6 +360,9 @@ resize2fs /dev/sda1
 
 - Follow [Ben Tasker's stuff](https://www.bentasker.co.uk/posts/blog/general/opnsense-pfsense-fttp-and-1gbps-pppoe.html)
 
+Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing requested amount).
+[Ref](https://github.com/opnsense/plugins/issues/627#issuecomment-420614278)
+
 ##### DNS Configuration
 
 1. Configure Upbound DNS service
@@ -434,6 +437,7 @@ rm alacritty.info
 ##### Nginx for Kanidm
 
 Nginx configuration on OPNsense requires modification for Kanidm Oauth to work!
+
 1. Inspect the generated configuration file, either via SSH or Web console
 1. Locate the `server` block for the Kanidm HTTP server
 1. There should be a line like `include $UUID_post/*.conf`, note the directory name.
