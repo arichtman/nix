@@ -146,25 +146,34 @@ in {
         # };
       };
     };
-    # https://git.sr.ht/~goorzhel/nixos/tree/ebe64964039dff02049eeb85802f5a76a56fe668/item/profiles/k3s/common/net.nix#L54
-    # Open kubelet port to local addresses
-    networking.firewall = {
-      # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
-      #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded
-      # Ref: https://blog.goorzhel.com/istio-to-cilium-a-grand-yak-shave/
-      # TODO: Write netfilter rules instead of opening this
-      checkReversePath = "loose";
-      # Log them in case it becomes an issue later
-      # Later Ariel here, it was absolutely an issue
-      logReversePathDrops = true;
-      extraReversePathFilterRules = ''
-      '';
-      extraInputRules = ''
-        ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
-        ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
-        ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4240 accept comment "Allow IPv6 Cilium-Agent health stuff"
-        ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
-      '';
+    # Ref: https://git.sr.ht/~goorzhel/nixos/tree/ebe64964039dff02049eeb85802f5a76a56fe668/item/profiles/k3s/common/net.nix#L54
+    networking = {
+      nftables.enable = true;
+      # Ref: https://git.sr.ht/~goorzhel/nixos/tree/09e08f41c855cfe60ef44f9f4ae412f18db5b105/item/profiles/k3s/common/net.nix
+      # Note: I don't run DHCPv6 presently so may not be doing much
+      dhcpcd.denyInterfaces = [
+        "lxc_*"
+        "cilium_*"
+      ];
+      firewall = {
+        # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
+        #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded
+        # Ref: https://blog.goorzhel.com/istio-to-cilium-a-grand-yak-shave/
+        # TODO: Write netfilter rules instead of opening this
+        checkReversePath = "loose";
+        # Log them in case it becomes an issue later
+        # Later Ariel here, it was absolutely an issue
+        logReversePathDrops = true;
+        extraReversePathFilterRules = ''
+        '';
+        # Open kubelet port to local addresses
+        extraInputRules = ''
+          ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
+          ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
+          ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4240 accept comment "Allow IPv6 Cilium-Agent health stuff"
+          ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
+        '';
+      };
     };
     systemd = {
       services = {
