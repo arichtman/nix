@@ -97,6 +97,9 @@ in
         };
         resolved = {
           enable = true;
+          extraConfig = ''
+            MulticastDNS=true
+          '';
         };
         journald.extraConfig = ''
           SystemMaxUse=100M
@@ -175,8 +178,6 @@ in
         search = [
           config.networking.domain
         ];
-        # TODO: Consider removal of networkmanager
-        networkmanager.enable = true;
         nftables.enable = true;
         # Only allow ingress from ranges I control
         firewall.extraInputRules = lib.concatStringsSep "\n" [

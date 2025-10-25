@@ -138,6 +138,8 @@ Todo:
   [article](https://povilasv.me/how-to-monitor-containerd/)
   [prom docs](https://prometheus.io/docs/guides/opentelemetry/)
 - "Package" an app using [generic Helm charts](https://github.com/bjw-s/helm-charts)
+- Amend `systemd-resolved` to prefer (or only) use v6 DNS upstream.
+  [Issue](https://github.com/systemd/systemd/issues/16322)
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
 - Pull k8s module out into it's own flake/repo/overlay?

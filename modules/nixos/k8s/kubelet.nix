@@ -151,10 +151,16 @@ in {
       nftables.enable = true;
       # Ref: https://git.sr.ht/~goorzhel/nixos/tree/09e08f41c855cfe60ef44f9f4ae412f18db5b105/item/profiles/k3s/common/net.nix
       # Note: I don't run DHCPv6 presently so may not be doing much
-      dhcpcd.denyInterfaces = [
-        "lxc_*"
-        "cilium_*"
-      ];
+      # Ref: https://manpages.debian.org/buster/dhcpcd5/dhcpcd.conf.5.en.html
+      dhcpcd = {
+        denyInterfaces = [
+          "lxc*"
+          "cilium*"
+        ];
+        extraConfig = ''
+          ipv6only
+        '';
+      };
       firewall = {
         # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
         #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded
