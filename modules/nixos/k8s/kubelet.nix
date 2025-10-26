@@ -43,16 +43,13 @@
       authorization = {
         mode = "Webhook";
       };
-      # Host's search domain is `internal.`, so we need to override this
+      # Host's search domain is `internal` and `systems.richtman.au`, so we need to override this
       clusterDomain = "cluster.local";
       # Ref: https://coredns.io/plugins/loop/#troubleshooting-loops-in-kubernetes-clusters
       resolvConf = "/run/systemd/resolve/resolv.conf";
-      clusterDNS = ["${lib.arichtman.net.ip6.prefix}:ffff::10"];
+      # Note: This must match the clusterIP given to CoreDNS
+      clusterDNS = ["fda6:3c52:d12b::10"];
       imageMaximumGCAge = "604800s";
-      # Listen on any address. We're using DHCP/SLAAC so it's not like we can just feed through host IP configuration.
-      # Also we may have multiple interfaces so...
-      # address = "::";
-      # port = 1;
     };
   kubeletConfigFile = pkgs.writeText "kubelet-config" (builtins.toJSON kubeletConfig);
   kubeletKubeconfig = {
@@ -149,18 +146,12 @@ in {
     # Ref: https://git.sr.ht/~goorzhel/nixos/tree/ebe64964039dff02049eeb85802f5a76a56fe668/item/profiles/k3s/common/net.nix#L54
     networking = {
       nftables.enable = true;
+      networkmanager = {
+        unmanaged = ["lxc*" "cilium*"];
+      };
       # Ref: https://git.sr.ht/~goorzhel/nixos/tree/09e08f41c855cfe60ef44f9f4ae412f18db5b105/item/profiles/k3s/common/net.nix
       # Note: I don't run DHCPv6 presently so may not be doing much
       # Ref: https://manpages.debian.org/buster/dhcpcd5/dhcpcd.conf.5.en.html
-      dhcpcd = {
-        denyInterfaces = [
-          "lxc*"
-          "cilium*"
-        ];
-        extraConfig = ''
-          ipv6only
-        '';
-      };
       firewall = {
         # Required for Kubernetes namespaced networking. I think the Kubelet sends packets over the default
         #   interface which the return path would be the vEth in default/host netns. Presumably it's being IP forwarded

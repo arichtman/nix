@@ -54,6 +54,7 @@ in
         ++ scripts;
       shellHook = ''
         prek install --install-hooks
+        source <(kubectl completion zsh)
         echo "Entering the nix  Z O N E"
       '';
     }

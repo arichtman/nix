@@ -6,8 +6,9 @@
 }: let
   cfg = config.services.k8s-apiserver;
   # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1beta1/
+  # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/
   authConfig = {
-    apiVersion = "apiserver.config.k8s.io/v1beta1";
+    apiVersion = "apiserver.config.k8s.io/v1";
     kind = "AuthenticationConfiguration";
     jwt = [
       {
@@ -97,8 +98,8 @@
     external-hostname = config.networking.hostName;
     # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
     # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
-    feature-gates = "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true";
-    runtime-config = "certificates.k8s.io/v1alpha1/clustertrustbundles=true";
+    feature-gates = "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true,kube:MutatingAdmissionPolicy=true";
+    runtime-config = "certificates.k8s.io/v1beta1=true,admissionregistration.k8s.io/v1beta1=true";
     # TODO: deduplicate/couple this
     kubelet-certificate-authority = "${cfg.secretsPath}/k8s-ca.pem";
     kubelet-client-certificate = "${cfg.secretsPath}/kube-apiserver-kubelet-client.pem";

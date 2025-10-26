@@ -6,6 +6,8 @@
 # cat nodes.txt | xargs -I% bash -c 'kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite'
 # kgn -o custom-columns=Node:.metadata.name,Id:".metadata.annotations.cilium\.io/bgp-virtual-router\.65551"
 
+extraArgs:
+  - "--enable-host-reachable-services=true"
 cluster:
   name: kubernetes
 # No kube-proxy

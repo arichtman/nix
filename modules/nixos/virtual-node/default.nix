@@ -30,15 +30,6 @@ in
           };
         };
       };
-      # Required to respond to neighbor discovery protocol for IPv6 SLAAC
-      services.radvd = {
-        # Fat controller has a pass-thru NIC that's different name-wise
-        config = ''
-          interface ens16 {
-            AdvSendAdvert on;
-          };
-        '';
-      };
       fileSystems."/" = {
         device = "/dev/sda1";
         fsType = "ext4";

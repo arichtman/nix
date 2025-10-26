@@ -51,7 +51,7 @@ in
       users.users.nixos = {
         isNormalUser = true;
         description = "nixos";
-        extraGroups = ["networkmanager" "wheel"];
+        extraGroups = ["wheel"];
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJt9zJAxzYEK7Y2FYmwkT4cnYr/e4lO2w/ivNL74Pp6B"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxGxm6tCZlV3vJ6+yAkmQKcqVagfhgaf2aHzVQHvay+"
@@ -97,6 +97,8 @@ in
         };
         resolved = {
           enable = true;
+          # Disable built-in resolved CLoudflare+Google+Quad9 etc
+          fallbackDns = [];
           extraConfig = ''
             MulticastDNS=true
           '';
@@ -128,18 +130,6 @@ in
           openFirewall = true;
           # I don't think this is strictly necessary for dual stack but eh
           listenAddress = "[::]";
-        };
-        # Required to respond to neighbor discovery protocol for IPv6 SLAAC
-        radvd = {
-          enable = true;
-          # Leftover from testing, remove before flight
-          # prefix ::/64 {};
-          # debugLevel = 4;
-          config = ''
-            interface eno1 {
-              AdvSendAdvert on;
-            };
-          '';
         };
         # Configure keymap in X11
         xserver = {
@@ -186,11 +176,17 @@ in
           # TODO: hail mary in case it's nftables dropping stuff
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
         ];
-        # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-        # (the default) this is the recommended approach. When using systemd-networkd it's
-        # still possible to use this option, but it's recommended to use it in conjunction
-        # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-        useDHCP = lib.mkDefault true;
+        useNetworkd = true;
+        dhcpcd.enable = false;
+      };
+      # Ref: https://timeloop.cafe/@uep/115439736391881719
+      systemd.network = {
+        enable = true;
+        config = {
+          networkConfig = {
+            UseDomains = true;
+          };
+        };
       };
 
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
