@@ -1,0 +1,14 @@
+groups:
+
+- name: PVE
+
+  rules:
+
+    - alert: ProxmoxLocked
+      expr: 'sum(pve_lock_state) > 0'
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: Proxmox is locked (instance {{ $labels.instance }})
+        description: "Proxmox is working on VMs\n  LABELS = {{ $labels }}"

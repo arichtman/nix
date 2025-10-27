@@ -51,7 +51,7 @@ in {
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://prometheus.${config.control-node.serviceDomain}/";
-      ruleFiles = [./rules/embedded-exporter.yaml ./rules/node-exporter.yaml ./rules/etcd-contrib.yaml ./rules/k8s.yaml];
+      ruleFiles = [./rules/embedded-exporter.yaml ./rules/node-exporter.yaml ./rules/etcd-contrib.yaml ./rules/k8s.yaml ./rules/pve.yaml];
       alertmanagers = [
         {
           static_configs = [
@@ -166,20 +166,20 @@ in {
           #   cluster = ["1"];
           #   node = ["1"];
           # };
-          # relabel_configs = [
-          #   {
-          #     source_labels = ["__address__"];
-          #     target_label = "__param_target";
-          #   }
-          #   {
-          #     source_labels = ["__param_target"];
-          #     target_label = "instance";
-          #   }
-          #   {
-          #     target_label = "__address__";
-          #     replacement = "proxmox.internal";
-          #   }
-          # ];
+          relabel_configs = [
+            #   {
+            #     source_labels = ["__address__"];
+            #     target_label = "__param_target";
+            #   }
+            #   {
+            #     source_labels = ["__param_target"];
+            #     target_label = "instance";
+            #   }
+            {
+              target_label = "instance";
+              replacement = "proxmox.internal";
+            }
+          ];
           static_configs = [
             {
               targets = [
@@ -195,6 +195,19 @@ in {
         checkConfig = false;
         # Ref: https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
         configuration = {
+          inhibit_rules = [
+            {
+              source_matchers = [
+                ''alertname = "proxmoxlocked"''
+              ];
+              target_matchers = [
+                # group = "nodeexporter";
+                ''nodename = "proxmox"''
+              ];
+              # TODO: strip port numbers in scrape config
+              # equal = ["instance"];
+            }
+          ];
           receivers = [
             {
               name = "null";
@@ -207,16 +220,32 @@ in {
                 }
               ];
             }
+            {
+              name = "discord-paging";
+              discord_configs = [
+                {
+                  webhook_url_file = "/var/lib/alertmanager/discord-paging-webhook-url";
+                }
+              ];
+            }
           ];
           route = {
             receiver = "discord";
             group_by = ["alertname" "nodename"];
             routes = [
               {
+                receiver = "null";
                 matchers = [
                   "alertname=\"PrometheusAlertmanagerE2eDeadManSwitch\""
                 ];
-                receiver = "null";
+                continue = false;
+              }
+              {
+                receiver = "discord-paging";
+                matchers = [
+                  ''severity =~ "critical|error"''
+                ];
+                continue = false;
               }
             ];
           };
