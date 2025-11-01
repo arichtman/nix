@@ -198,14 +198,16 @@ in {
           inhibit_rules = [
             {
               source_matchers = [
-                ''alertname = "proxmoxlocked"''
+                # ''alertname = "proxmoxlocked"''
+                ''group = "PVE"''
+                ''utility = "inhibition"''
               ];
               target_matchers = [
-                # group = "nodeexporter";
-                ''nodename = "proxmox"''
+                ''group = "NodeExporter"''
+                # ''nodename = "proxmox"''
               ];
               # TODO: strip port numbers in scrape config
-              # equal = ["instance"];
+              equal = ["instance"];
             }
           ];
           receivers = [
