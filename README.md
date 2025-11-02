@@ -771,3 +771,4 @@ some _very_ wip notes about the desktop.
 - [Jake Hamilton videos](https://www.youtube.com/@jakehamiltondev)
 - [Nebucatnetzer's config](https://git.2li.ch/Nebucatnetzer/nixos/)
 - [Post about inline nix use helm](https://hdev.im/@farcaller/113018001043836518)
+- [Wrapper library](https://github.com/Lassulus/wrappers)
