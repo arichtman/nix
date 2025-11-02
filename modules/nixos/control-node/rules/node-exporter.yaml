@@ -1,10 +1,7 @@
 # Ref: https://github.com/samber/awesome-prometheus-alerts/blob/master/dist/rules/host-and-hardware/node-exporter.yml
 groups:
-
 - name: NodeExporter
-
   rules:
-
     - alert: HostOutOfMemory
       expr: '(node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
       for: 2m

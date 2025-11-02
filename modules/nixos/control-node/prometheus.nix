@@ -198,15 +198,10 @@ in {
           inhibit_rules = [
             {
               source_matchers = [
-                # ''alertname = "proxmoxlocked"''
-                ''group = "PVE"''
                 ''utility = "inhibition"''
               ];
               target_matchers = [
-                ''group = "NodeExporter"''
-                # ''nodename = "proxmox"''
               ];
-              # TODO: strip port numbers in scrape config
               equal = ["instance"];
             }
           ];
@@ -239,6 +234,14 @@ in {
                 receiver = "null";
                 matchers = [
                   "alertname=\"PrometheusAlertmanagerE2eDeadManSwitch\""
+                ];
+                continue = false;
+              }
+              {
+                # Suppress inhibit-only alerts
+                receiver = "null";
+                matchers = [
+                  ''utility = "inhibition"''
                 ];
                 continue = false;
               }
