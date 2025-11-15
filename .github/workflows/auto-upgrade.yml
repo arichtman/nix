@@ -15,7 +15,6 @@ jobs:
       with:
         fetch-depth: 1
     - uses: DeterminateSystems/nix-installer-action@main
-    - uses: DeterminateSystems/magic-nix-cache-action@main
     - name: Update stuff
       run: |
         nix flake update
