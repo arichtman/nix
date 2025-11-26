@@ -124,7 +124,15 @@ in
           enableBashIntegration = true;
           enableZshIntegration = true;
           attachExistingSession = true;
-          exitShellOnExit = true;
+          # Let's try leaving the session open on quit
+          # exitShellOnExit = true;
+          # Ref: https://github.com/zellij-org/zellij/pull/3047#issuecomment-2532831794
+          extraConfig = ''
+            bind "Shift Left" { MoveTab "Left"; }
+            bind "Shift h" { MoveTab "Left"; }
+            bind "Shift Right" { MoveTab "Right"; }
+            bind "Shift l" { MoveTab "Right"; }
+          '';
         };
         helix = {
           enable = true;
