@@ -271,11 +271,13 @@ in
             bl = "blame";
             xclean = "clean --force -x --exclude '.env'";
           };
-          ignores = lib.arichtman.sourceGitignoreList {
-            languages = ["hugo" "rust" "linux" "macos" "csharp" "direnv" "python" "windows" "terraform" "dotnetcore" "terragrunt" "rust-analyzer" "node" "yarn"];
-            hash = "12gswbdnlsx1gzqxns6s6nzsc0kkvnprr44abc1v8l6in8rjyj57";
-            filterFunction = x: x != "Cargo.lock";
-          };
+          ignores =
+            (lib.arichtman.sourceGitignoreList {
+              languages = ["hugo" "rust" "linux" "macos" "csharp" "direnv" "python" "windows" "terraform" "dotnetcore" "terragrunt" "rust-analyzer" "node" "yarn"];
+              hash = "12gswbdnlsx1gzqxns6s6nzsc0kkvnprr44abc1v8l6in8rjyj57";
+              filterFunction = x: x != "Cargo.lock";
+            })
+            ++ [".helix/"];
           attributes = import ./git/attributes.nix;
           signing = {
             signByDefault = true;
