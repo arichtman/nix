@@ -14,4 +14,21 @@ formatter = { command = "dprint", args = ["fmt", "--stdin", "md"] }
 # Ref: https://github.com/helix-editor/helix/discussions/11653#discussioncomment-14138703
 [[language]]
 name = "git-commit"
-language-servers = [ "harper-ls" ]
+language-servers = ["harper-ls"]
+
+[language-server]
+kcl-language-server = { command = "kcl-language-server" }
+
+[[language]]
+name = "kcl-lang"
+grammar = "kcl"
+scope = "source.k"
+file-types = ["kcl", { glob = "*.k" }]
+roots = ["kcl.mod", "kcl.yaml"]
+comment-tokens = ["#"]
+language-servers = ["kcl-language-server"]
+formatter = { command = "kcl", args = ["fmt"] }
+
+[[grammar]]
+name = "kcl-lang"
+source = { git = "https://github.com/kcl-lang/tree-sitter-kcl", rev = "b0b2eb38009e04035a6e266c7e11e541f3caab7c" }
