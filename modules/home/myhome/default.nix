@@ -482,7 +482,6 @@ in
             yubikey-manager
             yubioath-flutter
             yubikey-touch-detector
-            yubikey-personalization-gui
           ];
         file =
           # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
@@ -510,7 +509,5 @@ in
         enableNixpkgsReleaseCheck = true;
         shellAliases = aliases.myAliases // aliases.classicalAliases;
       };
-      # Darwin launchpad fixes
-      # Ref: https://github.com/nix-community/home-manager/issues/1341#issuecomment-1870352014
     };
   }

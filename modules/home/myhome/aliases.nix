@@ -6,16 +6,10 @@
 }: let
   cfg = config.default-home;
   darwinAliases = {
-    dr = "darwin-rebuild";
+    dr = "sudo darwin-rebuild";
     drc = "dr check --flake .";
     drs = "dr switch --flake .";
     flushdns = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
-    brute-force-darwin-rebuild-check = "until drc ; do : ; done";
-    brute-force-darwin-rebuild-switch = "until drs ; do : ; done";
-    brute-force-flake-update = "until nix flake update --commit-lock-file ; do : ; done";
-    brute-force-direnv-reload = "until direnv reload ; do : ; done";
-    # Ope, looks like Alacritty launch is cooked on x86_64 Darwin
-    alac = "open -a alacritty; exit 0";
   };
 in {
   classicalAliases = {
@@ -116,7 +110,6 @@ in {
       tfp = "terraform plan";
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
-      # flushdns = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
       phonesetup = ''        nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb tcpip 5555 \
                       && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
                       && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1 \
@@ -124,7 +117,7 @@ in {
       '';
     }
     # TODO: If the OpenGL-non NixOS system thing ever gets resolved...
-    // lib.optionalAttrs (cfg.isThatOneWeirdMachine || (pkgs.stdenv.hostPlatform.isDarwin && !pkgs.stdenv.hostPlatform.isAarch)) {alac = "nohup nixGLNvidia alacritty &";}
+    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nohup nixGLNvidia alacritty &";}
     # Have to put here as modules are Nix config and not home-manager (?)
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin darwinAliases;
 }

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   personal-machine.enabled = true;
   default-home = {
     username = "arichtman";

@@ -39,11 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    yaml2nix = {
-      url = "github:euank/yaml2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-versions = {
       url = "github:vic/nix-versions";
       inputs.nixpkgs.follows = "nixpkgs";

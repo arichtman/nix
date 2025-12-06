@@ -16,7 +16,7 @@ in
   mkShell (
     devEnvVars
     // {
-      meta.platforms = ["aarch64-darwin" "x86_64-linux" "x86_64-darwin"];
+      meta.platforms = ["aarch64-darwin" "x86_64-linux"];
       packages = with pkgs;
         [
           inputs.nix-versions.packages.${system}.nix-versions

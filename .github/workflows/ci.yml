@@ -35,16 +35,6 @@ jobs:
       run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
 
-  check_x86_64-darwin:
-    runs-on: macos-14-large
-    steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 1
-    - uses: DeterminateSystems/nix-installer-action@main
-    - name: Test machine
-      run: nix build .#darwinConfigurations.macbookpro.system
-
   check_aarch64-darwin:
     runs-on: macos-15
     steps:

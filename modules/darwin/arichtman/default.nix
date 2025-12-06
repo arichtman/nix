@@ -21,9 +21,6 @@ with lib;
         experimental-features = nix-command flakes
       '';
 
-      #TODO: Do we even want Rosetta?
-      # extra-platforms = lib.mkIf pkgs.stdenv.isAarch64 x86_64-darwin;
-
       # Required or /run/current-system/sw isn't put on PATH
       #TODO: pull config out from default-home?
       programs.zsh.enable = true;
