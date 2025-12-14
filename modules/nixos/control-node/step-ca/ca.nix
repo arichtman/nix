@@ -36,6 +36,23 @@
         };
         encryptedKey = "eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJjdHkiOiJqd2sranNvbiIsImVuYyI6IkEyNTZHQ00iLCJwMmMiOjYwMDAwMCwicDJzIjoiNFpRWDh3RFB0V1BNbWM3dWlUS2htdyJ9.uxOSZNJRfihd5vhGaZpWJaX5XWhtdtLG7K9UeQZwCWf16VwcWUgH9A.hyCH7xbKfLMcPhX-.0xSkFWL49A58fTx47Bt_racnOuV_jfDmpE05DeFJSg5C8W0ikTwOSPEaO_rN3JzF7n977leW-1F_VNxzXQv25MuguObJmnAWPTbvSLrX9z_O7DG1c-dxkh5GxW38rTYYWulP9J1eZhS4reqZGobWqbuLyXkrL5OG9BiubbNQFPuDIsEvQ0Ts9Tf44ySaU2_F5UuB_xIwPtzhshFMTrZlr9vB3iN12aMIpaggtkM5c1f7T2lCZL4Ec-heEkOOmIlPFaG4wNgRCDUp8jfzenkSClWuCDgggvDHwiZR7vmDoek3BUrysMplhxERzWLmC0_dWdVrzjvQ2QwpocZJ2zY.ZDwrwSZioQT_2CrnzXD7fg";
       }
+      {
+        "type" = "OIDC";
+        "name" = "kanidm";
+        "clientID" = "step-ca";
+        # Not secret, Ref: https://smallstep.com/docs/step-ca/provisioners/#notes
+        "clientSecret" = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        "configurationEndpoint" = "https://id.richtman.au/oauth2/openid/step-ca/.well-known/openid-configuration";
+        "admins" = ["ariel@richtman.au"];
+        "domains" = ["id.richtman.au"];
+        "scopes" = ["openid" "email"];
+        "listenAddress" = "localhost:10000";
+        "claims" = {
+          "maxTLSCertDuration" = "8h";
+          "defaultTLSCertDuration" = "2h";
+          "disableRenewal" = true;
+        };
+      }
     ];
   };
   tls = {

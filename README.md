@@ -79,6 +79,8 @@ Features:
 - Valheim server
 - Nix binary cache
 - Kanidm identity management
+- Step-CA certificate authority
+- OIDC SSO for Grafana and Step-CA
 
 Todo:
 
@@ -88,13 +90,11 @@ Todo:
 - Spire for node identity
 - Stop Spire agent dying if stale join token
 - Secrets (Vault/OpenBao?)
-- Certificate authority? (step-ca?)
 - More identity integration.
   Done:
   - Grafana
     To-do:
   - Proxmox (may be limited to authentication)
-  - Step-CA [ref](https://smallstep.com/docs/step-ca/provisioners/#oauthoidc-single-sign-on)
   - OPNsense (LDAP only)
     Not possible:
   - Garage
@@ -113,6 +113,7 @@ Features:
 - Single-stack IPv6 with native routing/no overlay
 - Dynamic BGP peering of nodes with router/OPNsense
 - CoreDNS inside cluster
+- OIDC SSO
 
 Todo:
 
@@ -145,6 +146,8 @@ Todo:
 - Pull k8s module out into it's own flake/repo/overlay?
 - Use sig-addonmanager to bootstrap a CD tool and a CNI
 - Add SLOs to service monitoring [sloth](https://sloth.dev/)
+- Setup Step-CA as a certificate provider
+- Cert-Manager
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
