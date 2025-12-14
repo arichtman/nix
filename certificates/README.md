@@ -34,14 +34,40 @@ mv client.p12 ~/Downloads
 
 ```
 # On node
-step certificate create "Smallstep" intermediate.csr intermediate_ca_key --csr --san fat-controller.systems.richtman.au --san fat-controller.internal --san fat-controller.local --san ca.richtman.au
+step certificate create "Smallstep" step-ca.csr step-ca-key.pem \
+  --csr --san fat-controller.systems.richtman.au \
+  --san fat-controller.internal \
+  --san fat-controller.local \
+  --san ca.richtman.au \
+  --password-file step-ca-pass.txt
+
 # Check SANs
-step certificate inspect intermediate.csr
+step certificate inspect step-ca.csr
+
 # On signing location
-step certificate sign --template ./granular-dn-intermediate.tpl --set-file ./dn-defaults.json intermediate.csr root-ca.pem root-ca-key.pem > intermediate.pem
+step certificate sign step-ca.csr root-ca.pem root-ca-key.pem \
+  --template ./granular-dn-intermediate.tpl --set-file ./dn-defaults.json \
+  --password-file root-ca-pass.txt \
+  --not-after 8760h > step-ca.pem
+
 # Check SANs
-step certificate inspect intermediate.pem
+step certificate inspect step-ca.pem
+
 # Transport certificate to node
+rsync step-ca.pem step-ca-key.pem step-ca-pass.txt root-ca.pem fc:~
+ssh fc sudo mv /home/nixos/step-ca-pass.txt /var/lib/step-ca/secrets/intermediate_password
+ssh fc sudo chown step-ca: /var/lib/step-ca/secrets/intermediate_password
+ssh fc sudo chmod 400 /var/lib/step-ca/secrets/intermediate_password
+ssh fc sudo mv /home/nixos/step-ca-key.pem /var/lib/step-ca/secrets/intermediate_ca_key
+ssh fc sudo chown nobody: /var/lib/step-ca/secrets/intermediate_ca_key
+ssh fc sudo chmod 400 /var/lib/step-ca/secrets/intermediate_ca_key
+
+ssh fc sudo mv /home/nixos/step-ca.pem /var/lib/step-ca/certs/intermediate_ca.crt
+ssh fc sudo chown step-ca: /var/lib/step-ca/certs/intermediate_ca.crt
+ssh fc sudo mv /home/nixos/root-ca.pem /var/lib/step-ca/certs/root_ca.crt
+ssh fc sudo chown nobody: /var/lib/step-ca/certs/root_ca.pem
 ```
+
+Note: might be that everthing should chown to `nobody`, not sure with Systemd `DynamicUser`...
 
 Ref: https://smallstep.com/docs/tutorials/intermediate-ca-new-ca/

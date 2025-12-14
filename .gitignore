@@ -13,6 +13,7 @@ result*
 # PKI exclude, technically the certs aren't sensitive but...
 *.pem
 *-pass.txt
+*.csr
 *.key
 *.pub
 
