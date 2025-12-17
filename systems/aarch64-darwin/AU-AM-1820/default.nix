@@ -7,6 +7,10 @@
   environment.systemPackages = [
     pkgs.colima
     pkgs.lima
+    # Have to install widely for VScode
+    pkgs.kcl
+    # ...but this one's not Darwin-arm
+    # pkgs.kcl-language-server
   ];
   # only looks to be on unstable but in wiki?
   # https://nixos.wiki/wiki/Fonts
