@@ -263,22 +263,12 @@ in
             ];
           };
         };
+        delta = {
+          enable = true;
+          enableGitIntegration = true;
+        };
         git = {
           enable = true;
-          delta.enable = true;
-          userEmail = cfg.git.email;
-          userName = cfg.git.username;
-          aliases = {
-            c = "commit";
-            co = "checkout";
-            s = "status";
-            b = "branch";
-            S = "switch";
-            d = "diff";
-            f = "fetch";
-            bl = "blame";
-            xclean = "clean --force -x --exclude '.env'";
-          };
           ignores =
             (lib.arichtman.sourceGitignoreList {
               languages = ["hugo" "rust" "linux" "macos" "csharp" "direnv" "python" "windows" "terraform" "dotnetcore" "terragrunt" "rust-analyzer" "node" "yarn"];
@@ -291,7 +281,22 @@ in
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";
           };
-          extraConfig = {
+          settings = {
+            user = {
+              email = cfg.git.email;
+              name = cfg.git.username;
+            };
+            alias = {
+              c = "commit";
+              co = "checkout";
+              s = "status";
+              b = "branch";
+              S = "switch";
+              d = "diff";
+              f = "fetch";
+              bl = "blame";
+              xclean = "clean --force -x --exclude '.env'";
+            };
             gpg.format = "ssh";
             maintenance = {
               auto = "false";
