@@ -32,3 +32,18 @@ formatter = { command = "kcl", args = ["fmt"] }
 [[grammar]]
 name = "kcl-lang"
 source = { git = "https://github.com/kcl-lang/tree-sitter-kcl", rev = "b0b2eb38009e04035a6e266c7e11e541f3caab7c" }
+
+# Nested yaml-language-server configuration for helm-ls
+[language-server.helm_ls.config.helm-ls.yamlls.config.yaml]
+format = { enable = true }
+schemaStore = { enable = true }
+
+# yaml-language-server native configuration
+[language-server.yaml-language-server.config.yaml]
+format = { enable = true }
+schemaStore = { enable = true }
+
+# YAML formatting using Dprint
+[[language]]
+name = "yaml"
+formatter = { command = "dprint", args = ["fmt", "-"] }
