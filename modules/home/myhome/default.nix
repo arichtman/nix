@@ -72,11 +72,10 @@ in
         data = ["$HOME/.nix-profile/share"];
       };
 
-      # TODO: Uncomment when home-manager is recent enough to use
-      # services.home-manager.autoExpire = {
-      #   enable = true;
-      #   store.cleanup = true;
-      # };
+      services.home-manager.autoExpire = {
+        enable = true;
+        store.cleanup = true;
+      };
       programs = {
         readline.enable = true;
         readline.extraConfig = "set enable-bracketed-paste off";
