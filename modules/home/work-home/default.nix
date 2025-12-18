@@ -50,7 +50,7 @@ in
           };
         };
         git = {
-          extraConfig = {
+          settings = {
             # Ref: https://chaos.social/@calisti/112190526505794575
             includeIf = {
               "hasConfig:remote.*.url:https://github.com/arichtman/**" = {path = "~/.config/git/personal";};
