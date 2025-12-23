@@ -199,6 +199,7 @@ in
         htop.enable = true;
         jq.enable = true;
         less.enable = true;
+        # TODO: Ref https://andre.arko.net/2025/10/15/jj-part-4-configuration/
         jujutsu = {
           enable = true;
           settings = {
@@ -410,7 +411,7 @@ in
             dog # dig replacement
             procs # ps replacement
             eget # github binary pull tool
-            du-dust # du replacement
+            dust # du replacement
             duf # df replacement
             sd # sed replacement
             gping # ping replacement
