@@ -170,8 +170,8 @@ in {
     networking.nftables.enable = true;
     # Only allow ingress from ranges I control
     networking.firewall.extraInputRules = ''
-      ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 6443 accept
-      ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 6443 accept
+      ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 6443 accept comment "Allow LAN APIserver"
+      ip6 saddr { ${lib.arichtman.net.ip6.wireguardCIDR} } tcp dport 6443 accept comment "Allow VPN APIserver"
     '';
   };
 }

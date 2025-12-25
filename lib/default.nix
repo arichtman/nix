@@ -19,6 +19,7 @@ in {
       # prefixCIDR = "${lib.arichtman.net.ip6.prefix}::/48";
       prefixCIDR = "2403:580a:e4b1::/48";
       subnet = "2403:580a:e4b1::/64";
+      wireguardCIDR = "fd00:f423:5624:9f39::/64";
     };
     ip4 = {
       subnet = "192.168.1.0/24";

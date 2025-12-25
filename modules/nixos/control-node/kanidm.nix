@@ -13,7 +13,7 @@
           pam_allowed_login_groups = ["all_access"];
         };
         enableClient = true;
-        package = pkgs.kanidm_1_7;
+        package = pkgs.kanidm_1_8;
         serverSettings = {
           origin = "https://${config.services.kanidm.serverSettings.domain}";
           domain = "id.richtman.au";

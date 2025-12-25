@@ -628,6 +628,9 @@ I doubt the Kubelet has an option to open that up and since we're getting denied
 #### Notes
 
 Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
+
+Deploying from laptop: `nixos-rebuild-ng test --build-host fc --target-host fc --flake flake.nix --sudo`
+
 Minimal install ~3.2 gigs
 Lab-node with master node about 3.2 gb also, so will want more headroom.
 
