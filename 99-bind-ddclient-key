@@ -1,0 +1,5 @@
+#!/bin/sh
+# Copies out just the key portion of the RNDC configuration
+#   so that ddclient_opn service can use it directly
+
+head -4 /usr/local/etc/namedb/rndc.conf > /usr/local/etc/namedb/rndc.conf.key

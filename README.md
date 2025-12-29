@@ -381,33 +381,96 @@ Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing re
 
 ##### DNS Configuration
 
+###### Local Resolver
+
 1. Configure Upbound DNS service
    - enable DNSSEC
-   - enable DHCP lease registration
+   - ~~enable DHCP lease registration~~ No longer works with Kea DHCP and ISC DHCP is deprecated.
    - Disallow system nameservers in DoT and add records with blank domains+port 853
    - Enable blocklists
      - OIDS Ads
      - Steven Black
      - Hagezi Multi Pro++
    - Enable data capture
+1. Firewall trap DNS.
+   Create a NAT port-forward:
+   - LAN interface
+   - IPv4+6
+   - TCP+UDP
+   - Invert
+   - Destination LAN net
+   - from dns to dns
+   - Redirect target Localhost:53
+1. Test the trap.
+   - DNS redirection:
+     1. Unbound host override bing.com to something
+     1. Check this returns the override `dig +trace @4.4.4.4 bing.com`
+     1. Revert the override
+   - Ad blocking
+     1. Grab some addresses from one of the blocklists manually
+     1. Attempt to resolve them
+
+###### Authoritative Nameserver
+
+** Under construction **
+
+- If putting the nameserver on it's own domain, we need _glue records_.
+  OnlyDomains insists on 2 NS entries and only supports IPv4.
+  We may need to do this with a subdomain.
+- If using _another_ domain, we can have 2 x addresses that are both DDNSed on the secondary domain.
+  So we might DDNS `ns-{0,1}.richtman.dev`, then have `richtman.au` root NS entries be those.
+- Current ISP does not provision static IPv6 prefix delegations,
+  but the allocation is fairly static and our v4 is already out of CGNAT so pretty stable.
+  Without guarantees about IP stability, the glue records could fail hard if anything changed.
+- Bind _must_ be on port 53 to be a public nameserver.
+  DHCP DNS configuration can still point to the router's IP and port 53,
+  since we have the NAT rule redirecting it.
+  The NAT rule will need it's destination port changed.
+- It makes the most sense to have LAN devices still using Unbound,
+  rather than Bind with recursive queries allowed.
+- Small optimization is to set Unbound query forwarding for the domain to point
+  at Bind on localhost, saves traversing from root.
+- I had some issues allowlisting the LAN for recursive queries.
+  I set it to All for now but this will need to be ironed out.
+  Leaving a recursing resolver on the open internet is a no-go.
+- Will need to add Firewall quick rule inbound on WAN to allow traffic.
+- It _might_ be possible to hook up a custom DDNS account type to hit the
+  [OPNsense API](https://docs.opnsense.org/development/api/plugins/bind.html).
+  [Blog post](https://www.maksonlee.com/custom-ddns-for-your-home-lab-with-opnsense-bind-python-cron/)
+
+1. Install Bind plugin
+1. Add ACLs.
+   - All: `0.0.0.0/0, ::/0`
+   - Link-local_v6: `fe80::/10`
+   - Dual-stack_loopback: `127.0.0.0/24, ::1/128`
+1. Add primary zone.
+   Set the TTL and negative TTL low for testing.
+   DNS server should be the FQDN of the nameserver.
+   Allow query - All.
+1. Add the minimum records for the zone to be valid.
+   - NS type record at the apex (empty name), value of the zone domain.
+   - AAAA type record (or A but), also at the apex, value of the public IP of the nameserver.
+1. Generate new RNDC secret in CLI, save in GUI.
+   `tsig-keygen -a hmac-sha512 rndc-key`
+1. Add script to export the Bind RNDC secret for DynDns to use,
+   [`/usr/local/etc/rc.syshook.d/config/99-bind-ddclient-key`](./99-bind-ddclient-key)
+1. Add Dynamic DNS account type `nsupdatev6`, with the password as `/usr/local/etc/namedb/rndc.conf.key`.
+   Confirm at `/usr/local/etc/ddclient.json`.
+
+- [GitHub issue about default secret](https://github.com/opnsense/plugins/issues/2196#issuecomment-842453622)
+- [Blog about OPNsense Bind config](https://cormier.co/post/opnsense-bind-plugin-configuration/)
+- [Blog on BIND RNDC](https://tecadmin.net/configure-rndc-for-bind9/)
+- [Another blog BIND RFC2136](https://blog.rebornco.de/2025/01/rfc2136-and-nsupdate/index.html)
+- [ddclient protocols](https://ddclient.net/protocols.html)
+- [GitHub comment external-dns config](https://github.com/kubernetes-sigs/external-dns/issues/3721#issuecomment-2474290761)
+- [GitHub issue Bind bugs with dynamic DNS](https://github.com/opnsense/plugins/issues/4352)
+- [Tool to externally query my DNS](https://www.onlinednslookup.com/global-dns-checker)
+- [Hellthread on the DDNS transition](https://forum.opnsense.org/index.php?topic=26446.0;topicseen)
 
 ##### Firewall Configuration
 
 1. Firewall
    - Add aliases for static boxes, localhost
-   - Create a NAT port-forward:
-     - LAN interface
-     - IPv4+6
-     - TCP+UDP
-     - Invert
-     - Destination LAN net
-     - from dns to dns
-     - Redirect target Localhost:53
-1. Test
-   - DNS redirection:
-     - Unbound host override bing.com to something
-     - Check this returns the override `dig +trace @4.4.4.4 bing.com`
-   - Ad blocking https://d3ward.github.io/toolz/adblock.html
 1. Block bad IPs
    1. Add aliases for IP lists (see references)
    1. Add firewall rules:
