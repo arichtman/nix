@@ -301,6 +301,17 @@ proc /proc proc defaults 0 0
 UUID=b35130d3-6351-4010-87dd-6f2dac34cfba /mnt/pve/Backup ext4 defaults,nofail,x-systemd.device-timeout=5 0 2
 ```
 
+#### Well-known IPv6 Addressing
+
+Setting this MAC will result in a tasteful link-local IP, `fe80::b00b:1eff:fee1:900d`.
+
+`/etc/network/interfaces`:
+
+```text
+iface vmbr0 inet static
+        hwaddress ether b2:0b:1e:e1:90:0d
+```
+
 #### Re-IDing a Proxmox VM
 
 I used this to shift OPNsense to 999 and any templates to >=1000.
@@ -419,8 +430,35 @@ Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 
 ##### WireGuard
 
-Follow tutorial AKA forgot to document it.
-See also `wg0.conf` in this repo.
+Follow tutorial AKA forgot to document it, see [configuration file in repo](./wg0.conf).
+
+##### BGP
+
+`/usr/local/etc/rc.syshook.d/start/99-frr-conf`:
+
+```shell
+#!/bin/sh
+# Overwrites FRR configuration and restarts it
+
+cp ~/frr.conf /usr/local/etc/frr/frr.conf
+service frr restart
+```
+
+[`~/frr.conf`](./frr.conf)
+
+##### Well-known IPv6 Addressing
+
+Ideally, we'd change the MAC itself - but that doesn't seem to work.
+Strangely, this results in _no_ EUI-64 link-local address.
+
+`/usr/local/etc/rc.syshook.d/early/99-ll-alias`:
+
+```sh
+#!/bin/sh
+# Sets an additional link-local IPv6 address on the LAN interface
+
+ifconfig igc1 inet6 fe80::1ced:c0ff:fed0:0dad alias
+```
 
 ##### Alacritty terminal
 
@@ -767,6 +805,14 @@ some _very_ wip notes about the desktop.
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix failing Alacritty launchpad launch
 - Fix failing `systemd-remount-fs.service`
+
+### Batocera
+
+Fix terminfo for Alacritty:
+`curl -sSL https://raw.githubusercontent.com/alacritty/alacritty/master/extra/alacritty.info | tic -x -`
+
+- [Blog](https://dev.to/burnskp/fix-wezterms-terminfo-on-arch-1k0a)
+- [Alacritty docs](https://github.com/alacritty/alacritty/blob/master/INSTALL.md#terminfo)
 
 ## Nix References
 
