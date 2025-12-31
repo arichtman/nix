@@ -17,7 +17,7 @@ Be warned, I'm still learning and experimenting.
 Features:
 
 - ACME certificates for TLS on services
-- Reverse proxy with mTLS protection to internal services
+- Reverse proxy with mTLS protection to foundational services
 - Private CA TLS certificates for direct service access (k8s, OPNsense, Proxmox, access point)
 - Wireguard VPN remote access
 - Unencrypted client DNS trapped, filtered, and upgraded to DoT
@@ -30,8 +30,8 @@ Features:
 
 Todo:
 
-- Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)
 - Test local DNS from VPNs
+- Host an authoritative DNS
 - Find a DDNS provider that supports the generic update mechanism, not a proprietary API.
   Switch to Inadyne DDNS client for that?
 - Host authoritative DNS server, maybe Hickory.
@@ -47,8 +47,9 @@ Todo:
 - Figure out how to make the configuration work when the v6 prefix changes
 - Add compatibility option/translation layer for IPv6->IPv4
 - Remove IPv4
-- Host an authoritative DNS
 - See about getting my own AS and IPv6 prefix
+- ~~Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)~~
+  Seems to be more peer-to-peer and rather point-to-site suits me here.
 
 ### Substratum (Virtualization and Systems)
 
@@ -68,6 +69,9 @@ Todo:
 - Either stabilize or hardware watchdog Topton N100
 - Work out watchdog on OPNsense/BSD
 - Set up OpenAMT for out-of-band management.
+- See about TFTP on IPv6.
+  [Issue 1](https://github.com/opnsense/plugins/issues/4734)
+  [Issue 2](https://github.com/opnsense/plugins/issues/4043)
 
 ### Subsoil (Foundational Services)
 
@@ -117,16 +121,19 @@ Features:
 
 Todo:
 
-- External-DNS, Certificate-Manager, FluxCD
-- Figure cluster bootstrapping out
+- Setup External-DNS operator
+- Setup Step-CA as a certificate provider for Cert-Manager
+- Cluster-wide backup system, Velero?
 - Do dynamically-delegated prefixes for node pod CIDRs.
   Honestly I'm not sure this is a value-add but it would be cool.
   See diagram below.
 - Set up IPv6 public ingress and firewalling
 - Enable [k8s native tracing](https://kubernetes.io/docs/concepts/cluster-administration/system-traces/)
+- Enable [k8s native secret encryption](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
 - Enable `KubeletPSI` feature
 - Use the kubernetes mkCert and mkKubeConfig functions [example](https://github.com/pl-misuw/nixos_config/blob/cce24d10374f91c2717f6bd6b3950ebad8e036d5/modules/k8s.nix#L11)
-- Look into kubernetes managing itself with etc+cluster CAs in `/etc/kubernetes/pki`
+- Look into kubernetes managing it's own etcd+cluster CAs.
+- Check Kubelet cert rotation is working [docs link](https://kubernetes.io/docs/tasks/tls/certificate-rotation/)
 - See about CSR auto-approval [project](https://github.com/postfinance/kubelet-csr-approver)
 - Add WASM runtime
 - Find some kind of dynamic PV/storage option.
@@ -144,10 +151,9 @@ Todo:
 - Write a custom cloud provider using SSH and WoL.
 - Adjust the custom cloud provider to use OpenAMT.
 - Pull k8s module out into it's own flake/repo/overlay?
-- Use sig-addonmanager to bootstrap a CD tool and a CNI
 - Add SLOs to service monitoring [sloth](https://sloth.dev/)
-- Setup Step-CA as a certificate provider
-- Cert-Manager
+- ~~Use sig-addonmanager to bootstrap a CD tool and a CNI?~~
+  Seems like a pretty unused subproject and I don't mind for home leaving a couple manual steps.
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
