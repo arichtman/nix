@@ -6,9 +6,9 @@ metadata:
 spec:
   matchConstraints:
     resourceRules:
-      - apiGroups: ["apps"]
+      - apiGroups: [""]
         apiVersions: ["v1"]
-        resources: ["deployments", "statefulsets", "daemonsets"]
+        resources: ["pods"]
         operations:  ["CREATE", "UPDATE"]
   reinvocationPolicy: IfNeeded
   mutations:
@@ -18,7 +18,7 @@ spec:
           [
             JSONPatch{
               op: "add",
-              path: "/spec/template/spec/dnsConfig",
+              path: "/spec/dnsConfig",
               value: {
                 "options": [
                   {
