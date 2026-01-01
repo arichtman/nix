@@ -495,7 +495,7 @@ Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing re
 
 Follow one of the 6000 tutorials AKA yes, I forgot to document it.
 
-- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/())
+- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/)
 
 ##### WireGuard
 
@@ -527,6 +527,17 @@ Strangely, this results in _no_ EUI-64 link-local address.
 # Sets an additional link-local IPv6 address on the LAN interface
 
 ifconfig igc1 inet6 fe80::1ced:c0ff:fed0:0dad alias
+```
+
+Note: I did try this in the prior file but it didn't seem to take.
+
+`/usr/local/etc/rc.syshook.d/start/98-ll-route`:
+
+```sh
+#!/bin/sh
+
+# Required else the default route points to WAN interface, so LL traffic dies
+route -6 change default fe80::1ced:c0ff:fed0:dad%igc1
 ```
 
 ##### Alacritty terminal
@@ -736,7 +747,7 @@ I doubt the Kubelet has an option to open that up and since we're getting denied
 
 Checking builds manually: `nix build .#nixosConfigurations.fat-controller.config.system.build.toplevel`
 
-Deploying from laptop: `nixos-rebuild-ng test --build-host fc --target-host fc --flake flake.nix --sudo`
+Deploying from laptop: `nixos-rebuild-ng test --build-host fc --target-host fc --flake . --sudo`
 
 Minimal install ~3.2 gigs
 Lab-node with master node about 3.2 gb also, so will want more headroom.
