@@ -175,6 +175,7 @@ in
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
           # TODO: hail mary in case it's nftables dropping stuff
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
+          "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4244 accept comment \"Allow IPv6 Cilium Hubble peer\""
         ];
         useNetworkd = true;
         dhcpcd.enable = false;

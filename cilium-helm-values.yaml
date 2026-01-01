@@ -1,5 +1,5 @@
 # helm repo add cilium https://helm.cilium.io/
-# helm pull cilium/cilium --version 1.17.3
+# helm pull cilium/cilium --version 1.18.5
 # kubectl delete node $(kubectl get nodes | grep NotReady | awk '{print $1;}')
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all
@@ -7,9 +7,9 @@
 # cat nodes.txt | xargs -I% bash -c 'kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite'
 # kgn -o custom-columns=Node:.metadata.name,Id:".metadata.annotations.cilium\.io/bgp-virtual-router\.65551"
 # k apply -f ./cilium-bgp.yaml
-# helm upgrade --install cilium ./cilium-1.17.3.tgz --namespace kube-system --values cilium-helm-values.yaml
+# helm upgrade --install cilium ./cilium-1.18.5.tgz --namespace kube-system --values cilium-helm-values.yaml
 #
-# helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.17.3
+# helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.18.5
 
 cluster:
   name: kubernetes
@@ -81,4 +81,8 @@ envoy:
 operator:
   rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
   replicas: 1
+hubble:
+  enabled: true
+  relay:
+    enabled: true
 #endregion
