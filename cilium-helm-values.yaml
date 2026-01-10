@@ -43,6 +43,8 @@ podAnnotations:
 # Could not modify IPv6 gro_max_size and gso_max_size
 enableIPv6BIGTCP: false
 enableIPv6Masquerade: true
+# Disabling for now as it fails tests
+l7Proxy: false
 # Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
 bpf:
   # Use BPF instead of iptables masquerading
@@ -51,7 +53,13 @@ bpf:
   masquerade: true
   # Allow cluster external access to ClusterIP services.
   lbExternalClusterIP: true
+  # TODO: explore
+  # dataPathMode: "netkit-l2"
 autoDirectNodeRoutes: true
+# WIP: maybe our ticket
+# directRoutingSkipUnreachable: true
+# Put cilium info on the k8s node resource - why not?
+annotateK8sNode: true
 # https://github.com/cilium/cilium/issues/21538
 # https://github.com/cilium/cilium/issues/35822
 # https://github.com/cilium/cilium/issues/17240
@@ -61,12 +69,12 @@ externalIPs:
 # ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
 ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
 ipam:
-  mode: "cluster-pool" # Should be unnecessary
+  # mode: "cluster-pool" # Should be unnecessary
   operator:
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
-    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
 
@@ -80,7 +88,7 @@ envoy:
 #   enabled: true
 operator:
   rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
-  replicas: 1
+  # replicas: 2
 hubble:
   enabled: true
   relay:

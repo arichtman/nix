@@ -377,6 +377,8 @@ resize2fs /dev/sda1
 1. System > settings > cron
    - once daily to update the block lists
    - once weekly after the backup is taken (this ensures we can restore)
+1. Enable SSH port forwarding in case LAN is link-local only since Firefox, Chrome etc refuse to browse link-local v6 addresses.
+   - `/usr/local/etc/ssh/sshd_config.d/99-forwarding`: `AllowTcpForwarding yes`
 
 ##### Tuning
 
@@ -527,17 +529,6 @@ Strangely, this results in _no_ EUI-64 link-local address.
 # Sets an additional link-local IPv6 address on the LAN interface
 
 ifconfig igc1 inet6 fe80::1ced:c0ff:fed0:0dad alias
-```
-
-Note: I did try this in the prior file but it didn't seem to take.
-
-`/usr/local/etc/rc.syshook.d/start/98-ll-route`:
-
-```sh
-#!/bin/sh
-
-# Required else the default route points to WAN interface, so LL traffic dies
-route -6 change default fe80::1ced:c0ff:fed0:dad%igc1
 ```
 
 ##### Alacritty terminal

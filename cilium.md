@@ -2,34 +2,31 @@
 
 To do:
 
-- Fix in-cluster API server access by default service
 - Ensure in-cluster traffic doesn't traverse the router
 - Figure out a way to locally use either Helm or JSONschema to identify unused input values
 - Rename cluster
-- Enable Hubble (relay seems to fail without CoreDNS/default k8s service)
 - See about sending traces somewhere
-- Re-enable default operator HA
 - Install Gateway API CRDs and enable Cilium support
 - Enable load balancer support
 - Look into pmtuDiscovery
 - Enable Grafana dashboard, prom metrics, serviceMonitors
-- Netkit or BPF host routing (I think this might be on by default now?)
-- CiliumEndpointSlice
+- Look into BPF datapath mode using netkit
 - Exclude labels from identity
 - `defaultLBServiceIPAM`?
 - `externalIPs.enabled`?
-- `k8sServiceHost=auto` with bootstrapped ConfigMap
+- ~~Re-enable default operator HA~~
+- ~~Enable Hubble (relay seems to fail without CoreDNS/default k8s service)~~
+- ~~Fix in-cluster API server access by default service~~
 
-- https://www.cni.dev/docs/spec/#configuration-format
-- https://docs.cilium.io/en/stable/helm-reference/
-- https://docs.cilium.io/en/stable/network/kubernetes/configuration/
-- https://docs.cilium.io/en/stable/operations/troubleshooting/
-- https://docs.cilium.io/en/stable/operations/troubleshooting/
-- https://github.com/cilium/cilium/tree/main/install/kubernetes/cilium
-- https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/
-- https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/
-- https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
-- https://kubernetes.io/docs/concepts/services-networking/dual-stack/
+- [Official CNI config spec](https://www.cni.dev/docs/spec/#configuration-format)
+- [Cilium docs: Helm values](https://docs.cilium.io/en/stable/helm-reference/)
+- [Cilium docs: k8s config](https://docs.cilium.io/en/stable/network/kubernetes/configuration/)
+- [Cilium docs: troubleshooting](https://docs.cilium.io/en/stable/operations/troubleshooting/)
+- [Giantswarm Cilium troubleshooting](https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/)
+- [k8s docs: CNI plugin troubleshooting](https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/)
+- [k8s docs: kubelet config file](https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/)
+- [k8s docs: dual stack networking](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
+- [Cilium connectivity test docs](https://docs.cilium.io/en/latest/cmdref/cilium_connectivity_test/)
 - [Some settings we might need for naked pods](https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/)
 - [More cilium v6 stuff](https://functional.cafe/@arianvp/112994181771306904)
 - [bpftool intro blog](https://thegraynode.io/posts/bpftool_introduction/)
@@ -68,14 +65,18 @@ kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no
 kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "bgp"
 ```
 
+FRR config:
+
+```
 bgp listen range 2403:580a:e4b1::/48 peer-group LAN
 bgp listen range 2403:580a:e4b1::/64 peer-group LAN
+```
 
 ### AFI/SAFI overlap
 
 Error: `Configured AFI/SAFIs do not overlap with received MP capabilities`
 
-Solution (so far):
+Solution:
 
 - Removed ipv4 enablement
 - Changed default from v4 to v6
@@ -100,12 +101,12 @@ Solution (so far):
 
 buncha static IP solutions
 
-- https://blog.miraco.la/bgp-cilium-and-frr-top-of-rack-for-all
-- https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090
-- https://blog.mosibi.nl/all/2021/12/27/cilium-bpg.html
-- https://rajsingh.info/p/cilium-unifi/
-- https://allanjohn909.medium.com/harnessing-the-power-of-cilium-a-guide-to-bgp-integration-with-gateway-api-on-ipv4-7b0d058a1c0d
-- https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf
+- [Miraco blog on BGP and FRR ToR](https://blog.miraco.la/bgp-cilium-and-frr-top-of-rack-for-all)
+- [Blog on Cilium, Gateway API, and BGP](https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090)
+- [Blog on Cilium BGP](https://blog.mosibi.nl/all/2021/12/27/cilium-bpg.html)
+- [Blog on Cilium with Unifi](https://rajsingh.info/p/cilium-unifi/)
+- [Blog on Cilium v4 Gateway API integration](https://allanjohn909.medium.com/harnessing-the-power-of-cilium-a-guide-to-bgp-integration-with-gateway-api-on-ipv4-7b0d058a1c0d)
+- [Example Cilium BGP FRR config file](https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf)
 
 ## Documentation read-through thoughts
 
@@ -456,3 +457,33 @@ Manually mounting the token doesn't yield the error.
   Also had to clear out the `/etc/cni/net.d` from remainder CNI configuration.
 - serviceAccount `default` missing from at least nameSpace `kube-system`
 - Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...
+
+#### WIP
+
+Debug CoreDNS:
+
+```bash
+echo "Dumping netns addresses"
+ip a show dev eth0
+echo "Testing router DNS connection"
+nc -zvw 2 2403:580a:e4b1:0:aab8:e0ff:fe00:91ef 53
+echo "Dumping all v6 routes"
+ip -6 route show
+echo "Checking router v6 route"
+ip route get 2403:580a:e4b1:0:aab8:e0ff:fe00:91ef
+echo "Checking ApiServer route"
+ip route get fda6:3c52:d12b::1
+echo "Checking ApiServer access"
+nc -zvw 2 fda6:3c52:d12b::1 443
+```
+
+Debug pod networking:
+
+```bash
+echo "Checking CoreDNS connection"
+nc -zvw 2 fda6:3c52:d12b::10 53
+echo "Checking v6 egress route"
+ip route get 2a0a:4580:103f:c0de::1
+echo "Checking v6 egress connection"
+nc -zvw 2 2a0a:4580:103f:c0de::1 443
+```
