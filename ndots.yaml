@@ -37,3 +37,42 @@ metadata:
 spec:
   policyName: default-dns-ndots
   matchResources:
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: default-dns-ndots-pods
+spec:
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+        operations:  ["CREATE", "UPDATE"]
+  reinvocationPolicy: IfNeeded
+  mutations:
+    - patchType: "JSONPatch"
+      jsonPatch:
+        expression: >
+          [
+            JSONPatch{
+              op: "add",
+              path: "/spec/dnsConfig",
+              value: {
+                "options": [
+                  {
+                    "name": "ndots",
+                    "value": "2"
+                  }
+                ]
+               }
+            }
+          ]
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: default-dns-ndots-podsonly
+spec:
+  policyName: default-dns-ndots-podsonly
+  matchResources:

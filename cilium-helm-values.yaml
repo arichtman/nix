@@ -1,13 +1,16 @@
-# helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.17.3
-# helm upgrade --install cilium ./cilium-1.17.3.tgz --namespace kube-system --values cilium-helm-values.yaml
+# helm repo add cilium https://helm.cilium.io/
+# helm pull cilium/cilium --version 1.18.5
 # kubectl delete node $(kubectl get nodes | grep NotReady | awk '{print $1;}')
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all
+# ./label.sh
 # cat nodes.txt | xargs -I% bash -c 'kubectl annotate node % cilium.io/bgp-virtual-router.65551="router-id=192.168.255.$(shuf -i 0-255 -n 1)" --overwrite'
 # kgn -o custom-columns=Node:.metadata.name,Id:".metadata.annotations.cilium\.io/bgp-virtual-router\.65551"
+# k apply -f ./cilium-bgp.yaml
+# helm upgrade --install cilium ./cilium-1.18.5.tgz --namespace kube-system --values cilium-helm-values.yaml
+#
+# helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-helm-values.yaml --version 1.18.5
 
-extraArgs:
-  - "--enable-host-reachable-services=true"
 cluster:
   name: kubernetes
 # No kube-proxy
@@ -37,8 +40,11 @@ bgpControlPlane:
 # This makes kubectl logs and execs default nicely
 podAnnotations:
   kubectl.kubernetes.io/default-container: cilium-agent
-enableIPv6BIGTCP: true
+# Could not modify IPv6 gro_max_size and gso_max_size
+enableIPv6BIGTCP: false
 enableIPv6Masquerade: true
+# Disabling for now as it fails tests
+l7Proxy: false
 # Ref: https://docs.cilium.io/en/latest/network/concepts/masquerading/#ebpf-based
 bpf:
   # Use BPF instead of iptables masquerading
@@ -47,7 +53,13 @@ bpf:
   masquerade: true
   # Allow cluster external access to ClusterIP services.
   lbExternalClusterIP: true
+  # TODO: explore
+  # dataPathMode: "netkit-l2"
 autoDirectNodeRoutes: true
+# WIP: maybe our ticket
+# directRoutingSkipUnreachable: true
+# Put cilium info on the k8s node resource - why not?
+annotateK8sNode: true
 # https://github.com/cilium/cilium/issues/21538
 # https://github.com/cilium/cilium/issues/35822
 # https://github.com/cilium/cilium/issues/17240
@@ -57,12 +69,12 @@ externalIPs:
 # ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
 ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
 ipam:
-  mode: "cluster-pool" # Should be unnecessary
+  # mode: "cluster-pool" # Should be unnecessary
   operator:
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
-    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
 
@@ -76,5 +88,9 @@ envoy:
 #   enabled: true
 operator:
   rolloutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
-  replicas: 1
+  # replicas: 2
+hubble:
+  enabled: true
+  relay:
+    enabled: true
 #endregion

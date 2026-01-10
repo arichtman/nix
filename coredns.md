@@ -93,14 +93,14 @@ When changing the Kubelet `resolvConf` setting you need to re-roll any existing 
 
 ## References
 
-- https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
-- https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
-- https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+- [k8s docs: DNS debugging](https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/)
+- [k8s docs: custom DNS nameservers](https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/)
+- [k8s docs: DNS and service concepts](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 
-- https://coredns.io/plugins/loop/#troubleshooting
-- https://coredns.io/plugins/kubernetes/
-- https://coredns.io/2017/05/08/custom-dns-entries-for-kubernetes/
-- https://coredns.io/2017/07/23/corefile-explained/
-- https://github.com/kubernetes/dns/blob/master/docs/specification.md
-- https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns/coredns
-- https://smallstep.com/blog/kubernetes-the-secure-way/
+- [CoreDNS docs: loop troubleshooting](https://coredns.io/plugins/loop/#troubleshooting)
+- [CoreDNS docs: k8s plugin](https://coredns.io/plugins/kubernetes/)
+- [CoreDNS docs: custom DNS k8s](https://coredns.io/2017/05/08/custom-dns-entries-for-kubernetes/)
+- [CoreDNS docs: Corefile](https://coredns.io/2017/07/23/corefile-explained/)
+- [k8s DNS specification](https://github.com/kubernetes/dns/blob/master/docs/specification.md)
+- [Smallstep securiing k8s](https://smallstep.com/blog/kubernetes-the-secure-way/)
+- [CoreDNS Helm values](https://github.com/coredns/helm/blob/master/charts/coredns/values.yaml)

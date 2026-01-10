@@ -377,6 +377,8 @@ resize2fs /dev/sda1
 1. System > settings > cron
    - once daily to update the block lists
    - once weekly after the backup is taken (this ensures we can restore)
+1. Enable SSH port forwarding in case LAN is link-local only since Firefox, Chrome etc refuse to browse link-local v6 addresses.
+   - `/usr/local/etc/ssh/sshd_config.d/99-forwarding`: `AllowTcpForwarding yes`
 
 ##### Tuning
 
