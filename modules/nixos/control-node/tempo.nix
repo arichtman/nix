@@ -3,6 +3,11 @@
   lib,
   ...
 }: {
+  config.systemd.services.tempo = lib.mkIf config.services.tempo.enable {
+    # Tempo fails to start if it can't locate some private IPs, so we'll ensure network is online before starting
+    after = ["network-online.target"];
+    requires = config.systemd.services.tempo.after;
+  };
   config.services = lib.mkIf config.control-node.enable {
     grafana.provision.datasources.settings.datasources = [
       {
