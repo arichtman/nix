@@ -5,15 +5,16 @@
 }: {
   imports = [
     ./caddy.nix
-    ./garage.nix
-    ./nix-serve.nix
-    ./website.nix
     ./kanidm.nix
-    ./step-ca.nix
-    ./monitoring.nix
-    ./tempo.nix
-    ./prometheus.nix
+    ./garage.nix
+    ./forgejo.nix
     ./loki.nix
+    ./prometheus.nix
+    ./nix-serve.nix
+    ./monitoring.nix
+    ./step-ca.nix
+    ./tempo.nix
+    ./website.nix
   ];
   options.control-node = {
     enable = lib.mkEnableOption "Whether this is a controller";

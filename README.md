@@ -82,6 +82,7 @@ Features:
 - Garage S3 cluster
 - Valheim server
 - Nix binary cache
+- Forgejo Git forge
 - Kanidm identity management
 - Step-CA certificate authority
 - OIDC SSO for Grafana and Step-CA
@@ -692,6 +693,26 @@ kanidm system oauth2 show-basic-secret grafana
 ```
 
 Grafana side: [Official docs examples](https://kanidm.github.io/kanidm/stable/integrations/oauth2/examples.html#grafana)
+
+#### Forgejo setup
+
+```bash
+kanidm group create forgejo_users
+kanidm group create forgejo_admins
+kanidm system oauth2 create forgejo "Forgejo" https://forgejo.services.richtman.au
+kanidm system oauth2 add-redirect-url forgejo https://forgejo.services.richtman.au/user/oauth2/Kanidm/callback
+# forgejo users cannot have '@' in name, so use short username instead
+kanidm system oauth2 prefer-short-username forgejo
+kanidm system oauth2 update-scope-map forgejo forgejo_users openid email profile ssh_publickeys
+kanidm system oauth2 update-claim-map forgejo forgejo_role forgejo_admins admin
+kanidm group add-members forgejo_admins arichtman@id.richtman.au
+kanidm group add-members forgejo_users arichtman@id.richtman.au
+# etc. for forgejo_role forgejo_restricted restricted
+kanidm system oauth2 show-basic-secret forgejo
+# <secret>
+```
+
+- [GitHub discussion with config](https://github.com/kanidm/kanidm/discussions/4045)
 
 #### Topsoil
 
