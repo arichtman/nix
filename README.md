@@ -810,13 +810,6 @@ References:
 Trust chain system install:
 `sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
 
-#### Old MBP setup
-
-OPNsense/openssl's ciphers are too new, to install client certificate you may need to pkcs12 bundle legacy.
-`openssl pkcs12 -export -legacy -out Certificate.p12 -in certificate.pem -inkey key.pem`
-
-- [StackOverflow post](https://stackoverflow.com/a/74792849)
-
 #### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
@@ -854,15 +847,9 @@ To do: look into [Nix VMs on Mac](https://paretosecurity.com/blog/being-a-happy-
 
 some _very_ wip notes about the desktop.
 
-- Installer with nVidia drivers worked ok in simplified mode
-- Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
-- Bluetooth pair the speaker though you may have to change the codec in settings > sound
-- I ran `bluetoothctl trust $MAC` to try and start off autoconnect
-- I fiddled about in display settings to get orientation of monitors correct
+#### Common steps
+
 - `sudo visudo` and swap the commented lines for wheel to enable `NOPASSWD`.
-- Suppress/fix warnings about running Nix commands as myself:
-  Added `trusted-users = @wheel` to `/etc/nix/nix.custom.conf` (DetSys thing not to use `/etc/nix/nix.conf`).
-  Note: might be able to specify this at install time...
 - Enable composefs transient root, then install DetSys Nix (for SELinux support).
   `/etc/ostree/prepare-root.conf`:
 
@@ -875,16 +862,32 @@ some _very_ wip notes about the desktop.
 
   Then `sudo rpm-ostree initramfs-etc --reboot --track=/etc/ostree/prepare-root.conf`.
   [Reference](https://github.com/coreos/rpm-ostree/issues/337#issuecomment-2856321727)
-- Used `nix develop` to bootstrap
-- `home-manager switch --flake . -b backup`
-- Installed my root certificate
-  `sudo curl https://www.richtman.au/root-ca.pem -o /etc/pki/ca-trust/source/anchors/root-ca.pem`
-  `sudo update-ca-trust`
 - Set my shell to Zsh `sudo usermod --shell $(which zsh) arichtman`.
-  Note: not sure how this is going, obvs that path isn't in `/etc/shells`, but I can't see any `bash-default-shell` in `rpm-ostree`.
-  Reboot and see if it applies on login.
 - Install system level layers with zsh and alacritty.
-  `sudo rpm-ostree install -y --idempotent zsh alacritty`
+  `sudo rpm-ostree install -y --idempotent helix zsh alacritty`
+- Nix install using ostree
+  `curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install ostree --no-confirm`
+- Bootstrap profile install by either using web IDE or setting hostname then
+  `nix run nixpkgs/release-25.11#home-manager -- switch --flake github:arichtman/nix`
+- Install my root CA to system:
+
+  ```bash
+  curl https://www.richtman.au/root-ca.pem -O
+  sudo cp root-ca.pem /etc/pki/ca-trust/source/
+  sudo update-ca-trust extract
+  ```
+- Set system default Rust - maybe from Nix repo: `rustup default stable`
+
+### Bazzite/Desktop Setup
+
+- Installer with nVidia drivers worked ok in simplified mode
+- Despite the claims of signing automation for secure boot it still needs to be disabled, 'less you like 800x600.
+- Bluetooth pair the speaker though you may have to change the codec in settings > sound
+- I ran `bluetoothctl trust $MAC` to try and start off autoconnect
+- I fiddled about in display settings to get orientation of monitors correct
+- Suppress/fix warnings about running Nix commands as myself:
+  Added `trusted-users = @wheel` to `/etc/nix/nix.custom.conf` (DetSys thing not to use `/etc/nix/nix.conf`).
+  Note: might be able to specify this at install time...
 - Fix failure to wake from sleep.
   `/usr/lib/systemd/system/service.d/50-keep-warm.conf`:
 
@@ -898,6 +901,22 @@ some _very_ wip notes about the desktop.
   [Reference](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8292#note_2445334)
 - Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
 
+#### Bluefin Thinkpad Setup
+
+```bash
+ujust setup-luks-tpm-unlock
+# Nix-index is a RAM hog and will OOM
+# Ref: https://github.com/nix-community/nix-index/issues/64#issuecomment-3479900253
+# Can't get the full 16GiB on /tmp, and can't do typical swapfile creation with BTRFS due to CoW
+# Ref: https://unix.stackexchange.com/a/713929
+btrfs filesystem mkswapfile --size 16G /var/tmp/temp_swapfile
+nix-index
+sudo swapoff temp_swapfile
+sudo rm -fr temp_swapfile
+```
+
+- Enable auto sign-in in settings
+
 ### Desktop Todo
 
 - Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
@@ -906,7 +925,7 @@ some _very_ wip notes about the desktop.
 - Learn about universal blue/ostree and decide if I want to keep this
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
-- Fix failing Alacritty launchpad launch
+- Fix failing Alacritty launchpad launch on Bazzite
 - Fix failing `systemd-remount-fs.service`
 
 ### Batocera
