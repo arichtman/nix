@@ -12,6 +12,7 @@
             # Required for front-end addresses not to break behind reverse proxies
             ROOT_URL = "https://forgejo.services.richtman.au:443";
             HTTP_ADDR = "::1";
+            HTTP_PORT = 3001;
             DOMAIN = "forgejo.services.richtman.au";
             # SSH_PORT = 222;
           };
