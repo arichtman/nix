@@ -97,11 +97,10 @@ in
         };
         resolved = {
           enable = true;
-          # Disable built-in resolved CLoudflare+Google+Quad9 etc
-          fallbackDns = [];
-          extraConfig = ''
-            MulticastDNS=true
-          '';
+          settings.Resolve = {
+            # Disable built-in resolved Cloudflare+Google+Quad9 etc
+            FallbackDNS = [];
+          };
         };
         journald.extraConfig = ''
           SystemMaxUse=100M

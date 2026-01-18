@@ -30,6 +30,7 @@ in
           deploy-rs
           statix
           deadnix
+          nixos-rebuild-ng
           # Kubernetes stuff
           kubectl
           kubernetes-helm
@@ -47,7 +48,7 @@ in
           snowfallorg.thaw
           nixtract
           # Pre-commit replacement
-          arichtman.prek
+          prek
           # Experimental diff tool
           arichtman.mamediff
         ]

@@ -107,4 +107,6 @@ in {
       };
     };
   };
+  # TODO: Renable when agent is working
+  # services.prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "spire-agent" 9989)];
 }

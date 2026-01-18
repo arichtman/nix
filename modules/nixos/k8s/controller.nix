@@ -72,7 +72,7 @@
   };
   controllerConfigFile = pkgs.writeText "controller-config" (builtins.toJSON controllerConfig);
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/
-  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+  serviceArgs = lib.cli.toCommandLineShellGNU {} {
     # Controls whether the following are used or not
     # allocate-node-cidrs = true;
     # region maybeIgnored

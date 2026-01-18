@@ -3,46 +3,15 @@
   lib,
   ...
 }: let
-  mkLocalScrapeConfig = name: port: {
-    job_name = builtins.toString name;
-    relabel_configs = promLocalHostRelabelConfigs;
-    honor_labels = false;
-    static_configs = [
-      {
-        targets = [
-          "localhost:${builtins.toString port}"
-        ];
-        labels = {
-          instance = "${config.networking.hostName}.systems.richtman.au";
-        };
-      }
-    ];
-  };
   mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
     "${config.networking.hostName}"
+    # TODO: Re-enable when all plugged back in
     "patient-zero"
-    "dr-singh"
+    # "dr-singh"
     "smol-bat"
-    "tweedledee"
-    "tweedledum"
+    # "tweedledee"
+    # "tweedledum"
   ]);
-  promLocalHostRelabelConfigs = [
-    # TODO: Work out why localhost relabel and label override aren't working
-    # Relabel localhost so we don't have to open metrics to the world
-    {
-      source_labels = ["__address__"];
-      regex = ".*localhost.*";
-      target_label = "instance";
-      replacement = "${config.networking.hostName}.systems.richtman.au";
-    }
-    # Remove port numbers
-    {
-      source_labels = ["__address__"];
-      regex = "(.+):.*";
-      target_label = "instance";
-      replacement = "\${1}";
-    }
-  ];
 in {
   config.services = lib.mkIf config.control-node.enable {
     prometheus = {
@@ -68,37 +37,11 @@ in {
         scrape_interval = "30s";
       };
       scrapeConfigs = [
-        # TODO: Maybe wire these up to the actual service config?
-        (mkLocalScrapeConfig "caddy" 2019)
-        # See impl for why non-default port
-        (mkLocalScrapeConfig "etcd" 2399)
-        (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
-        (mkLocalScrapeConfig "tempo" 3200)
-        (mkLocalScrapeConfig "garage" 3903)
-        # Had to do manually since scheme is https
-        {
-          job_name = "k8s_apiserver";
-          relabel_configs = promLocalHostRelabelConfigs;
-          honor_labels = false;
-          scheme = "https";
-          static_configs = [
-            {
-              targets = [
-                "localhost:6443"
-              ];
-              labels = {
-                instance = "${config.networking.hostName}.systems.richtman.au";
-              };
-            }
-          ];
-        }
-        (mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
-        (mkLocalScrapeConfig "spire-server" 9988)
-        # TODO: Renable when agent is working
-        # (mkLocalScrapeConfig "spire-agent" 9989)
+        (lib.arichtman.mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
+        (lib.arichtman.mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
         # Self-monitoring (fwiw)
-        (mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
-        (mkLocalScrapeConfig "prometheus" config.services.prometheus.port)
+        (lib.arichtman.mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
+        (lib.arichtman.mkLocalScrapeConfig "prometheus" config.services.prometheus.port)
         {
           job_name = "containerd";
           metrics_path = "v1/metrics";
@@ -144,7 +87,7 @@ in {
         }
         {
           job_name = "nodes";
-          relabel_configs = promLocalHostRelabelConfigs;
+          relabel_configs = lib.arichtman.promLocalHostRelabelConfigs;
           honor_labels = false;
           static_configs = [
             {

@@ -87,7 +87,7 @@
   };
   kubeletKubeconfigFile = pkgs.writeText "kubelet-kubeconfig" (builtins.toJSON kubeletKubeconfig);
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
-  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+  serviceArgs = lib.cli.toCommandLineShellGNU {} {
     config = kubeletConfigFile;
     node-ip = "::";
     config-dir = kubeletConfigDropinPath;

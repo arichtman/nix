@@ -38,6 +38,7 @@
           };
         };
       };
+      prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "caddy" 2019)];
     };
   };
 }

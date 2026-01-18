@@ -19,7 +19,9 @@
           domain = "id.richtman.au";
           bindaddress = "[::]:8443";
           ldapbindaddress = "[::]:3636";
-          trust_x_forward_for = true;
+          http_client_address_info = {
+            x-forward-for = [lib.arichtman.net.ip6.subnet lib.arichtman.net.ip4.subnet];
+          };
           tls_chain = "/var/lib/kanidm/cert.pem";
           tls_key = "/var/lib/kanidm/key.pem";
         };

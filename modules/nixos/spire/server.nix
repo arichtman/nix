@@ -126,6 +126,7 @@ in {
         StartLimitIntervalSec = 5;
       };
     };
+    services.prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "spire-server" serverConfig.telemetry.Prometheus.port)];
     networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
       "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport ${toString topConfig.port} accept comment \"Allow Spire inbound\""
     ];

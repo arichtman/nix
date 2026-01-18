@@ -11,7 +11,39 @@
       # For some godforsaken reason arguments.hash bombs on missing property
       sha256 = hash;
     };
-in {
+in rec {
+  promLocalHostRelabelConfigs = [
+    # TODO: Work out why localhost relabel and label override aren't working
+    # Relabel localhost so we don't have to open metrics to the world
+    {
+      source_labels = ["__address__"];
+      regex = ".*localhost.*";
+      target_label = "instance";
+      replacement = "fat-controller.systems.richtman.au";
+    }
+    # Remove port numbers
+    {
+      source_labels = ["__address__"];
+      regex = "(.+):.*";
+      target_label = "instance";
+      replacement = "\${1}";
+    }
+  ];
+  mkLocalScrapeConfig = name: port: {
+    job_name = builtins.toString name;
+    relabel_configs = promLocalHostRelabelConfigs;
+    honor_labels = false;
+    static_configs = [
+      {
+        targets = [
+          "localhost:${builtins.toString port}"
+        ];
+        labels = {
+          instance = "fat-controller.systems.richtman.au";
+        };
+      }
+    ];
+  };
   net = {
     ip6 = {
       prefix = "2403:580a:e4b1";

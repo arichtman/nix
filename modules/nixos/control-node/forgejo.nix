@@ -12,6 +12,7 @@
             # Required for front-end addresses not to break behind reverse proxies
             ROOT_URL = "https://forgejo.services.richtman.au:443";
             HTTP_ADDR = "::1";
+            HTTP_PORT = 3001;
             DOMAIN = "forgejo.services.richtman.au";
             # SSH_PORT = 222;
           };
@@ -24,6 +25,11 @@
           };
           openid = {
             ENABLE_OPENID_SIGNIN = false;
+          };
+          metrics = {
+            ENABLED = true;
+            ENABLED_ISSUE_BY_LABEL = true;
+            ENABLED_ISSUE_BY_REPOSITORY = true;
           };
           oauth2_client = {
             OPENID_CONNECT_SCOPES = "email profile ssh_publickeys";
@@ -47,6 +53,7 @@
           };
         };
       };
+      prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "forgejo" config.services.forgejo.settings.server.HTTP_PORT)];
     };
   };
 }

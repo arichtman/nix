@@ -77,7 +77,7 @@
   };
   authConfigFile = pkgs.writeText "auth-config" (builtins.toJSON authConfig);
   # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
-  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+  serviceArgs = lib.cli.toCommandLineShellGNU {} {
     # "--advertise-address"
     # "2001:db8:1234:5678::1"
     # Need privileged for Cilium
@@ -167,6 +167,27 @@ in {
         socat
       ];
     };
+    services.prometheus.scrapeConfigs = [
+      # See impl for why non-default port
+      (lib.arichtman.mkLocalScrapeConfig "etcd" 2399)
+      # Had to do manually since scheme is https
+      {
+        job_name = "k8s_apiserver";
+        relabel_configs = lib.arichtman.promLocalHostRelabelConfigs;
+        honor_labels = false;
+        scheme = "https";
+        static_configs = [
+          {
+            targets = [
+              "localhost:6443"
+            ];
+            labels = {
+              instance = "${config.networking.hostName}.systems.richtman.au";
+            };
+          }
+        ];
+      }
+    ];
     networking.nftables.enable = true;
     # Only allow ingress from ranges I control
     networking.firewall.extraInputRules = ''
