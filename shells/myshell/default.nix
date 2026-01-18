@@ -47,7 +47,7 @@ in
           snowfallorg.thaw
           nixtract
           # Pre-commit replacement
-          arichtman.prek
+          prek
           # Experimental diff tool
           arichtman.mamediff
         ]
