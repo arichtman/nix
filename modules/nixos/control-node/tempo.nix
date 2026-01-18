@@ -130,5 +130,6 @@
         };
       };
     };
+    prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "tempo" 3200)];
   };
 }

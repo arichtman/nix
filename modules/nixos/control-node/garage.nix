@@ -51,6 +51,7 @@
           };
         };
       };
+      prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "garage" 3903)];
     };
   };
 }
