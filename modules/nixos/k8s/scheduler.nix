@@ -49,7 +49,7 @@
   };
   schedulerConfigFile = pkgs.writeText "scheduler-config" (builtins.toJSON schedulerConfig);
   # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/
-  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+  serviceArgs = lib.cli.toCommandLineShellGNU {} {
     bind-address = "::";
     config = schedulerConfigFile;
     client-ca-file = "${topConfig.secretsPath}/k8s-ca.pem";

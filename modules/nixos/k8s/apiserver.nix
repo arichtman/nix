@@ -77,7 +77,7 @@
   };
   authConfigFile = pkgs.writeText "auth-config" (builtins.toJSON authConfig);
   # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
-  serviceArgs = lib.cli.toGNUCommandLineShell {} {
+  serviceArgs = lib.cli.toCommandLineShellGNU {} {
     # "--advertise-address"
     # "2001:db8:1234:5678::1"
     # Need privileged for Cilium
