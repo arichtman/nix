@@ -5,11 +5,12 @@
 }: let
   mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
     "${config.networking.hostName}"
+    # TODO: Re-enable when all plugged back in
     "patient-zero"
-    "dr-singh"
+    # "dr-singh"
     "smol-bat"
-    "tweedledee"
-    "tweedledum"
+    # "tweedledee"
+    # "tweedledum"
   ]);
 in {
   config.services = lib.mkIf config.control-node.enable {
