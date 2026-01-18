@@ -30,6 +30,7 @@ in
           deploy-rs
           statix
           deadnix
+          nixos-rebuild-ng
           # Kubernetes stuff
           kubectl
           kubernetes-helm
