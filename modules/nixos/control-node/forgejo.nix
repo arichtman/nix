@@ -26,6 +26,11 @@
           openid = {
             ENABLE_OPENID_SIGNIN = false;
           };
+          metrics = {
+            ENABLED = true;
+            ENABLED_ISSUE_BY_LABEL = true;
+            ENABLED_ISSUE_BY_REPOSITORY = true;
+          };
           oauth2_client = {
             OPENID_CONNECT_SCOPES = "email profile ssh_publickeys";
             # Strictly enumerated due to OIDC, TODO: remap on Kanidm side?

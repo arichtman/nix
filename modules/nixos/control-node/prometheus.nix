@@ -73,6 +73,7 @@ in {
         # See impl for why non-default port
         (mkLocalScrapeConfig "etcd" 2399)
         (mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
+        (mkLocalScrapeConfig "forgejo" config.services.forgejo.settings.server.HTTP_PORT)
         (mkLocalScrapeConfig "tempo" 3200)
         (mkLocalScrapeConfig "garage" 3903)
         # Had to do manually since scheme is https
