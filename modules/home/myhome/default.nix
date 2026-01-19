@@ -171,7 +171,6 @@ in
           enableZshIntegration = true;
         };
         bat.enable = true;
-        command-not-found.enable = true;
         direnv = {
           enable = true;
           enableBashIntegration = true;
