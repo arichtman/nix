@@ -168,13 +168,22 @@ in {
                 }
               ];
             }
+            {
+              name = "healthchecks-io";
+              webhook_configs = [
+                {
+                  send_resolved = false;
+                  url_file = "/var/lib/alertmanager/healthchecks-io-webhook-url";
+                }
+              ];
+            }
           ];
           route = {
             receiver = "discord";
             group_by = ["alertname" "nodename"];
             routes = [
               {
-                receiver = "null";
+                receiver = "healthchecks-io";
                 matchers = [
                   "alertname=\"PrometheusAlertmanagerE2eDeadManSwitch\""
                 ];

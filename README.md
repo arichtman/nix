@@ -79,6 +79,7 @@ Features:
 
 - Caddy reverse proxy
 - Prometheus+Alertmanager+Grafana monitoring stack
+- Dead man's switch for total outages
 - Garage S3 cluster
 - Valheim server
 - Nix binary cache
