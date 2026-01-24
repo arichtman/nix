@@ -4,6 +4,9 @@
   pkgs,
   ...
 }: let
+  # Maybe enable private /tmp and use that
+  # config.systemd.services.etcd.serviceConfig = {PrivateTmp = true;};
+  etcdSnapshotFilePath = "/var/lib/kubernetes/etcd-db.snapshot";
   cfg = config.services.k8s-apiserver;
   # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1beta1/
   # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/
@@ -135,6 +138,44 @@ in {
     };
   };
   config = lib.mkIf cfg.enable {
+    services.restic = {
+      backups = {
+        etcd = {
+          initialize = true;
+          user = "kubernetes";
+          backupPrepareCommand = ''
+            cd ${config.services.k8s.secretsPath}
+            ETCDCTL_CACERT=etcd-ca.pem ETCDCTL_CERT=kube-apiserver-etcd-client.pem ETCDCTL_KEY=kube-apiserver-etcd-client-key.pem \
+            ETCDCTL_ENDPOINTS=localhost:2379 \
+            ${pkgs.etcd}/bin/etcdctl snapshot save ${etcdSnapshotFilePath}
+          '';
+          backupCleanupCommand = "rm -fr ${etcdSnapshotFilePath}";
+          extraBackupArgs = [
+            "--tag k8s"
+            "--tag etcd"
+            "--tag subsoil"
+          ];
+          paths = [
+            etcdSnapshotFilePath
+          ];
+          # Ref: https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html#s3-compatible-storage
+          environmentFile = "/var/lib/restic/s3-servers-australia";
+          timerConfig = {
+            OnCalendar = "15:00";
+            # OnCalendar = "*-*-* */12:00:00";
+            Persistent = true;
+            RandomizedDelaySec = "15m";
+          };
+          pruneOpts = [
+            "--keep-daily 7"
+            "--keep-weekly 4"
+            "--keep-monthly 1"
+            "--group-by tags"
+          ];
+          repository = "s3:https://s3.si.servercontrol.com.au/backups";
+        };
+      };
+    };
     systemd.services.k8s-apiserver = {
       description = "K8s API server AKA mother brain";
       # Required to activate the service.
