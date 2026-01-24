@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   config = lib.mkIf config.control-node.enable {
@@ -40,6 +41,30 @@
             ACCOUNT_LINKING = "auto";
           };
         };
+      };
+      restic.backups.forgejo = {
+        initialize = true;
+        user = "forgejo";
+        command = [
+          (lib.getExe config.services.forgejo.package)
+          "dump"
+          "--config"
+          "${config.services.forgejo.customDir}/conf/app.ini"
+          "--file"
+          "-"
+        ];
+        environmentFile = "/var/lib/restic/s3-servers-australia";
+        extraBackupArgs = [
+          "--tag forgejo"
+          "--tag subsoil"
+          "--stdin-filename ${config.services.forgejo.stateDir}/data/forgejo.db"
+        ];
+        timerConfig = {
+          OnCalendar = "15:00";
+          Persistent = true;
+          RandomizedDelaySec = "15m";
+        };
+        repository = "s3:https://s3.si.servercontrol.com.au/backups";
       };
       caddy = {
         enable = true;

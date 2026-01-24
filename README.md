@@ -88,7 +88,8 @@ Features:
 - Step-CA certificate authority
 - OIDC SSO for Grafana and Step-CA
 - Offsite backups of:
-  - etcd
+  - Etcd
+  - Forgejo
 
 Todo:
 
