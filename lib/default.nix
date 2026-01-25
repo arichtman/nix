@@ -12,6 +12,17 @@
       sha256 = hash;
     };
 in rec {
+  fetchGrafanaDashboard = arguments @ {
+    id,
+    revision,
+    name,
+    hash ? lib.fakeSha256,
+  }:
+    builtins.fetchurl {
+      url = "https://grafana.com/api/dashboards/${builtins.toString id}/revisions/${builtins.toString revision}/download";
+      name = name;
+      sha256 = hash;
+    };
   promLocalHostRelabelConfigs = [
     # TODO: Work out why localhost relabel and label override aren't working
     # Relabel localhost so we don't have to open metrics to the world
