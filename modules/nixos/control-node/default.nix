@@ -12,6 +12,7 @@
     ./prometheus.nix
     ./nix-serve.nix
     ./monitoring.nix
+    ./restic.nix
     ./step-ca.nix
     ./tempo.nix
     ./website.nix

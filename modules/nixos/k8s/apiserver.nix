@@ -147,7 +147,7 @@ in {
             cd ${config.services.k8s.secretsPath}
             ETCDCTL_CACERT=etcd-ca.pem ETCDCTL_CERT=kube-apiserver-etcd-client.pem ETCDCTL_KEY=kube-apiserver-etcd-client-key.pem \
             ETCDCTL_ENDPOINTS=localhost:2379 \
-            ${pkgs.etcd}/bin/etcdctl snapshot save ${etcdSnapshotFilePath}
+            ${config.services.etcd.package}/bin/etcdctl snapshot save ${etcdSnapshotFilePath}
           '';
           backupCleanupCommand = "rm -fr ${etcdSnapshotFilePath}";
           extraBackupArgs = [
@@ -166,12 +166,6 @@ in {
             Persistent = true;
             RandomizedDelaySec = "15m";
           };
-          pruneOpts = [
-            "--keep-daily 7"
-            "--keep-weekly 4"
-            "--keep-monthly 1"
-            "--group-by tags"
-          ];
           repository = "s3:https://s3.si.servercontrol.com.au/backups";
         };
       };
