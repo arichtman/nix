@@ -51,6 +51,7 @@ in
           prek
           # Experimental diff tool
           arichtman.mamediff
+          restic
         ]
         ++ scripts;
       shellHook = ''
