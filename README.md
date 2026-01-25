@@ -162,6 +162,19 @@ Todo:
 
 ![foolish mortals](./assets/native-k8s-ipv6.drawio.svg "What the fuck is this")
 
+1. Swap Cilium to CRD-backed IPAM
+1. Wipe all CiliumNode resources (or at least remove IPs, kill pods)
+1. Write tool to request and manage v6 prefix from DHCPv6
+1. Write code to amend CiliumNode `.spec.ipam.available`
+1. Configure eDNS auth to Route53
+1. Configure eDNS to publish `Service` resources (I think only `type: Loadbalancer` are actioned)
+
+1. Set up secondary domain glue records
+1. Configure eDNS RFC2136 to OPNsense BIND.
+
+Note that LAN traffic to k8s _will_ traverse the router by default, since there's no way for RAs to send other prefix routes.
+It _may_ be possible with IP redirect messages to ad-hoc solve the additional hop, but I haven't confirmed OPNsense is sending v6 redirects.
+
 - [Cilium with OpnSense blog](https://dickingwithdocker.com/posts/using-bgp-to-integrate-cilium-with-opnsense/)
 - [k8s setup with BGP and /64s](https://functional.cafe/@arianvp/112994181771306904)
 

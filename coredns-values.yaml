@@ -1,6 +1,6 @@
 # helm repo add coredns https://coredns.github.io/helm
 # helm pull coredns/coredns --version 1.45.0
-# helm upgrade --namespace kube-system --install coredns ./coredns-1.45.0.tgz --namespace kube-system --values coredns-helm-values.yaml
+# helm upgrade --namespace kube-system --install coredns ./coredns-1.45.0.tgz --namespace kube-system --values coredns-values.yaml
 service:
   clusterIP: fda6:3c52:d12b::10
 serviceAccount:

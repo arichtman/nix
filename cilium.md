@@ -6,8 +6,7 @@ To do:
 - Figure out a way to locally use either Helm or JSONschema to identify unused input values
 - Rename cluster
 - See about sending traces somewhere
-- Install Gateway API CRDs and enable Cilium support
-- Enable load balancer support
+- Enable Gateway API or Load balancers
 - Look into pmtuDiscovery
 - Enable Grafana dashboard, prom metrics, serviceMonitors
 - Look into BPF datapath mode using netkit
@@ -17,6 +16,12 @@ To do:
 - ~~Re-enable default operator HA~~
 - ~~Enable Hubble (relay seems to fail without CoreDNS/default k8s service)~~
 - ~~Fix in-cluster API server access by default service~~
+
+Notes:
+
+Gateway API needs l7 envoy configured.
+Would be cool if this supported TLS offload for workloads,
+though we _could_ probably use an operator like cert-manager to do sidecars.
 
 - [Official CNI config spec](https://www.cni.dev/docs/spec/#configuration-format)
 - [Cilium docs: Helm values](https://docs.cilium.io/en/stable/helm-reference/)
