@@ -1,6 +1,40 @@
 {
   description = "Ariel's machine configs";
   inputs = {
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-versions = {
+      url = "github:vic/nix-versions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixocaine = {
+      url = "https://git.madhouse-project.org/iocaine/nixocaine/archive/stable.tar.gz";
+    };
+
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     snowfall-lib = {
@@ -10,36 +44,6 @@
 
     snowfall-thaw = {
       url = "github:snowfallorg/thaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-versions = {
-      url = "github:vic/nix-versions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
