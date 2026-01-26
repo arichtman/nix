@@ -4,17 +4,17 @@
   ...
 }: {
   config = lib.mkIf config.control-node.enable {
-    services = {
-      caddy = {
-        virtualHosts = {
-          "www.${config.control-node.serviceDomain}:80" = {
-            extraConfig = ''
-              handle_path /www* {
-                root * /var/lib/caddy/www
-                file_server
-              }
-            '';
-          };
+    services.caddy = {
+      enable = true;
+      virtualHosts = {
+        "www.richtman.au:80" = {
+          extraConfig = ''
+            handle_path /www* {
+              import iocaine
+              root * /var/lib/caddy/www
+              file_server
+            }
+          '';
         };
       };
     };

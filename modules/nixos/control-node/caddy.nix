@@ -24,8 +24,18 @@
           # Disable TLS as we're internal
           "auto_https off"
           # For testing
-          "debug"
+          # "debug"
         ];
+        # TODO: Should wire the port number in properly but it means assuming iocaine with Caddy...
+        extraConfig = ''
+          (iocaine) {
+            @read method GET HEAD
+            reverse_proxy @read [::1]:42069 {
+              @fallback status 421
+              handle_response @fallback
+            }
+          }
+        '';
         # Set default response to error so invalid/unrouted requests are obvious
         # Ref: https://caddy.community/t/why-caddy-emits-empty-200-ok-responses-by-default/17634
         virtualHosts = {

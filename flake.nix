@@ -37,6 +37,7 @@
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    # Ref: https://snowfall.org/reference/lib/
     snowfall-lib = {
       url = "github:snowfallorg/lib/v3.0.2";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,6 +67,7 @@
       systems.modules.darwin = with inputs; [
         mac-app-util.darwinModules.default
       ];
+      systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default

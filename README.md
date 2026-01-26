@@ -31,10 +31,9 @@ Features:
 Todo:
 
 - Test local DNS from VPNs
-- Host an authoritative DNS
 - Find a DDNS provider that supports the generic update mechanism, not a proprietary API.
   Switch to Inadyne DDNS client for that?
-- Host authoritative DNS server, maybe Hickory.
+- Host authoritative DNS server, ~~maybe Hickory~~ probably BIND.
   See [ns-global](https://ns-global.zone/) for some resiliency.
 - Review `net.inet.tcp.tso` for VM safety/perf
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
@@ -47,6 +46,8 @@ Todo:
 - Figure out how to make the configuration work when the v6 prefix changes
 - Add compatibility option/translation layer for IPv6->IPv4
 - Remove IPv4
+- Configure Nginx to dynamically set upstream path from subdomain as default server.
+  [SO post](https://stackoverflow.com/questions/12950572/nginx-wildcard-proxy-pass-subdomain-to-the-server-upstream-proxy)
 - See about getting my own AS and IPv6 prefix
 - ~~Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)~~
   Seems to be more peer-to-peer and rather point-to-site suits me here.

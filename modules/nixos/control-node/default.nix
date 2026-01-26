@@ -7,6 +7,7 @@
     ./caddy.nix
     ./kanidm.nix
     ./garage.nix
+    ./iocaine.nix
     ./forgejo.nix
     ./loki.nix
     ./prometheus.nix
