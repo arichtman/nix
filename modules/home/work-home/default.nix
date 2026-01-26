@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }: let
   cfg = config.work-home;
@@ -81,8 +80,7 @@ in
           awscli2
           kubectl
           terraform
-          # TODO: clean back up when build is fixed
-          inputs.nixpkgs-release.legacyPackages.${system}.terragrunt
+          terragrunt
           # Ref: https://github.com/NixOS/nixpkgs/issues/291753
           # mitmproxy
           kubernetes-helm
