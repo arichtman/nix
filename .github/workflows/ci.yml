@@ -20,7 +20,7 @@ jobs:
     - name: Test nix environment
       run: nix develop
 
-  check_linux:
+  check_linux_systems:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
       run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
 
-  check_aarch64-darwin:
+  check_work_system:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v5

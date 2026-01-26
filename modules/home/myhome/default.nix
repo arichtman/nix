@@ -453,7 +453,7 @@ in
             lldb
             alejandra # nix formatter
             dprint # formatting (esp MD)
-            nixfmt-rfc-style
+            nixfmt
             helm-ls
             yaml-language-server
             harper # Git commit English
