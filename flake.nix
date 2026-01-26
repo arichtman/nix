@@ -71,6 +71,7 @@
       overlays = with inputs; [
         nixgl.overlays.default
         snowfall-thaw.overlays.default
+        nixocaine.overlays.default
       ];
       alias.shells = {
         default = "myshell";
