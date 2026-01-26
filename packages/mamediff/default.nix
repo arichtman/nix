@@ -6,25 +6,21 @@
 }:
 rustPlatform.buildRustPackage rec {
   pname = "mamediff";
-  version = "v${src.rev}";
+  version = src.rev;
   src = fetchFromGitHub {
     owner = "sile";
     repo = pname;
-    rev = "v0.2.1";
-    hash = "sha256-kZeBPxg8B2tO4XFKxnWr2eIPgPssZTlKD8a/o3xCAOU=";
-    # hash = lib.fakeHash;
+    rev = "v0.5.1";
+    hash = "sha256-vSk31t4iXdC4ZjBB45rQkfD6nPZM6/p6xz5fIHDcCcg=";
   };
-  # Ref: https://github.com/NixOS/nixpkgs/issues/61618#issuecomment-499377463
-  # preConfigure = ''
-  #   export HOME=`mktemp -d`
-  # '';
+  # Possibly not required but makes it work for now
   doCheck = false;
-  cargoHash = "sha256-0QnuH3PIeENAkkx/GquL7jFsk8eVykgYL76NEQzg2sQ=";
+  cargoHash = "sha256-mZ7IZFn8pCs7cu1lkHMFbrWbctxbrst/QdNv9jrYq3Y=";
   meta = with lib; {
     mainProgram = pname;
     description = "A TUI editor for managing unstaged and staged Git diffs";
     homepage = "https://github.com/${src.owner}/${pname}";
-    changelog = "${meta.homepage}/releases/tag/${version}";
+    changelog = "${meta.homepage}/releases/tag/${src.rev}";
     license = with licenses; [
       mit
     ];
