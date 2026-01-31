@@ -49,6 +49,7 @@ Todo:
 - Configure Nginx to dynamically set upstream path from subdomain as default server.
   [SO post](https://stackoverflow.com/questions/12950572/nginx-wildcard-proxy-pass-subdomain-to-the-server-upstream-proxy)
 - See about getting my own AS and IPv6 prefix
+- Get a real switch and Cat6a - [blog](https://blog.fidelramos.net/software/self-hosted-home-1?ref=selfh.st)
 - ~~Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)~~
   Seems to be more peer-to-peer and rather point-to-site suits me here.
 
