@@ -42,6 +42,26 @@
           };
         };
       };
+      restic.backups.kanidm = {
+        initialize = true;
+        user = "kanidm";
+        backupPrepareCommand = "${config.services.kanidm.package}/bin/kanidmd database backup ${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json";
+        backupCleanupCommand = "rm -fr ${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json";
+        paths = [
+          "${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json"
+        ];
+        environmentFile = "/var/lib/restic/s3-servers-australia";
+        extraBackupArgs = [
+          "--tag kanidm"
+          "--tag subsoil"
+        ];
+        timerConfig = {
+          OnCalendar = "15:00";
+          Persistent = true;
+          RandomizedDelaySec = "15m";
+        };
+        repository = "s3:https://s3.si.servercontrol.com.au/backups";
+      };
     };
     networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
       "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 8443 accept comment \"Allow HTTPS for auth\""
