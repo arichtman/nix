@@ -5,10 +5,11 @@
 }: let
   mkForAllMachinesScrapeAddress = port: (builtins.map (n: "${n}.systems.richtman.au:${builtins.toString port}") [
     "${config.networking.hostName}"
+    # Disabled due to home lab packdown for moving
     # TODO: Re-enable when all plugged back in
-    "patient-zero"
+    # "patient-zero"
     # "dr-singh"
-    "smol-bat"
+    # "smol-bat"
     # "tweedledee"
     # "tweedledum"
   ]);

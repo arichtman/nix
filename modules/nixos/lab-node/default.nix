@@ -40,6 +40,7 @@ in
           download-buffer-size = 134217728;
           build-max-jobs = 2;
           cores = 0;
+          trusted-users = ["@wheel"];
         };
         optimise.automatic = true;
         gc.automatic = true;
