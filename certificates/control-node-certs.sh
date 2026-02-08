@@ -94,6 +94,8 @@ ssh "${NODE_FQDN}" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
 ssh "${NODE_FQDN}" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
 # Bounce all services
 ssh "${NODE_FQDN}" sudo systemctl restart k8s-scheduler k8s-controller k8s-apiserver etcd
+# Set our local int ca
+cp --force k8s-ca.pem ~/.kube
 # Wipe all service accounts since we've rolled the key for them
 # Ideally do it by label/annotation but they don't have the same autoupdate stuff written as clusterroles
 # kubectl delete serviceaccount --all
