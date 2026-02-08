@@ -91,6 +91,6 @@ operator:
   # replicas: 2
 hubble:
   enabled: true
-  relay:
-    enabled: true
+  # relay:
+    # enabled: true
 #endregion
