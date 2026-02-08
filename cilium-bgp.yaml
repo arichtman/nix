@@ -1,5 +1,5 @@
 # Note: may need to disable masquerading for this to work
-apiVersion: cilium.io/v2alpha1
+apiVersion: cilium.io/v2
 kind: CiliumBGPClusterConfig
 metadata:
   name: cilium-bgp
@@ -20,7 +20,7 @@ spec:
       peerConfigRef:
         name: "primary-router"
 ---
-apiVersion: cilium.io/v2alpha1
+apiVersion: cilium.io/v2
 kind: CiliumBGPPeerConfig
 metadata:
   name: primary-router
@@ -40,7 +40,7 @@ spec:
         matchLabels:
           advertise: bgp
 ---
-apiVersion: cilium.io/v2alpha1
+apiVersion: cilium.io/v2
 kind: CiliumBGPAdvertisement
 metadata:
   name: bgp-advertisements
