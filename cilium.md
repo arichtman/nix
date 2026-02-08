@@ -73,8 +73,8 @@ kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-he
 FRR config:
 
 ```
-bgp listen range 2403:580a:e4b1::/48 peer-group LAN
-bgp listen range 2403:580a:e4b1::/64 peer-group LAN
+bgp listen range 2403:581e:ab78::/48 peer-group LAN
+bgp listen range 2403:581e:ab78::/64 peer-group LAN
 ```
 
 ### AFI/SAFI overlap
@@ -338,13 +338,13 @@ $ sudo tail -f cilium-k2mkh_kube-system_config-2d981c7a3a549e59e21b73b99cb911302
 2024-11-30T01:49:50.348745679Z stdout F Running
 2024-11-30T01:49:50.350489082Z stderr F E1130 01:49:50.349606       1 config.go:529] Expected to load root CA config from /var/run/secrets/kubernetes.io/serviceaccount/ca.crt, but got err: error creating pool from /var/run/secrets/kubernetes.io/serviceaccount/ca.crt: data does not contain any valid RSA or ECDSA certificates
 2024-11-30T01:49:50.350750773Z stderr F 2024/11/30 01:49:50 INFO Starting
-2024-11-30T01:49:50.350765231Z stderr F time="2024-11-30T01:49:50Z" level=info msg="Establishing connection to apiserver" host="https://[2403:580a:e4b1:fffd::1]:443" subsys=k8s-client
-2024-11-30T01:50:25.360620145Z stderr F time="2024-11-30T01:50:25Z" level=info msg="Establishing connection to apiserver" host="https://[2403:580a:e4b1:fffd::1]:443" subsys=k8s-client
-2024-11-30T01:50:55.364900375Z stderr F time="2024-11-30T01:50:55Z" level=error msg="Unable to contact k8s api-server" error="Get \"https://[2403:580a:e4b1:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:580a:e4b1:fffd::1]:443: i/o timeout" ipAddr="https://[2403:580a:e4b1:fffd::1]:443" subsys=k8s-client
-2024-11-30T01:50:55.364962154Z stderr F 2024/11/30 01:50:55 ERROR Start hook failed function="client.(*compositeClientset).onStart (k8s-client)" error="Get \"https://[2403:580a:e4b1:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:580a:e4b1:fffd::1]:443: i/o timeout"
-2024-11-30T01:50:55.364976241Z stderr F 2024/11/30 01:50:55 ERROR Start failed error="Get \"https://[2403:580a:e4b1:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:580a:e4b1:fffd::1]:443: i/o timeout" duration=1m5.014039638s
+2024-11-30T01:49:50.350765231Z stderr F time="2024-11-30T01:49:50Z" level=info msg="Establishing connection to apiserver" host="https://[2403:581e:ab78:fffd::1]:443" subsys=k8s-client
+2024-11-30T01:50:25.360620145Z stderr F time="2024-11-30T01:50:25Z" level=info msg="Establishing connection to apiserver" host="https://[2403:581e:ab78:fffd::1]:443" subsys=k8s-client
+2024-11-30T01:50:55.364900375Z stderr F time="2024-11-30T01:50:55Z" level=error msg="Unable to contact k8s api-server" error="Get \"https://[2403:581e:ab78:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:581e:ab78:fffd::1]:443: i/o timeout" ipAddr="https://[2403:581e:ab78:fffd::1]:443" subsys=k8s-client
+2024-11-30T01:50:55.364962154Z stderr F 2024/11/30 01:50:55 ERROR Start hook failed function="client.(*compositeClientset).onStart (k8s-client)" error="Get \"https://[2403:581e:ab78:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:581e:ab78:fffd::1]:443: i/o timeout"
+2024-11-30T01:50:55.364976241Z stderr F 2024/11/30 01:50:55 ERROR Start failed error="Get \"https://[2403:581e:ab78:fffd::1]:443/api/v1/namespaces/kube-system\": dial tcp [2403:581e:ab78:fffd::1]:443: i/o timeout" duration=1m5.014039638s
 2024-11-30T01:50:55.365008111Z stderr F 2024/11/30 01:50:55 INFO Stopping
-2024-11-30T01:50:55.365026836Z stderr F Error: Build config failed: failed to start: Get "https://[2403:580a:e4b1:fffd::1]:443/api/v1/namespaces/kube-system": dial tcp [2403:580a:e4b1:fffd::1]:443: i/o timeout
+2024-11-30T01:50:55.365026836Z stderr F Error: Build config failed: failed to start: Get "https://[2403:581e:ab78:fffd::1]:443/api/v1/namespaces/kube-system": dial tcp [2403:581e:ab78:fffd::1]:443: i/o timeout
 ```
 
 ### Envoy failures
@@ -471,11 +471,11 @@ Debug CoreDNS:
 echo "Dumping netns addresses"
 ip a show dev eth0
 echo "Testing router DNS connection"
-nc -zvw 2 2403:580a:e4b1:0:aab8:e0ff:fe00:91ef 53
+nc -zvw 2 2403:581e:ab78:0:aab8:e0ff:fe00:91ef 53
 echo "Dumping all v6 routes"
 ip -6 route show
 echo "Checking router v6 route"
-ip route get 2403:580a:e4b1:0:aab8:e0ff:fe00:91ef
+ip route get 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
 echo "Checking ApiServer route"
 ip route get fda6:3c52:d12b::1
 echo "Checking ApiServer access"

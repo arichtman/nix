@@ -13,5 +13,5 @@
 ### Reaching the API server in-cluster
 
 ```
-Error: unable to load configmap based request-header-client-ca-file: Get "https://[2403:580a:e4b1:1:ffff:ffff:ffff:1]:443/api/v1/namespaces/kube-system/configmaps/extension-apiserver-authentication": dial tcp [2403:580a:e4b1:1:ffff:ffff:ffff:1]:443: i/o timeout
+Error: unable to load configmap based request-header-client-ca-file: Get "https://[2403:581e:ab78:1:ffff:ffff:ffff:1]:443/api/v1/namespaces/kube-system/configmaps/extension-apiserver-authentication": dial tcp [2403:581e:ab78:1:ffff:ffff:ffff:1]:443: i/o timeout
 ```

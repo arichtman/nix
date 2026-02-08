@@ -158,7 +158,7 @@ Final `/etc/systemd/resolved.conf`:
 
 ```ini
 [Resolve]
-DNS=192.168.1.1,2403:580a:e4b1:0:aab8:e0ff:fe00:91ef
+DNS=192.168.1.1,2403:581e:ab78:0:aab8:e0ff:fe00:91ef
 Domains=local internal
 MulticastDNS=yes
 DNSStubListenerExtra=[::1]:53

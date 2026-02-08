@@ -66,15 +66,15 @@ annotateK8sNode: true
 routingMode: native
 externalIPs:
   enabled: true
-# ipv6NativeRoutingCIDR: 2403:580a:e4b1::/48
-ipv6NativeRoutingCIDR: 2403:580a:e4b1::/64
+# ipv6NativeRoutingCIDR: 2403:581e:ab78::/48
+ipv6NativeRoutingCIDR: 2403:581e:ab78::/64
 ipam:
   # mode: "cluster-pool" # Should be unnecessary
   operator:
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756
-    # clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1::/64"]
-    clusterPoolIPv6PodCIDRList: ["2403:580a:e4b1:1::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
 

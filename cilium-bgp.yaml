@@ -16,7 +16,7 @@ spec:
       peerASN: 65551
       # Not allowed DNS names I think
       # peerAddress: home.richtman.au
-      peerAddress: 2403:580a:e4b1::aab8:e0ff:fe00:91ef
+      peerAddress: 2403:581e:ab78::aab8:e0ff:fe00:91ef
       peerConfigRef:
         name: "primary-router"
 ---

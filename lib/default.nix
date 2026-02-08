@@ -57,11 +57,11 @@ in rec {
   };
   net = {
     ip6 = {
-      prefix = "2403:580a:e4b1";
+      prefix = "2403:581e:ab78";
       # TODO: figure out why arichtman doesn't exist on this lib
       # prefixCIDR = "${lib.arichtman.net.ip6.prefix}::/48";
-      prefixCIDR = "2403:580a:e4b1::/48";
-      subnet = "2403:580a:e4b1::/64";
+      prefixCIDR = "2403:581e:ab78::/48";
+      subnet = "2403:581e:ab78::/64";
       wireguardCIDR = "fd00:f423:5624:9f39::/64";
     };
     ip4 = {
