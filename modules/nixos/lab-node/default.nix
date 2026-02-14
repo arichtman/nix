@@ -15,23 +15,36 @@ in
       enable = mkEnableOption "Turns a machine into one of my minions mwahahaha";
     };
     config = mkIf cfg.enable {
-      environment.systemPackages = with pkgs; [
-        git
-        helix
-        step-cli
-        jq
-        yq
-        tcpdump
-        trippy
-        bpftools
-        ethtool
-        btop
-        sysstat
-        perf
-        dig
-        file
-        pwru
-      ];
+      environment = {
+        shellAliases = {
+          sc = "systemctl";
+          jc = "journalctl -xeu";
+
+          k = "kubectl";
+
+          nr = "nixos-rebuild";
+          nrt = "nr test --flake .";
+
+          sci = "step certificate inspect";
+        };
+        systemPackages = with pkgs; [
+          git
+          helix
+          step-cli
+          jq
+          yq
+          tcpdump
+          trippy
+          bpftools
+          ethtool
+          btop
+          sysstat
+          perf
+          dig
+          file
+          pwru
+        ];
+      };
       nix = {
         settings = {
           trusted-public-keys = lib.mkAfter ["fat-controller.systems.richtman.au:ULbki6cpX8A6Lvpx7XX7HuZ2qaEs0spWpvs+MOad204="];
