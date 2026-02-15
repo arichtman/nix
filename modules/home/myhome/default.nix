@@ -503,6 +503,8 @@ in
               source = ./terraform;
               recursive = true;
             };
+            # Could toJSON here but YAML means we get LSP support (if we can find JSONschema)
+            ".kube/kuberc".source = k8s/kuberc.yaml;
             # Required to create empty directory for Terraform plugin cache since TF won't create if not exist 🙄
             # https://github.com/nix-community/home-manager/issues/2104
             ".terraform.d/plugin-cache/.keep".text = "";

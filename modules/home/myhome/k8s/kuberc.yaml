@@ -1,0 +1,23 @@
+#yaml-language-server: $schema=
+# Ref: https://kubernetes.io/docs/reference/kubectl/kuberc/
+apiVersion: kubectl.config.k8s.io/v1beta1
+kind: Preference
+defaults:
+  # (1) default server-side apply
+  - command: apply
+    options:
+      - name: server-side
+        default: "true"
+
+  # (2) default interactive deletion
+  - command: delete
+    options:
+      - name: interactive
+        default: "true"
+
+credentialPluginPolicy: Allowlist
+credentialPluginAllowlist:
+  - name: kubectl
+# Bizarrely, since it matches on `command` property we need to allowlist kubectl
+#   and not the _actual_ plugin?
+#   - name: oidc_login
