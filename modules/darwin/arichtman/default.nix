@@ -13,7 +13,6 @@ with lib;
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        sharedModules = [inputs.mac-app-util.homeManagerModules.default];
       };
 
       nix.extraOptions = ''

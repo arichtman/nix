@@ -16,11 +16,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-versions = {
       url = "github:vic/nix-versions";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -64,9 +59,6 @@
     lib.mkFlake {
       channels-config.allowUnfree = true;
 
-      systems.modules.darwin = with inputs; [
-        mac-app-util.darwinModules.default
-      ];
       systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
       overlays = with inputs; [
         nixgl.overlays.default
