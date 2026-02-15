@@ -14,7 +14,7 @@
         };
         enableClient = true;
         package = pkgs.kanidm_1_8;
-        serverSettings = {
+        server.settings = {
           origin = "https://${config.services.kanidm.serverSettings.domain}";
           domain = "id.richtman.au";
           bindaddress = "[::]:8443";
