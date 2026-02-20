@@ -7,15 +7,15 @@
   config = lib.mkIf config.control-node.enable {
     services = {
       kanidm = {
-        enableServer = true;
         # enablePam = true;
-        unixSettings = {
+        unix.settings.kanidm = {
           pam_allowed_login_groups = ["all_access"];
         };
-        enableClient = true;
+        client.enable = true;
         package = pkgs.kanidm_1_8;
+        server.enable = true;
         server.settings = {
-          origin = "https://${config.services.kanidm.serverSettings.domain}";
+          origin = "https://${config.services.kanidm.server.settings.domain}";
           domain = "id.richtman.au";
           bindaddress = "[::]:8443";
           ldapbindaddress = "[::]:3636";
@@ -26,8 +26,8 @@
           tls_key = "/var/lib/kanidm/key.pem";
         };
 
-        clientSettings = {
-          uri = config.services.kanidm.serverSettings.domain;
+        client.settings = {
+          uri = config.services.kanidm.server.settings.domain;
         };
         # TODO: Was causing service startup failures, 403 denial on attempting to modify this user, specifically legal name.
         # I think it's to do with idm_admin not being allowed to modify certain fields?
@@ -45,10 +45,10 @@
       restic.backups.kanidm = {
         initialize = true;
         user = "kanidm";
-        backupPrepareCommand = "${config.services.kanidm.package}/bin/kanidmd database backup ${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json";
-        backupCleanupCommand = "rm -fr ${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json";
+        backupPrepareCommand = "${config.services.kanidm.package}/bin/kanidmd database backup ${config.services.kanidm.server.settings.online_backup.path}/kanidm.backup.json";
+        backupCleanupCommand = "rm -fr ${config.services.kanidm.server.settings.online_backup.path}/kanidm.backup.json";
         paths = [
-          "${config.services.kanidm.serverSettings.online_backup.path}/kanidm.backup.json"
+          "${config.services.kanidm.server.settings.online_backup.path}/kanidm.backup.json"
         ];
         environmentFile = "/var/lib/restic/s3-servers-australia";
         extraBackupArgs = [
