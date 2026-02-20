@@ -19,7 +19,7 @@ in rec {
     hash ? lib.fakeSha256,
   }:
     builtins.fetchurl {
-      url = "https://grafana.com/api/dashboards/${builtins.toString id}/revisions/${builtins.toString revision}/download";
+      url = "https://grafana.com/api/dashboards/${toString id}/revisions/${toString revision}/download";
       name = name;
       sha256 = hash;
     };
@@ -41,13 +41,13 @@ in rec {
     }
   ];
   mkLocalScrapeConfig = name: port: {
-    job_name = builtins.toString name;
+    job_name = toString name;
     relabel_configs = promLocalHostRelabelConfigs;
     honor_labels = false;
     static_configs = [
       {
         targets = [
-          "localhost:${builtins.toString port}"
+          "localhost:${toString port}"
         ];
         labels = {
           instance = "fat-controller.systems.richtman.au";
