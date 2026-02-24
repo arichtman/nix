@@ -81,6 +81,7 @@ in
           kubectl
           terraform
           terragrunt
+          prek
           # Ref: https://github.com/NixOS/nixpkgs/issues/291753
           # mitmproxy
           kubernetes-helm
@@ -94,6 +95,8 @@ in
           lazydocker
           docker-credential-helpers
           taplo
+          freerdp
+          # home-manager
         ];
       };
     };
