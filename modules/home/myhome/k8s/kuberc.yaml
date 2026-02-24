@@ -18,6 +18,7 @@ defaults:
 credentialPluginPolicy: Allowlist
 credentialPluginAllowlist:
   - name: kubectl
+  - name: aws # Need for work
 # Bizarrely, since it matches on `command` property we need to allowlist kubectl
 #   and not the _actual_ plugin?
 #   - name: oidc_login
