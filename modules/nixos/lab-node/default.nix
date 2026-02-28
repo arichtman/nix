@@ -60,6 +60,13 @@ in
         # optimised for noninteractive
         daemonCPUSchedPolicy = "batch";
       };
+      # Doesn't come with restart by default but is fallible
+      systemd.services.nix-optimise.serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = 5;
+        StartLimitBurst = 5;
+        StartLimitIntervalSec = 60;
+      };
       system.autoUpgrade.flake = "github:arichtman/nix";
       # Define a user account.
       users.users.nixos = {
