@@ -206,6 +206,8 @@ in
               name = "Ariel Richtman";
               email = "ariel@richtman.au";
             };
+            # Ref: https://shaddy.dev/notes/jj-tug/
+            aliases.tug = ["bookmark" "move" "--from" "heads(::@- & bookmarks())" "--to" "@-"];
             ui = {
               default-command = "status";
               editor = "hx";
