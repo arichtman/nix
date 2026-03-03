@@ -80,6 +80,7 @@ in
           awscli2
           kubectl
           terraform
+          terraform-docs
           terragrunt
           prek
           # Ref: https://github.com/NixOS/nixpkgs/issues/291753
