@@ -58,10 +58,8 @@ in rec {
   net = {
     ip6 = {
       prefix = "2403:581e:ab78";
-      # TODO: figure out why arichtman doesn't exist on this lib
-      # prefixCIDR = "${lib.arichtman.net.ip6.prefix}::/48";
-      prefixCIDR = "2403:581e:ab78::/48";
-      subnet = "2403:581e:ab78::/64";
+      prefixCIDR = "${net.ip6.prefix}::/48";
+      subnet = "${net.ip6.prefix}::/64";
       wireguardCIDR = "fd00:f423:5624:9f39::/64";
       routerLinkLocalAddress = "fe80::1ced:c0ff:fed0:0dad";
       routerEUI64 = "aab8:e0ff:fe00:91ef";
