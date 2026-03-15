@@ -192,8 +192,6 @@ in
         # Only allow ingress from ranges I control
         firewall.extraInputRules = lib.concatStringsSep "\n" [
           "ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 443 accept comment \"Allow private IPv4 subnets\""
-          # Temporarily allow old v4 subnet for transition
-          "ip saddr { 192.168.1.0/24 } tcp dport 443 accept comment \"Allow private IPv4 subnets\""
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
           # TODO: hail mary in case it's nftables dropping stuff
           "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
