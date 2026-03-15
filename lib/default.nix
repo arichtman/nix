@@ -66,7 +66,7 @@ in rec {
       routerGlobalUnicastAddress = "${net.ip6.prefix}:0:${net.ip6.routerEUI64}";
     };
     ip4 = {
-      subnet = "192.168.1.0/24";
+      subnet = "10.128.1.0/24";
     };
   };
   # Pass-through the function in case people want plain gitignores
