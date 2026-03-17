@@ -87,6 +87,13 @@ in
           #   "--glob='!*.svg'"
           # ];
         };
+        mergiraf = {
+          enable = true;
+          # May never need to enable these expressly...
+          # Ref: https://techhub.social/@hmnews/116214012347198415
+          # enableGitIntegration = true;
+          # enableJujutsuIntegration = true;
+        };
         alacritty = {
           enable = true;
           package = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) null; # Deliberately unset the package cause Alacritty is just shitful to use/manage when Nix-installed
@@ -329,10 +336,6 @@ in
               default = "current";
               followTags = true;
             };
-            merge.mergiraf = {
-              name = "mergiraf";
-              driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P";
-            };
             url =
               {
                 "https://github.com" = {insteadOf = "gh";};
@@ -471,8 +474,6 @@ in
             # jj VCS
             jujutsu
             gg-jj
-            # diff tool
-            mergiraf
             arichtman.mamediff
             # langs
             rustup
