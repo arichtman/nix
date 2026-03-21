@@ -68,7 +68,7 @@ Todo:
 - Swap my user to a lower privilege one on Proxmox and OPNsense
 - See about more modern watchdog options - apparently this one is ancient 32 bit PCI
 - Debug watchdog not stopping on control node reboot.
-- Either stabilize or hardware watchdog Topton N100
+- Either fix hardware watchdog Topton N100 or add a physical something
 - Work out watchdog on OPNsense/BSD
 - Set up OpenAMT for out-of-band management.
 - See about TFTP on IPv6.
@@ -399,6 +399,10 @@ resize2fs /dev/sda1
    - once weekly after the backup is taken (this ensures we can restore)
 1. Enable SSH port forwarding in case LAN is link-local only since Firefox, Chrome etc refuse to browse link-local v6 addresses.
    - `/usr/local/etc/ssh/sshd_config.d/99-forwarding`: `AllowTcpForwarding yes`
+1. Routing > STATIC
+   - Enable
+   - Add route for Proxmox link-local, else it tries to out via WAN.
+     Network: `fe80::b00b:1eff:fee1:900d/128`, gateway empty, interface LAN.
 
 ##### Tuning
 
