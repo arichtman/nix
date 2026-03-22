@@ -39,19 +39,20 @@ Todo:
 - Add dNAT port forwarding for Proxmox managment GUI from 443 to 8006
 - Tune Wireguard
 - Add IPsec
-- Fix/add OpenVPN
+- Add OpenVPN
   [ref](https://www.reddit.com/r/OPNsenseFirewall/comments/1adzr5y/openvpn_setup_instances_getting_ipv6_address_error/)
   [ref](https://forum.opnsense.org/index.php?topic=42672.0)
+  [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/)
 - Figure out why DNAT of DNS traffic to loopback doesn't work and has to be LAN IP address
-- Figure out how to make the configuration work when the v6 prefix changes
+- Figure out how to make the configuration work when the v6 prefix changes.
+  ULA ranges might be helping with this but the router LAN interface doesn't seem to be adding a ULA address while we have GUA prefix.
 - Add compatibility option/translation layer for IPv6->IPv4
-- Remove IPv4
+- Remove IPv4.
+  Probably not going to happen - v6 memorability/discoverability is tough
 - Configure Nginx to dynamically set upstream path from subdomain as default server.
   [SO post](https://stackoverflow.com/questions/12950572/nginx-wildcard-proxy-pass-subdomain-to-the-server-upstream-proxy)
 - See about getting my own AS and IPv6 prefix
 - Get a real switch and Cat6a - [blog](https://blog.fidelramos.net/software/self-hosted-home-1?ref=selfh.st)
-- ~~Maybe [Tailscale OPNsense](https://tailscale.com/kb/1097/install-opnsense)~~
-  Seems to be more peer-to-peer and rather point-to-site suits me here.
 
 ### Substratum (Virtualization and Systems)
 
@@ -174,8 +175,9 @@ Todo:
 1. Set up secondary domain glue records
 1. Configure eDNS RFC2136 to OPNsense BIND.
 
-Note that LAN traffic to k8s _will_ traverse the router by default, since there's no way for RAs to send other prefix routes.
-It _may_ be possible with IP redirect messages to ad-hoc solve the additional hop, but I haven't confirmed OPNsense is sending v6 redirects.
+Note that LAN traffic to k8s ~~will~~ _may_ traverse the router by default, there may be a way for RAs to send other prefix routes.
+Ideally BGP-learned routes get added to the RA, otherwise automatable.
+It _may_ also be possible with IP redirect messages to ad-hoc solve the additional hop, but I haven't confirmed OPNsense is sending v6 redirects.
 
 - [Cilium with OpnSense blog](https://dickingwithdocker.com/posts/using-bgp-to-integrate-cilium-with-opnsense/)
 - [k8s setup with BGP and /64s](https://functional.cafe/@arianvp/112994181771306904)
@@ -197,6 +199,12 @@ See also:
 - [MacOS](/mac.md)
 
 ### Bedrock
+
+ULA network ranges:
+
+Home: `fd2f:f92f:f268::/48`
+Remote: `fd94:d596:9a19::/48`
+Wireguard tunnel: `fd60:f161:ae68::/48`
 
 ### Substratum
 
@@ -517,15 +525,44 @@ Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing re
   [alt server](https://eigenmagic.net/deck/@JeGr@chaos.social/114406575249856820)
   [Spamhaus](https://docs.opnsense.org/manual/how-tos/drop.html)
 
-##### OpenVPN
-
-Follow one of the 6000 tutorials AKA yes, I forgot to document it.
-
-- [OpenVPN setup guide](https://sysadmin102.com/2024/03/opnsense-openvpn-instance-remote-access-ssl-tls-user-auth/)
-
 ##### WireGuard
 
-Follow tutorial AKA forgot to document it, see [configuration file in repo](./wg0.conf).
+1. Generate ULA prefixes for tunnel plus one for each site.
+1. Create Wireguard instance.
+   - Port: `51820`
+   - Tunnel address v6: `fd60:f161:ae68::1/64`
+   - Tunnel address v4: `10.255.255.1/24`
+1. Generate peer.
+   Note: I think making these all IPs would result in full tunnel.
+   By being specific we save having to set the ranges in the policy/GUI config.
+   Note: `KeepAlive` is required for reliable Site A outbound as long as Site B is behind (cg)NAT.
+   Otherwise if Site B is not sending anything outbound it will cease connection after 2 minutes.
+   AllowedIPs:
+   - IPv4 tunnel: `10.255.255.2/24`
+   - IPv4 remote LAN: `10.128.1.0/24`
+   - IPv6 tunnel: `fd60:f161:ae68::2/64`
+   - IPv6 remote LAN: `fd94:d596:9a19::/48`
+   - Keep alive: `25`
+1. Add cron job to OPNsense.
+   This is probably not needed since remote site is initiating but can't hurt.
+   - Type: `Renew DNS for WireGuard on stale connections`
+   - Schedule: `0 * * * *`
+
+See [configuration file in repo](./wg0.conf) for example.
+
+###### OpenWRT Site-to-Site Peering
+
+- Enable IPv6
+- Set up Wireguard client
+  - Import peer
+  - Set advanced/policy mode
+  - Disable kill switch
+  - Ensure _no_ full tunnel
+- Set site ULA in LUCI
+  - Network > Global options
+  - Network > Interfaces > LAN > DHCP Server > IPv6 RA Settings: Default Router = Automatic
+- Set scheduled task for Wireguard DNS refresh.
+  LUCI > System > Scheduled Tasks: `0 * * * * * /usr/bin/wireguard_watchdog`
 
 ##### BGP
 
@@ -908,6 +945,7 @@ some _very_ wip notes about the desktop.
 - Bluetooth pair the speaker though you may have to change the codec in settings > sound
 - I ran `bluetoothctl trust $MAC` to try and start off autoconnect
 - I fiddled about in display settings to get orientation of monitors correct
+- `sudo systemctl enable --now sshd` - firewall seemed already okay
 - Suppress/fix warnings about running Nix commands as myself:
   Added `trusted-users = @wheel` to `/etc/nix/nix.custom.conf` (DetSys thing not to use `/etc/nix/nix.conf`).
   Note: might be able to specify this at install time...
