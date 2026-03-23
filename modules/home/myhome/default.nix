@@ -103,26 +103,18 @@ in
             font.size = 14;
             font.normal.family = "FiraCode Nerd Font";
             terminal.shell.program = "zellij";
-            keyboard.bindings = let
-              zeroKeyReset = {
-                key = "Zero";
+            keyboard.bindings = [
+              {
+                key = "Equals";
                 mods = "Control";
-                action = "ResetFontSize";
-              };
-            in
-              [
-                {
-                  key = "Equals";
-                  mods = "Control";
-                  action = "IncreaseFontSize";
-                }
-                {
-                  key = "Minus";
-                  mods = "Control";
-                  action = "DecreaseFontSize";
-                }
-              ]
-              ++ lib.optional (!cfg.isThatOneWeirdMachine && pkgs.stdenv.isAarch64) zeroKeyReset;
+                action = "IncreaseFontSize";
+              }
+              {
+                key = "Minus";
+                mods = "Control";
+                action = "DecreaseFontSize";
+              }
+            ];
           };
         };
         zellij = {
@@ -130,8 +122,7 @@ in
           enableBashIntegration = true;
           enableZshIntegration = true;
           attachExistingSession = true;
-          # Let's try leaving the session open on quit
-          # exitShellOnExit = true;
+          exitShellOnExit = true;
           # Ref: https://github.com/zellij-org/zellij/pull/3047#issuecomment-2532831794
           extraConfig = ''
             bind "Shift Left" { MoveTab "Left"; }
