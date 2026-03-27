@@ -84,15 +84,20 @@ Features:
 - Prometheus+Alertmanager+Grafana monitoring stack
 - Dead man's switch for total outages
 - Garage S3 cluster
-- Valheim server
 - Nix binary cache
 - Forgejo Git forge
-- Kanidm identity management
+- Kanidm identity management/provider
 - Step-CA certificate authority
-- OIDC SSO for Grafana and Step-CA
+- Personal website hosting with automated updates
+- OIDC SSO
+  - Grafana
+  - Step-CA
+  - Kubernetes
+  - Forgejo
 - Offsite backups of:
   - Etcd
   - Forgejo
+  - Kanidm
 
 Todo:
 
@@ -101,7 +106,10 @@ Todo:
 - Configure what can be for Otel
 - Spire for node identity
 - Stop Spire agent dying if stale join token
+- Deploy Umami self-hosted
 - Secrets (Vault/OpenBao?)
+- Configure HTTP/2 connections only between nginx and Caddy to mitigate request smuggling.
+  Note: may require TLS as `protocols h2c` seems to break a lot of things.
 - More identity integration.
   Done:
   - Grafana
@@ -112,9 +120,10 @@ Todo:
   - Garage
 - Switch routing to _dynamic_ subdomains.
 - Add Uptime Kuma publicly
-- Deploy external dead man's switch and route Alertmanager to it.
 - Find a nice way to make foundational services upstream in Nginx config either nicer or subsume it.
 - Look into different Nix store cache, maybe Attic or Harmonia
+- ~~Deploy external dead man's switch and route Alertmanager to it.~~
+  Thanks healthchecks.io!!
 
 ### Topsoil (Kubernetes)
 
@@ -922,6 +931,16 @@ some _very_ wip notes about the desktop.
 
   Then `sudo rpm-ostree initramfs-etc --reboot --track=/etc/ostree/prepare-root.conf`.
   [Reference](https://github.com/coreos/rpm-ostree/issues/337#issuecomment-2856321727)
+- Fix remount service since using composefs.
+  This fixes Nix seemingly forgetting all the store paths constantly.
+  `/etc/systemd/system.conf.d/overlayfs.conf`:
+
+  ```
+  [Manager]
+  DefaultEnvironment="LIBMOUNT_FORCE_MOUNT2=always"
+  ```
+
+  [Reference](https://github.com/systemd/systemd/issues/39558#issuecomment-3571120574)
 - Set my shell to Zsh `sudo usermod --shell $(which zsh) arichtman`.
 - Install system level layers with zsh and alacritty.
   `sudo rpm-ostree install -y --idempotent helix zsh alacritty`
