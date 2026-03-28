@@ -52,6 +52,8 @@ in
           # Experimental diff tool
           arichtman.mamediff
           restic
+          # WIP
+          iodine
         ]
         ++ scripts;
       shellHook = ''

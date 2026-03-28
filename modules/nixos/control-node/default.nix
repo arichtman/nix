@@ -8,6 +8,7 @@
     ./kanidm.nix
     ./garage.nix
     ./iocaine.nix
+    ./iodine.nix
     ./forgejo.nix
     ./loki.nix
     ./prometheus.nix
