@@ -365,6 +365,9 @@ in
             if command -v nix-your-shell > /dev/null; then
               nix-your-shell zsh | source /dev/stdin
             fi
+            function rscleanup () {
+              k delete rs $(kg rs -l app.kubernetes.io/instance=$1 -o jsonpath='{ .items[?(@.spec.replicas==0)].metadata.name }') ;
+            }
           '';
         };
       };
