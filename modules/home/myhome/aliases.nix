@@ -110,10 +110,10 @@ in {
       tfp = "terraform plan";
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
-      phonesetup = ''        nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb tcpip 5555 \
-                      && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
-                      && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1 \
-                      && nix shell nixpkgs/release-24.05#android-tools --keep-going -c adb shell pm uninstall com.google.android.apps.bard
+      phonesetup = ''        nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb tcpip 5555 \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1 \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell pm uninstall com.google.android.apps.bard
       '';
     }
     # TODO: If the OpenGL-non NixOS system thing ever gets resolved...
