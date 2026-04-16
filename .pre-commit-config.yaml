@@ -31,11 +31,9 @@ repos:
   hooks:
   - id: deadnix
 - repo: https://github.com/spinergie/pre-commit-dprint
-  rev: 'v0.50.1'  # Use the sha / tag you want to point at
+  rev: 'v0.54.0'  # Use the sha / tag you want to point at
   hooks:
   - id: dprint
-    # Ref: https://github.com/spinergie/pre-commit-dprint/issues/1
-    args: ['--allow-no-files']
 # Disabled due to breaking updates
 # TODO: revert to main project when this is merged
 # https://github.com/oppiliappan/statix/pull/81
