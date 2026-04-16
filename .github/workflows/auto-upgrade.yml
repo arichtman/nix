@@ -19,7 +19,7 @@ jobs:
       run: |
         nix flake update
         nix develop --command prek autoupdate
-    - uses: peter-evans/create-pull-request@v6
+    - uses: peter-evans/create-pull-request@v8
       with:
         branch: auto-updates
         token: ${{ secrets.WRITEBACK_TOKEN }}
