@@ -116,11 +116,11 @@
     "flake-compat_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1747046372,
-        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "lastModified": 1761588595,
+        "narHash": "sha256-XKUZz9zewJNUj46b4AJdiRZJAvSZ0Dqj2BNfXvFlJC4=",
         "owner": "edolstra",
         "repo": "flake-compat",
-        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "rev": "f387cd2afec9419c8ee37694406ca490c3f34ee5",
         "type": "github"
       },
       "original": {
@@ -313,7 +313,7 @@
         "type": "github"
       }
     },
-    "iocaine-stable": {
+    "iocaine-unstable": {
       "inputs": {
         "nixpkgs": [
           "nixocaine",
@@ -332,13 +332,13 @@
       "locked": {
         "lastModified": 1775891927,
         "narHash": "sha256-Fl9aWzox39KkuP+P3h2KFIvx7F3BabZReSUK417hybA=",
-        "rev": "ea20fbf2fb37c8780a47a57beca44651ce5aa9ae",
+        "rev": "bbea06f348c1608b7d492ef800f501338b2b9f04",
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/iocaine/archive/ea20fbf2fb37c8780a47a57beca44651ce5aa9ae.tar.gz?rev=ea20fbf2fb37c8780a47a57beca44651ce5aa9ae"
+        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/iocaine/archive/bbea06f348c1608b7d492ef800f501338b2b9f04.tar.gz?rev=bbea06f348c1608b7d492ef800f501338b2b9f04"
       },
       "original": {
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/iocaine/iocaine/archive/iocaine-3.4.0.tar.gz"
+        "url": "https://git.madhouse-project.org/iocaine/iocaine/archive/iocaine-3.x.tar.gz"
       }
     },
     "nam-shub-of-enki": {
@@ -346,7 +346,7 @@
         "avalanche": "avalanche",
         "iocaine": [
           "nixocaine",
-          "iocaine-stable"
+          "iocaine-unstable"
         ],
         "nixpkgs": [
           "nixocaine",
@@ -362,15 +362,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1775895487,
-        "narHash": "sha256-PAMIYbaqso9hUTU+Mfh9ejZFQnYlcCfZe85P8sNzwPM=",
-        "rev": "b80a0c518d2431f2dba4c4ecd01e45f800d9db85",
+        "lastModified": 1775893741,
+        "narHash": "sha256-I0uBsP2ozlBr2tT6spz/K/XsRZrgoCMEtdKAqyunjT0=",
+        "rev": "7e81078fb380bb90a0d0c2969caa6cdc717a5e4e",
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nam-shub-of-enki/archive/b80a0c518d2431f2dba4c4ecd01e45f800d9db85.tar.gz?rev=b80a0c518d2431f2dba4c4ecd01e45f800d9db85"
+        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nam-shub-of-enki/archive/7e81078fb380bb90a0d0c2969caa6cdc717a5e4e.tar.gz?rev=7e81078fb380bb90a0d0c2969caa6cdc717a5e4e"
       },
       "original": {
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/iocaine/nam-shub-of-enki/archive/iocaine-3.x.tar.gz"
+        "url": "https://git.madhouse-project.org/iocaine/nam-shub-of-enki/archive/main.tar.gz"
       }
     },
     "nix-versions": {
@@ -420,7 +420,7 @@
     },
     "nixocaine": {
       "inputs": {
-        "iocaine-stable": "iocaine-stable",
+        "iocaine-unstable": "iocaine-unstable",
         "nam-shub-of-enki": "nam-shub-of-enki",
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": "pre-commit-hooks",
@@ -428,15 +428,15 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1775895871,
-        "narHash": "sha256-3cQnFd1iVTo9ijKzsLy4mo7ACGm8yk7yBL9rVMYsr/E=",
-        "rev": "80b769f5007eb3fb0626542d48f890440d81688f",
+        "lastModified": 1775896046,
+        "narHash": "sha256-RFFA5st980IqJL2P/gmjlrW38V23+G+1p1yZx0ped0Q=",
+        "rev": "ac2cd7e9c0002b89e894e8751c46a456585e5d06",
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nixocaine/archive/80b769f5007eb3fb0626542d48f890440d81688f.tar.gz"
+        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nixocaine/archive/ac2cd7e9c0002b89e894e8751c46a456585e5d06.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/iocaine/nixocaine/archive/stable.tar.gz"
+        "url": "https://git.madhouse-project.org/iocaine/nixocaine/archive/main.tar.gz"
       }
     },
     "nixpkgs": {
@@ -512,11 +512,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763032142,
-        "narHash": "sha256-M+2QBQoC0lzkCdUQRXylR2RkcT6BCRfW3KDs+c/IGLw=",
+        "lastModified": 1765911976,
+        "narHash": "sha256-t3T/xm8zstHRLx+pIHxVpQTiySbKqcQbK+r+01XVKc0=",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "84255025dee4c8701a99fbff65ac3c9095952f99",
+        "rev": "b68b780b69702a090c8bb1b973bab13756cc7a27",
         "type": "github"
       },
       "original": {
@@ -752,11 +752,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762938485,
-        "narHash": "sha256-AlEObg0syDl+Spi4LsZIBrjw+snSVU4T8MOeuZJUJjM=",
+        "lastModified": 1766000401,
+        "narHash": "sha256-+cqN4PJz9y0JQXfAK5J1drd0U05D5fcAGhzhfVrDlsI=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "5b4ee75aeefd1e2d5a1cc43cf6ba65eba75e83e4",
+        "rev": "42d96e75aa56a3f70cab7e7dc4a32868db28e8fd",
         "type": "github"
       },
       "original": {

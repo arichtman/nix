@@ -32,7 +32,7 @@
     };
 
     nixocaine = {
-      url = "https://git.madhouse-project.org/iocaine/nixocaine/archive/stable.tar.gz";
+      url = "https://git.madhouse-project.org/iocaine/nixocaine/archive/main.tar.gz";
     };
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
