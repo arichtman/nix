@@ -93,8 +93,6 @@ in {
           root_url = "https://grafana.${config.control-node.serviceDomain}/";
         };
         security = {
-          # Old, hard-coded value for convenient access if required
-          # secret_key = "SW2YcwTIb9zpOOhoPsMm";
           secret_key = "$__file{/var/lib/grafana/secrets/secret_key}";
         };
       };
