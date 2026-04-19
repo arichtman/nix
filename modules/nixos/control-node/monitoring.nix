@@ -92,6 +92,9 @@ in {
           # Note: This must be set for Oauth to work, otherwise the redirect URL is insecure and localhost on port 3000
           root_url = "https://grafana.${config.control-node.serviceDomain}/";
         };
+        security = {
+          secret_key = "$__file{/var/lib/grafana/secrets/secret_key}";
+        };
       };
       provision = {
         enable = true;
