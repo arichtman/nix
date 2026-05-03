@@ -931,6 +931,7 @@ some _very_ wip notes about the desktop.
 
   Then `sudo rpm-ostree initramfs-etc --reboot --track=/etc/ostree/prepare-root.conf`.
   [Reference](https://github.com/coreos/rpm-ostree/issues/337#issuecomment-2856321727)
+  [Reference](https://github.com/DeterminateSystems/nix-installer/issues/1445#issuecomment-4364987355)
 - Fix remount service since using composefs.
   This fixes Nix seemingly forgetting all the store paths constantly.
   `/etc/systemd/system.conf.d/overlayfs.conf`:
@@ -1002,7 +1003,6 @@ sudo rm -fr temp_swapfile
 - Set resolved's upstream DNS from DHCPv4, figure out what to do about v6 dynamic DNS server.
 - Get CLI clipboard access
   [post](https://fosstodon.org/@ferki/112868797150769449)
-- Learn about universal blue/ostree and decide if I want to keep this
 - look into errors running `tracker-miner-fs-3.service`
 - Work out how to uninstall `nano-default-editor` `rpm-ostree override remove`
 - Fix failing Alacritty launchpad launch on Bazzite
