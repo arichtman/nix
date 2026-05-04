@@ -21,6 +21,9 @@
       apiVersion = "kubelet.config.k8s.io/v1beta1";
       kind = "KubeletConfiguration";
       enableServer = true;
+      tracing = {
+        endpoint = "${lib.arichtman.net.controllerAddress}:4317";
+      };
       tlsCertFile = "${kubeletSecretsPath}/kubelet-tls-cert-file.pem";
       tlsPrivateKeyFile = "${kubeletSecretsPath}/kubelet-tls-private-key-file.pem";
       tlsMinVersion = "VersionTLS12";
@@ -69,8 +72,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${kubeletSecretsPath}/k8s-ca.pem";
-          # TODO: un-hardcode
-          server = "https://fat-controller.systems.richtman.au:6443";
+          server = "https://${lib.arichtman.net.controllerAddress}:6443";
         };
       }
     ];

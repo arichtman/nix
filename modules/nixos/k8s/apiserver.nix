@@ -8,6 +8,13 @@
   # config.systemd.services.etcd.serviceConfig = {PrivateTmp = true;};
   etcdSnapshotFilePath = "/var/lib/kubernetes/etcd-db.snapshot";
   cfg = config.services.k8s-apiserver;
+  # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/#apiserver-config-k8s-io-v1-TracingConfiguration
+  tracingConfig = {
+    apiVersion = "apiserver.config.k8s.io/v1";
+    kind = "TracingConfiguration";
+    endpoint = "${lib.arichtman.net.controllerAddress}:4317";
+  };
+  tracingConfigFile = pkgs.writeText "tracing-config" (builtins.toJSON tracingConfig);
   # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1beta1/
   # Ref: https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/
   authConfig = {
@@ -86,6 +93,7 @@
     # Need privileged for Cilium
     allow-privileged = true;
     authentication-config = authConfigFile;
+    tracing-config-file = tracingConfigFile;
     # TODO: This seems sane
     # anonymous-auth = false;
     authorization-mode = "RBAC,Node";
