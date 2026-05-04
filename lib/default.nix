@@ -56,6 +56,7 @@ in rec {
     ];
   };
   net = {
+    controllerAddress = "fat-controller.systems.richtman.au";
     ip6 = {
       prefix = "2403:581e:ab78";
       prefixCIDR = "${net.ip6.prefix}::/48";

@@ -128,6 +128,7 @@ in {
         plugins."io.containerd.grpc.v1.cri".cni = {
           bin_dir = "/opt/cni/bin";
         };
+
         # TODO: Fix additional container runtimes
         # plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options = {
         #   SystemdCgroup = true;
@@ -174,13 +175,26 @@ in {
     };
     systemd = {
       services = {
-        containerd.path = with pkgs; [
-          # TODO: fiddling with this since the symlinks in /opt/cni/bin linked to nonexistent files
-          cni-plugins
-          # TODO: Fix additional container runtimes
-          # kata-runtime
-          # gvisor
-        ];
+        containerd = {
+          serviceConfig = {
+            Environment = [
+              # Ref: https://containerd.io/docs/2.2/tracing/
+              # Requires protocol - ref https://github.com/open-telemetry/opentelemetry-go/issues/5562
+              "OTEL_EXPORTER_OTLP_ENDPOINT=dns://${lib.arichtman.net.controllerAddress}:4317"
+              "OTEL_EXPORTER_OTLP_PROTOCOL=grpc"
+              "OTEL_EXPORTER_OTLP_INSECURE=true"
+            ];
+          };
+          path = with pkgs; [
+            # TODO: fiddling with this since the symlinks in /opt/cni/bin linked to nonexistent files
+            cni-plugins
+            # Fixes missing mkfs.erofs
+            erofs-utils
+            # TODO: Fix additional container runtimes
+            # kata-runtime
+            # gvisor
+          ];
+        };
         k8s-kubelet = {
           description = "Kubernetes Kubelet Service";
           # TODO: Add conditional here if not controller
