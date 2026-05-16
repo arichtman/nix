@@ -12,7 +12,7 @@
           pam_allowed_login_groups = ["all_access"];
         };
         client.enable = true;
-        package = pkgs.kanidm_1_9;
+        package = pkgs.kanidm_1_10;
         server.enable = true;
         server.settings = {
           origin = "https://${config.services.kanidm.server.settings.domain}";
