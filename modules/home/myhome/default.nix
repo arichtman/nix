@@ -89,10 +89,8 @@ in
         };
         mergiraf = {
           enable = true;
-          # May never need to enable these expressly...
-          # Ref: https://techhub.social/@hmnews/116214012347198415
-          # enableGitIntegration = true;
-          # enableJujutsuIntegration = true;
+          enableGitIntegration = true;
+          enableJujutsuIntegration = true;
         };
         alacritty = {
           enable = true;
