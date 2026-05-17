@@ -60,16 +60,19 @@ in rec {
     ip6 = {
       prefix = "2403:581e:ab78";
       prefixCIDR = "${net.ip6.prefix}::/48";
-      subnet = "${net.ip6.prefix}::/64";
+      subnetCIDR = "${net.ip6.prefix}::/64";
       wireguardCIDR = "fd00:f423:5624:9f39::/64";
       routerLinkLocalAddress = "fe80::1ced:c0ff:fed0:0dad";
       routerEUI64 = "aab8:e0ff:fe00:91ef";
       routerGlobalUnicastAddress = "${net.ip6.prefix}:0:${net.ip6.routerEUI64}";
     };
     ip4 = {
-      subnet = "10.128.0.0/24";
+      routerCIDR = "10.128.0.1/32";
+      subnetCIDR = "10.128.0.0/24";
     };
   };
+  # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
+  mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${net.ip6.routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
   # Pass-through the function in case people want plain gitignores
   inherit downloadGitignore;
   sourceGitignoreList = arguments @ {

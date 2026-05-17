@@ -112,10 +112,6 @@ in
 
       services = {
         k8s.worker = true;
-        # TODO: Troubleshoot
-        # Allows unofficial well-known FHS paths to work
-        # Ref: https://fzakaria.com/2025/02/27/nix-pragmatism-nix-ld-and-envfs.html
-        # envfs.enable = true;
         openssh = {
           enable = true;
           # TODO: Disable before opening to internet
@@ -172,12 +168,7 @@ in
       };
 
       boot = {
-        # TODO: May not require xt_socket
-        # Ref: https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090
-        # kernel.sysctl.net.core.devconf_inherit_init_net = 1;
-        # kernel.sysctl.net.netfilter.nf_conntrack_max = 196608;
         kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
-        # ++ [ "xt_socket"];
         # May be required for IPv6 neighbor discovery?
         kernel.sysctl."net.ipv4.ip_forward" = 1;
         kernel.sysctl."net.ipv6.ip_forward" = 1;
@@ -195,13 +186,12 @@ in
         ];
         nftables.enable = true;
         # Only allow ingress from ranges I control
-        firewall.extraInputRules = lib.concatStringsSep "\n" [
-          "ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 443 accept comment \"Allow private IPv4 subnets\""
-          "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 443 accept comment \"Allow my IPv6 prefix\""
-          # TODO: hail mary in case it's nftables dropping stuff
-          "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment \"Allow IPv6 Cilium health\""
-          "ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4244 accept comment \"Allow IPv6 Cilium Hubble peer\""
-        ];
+        firewall.extraInputRules = ''
+          ip saddr ${lib.arichtman.net.ip4.routerCIDR} accept comment "Allow router inbound"
+          # Prefix-change-durable blanket ingress from the router
+          # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
+          ip6 saddr & ::ffff:ffff:ffff:ffff == ::${lib.arichtman.net.ip6.routerEUI64} accept comment "Allow router inbound regardless of prefix"
+        '';
         useNetworkd = true;
         dhcpcd.enable = false;
       };

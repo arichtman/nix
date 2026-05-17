@@ -50,5 +50,10 @@
       };
       prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "caddy" 2019)];
     };
+    networking.firewall.extraInputRules = ''
+      ip saddr { ${lib.arichtman.net.ip4.routerCIDR} } tcp dport 80 accept comment "Allow private IPv4 HTTP"
+      ${lib.arichtman.mkNetfilterRuleRouterOnly "caddy" 80}
+      ip6 saddr { fe80::/10 } tcp dport 80 accept comment "Allow link-local HTTP"
+    '';
   };
 }

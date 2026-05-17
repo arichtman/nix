@@ -166,10 +166,12 @@ in {
         '';
         # Open kubelet port to local addresses
         extraInputRules = ''
-          ip saddr { ${lib.arichtman.net.ip4.subnet} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
+          ip saddr { ${lib.arichtman.net.ip4.subnetCIDR} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
           ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
           ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4240 accept comment "Allow IPv6 Cilium-Agent health stuff"
           ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"
+          ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment "Allow IPv6 Cilium health"
+          ip6 saddr { ${lib.arichtman.net.ip6.prefixCIDR} } tcp dport 4244 accept comment "Allow IPv6 Cilium Hubble peer"
         '';
       };
     };
