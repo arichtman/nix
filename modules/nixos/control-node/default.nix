@@ -17,6 +17,7 @@
     ./restic.nix
     ./step-ca.nix
     ./tempo.nix
+    ./vaultwarden.nix
     ./website.nix
   ];
   options.control-node = {
