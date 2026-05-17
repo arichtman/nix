@@ -114,8 +114,8 @@ in
         k8s.worker = true;
         openssh = {
           enable = true;
-          # TODO: Disable before opening to internet
-          # settings.PasswordAuthentication = false;
+          # TODO: Harden
+          # Ref: https://codeberg.org/ppb1701/nixos-config/src/branch/main/modules/system.nix#L116
         };
         resolved = {
           enable = true;
