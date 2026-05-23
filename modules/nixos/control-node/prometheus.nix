@@ -29,10 +29,11 @@ in {
                 valid_status_codes: [200]
                 method: GET
                 follow_redirects: true
-                preferred_ip_protocol: "ip6"
+                # TODO: fix Kanidm trust+hostname/SAN mismatch
+                tls_config:
+                  insecure_skip_verify: true
         '';
       };
-      # checkConfig = false;
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
       webExternalUrl = "https://prometheus.${config.control-node.serviceDomain}/";

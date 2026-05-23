@@ -44,6 +44,22 @@
           };
         };
       };
+      prometheus.scrapeConfigs = [
+        {
+          job_name = "kanidm";
+          metrics_path = "/probe";
+          params = {
+            module = ["http_2xx"];
+            # Ref: https://github.com/kanidm/kanidm/issues/216
+            target = ["https://localhost:8443/status"];
+          };
+          static_configs = [
+            {
+              targets = ["localhost:${lib.toString config.services.prometheus.exporters.blackbox.port}"];
+            }
+          ];
+        }
+      ];
       restic.backups.kanidm = {
         initialize = true;
         user = "kanidm";
