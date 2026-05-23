@@ -19,6 +19,7 @@ in {
       exporters.blackbox = {
         enable = true;
         listenAddress = "[::1]";
+        # Ref: https://github.com/prometheus/blackbox_exporter/blob/master/example.yml
         configFile = pkgs.writeText "blackbox.yml" ''
           modules:
             http_2xx:
