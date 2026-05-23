@@ -18,6 +18,7 @@ in {
         };
       };
     };
+    # Ref: https://blog.ppb1701.com/self-hosting-vaultwarden-taking-back-password-management-part-8-of-building-a-resilient-home-serve
     services = {
       vaultwarden = {
         enable = true;

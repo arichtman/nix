@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   mkForAllMachinesScrapeAddress = port: (map (n: "${n}.systems.richtman.au:${toString port}") [
@@ -15,6 +16,21 @@ in {
   config.services = lib.mkIf config.control-node.enable {
     prometheus = {
       enable = true;
+      exporters.blackbox = {
+        enable = true;
+        listenAddress = "[::1]";
+        configFile = pkgs.writeText "blackbox.yml" ''
+          modules:
+            http_2xx:
+              prober: http
+              timeout: 10s
+              http:
+                valid_status_codes: [200]
+                method: GET
+                follow_redirects: true
+                preferred_ip_protocol: "ip6"
+        '';
+      };
       # checkConfig = false;
       # TODO: Wire this all up centrally somewhere
       # Think about the ports though... it's so ugly wiring them when we're using all defaults...
@@ -41,6 +57,7 @@ in {
         # Self-monitoring (fwiw)
         (lib.arichtman.mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
         (lib.arichtman.mkLocalScrapeConfig "prometheus" config.services.prometheus.port)
+        (lib.arichtman.mkLocalScrapeConfig "blackbox" config.services.prometheus.exporters.blackbox.port)
         {
           job_name = "containerd";
           metrics_path = "v1/metrics";
