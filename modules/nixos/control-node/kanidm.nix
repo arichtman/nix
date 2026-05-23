@@ -22,6 +22,8 @@
           http_client_address_info = {
             x-forward-for = [lib.arichtman.net.ip6.routerGlobalUnicastAddress];
           };
+          # Export spans to Tempo
+          otel_grpc_url = "http://localhost:4317";
           tls_chain = "/var/lib/kanidm/cert.pem";
           tls_key = "/var/lib/kanidm/key.pem";
         };
