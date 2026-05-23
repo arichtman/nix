@@ -35,6 +35,21 @@ in {
           ROCKET_ADDRESS = "::";
         };
       };
+      prometheus.scrapeConfigs = [
+        {
+          job_name = "vaultwarden";
+          metrics_path = "/probe";
+          params = {
+            module = ["http_2xx"];
+            target = ["localhost:8000"];
+          };
+          static_configs = [
+            {
+              targets = ["localhost:${lib.toString config.services.prometheus.exporters.blackbox.port}"];
+            }
+          ];
+        }
+      ];
       restic.backups.vaultwarden = let
         vwPath = "/var/lib/vaultwarden";
         backupPath = "${vwPath}/db.sqlite3.backup";
