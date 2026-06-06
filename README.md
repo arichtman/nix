@@ -982,6 +982,10 @@ some _very_ wip notes about the desktop.
   [Reference](https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8292#note_2445334)
 - Enabled WoL [tutorial](https://www.maketecheasier.com/enable-wake-on-lan-ubuntu/)
 
+TODO:
+
+- Fix Steam on "media" machine [GitHub issue comment](https://github.com/ValveSoftware/steam-for-linux/issues/11488#issuecomment-4598246467)
+
 #### Bluefin Thinkpad Setup
 
 ```bash
