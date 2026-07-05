@@ -2,9 +2,11 @@
 
 cd /var/lib/caddy/www.richtman.au
 echo "In $(pwd)"
-echo "Starting git pull"
-git pull
-echo "Git pulled"
+echo "Starting git fetch"
+git fetch --all
+echo "Git fetched"
+echo "Resetting to remote main"
+git reset --hard origin/main
 echo "Ensuring submodules"
 git submodule update --init --recursive
 echo "Submodules initialized"
