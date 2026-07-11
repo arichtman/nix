@@ -17,10 +17,12 @@
             # SSH_PORT = 222;
           };
           service = {
+            # Ref: https://github.com/kanidm/kanidm/discussions/4045
             DISABLE_REGISTRATION = false;
             ALLOW_ONLY_EXTERNAL_REGISTRATION = true;
             # ENABLE_PASSWORD_SIGNIN_FORM = false;
             ENABLE_INTERNAL_SIGNIN = false;
+            SHOW_REGISTRATION_BUTTON = false;
             ENABLE_BASIC_AUTHENTICATION = false;
           };
           openid = {
