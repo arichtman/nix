@@ -3,6 +3,7 @@
   # Ref: https://github.com/mightyiam/dendritic
   #   or maybe Blueprint
   # Ref: https://github.com/numtide/blueprint
+  # Ref: https://pc-hass.de/blog/dendritic-machines/
   # Source: https://github.com/snowfallorg/lib/issues/173
   description = "Ariel's machine configs";
   inputs = {
