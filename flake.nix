@@ -1,12 +1,14 @@
 {
   # TODO: Move to dendritic pattern
   # Ref: https://github.com/mightyiam/dendritic
-  #   or maybe Blueprint
-  # Ref: https://github.com/numtide/blueprint
   # Ref: https://pc-hass.de/blog/dendritic-machines/
-  # Source: https://github.com/snowfallorg/lib/issues/173
   description = "Ariel's machine configs";
   inputs = {
+    # Ref: https://den.denful.dev/guides/migrate/
+    den.url = "github:denful/den";
+    import-tree.url = "github:denful/import-tree";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,47 +51,49 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = inputs: let
-    lib = inputs.snowfall-lib.mkLib {
+  outputs = inputs:
+  # let
+    # lib = inputs.snowfall-lib.mkLib {
+    #   inherit inputs;
+    #   src = ./.;
+    #   snowfall.namespace = "arichtman";
+    # };
+    # mkNixosConfiguration = name: {
+    #   hostname = "${builtins.toString name}.systems.richtman.au";
+    #   profiles.system = {
+    #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
+    #   };
+  #   };
+  # in
+    inputs.flake-parts.lib.mkFlake {
       inherit inputs;
-      src = ./.;
-      snowfall.namespace = "arichtman";
-    };
-    mkNixosConfiguration = name: {
-      hostname = "${builtins.toString name}.systems.richtman.au";
-      profiles.system = {
-        path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
-      };
-    };
-  in
-    lib.mkFlake {
-      channels-config.allowUnfree = true;
+      # channels-config.allowUnfree = true;
 
-      systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
-      overlays = with inputs; [
-        nixgl.overlays.default
-        snowfall-thaw.overlays.default
-        nixocaine.overlays.default
-      ];
-      alias.shells = {
-        default = "myshell";
-      };
+      # systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
+      # overlays = with inputs; [
+      #   nixgl.overlays.default
+      #   snowfall-thaw.overlays.default
+      #   nixocaine.overlays.default
+      # ];
+      # alias.shells = {
+      #   default = "myshell";
+      # };
 
-      deploy = {
-        sshUser = "nixos";
-        user = "root";
-        remoteBuild = true;
-        # TODO: DRY this up
-        nodes = {
-          fat-controller = mkNixosConfiguration "fat-controller";
-          patient-zero = mkNixosConfiguration "patient-zero";
-          dr-singh = mkNixosConfiguration "dr-singh";
-          smol-bat = mkNixosConfiguration "smol-bat";
-          tweedledee = mkNixosConfiguration "tweedledee";
-          tweedledum = mkNixosConfiguration "tweedledum";
-        };
-      };
+      # deploy = {
+      #   sshUser = "nixos";
+      #   user = "root";
+      #   remoteBuild = true;
+      #   # TODO: DRY this up
+      #   nodes = {
+      #     fat-controller = mkNixosConfiguration "fat-controller";
+      #     patient-zero = mkNixosConfiguration "patient-zero";
+      #     dr-singh = mkNixosConfiguration "dr-singh";
+      #     smol-bat = mkNixosConfiguration "smol-bat";
+      #     tweedledee = mkNixosConfiguration "tweedledee";
+      #     tweedledum = mkNixosConfiguration "tweedledum";
+      #   };
+      # };
 
-      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
-    };
+      # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
+    } (inputs.import-tree ./modules);
 }

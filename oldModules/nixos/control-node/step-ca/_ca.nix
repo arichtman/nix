@@ -1,4 +1,4 @@
-{config}: {
+{config, ...}: {
   root = "/var/lib/step-ca/certs/root_ca.crt";
   federatedRoots = null;
   crt = "/var/lib/step-ca/certs/intermediate_ca.crt";

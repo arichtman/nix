@@ -273,7 +273,7 @@ in
               filterFunction = x: x != "Cargo.lock";
             })
             ++ [".helix/"];
-          attributes = import ./git/attributes.nix;
+          attributes = import ./git/_attributes.nix;
           signing = {
             signByDefault = true;
             key = "~/.ssh/id_ed25519.pub";
