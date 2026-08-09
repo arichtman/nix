@@ -13,7 +13,6 @@
           then den.batteries.primary-user
           else {}
       )
-      ];
-      };
-    }
-
+    ];
+  };
+}

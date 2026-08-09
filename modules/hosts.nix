@@ -3,10 +3,10 @@
 # then config their aspects in as many files you want
 {
   den.schema.host = {lib, ...}: {
-    options.is-physical-node = lib.mkOption { default = false;};
+    options.is-physical-node = lib.mkOption {default = false;};
   };
   den.hosts.x86_64-linux = {
-    bluefin.users.arichtman = { };
+    bluefin.users.arichtman = {};
     tweedledee = {
       users.nixos = {};
       is-physical-node = true;
@@ -34,5 +34,4 @@
 
   # be sure to add nix-darwin input for this:
   # den.hosts.aarch64-darwin.apple.users.arichtman = { };
-
 }

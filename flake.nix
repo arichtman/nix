@@ -53,16 +53,16 @@
   };
   outputs = inputs:
   # let
-    # lib = inputs.snowfall-lib.mkLib {
-    #   inherit inputs;
-    #   src = ./.;
-    #   snowfall.namespace = "arichtman";
-    # };
-    # mkNixosConfiguration = name: {
-    #   hostname = "${builtins.toString name}.systems.richtman.au";
-    #   profiles.system = {
-    #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
-    #   };
+  # lib = inputs.snowfall-lib.mkLib {
+  #   inherit inputs;
+  #   src = ./.;
+  #   snowfall.namespace = "arichtman";
+  # };
+  # mkNixosConfiguration = name: {
+  #   hostname = "${builtins.toString name}.systems.richtman.au";
+  #   profiles.system = {
+  #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
+  #   };
   #   };
   # in
     inputs.flake-parts.lib.mkFlake {

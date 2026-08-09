@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}: 
-{
+}: {
   imports = [./server.nix ./agent.nix];
   options.services.spire = {
     trustDomain = lib.options.mkOption {

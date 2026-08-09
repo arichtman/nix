@@ -15,9 +15,8 @@
 
         buildInputs = with pkgs; [
           prek
-    		];
-  		};
-		};
-	};
+        ];
+      };
+    };
+  };
 }
-
