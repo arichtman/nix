@@ -6,8 +6,8 @@ let
 in
   # {pkgs, lib, config, den}: {
   {
-    den.aspects.lab-node = {
-      # includes = [den.aspects.k8s.worker ];
+    den.aspects.lab-node = {den}: {
+      includes = [den.aspects.k8s.worker];
       nixos = {
         pkgs,
         lib,
