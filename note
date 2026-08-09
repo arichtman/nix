@@ -3,3 +3,25 @@ https://github.com/denful/dendrix
 https://codeberg.org/explore/repos?q=dendritic&only_show_relevant=true&sort=recentupdate
 https://github.com/Doc-Steve/dendritic-design-with-flake-parts
 https://codeberg.org/abyssal-twilight/nix-config
+
+entity - typed data: host, user, standalone home. Produces nixosConfigurations etc appropriate to class.
+den.hosts { <system>.<name> = {} }
+den.homes
+users live by host - den.hosts.<systems>.<host>.users.<name>
+
+each host has a default aspect for configuring it den.aspects.<name>
+
+Entities have different policy dispatch, classes have different module system evaluation.
+Entities are instantiations of a schema e.g. `den.schema.host`
+Entities may have options declared directly on the instance.
+To apply to all instances of a schema `den.schema.host`, to apply to all instances globally, `den.schema.conf`.
+You can make your own schemas and instantiate them.
+Schemas get some stuff automatically, particularly context arguments pulled from the entities modules.
+
+`den.policies` holds policies.
+They're activated by being put in an `includes` list e.g. `den.schema.host.includes = [den.policies.<name>]`
+
+core types can have arbitrary arguments passed, that are then available in aspects.
+Disable with strict mode `imports = [ inputs.den.flakeModules.strict ];`
+
+aspects can configure any of the core types in one, and can include other aspects.
