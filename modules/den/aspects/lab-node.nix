@@ -4,9 +4,11 @@ let
     sha256 = "1n0mmybs4alnr0zw049nm01sbrrhkj3idan917lcc6p8ils17psh";
   };
 in
-  # {pkgs, lib, config, den}: {
-  {
-    den.aspects.lab-node = {den}: {
+  # Not sure why we need the ... here, docs say aspects don't need it...
+  # You'd think den would be part of the context, but if we make the nixos {den}:
+  #   it doesn't proc, so the shape of the arguments must not be matching...
+  {den, ...}: {
+    den.aspects.lab-node = {
       includes = [den.aspects.k8s.worker];
       nixos = {
         pkgs,
@@ -14,6 +16,10 @@ in
         config,
         ...
       }: {
+        users.users.nixos = {
+          isNormalUser = true;
+          extraGroups = ["wheel"];
+        };
         environment = {
           shellAliases = {
             sc = "systemctl";
