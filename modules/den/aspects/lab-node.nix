@@ -2,9 +2,8 @@
 # You'd think den would be part of the context, but if we make the nixos {den}:
 #   it doesn't proc, so the shape of the arguments must not be matching...
 {den, ...}: {
-  den.aspects.lab-node = {
+  den.aspects.labNode = {
     includes = [
-      den.aspects.k8s.worker
       den.aspects.trust
       den.aspects.localization
       den.aspects.defaultUser

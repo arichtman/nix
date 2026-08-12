@@ -3,7 +3,8 @@
     includes = [
       den.aspects.tweedledee._
       den.aspects.physical-node
-      den.aspects.lab-node
+      den.aspects.labNode
+      den.aspects.k8s.workerNode
     ];
   };
 }
