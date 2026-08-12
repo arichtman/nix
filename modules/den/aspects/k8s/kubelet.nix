@@ -100,6 +100,12 @@
       # --node-labels in the 'kubernetes.io' namespace must begin with an allowed prefix (kubelet.kubernetes.io, node.kubernetes.io) or be in the specifically allowed set (beta.kubernetes.io/arch, beta.kubernetes.io/instance-type, beta.kubernetes.io/os, failure-domain.beta.kubernetes.io/region, failure-domain.beta.kubernetes.io/zone, kubernetes.io/arch, kubernetes.io/hostname, kubernetes.io/os, node.kubernetes.io/instance-type, topology.kubernetes.io/region, topology.kubernetes.io/zone)
       # } // lib.attrsets.optionalAttrs (config.services.k8s.controller) {node-labels = "node-role.kubernetes.io/control-plane";});
     in {
+      boot = {
+        kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
+        # May be required for IPv6 neighbor discovery?
+        kernel.sysctl."net.ipv4.ip_forward" = 1;
+        kernel.sysctl."net.ipv6.ip_forward" = 1;
+      };
       virtualisation.containerd = {
         enable = true;
         # args = {

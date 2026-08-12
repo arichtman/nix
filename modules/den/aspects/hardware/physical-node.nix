@@ -1,5 +1,4 @@
 {
-  # den,
   self',
   lib,
   ...
@@ -16,26 +15,27 @@
         description = "UUID for root volume";
       };
     };
-    # nixos = {host,...}: {
-    # nixos = {
     nixos = {host, ...}: let
       cfg = host.settings.volumes;
     in {
-      # Bootloader.
-      boot.loader.grub.devices = [self'.nixos.filesystems."/boot".device];
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
+      # Bootloader
+      boot = {
+        loader = {
+          grub.devices = [self'.nixos.filesystems."/boot".device];
+          systemd-boot.enable = true;
+          efi.canTouchEfiVariables = true;
+        };
 
-      # ---- HARDWARE -----
-      # Note: This really only works for very homogenous machines.
-      # Luckily all my physical nodes are about the same!
+        # ---- HARDWARE -----
+        # Note: This really only works for very homogenous machines.
+        # Luckily all my physical nodes are about the same!
 
-      boot.initrd.availableKernelModules = ["xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
-      boot.kernelModules = ["kvm-intel"];
+        initrd.availableKernelModules = ["xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
+        kernelModules = ["kvm-intel"];
+      };
 
       fileSystems."/boot" = {
         device = "/dev/disk/by-uuid/${cfg.bootUuid}";
-        # device = "/dev/disk/by-uuid/${host.settings.physical-node.bootUuid}";
         fsType = "vfat";
       };
       fileSystems."/" = {
