@@ -81,7 +81,7 @@
             };
           };
         };
-        prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "forgejo" services.forgejo.settings.server.HTTP_PORT)];
+        prometheus.scrapeConfigs = [(host.mkLocalScrapeConfig "forgejo" services.forgejo.settings.server.HTTP_PORT)];
       };
     };
   };

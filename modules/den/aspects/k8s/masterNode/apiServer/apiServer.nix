@@ -1,4 +1,4 @@
-{den, ...}: {
+{
   den.aspects.k8s.masterNode.apiServer = {
     nixos = {
       pkgs,
@@ -45,11 +45,11 @@
       };
       services.prometheus.scrapeConfigs = [
         # See impl for why non-default port
-        (lib.arichtman.mkLocalScrapeConfig "etcd" 2399)
+        (host.mkLocalScrapeConfig "etcd" 2399)
         # Had to do manually since scheme is https
         {
           job_name = "k8s_apiserver";
-          relabel_configs = lib.arichtman.promLocalHostRelabelConfigs;
+          relabel_configs = host.promLocalHostRelabelConfigs;
           honor_labels = false;
           scheme = "https";
           static_configs = [
@@ -58,7 +58,7 @@
                 "localhost:6443"
               ];
               labels = {
-                instance = "${host.networking.hostName}.systems.richtman.au";
+                instance = "${host.name}.systems.richtman.au";
               };
             }
           ];

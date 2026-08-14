@@ -1,3 +1,5 @@
+# TODO: add `single-request-open` option
+# Ref: https://medium.com/@a.warkhade98/the-issue-159436266391
 # Ref: https://github.com/kubernetes/kubernetes/issues/127137#issuecomment-2603247342
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingAdmissionPolicy

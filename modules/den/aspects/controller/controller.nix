@@ -7,6 +7,7 @@
       den.aspects.controller.iocaine
       den.aspects.controller.forgejo
       den.aspects.controller.loki
+      den.aspects.controller.prometheus
     ];
   };
 }

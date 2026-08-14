@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  den.schema.host = let
+  den.schema.host = rec {
     promLocalHostRelabelConfigs = [
       # TODO: Work out why localhost relabel and label override aren't working
       # Relabel localhost so we don't have to open metrics to the world
@@ -21,7 +21,6 @@
         replacement = "\${1}";
       }
     ];
-  in rec {
     mkLocalScrapeConfig = name: port: {
       job_name = toString name;
       relabel_configs = promLocalHostRelabelConfigs;
@@ -37,7 +36,7 @@
         }
       ];
     };
-    net = {
+    net = rec {
       ip4 = {
         routerCIDR = "10.128.0.1/32";
         subnetCIDR = "10.128.0.0/24";
@@ -51,8 +50,9 @@
         wireguardCIDR = "fd2f:f92f:f268::/48";
         mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
       };
-      controllerAddress = "fat-controller.systems.richtman.au";
       serviceDomain = "services.richtman.au";
+      systemDomain = "systems.richtman.au";
+      controllerAddress = "fat-controller.${systemDomain}";
     };
     includes = [
       den.batteries.hostname
