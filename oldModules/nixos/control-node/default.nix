@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./monitoring.nix
     ./restic.nix
     ./step-ca.nix
     ./tempo.nix

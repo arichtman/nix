@@ -56,7 +56,6 @@
               "tweedledum"
             ]);
           in [
-            (host.mkLocalScrapeConfig "grafana" config.services.grafana.settings.server.http_port)
             (host.mkLocalScrapeConfig "kthxbye" config.services.kthxbye.port)
             # Self-monitoring (fwiw)
             (host.mkLocalScrapeConfig "alertmanager" config.services.prometheus.alertmanager.port)
