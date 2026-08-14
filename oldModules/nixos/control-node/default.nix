@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./nix-serve.nix
     ./monitoring.nix
     ./restic.nix
     ./step-ca.nix
