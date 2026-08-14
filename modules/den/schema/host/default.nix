@@ -11,6 +11,7 @@
       };
       ip6 = rec {
         routerEUI64 = "aab8:e0ff:fe00:91ef";
+        routerGlobalUnicastAddress = "${prefix}:0:${routerEUI64}";
         prefix = "2403:581e:ab78";
         subnetCIDR = "${prefix}::/64";
         prefixCIDR = "${prefix}::/48";
