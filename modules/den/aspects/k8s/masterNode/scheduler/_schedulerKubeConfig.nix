@@ -10,8 +10,8 @@
       {
         name = "scheduler";
         user = {
-          client-certificate = "${den.aspects.k8s.secretsPath}/scheduler-apiserver-client.pem";
-          client-key = "${den.aspects.k8s.secretsPath}/scheduler-apiserver-client-key.pem";
+          client-certificate = "/var/lib/kubernetes/secrets/scheduler-apiserver-client.pem";
+          client-key = "/var/lib/kubernetes/secrets/scheduler-apiserver-client-key.pem";
         };
       }
     ];
@@ -19,8 +19,8 @@
       {
         name = "default";
         cluster = {
-          certificate-authority = "${den.aspects.k8s.secretsPath}/k8s-ca.pem";
-          server = "https://${host.networking.hostName}.systems.richtman.au:6443";
+          certificate-authority = "/var/lib/kubernetes/secrets/k8s-ca.pem";
+          server = "https://${host.name}.systems.richtman.au:6443";
         };
       }
     ];

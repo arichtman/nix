@@ -8,7 +8,7 @@
     }: let
       serviceArgs = import ./_apiServerArgs.nix {
         inherit pkgs host lib;
-        secretsPath = den.aspects.k8s.secretsPath;
+        secretsPath = "/var/lib/kubernetes/secrets";
       };
     in {
       systemd.services.k8s-apiserver = {

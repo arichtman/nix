@@ -1,11 +1,14 @@
-{
+{den, ...}: {
   den.aspects.k8s.masterNode.scheduler = {
     nixos = {
       pkgs,
       lib,
+      host,
       ...
     }: let
-      serviceArgs = import ./_schedulerArgs.nix {inherit pkgs lib;};
+      schedulerKubeconfigFile = import ./_schedulerKubeConfig.nix {inherit host den pkgs;};
+      schedulerConfigFile = import ./_schedulerConfig.nix {inherit pkgs schedulerKubeconfigFile;};
+      serviceArgs = import ./_schedulerArgs.nix {inherit lib den schedulerConfigFile;};
     in {
       systemd.services.k8s-scheduler = {
         description = "Kubernetes Scheduler Service";

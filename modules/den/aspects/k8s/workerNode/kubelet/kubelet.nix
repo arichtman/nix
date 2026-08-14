@@ -9,6 +9,9 @@
     }: let
       kubeletSecretsPath = "/var/lib/kubelet/secrets";
       kubeletConfigDropinPath = "/var/lib/kubelet/config.d";
+      # TODO: Maybe use pkgs.writeText and environment.etc."kubernetes/kubelet.conf.d/10-kubelet.conf"
+      #  we'll need a way to use pkgs though...
+      # Ref: https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/
       # Ref: https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/
       kubeletConfig =
         # TODO: Unclear why this is returning a bool instead of the merged attrSet unless it thinks one is a function?

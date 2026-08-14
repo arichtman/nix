@@ -17,9 +17,9 @@
           # For now, use the existing Kubernetes location.
           # TODO: ascertain where this should be placed
           # TODO: work out secrets management
-          trustedCaFile = "${den.aspects.k8s.secretsPath}/etcd-ca.pem";
-          certFile = "${den.aspects.k8s.secretsPath}/etcd-tls.pem";
-          keyFile = "${den.aspects.k8s.secretsPath}/etcd-tls-key.pem";
+          trustedCaFile = "/var/lib/kubernetes/secrets/etcd-ca.pem";
+          certFile = "/var/lib/kubernetes/secrets/etcd-tls.pem";
+          keyFile = "/var/lib/kubernetes/secrets/etcd-tls-key.pem";
           clientCertAuth = true;
           listenClientUrls = [
             "https://[::1]:2379"
@@ -36,7 +36,7 @@
               initialize = true;
               user = "kubernetes";
               backupPrepareCommand = ''
-                cd ${den.aspects.k8s.secretsPath}
+                cd /var/lib/kubernetes/secrets
                 ETCDCTL_CACERT=etcd-ca.pem ETCDCTL_CERT=kube-apiserver-etcd-client.pem ETCDCTL_KEY=kube-apiserver-etcd-client-key.pem \
                 ETCDCTL_ENDPOINTS=localhost:2379 \
                 ${services.etcd.package}/bin/etcdctl snapshot save ${etcdSnapshotFilePath}

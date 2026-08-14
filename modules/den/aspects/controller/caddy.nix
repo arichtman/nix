@@ -1,0 +1,56 @@
+{
+  den.aspects.controller.caddy = {
+    lib,
+    host,
+    ...
+  }: {
+    nixos = {
+      services = {
+        # Required to enable IPv6 for nix-serve the binary cache
+        caddy = {
+          enable = true;
+          email = "ariel@richtman.au";
+          globalConfig = lib.concatStringsSep "\n" [
+            # Don't store out-of-band config changes
+            "persist_config off"
+            # As advised for auto-reload to not wait forever
+            "grace_period 10s"
+            # Enable for Prometheus
+            "metrics"
+            # Disable TLS as we're internal
+            "auto_https off"
+            # For testing
+            # "debug"
+          ];
+          # TODO: Should wire the port number in properly but it means assuming iocaine with Caddy...
+          extraConfig = ''
+            (iocaine) {
+              @read method GET HEAD
+              reverse_proxy @read [::1]:42069 {
+                @fallback status 421
+                handle_response @fallback
+              }
+            }
+          '';
+          # Set default response to error so invalid/unrouted requests are obvious
+          # Ref: https://caddy.community/t/why-caddy-emits-empty-200-ok-responses-by-default/17634
+          virtualHosts = {
+            ":80" = {
+              extraConfig = ''
+                respond "No upstream configured" 204 {
+                  close
+                }
+              '';
+            };
+          };
+        };
+        prometheus.scrapeConfigs = [(lib.arichtman.mkLocalScrapeConfig "caddy" 2019)];
+      };
+    };
+    networking.firewall.extraInputRules = ''
+      ip saddr { ${host.net.ip4.routerCIDR} } tcp dport 80 accept comment "Allow private IPv4 HTTP"
+      ${host.net.ip6.mkNetfilterRuleRouterOnly "caddy" 80}
+      ip6 saddr { fe80::/10 } tcp dport 80 accept comment "Allow link-local HTTP"
+    '';
+  };
+}

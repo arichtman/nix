@@ -1,4 +1,8 @@
-{den, ...}: {
+{
+  den,
+  lib,
+  ...
+}: {
   den.schema.host = {
     net = {
       ip4 = {
@@ -10,6 +14,8 @@
         prefix = "2403:581e:ab78";
         subnetCIDR = "${prefix}::/64";
         prefixCIDR = "${prefix}::/48";
+        wireguardCIDR = "fd2f:f92f:f268::/48";
+        mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
       };
       controllerAddress = "fat-controller.systems.richtman.au";
     };

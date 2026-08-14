@@ -1,10 +1,10 @@
 {den, ...}: {
   den.aspects.fat-controller = {
     includes = [
-      den.aspects.fat-controller._
       den.aspects.virtualNode
       den.aspects.labNode
       den.aspects.k8s.masterNode
+      den.aspects.controller
     ];
     nixos = {
       fileSystems."/" = {

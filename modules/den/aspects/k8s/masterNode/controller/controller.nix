@@ -9,7 +9,7 @@
       systemd.services.k8s-controller = let
         controllerArgs = import ./_controllerArgs.nix {
           inherit lib pkgs host;
-          secretsPath = den.aspects.k8s.worker.secretsPath;
+          secretsPath = "/var/lib/kubernetes/secrets";
         };
       in {
         description = "Kubernetes controller Service";

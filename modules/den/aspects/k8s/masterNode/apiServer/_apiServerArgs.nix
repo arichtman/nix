@@ -25,7 +25,7 @@ in
     etcd-certfile = "${secretsPath}/kube-apiserver-etcd-client.pem";
     etcd-keyfile = "${secretsPath}/kube-apiserver-etcd-client-key.pem";
     etcd-servers = "https://[::1]:2379";
-    external-hostname = host.networking.hostName;
+    external-hostname = host.name;
     # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
     # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
     feature-gates = "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true,kube:MutatingAdmissionPolicy=true";
