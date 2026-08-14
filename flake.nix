@@ -39,25 +39,9 @@
     };
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-
-    # Ref: https://snowfall.org/reference/lib/
-    snowfall-lib = {
-      url = "github:snowfallorg/lib/v3.0.2";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    snowfall-thaw = {
-      url = "github:snowfallorg/thaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs = inputs:
   # let
-  # lib = inputs.snowfall-lib.mkLib {
-  #   inherit inputs;
-  #   src = ./.;
-  #   snowfall.namespace = "arichtman";
-  # };
   # mkNixosConfiguration = name: {
   #   hostname = "${builtins.toString name}.systems.richtman.au";
   #   profiles.system = {

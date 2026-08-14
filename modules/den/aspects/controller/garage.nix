@@ -8,7 +8,6 @@
       services = {
         garage = {
           enable = true;
-          environmentFile = "/var/lib/garage/.env";
           settings = {
             replication_factor = 1;
             rpc_bind_addr = "[::]:3901";
@@ -24,6 +23,7 @@
               api_bind_addr = "[::]:3903";
             };
           };
+          # TODO: Upgrade to garage_2?
           package = pkgs.garage;
         };
         caddy = {

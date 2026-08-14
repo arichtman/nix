@@ -68,7 +68,6 @@
         restic.backups.kanidm = {
           initialize = true;
           user = "kanidm";
-          # TODO: Wire in nixos option value as default
           backupPrepareCommand = "${services.kanidm.package}/bin/kanidmd database backup /var/lib/kanidm/backups/kanidm.backup.json";
           backupCleanupCommand = "rm -fr /var/lib/kanidm/backups/kanidm.backup.json";
           paths = [
