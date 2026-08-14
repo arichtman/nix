@@ -14,6 +14,7 @@
       den.aspects.controller.step-ca
       den.aspects.controller.tempo
       den.aspects.controller.vaultwarden
+      den.aspects.controller.website
     ];
   };
 }

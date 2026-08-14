@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./website.nix
   ];
   options.control-node = {
     enable = lib.mkEnableOption "Whether this is a controller";
