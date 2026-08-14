@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./kanidm.nix
     ./garage.nix
     ./iocaine.nix
     ./iodine.nix
