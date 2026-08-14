@@ -4,8 +4,6 @@
   ...
 }: {
   imports = [
-    ./tempo.nix
-    ./vaultwarden.nix
     ./website.nix
   ];
   options.control-node = {
