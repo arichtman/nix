@@ -4,7 +4,6 @@
   ...
 }: {
   imports = [
-    ./step-ca.nix
     ./tempo.nix
     ./vaultwarden.nix
     ./website.nix

@@ -11,6 +11,7 @@
       den.aspects.controller.prometheus
       den.aspects.controller.nix-serve
       den.aspects.controller.restic
+      den.aspects.controller.step-ca
     ];
   };
 }
