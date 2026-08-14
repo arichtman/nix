@@ -4,8 +4,6 @@
   ...
 }: {
   imports = [
-    ./forgejo.nix
-    ./loki.nix
     ./prometheus.nix
     ./nix-serve.nix
     ./monitoring.nix

@@ -6,6 +6,7 @@
       den.aspects.controller.garage
       den.aspects.controller.iocaine
       den.aspects.controller.forgejo
+      den.aspects.controller.loki
     ];
   };
 }
