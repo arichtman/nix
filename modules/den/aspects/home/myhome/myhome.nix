@@ -1,17 +1,5 @@
 {
-  pkgs,
-  config,
-  home,
-  ...
-}: {
-  den.aspects.home.myhome = {
-    lib,
-    user,
-    # pkgs,
-    # config,
-    # home,
-    ...
-  }: rec {
+  den.aspects.home.myhome = {lib, ...}: {
     userSettings = {
       git = {
         user = lib.mkOption {
@@ -24,9 +12,9 @@
       };
     };
 
-    homeManager = {
+    homeManager = {home, ...}: {
       home = {
-        stateVersion = user.settings.home.myhome.stateVersion;
+        stateVersion = home.userSettings.stateVersion;
       };
     };
   };

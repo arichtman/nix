@@ -4,13 +4,22 @@
   den.hosts.x86_64-linux = {
     # bluefin.users.arichtman = {};
   };
+  den.hosts.aarch64-darwin.AU-AM-1820 = {
+    apple.users.arichtman = {
+      includes = [
+        den.aspects.home.myhome
+        den.aspects.home.work
+      ];
+    };
+  };
 
   # define an standalone home-manager for work
   den.homes = {
     x86_64-linux = {
       arichtman = {userSettings.stateVersion = "XXX";};
       "arichtman@bruce-banner" = {
-        userSettings.stateVersion = "???";
+        userSettings.stateVersion = "22.11";
+        # home.username = "arichtman";
         # home.stateVersion = "XXX";
         # includes = [den.aspects.home.myhome];
       };

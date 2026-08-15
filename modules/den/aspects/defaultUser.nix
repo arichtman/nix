@@ -3,7 +3,8 @@
     nixos = {
       users.users.nixos = {
         isNormalUser = true;
-        extraGroups = ["wheel"];
+        # Not required due to den.batteries.primary-user
+        # extraGroups = ["wheel"];
       };
     };
   };
