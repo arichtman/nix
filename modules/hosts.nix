@@ -1,15 +1,19 @@
 # defines all hosts + users + homes.
 # then config their aspects in as many files you want
-{
+{den, ...}: {
   den.hosts.x86_64-linux = {
     # bluefin.users.arichtman = {};
   };
 
   # define an standalone home-manager for work
   den.homes = {
-    aarch64-darwin.arichtman = {};
     x86_64-linux = {
-      bluefin.users.arichtman = {};
+      arichtman = {userSettings.stateVersion = "XXX";};
+      "arichtman@bruce-banner" = {
+        userSettings.stateVersion = "???";
+        # home.stateVersion = "XXX";
+        # includes = [den.aspects.home.myhome];
+      };
     };
   };
 
