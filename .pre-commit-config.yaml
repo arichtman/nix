@@ -27,7 +27,7 @@ repos:
   hooks:
   - id: alejandra-system
 - repo: https://github.com/astro/deadnix
-  rev: v1.3.1
+  rev: v1.3.2
   hooks:
   - id: deadnix
 - repo: https://github.com/spinergie/pre-commit-dprint

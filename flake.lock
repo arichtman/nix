@@ -41,11 +41,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777780666,
-        "narHash": "sha256-8wURyQMdDkGUarSTKOGdCuFfYiwa3HbzwscUfn3STDE=",
+        "lastModified": 1785389976,
+        "narHash": "sha256-0tLW8Ff5yt8AH97jw4ZpFJ0OCJ122zIlgWGDmOfU/VU=",
         "owner": "lnl7",
         "repo": "nix-darwin",
-        "rev": "8c62fba0854ba15c8917aed18894dbccb48a3777",
+        "rev": "15abb8c98f336cd8bd840d71059adebabe60bf04",
         "type": "github"
       },
       "original": {
@@ -63,11 +63,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1770019181,
-        "narHash": "sha256-hwsYgDnby50JNVpTRYlF3UR/Rrpt01OrxVuryF40CFY=",
+        "lastModified": 1786361680,
+        "narHash": "sha256-IxaZkb9rCGEZ+yGndxKXONeIEcKMzoFUsvLTB5G/caw=",
         "owner": "serokell",
         "repo": "deploy-rs",
-        "rev": "77c906c0ba56aabdbc72041bf9111b565cdd6171",
+        "rev": "16901271e5b30b591e56f7a84f25f186fb20f3e1",
         "type": "github"
       },
       "original": {
@@ -300,11 +300,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778805320,
-        "narHash": "sha256-nGFJ01m2CTBKD4ABtcY4vLhHrRN91LKr/pn41PcU78A=",
+        "lastModified": 1786719456,
+        "narHash": "sha256-B74DLQs/VjlqyhnnX3tguWwghqJHWSJX30TKZuAljIg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "9846abe15e7d0d36b8acbd4d05f2b87461744c92",
+        "rev": "83b7606dcf44abe3a94b86e8bb2b3355d22e8797",
         "type": "github"
       },
       "original": {
@@ -330,15 +330,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1775891927,
-        "narHash": "sha256-Fl9aWzox39KkuP+P3h2KFIvx7F3BabZReSUK417hybA=",
-        "rev": "bbea06f348c1608b7d492ef800f501338b2b9f04",
-        "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/iocaine/archive/bbea06f348c1608b7d492ef800f501338b2b9f04.tar.gz?rev=bbea06f348c1608b7d492ef800f501338b2b9f04"
+        "lastModified": 1779742069,
+        "narHash": "sha256-adsQuSL4F1mfSsUtLwdgUtHVYessBM31tlBU8Rbbst4=",
+        "ref": "iocaine-3.x",
+        "rev": "5521356167c61e6119777535fd92c8ee23be3483",
+        "revCount": 771,
+        "type": "git",
+        "url": "https://git.madhouse-project.org/iocaine/iocaine"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://git.madhouse-project.org/iocaine/iocaine/archive/iocaine-3.x.tar.gz"
+        "ref": "iocaine-3.x",
+        "type": "git",
+        "url": "https://git.madhouse-project.org/iocaine/iocaine"
       }
     },
     "nam-shub-of-enki": {
@@ -362,15 +365,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1775893741,
-        "narHash": "sha256-I0uBsP2ozlBr2tT6spz/K/XsRZrgoCMEtdKAqyunjT0=",
-        "rev": "7e81078fb380bb90a0d0c2969caa6cdc717a5e4e",
-        "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nam-shub-of-enki/archive/7e81078fb380bb90a0d0c2969caa6cdc717a5e4e.tar.gz?rev=7e81078fb380bb90a0d0c2969caa6cdc717a5e4e"
+        "lastModified": 1780092888,
+        "narHash": "sha256-B27esenlgT5jjh3kjCEn+xxsTDiiTRhu9ZXUxQZ7mZw=",
+        "ref": "main",
+        "rev": "a67cce7cef81d95d35b0f58f2848dfec9f5e20c7",
+        "revCount": 331,
+        "type": "git",
+        "url": "https://git.madhouse-project.org/iocaine/nam-shub-of-enki"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://git.madhouse-project.org/iocaine/nam-shub-of-enki/archive/main.tar.gz"
+        "ref": "main",
+        "type": "git",
+        "url": "https://git.madhouse-project.org/iocaine/nam-shub-of-enki"
       }
     },
     "nix-versions": {
@@ -428,11 +434,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1775896046,
-        "narHash": "sha256-RFFA5st980IqJL2P/gmjlrW38V23+G+1p1yZx0ped0Q=",
-        "rev": "ac2cd7e9c0002b89e894e8751c46a456585e5d06",
+        "lastModified": 1780214096,
+        "narHash": "sha256-x+TVoQeuSbl2URUoACzuopGBeHyc8V5ckD6BMeiJAZk=",
+        "rev": "6f27e771479281986b303e64515b07238a3694b6",
         "type": "tarball",
-        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nixocaine/archive/ac2cd7e9c0002b89e894e8751c46a456585e5d06.tar.gz"
+        "url": "https://git.madhouse-project.org/api/v1/repos/iocaine/nixocaine/archive/6f27e771479281986b303e64515b07238a3694b6.tar.gz"
       },
       "original": {
         "type": "tarball",
@@ -488,11 +494,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1778762200,
-        "narHash": "sha256-NiOfW9nHPaDebfu3svLnJbljIMQgkEQnkm3orhePHPY=",
+        "lastModified": 1786593342,
+        "narHash": "sha256-smTKQXMLLStzc8zJevMCckbk3My7SvbbLmPYZUJJKW4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "27198194e52129ccd8e845e7d5911911e7fea7d7",
+        "rev": "6b5e5b7a6631f065bf6908986990b37d845f847f",
         "type": "github"
       },
       "original": {
