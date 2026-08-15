@@ -1,0 +1,5 @@
+address: '[::]:50051' # external cluster autoscaler provider address of the form "host:port", "host%zone:port", "[host]:port" or "[host%zone]:port"
+key: autoscaler-cp-client-key.pem # path to file containing the tls key
+# cert: autoscaler-cp-client.pem # path to file containing the tls certificate
+cacert: autoscaler-cp-ca.pem # path to file containing the CA certificate
+# grpc_timeout: # timeout of invoking a grpc call

@@ -5,9 +5,9 @@ Configuring Kanidm as an Oauth provider for cluster identity.
 Todo:
 
 - Investigate additional properties for use in ABAC.
-- ~Look at mapping additional roles to groups to see if we can stack permissions.~
+- ~~Look at mapping additional roles to groups to see if we can stack permissions.~~
   Able to bind multiple roles based on groups, haven't investigated if permissions stack though.
-- ~Should fix or allow adding Prometheus target.~
+- ~~Should fix or allow adding Prometheus target.~~
   Anonymous auth now working for `/healthz`, `/livez`, `/readyz`, and `/metrics`.
 
 Note: maybe instead of extra scopes we do `--oidc-use-access-token` see [issue](https://github.com/int128/kubelogin/issues/1083).

@@ -67,7 +67,7 @@ Watchdog modules are blacklisted by default due to the footgunny nature of a boo
 `wdctl` _should_ be showing status but `/dev/watchdog` is missing.
 There's a `watchdog-mux.service` but it's inactive(dead) and nothing in journalctl.
 Enabling/starting it yields a device or resource busy.
-And there *is* a special character file at `/dev/watchdog`.
+And there _is_ a special character file at `/dev/watchdog`.
 `lsof | grep /dev/watchdog` yields only `systemd` holding `/dev/watchdog0`.
 This should be pointing systemd at `/dev/watchdog`.
 Perhaps systemd is clashing with watchdog-mux.
@@ -120,7 +120,6 @@ modprobe ipmi_si
 ```
 
 > If you're using systemd then you probably want to set RuntimeWatchdogSec= in /etc/systemd/system.conf and let the init process take care of poking the watchdog.
-
 
 - [Arch wiki about watchdogs](https://wiki.archlinux.org/title/Improving_performance#Watchdogs)
 - [Arch wiki kernel modules](https://wiki.archlinux.org/title/Kernel_module)

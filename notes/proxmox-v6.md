@@ -1,6 +1,7 @@
 # Proxmox IPv6
 
 Host interface enabling SLAAC.
+
 - Configure Proxmox IPv6 SLAAC.
 
 Dynamic v6 with static v4 might be bugged.

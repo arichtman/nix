@@ -1,0 +1,17 @@
+# k exec -it po/nw-test -- /bin/bash
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nw-test
+  name: nw-test
+spec:
+  containers:
+  - image: docker.io/nicolaka/netshoot:latest
+    name: nw-test
+    command:
+      - sleep
+      - infinity
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  nodeName: patient-zero.systems.richtman.au
