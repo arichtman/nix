@@ -11,7 +11,7 @@
         source_labels = ["__address__"];
         regex = ".*localhost.*";
         target_label = "instance";
-        replacement = "fat-controller.systems.richtman.au";
+        replacement = net.controllerAddress;
       }
       # Remove port numbers
       {
@@ -50,11 +50,13 @@
         wireguardCIDR = "fd2f:f92f:f268::/48";
         mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
       };
-      serviceDomain = "services.richtman.au";
-      systemDomain = "systems.richtman.au";
+      primaryDomain = "richtman.au";
+      serviceDomain = "services.${primaryDomain}";
+      systemDomain = "systems.${primaryDomain}";
       controllerAddress = "fat-controller.${systemDomain}";
     };
     includes = [
+      # TODO: check out other batteries
       den.batteries.hostname
     ];
   };
