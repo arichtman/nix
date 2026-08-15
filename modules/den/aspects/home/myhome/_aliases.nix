@@ -1,10 +1,8 @@
 {
   pkgs,
   lib,
-  config,
   ...
 }: let
-  cfg = config.default-home;
   darwinAliases = {
     dr = "sudo darwin-rebuild";
     drc = "dr check --flake .";
@@ -115,9 +113,9 @@ in {
                       && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1 \
                       && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell pm uninstall com.google.android.apps.bard
       '';
+      # OpenGL issues on non-NixOS systems, apparently
+      alac = "nohup nixGLNvidia alacritty &";
     }
-    # TODO: If the OpenGL-non NixOS system thing ever gets resolved...
-    // lib.optionalAttrs cfg.isThatOneWeirdMachine {alac = "nohup nixGLNvidia alacritty &";}
     # Have to put here as modules are Nix config and not home-manager (?)
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin darwinAliases;
 }

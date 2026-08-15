@@ -1,60 +1,5 @@
 {lib, ...}: let
-  downloadGitignore = arguments @ {
-    languages ? [],
-    hash ? lib.fakeSha256,
-    # Allow variadic arguments so we have one API
-    ...
-  }:
-    builtins.fetchurl {
-      url = "https://www.toptal.com/developers/gitignore/api/${lib.concatStringsSep "," arguments.languages}";
-      name = "myGitignore"; # Required as both "," and "%2C" are invalid store paths
-      # For some godforsaken reason arguments.hash bombs on missing property
-      sha256 = hash;
-    };
 in rec {
-  fetchGrafanaDashboard = arguments @ {
-    id,
-    revision,
-    name,
-    hash ? lib.fakeSha256,
-  }:
-    builtins.fetchurl {
-      url = "https://grafana.com/api/dashboards/${toString id}/revisions/${toString revision}/download";
-      name = name;
-      sha256 = hash;
-    };
-  promLocalHostRelabelConfigs = [
-    # TODO: Work out why localhost relabel and label override aren't working
-    # Relabel localhost so we don't have to open metrics to the world
-    {
-      source_labels = ["__address__"];
-      regex = ".*localhost.*";
-      target_label = "instance";
-      replacement = "fat-controller.systems.richtman.au";
-    }
-    # Remove port numbers
-    {
-      source_labels = ["__address__"];
-      regex = "(.+):.*";
-      target_label = "instance";
-      replacement = "\${1}";
-    }
-  ];
-  mkLocalScrapeConfig = name: port: {
-    job_name = toString name;
-    relabel_configs = promLocalHostRelabelConfigs;
-    honor_labels = false;
-    static_configs = [
-      {
-        targets = [
-          "localhost:${toString port}"
-        ];
-        labels = {
-          instance = "fat-controller.systems.richtman.au";
-        };
-      }
-    ];
-  };
   net = {
     controllerAddress = "fat-controller.systems.richtman.au";
     ip6 = {
@@ -71,20 +16,4 @@ in rec {
       subnetCIDR = "10.128.0.0/24";
     };
   };
-  # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
-  mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${net.ip6.routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
-  # Pass-through the function in case people want plain gitignores
-  inherit downloadGitignore;
-  sourceGitignoreList = arguments @ {
-    # Default this to a no-op processing where every list item is retained.
-    # TODO: Allow this to take a list of functions and recurse down to progressively apply them.
-    filterFunction ? (_: true),
-    ...
-  }: let
-    gitignoreFile = downloadGitignore arguments;
-    rawText = builtins.readFile gitignoreFile;
-    splitList = builtins.split "\n" rawText;
-    pureList = builtins.filter (x: x != []) splitList;
-  in
-    builtins.filter filterFunction pureList;
 }

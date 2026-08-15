@@ -4,6 +4,19 @@
   ...
 }: {
   den.schema.host = rec {
+    fetchGrafanaDashboard = arguments @ {
+      id,
+      revision,
+      name,
+      hash ? lib.fakeSha256,
+    }:
+      builtins.fetchurl {
+        url = "https://grafana.com/api/dashboards/${toString id}/revisions/${toString revision}/download";
+        name = name;
+        sha256 = hash;
+      };
+    # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
+    mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${net.ip6.routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
     promLocalHostRelabelConfigs = [
       # TODO: Work out why localhost relabel and label override aren't working
       # Relabel localhost so we don't have to open metrics to the world
