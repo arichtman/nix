@@ -9,6 +9,7 @@
       includes = [
         den.aspects.home.myhome
         den.aspects.home.work
+        den.aspects.darwin
       ];
     };
   };

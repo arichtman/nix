@@ -1,28 +1,10 @@
 {
-  lib,
-  pkgs,
-  inputs,
-  ...
-}:
-# Ref: https://github.com/andrewzah/nix-configs/blob/master/hosts/m3/system.nix
-#TODO: Revisit the use of lib
-with lib;
-# with lib.internal;
-  {
-    config = mkIf pkgs.stdenv.isDarwin {
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-      };
-
-      nix.extraOptions = ''
-        auto-optimise-store = true
-        experimental-features = nix-command flakes
-      '';
-
-      # Required or /run/current-system/sw isn't put on PATH
-      #TODO: pull config out from default-home?
-      programs.zsh.enable = true;
+  den.aspects.darwin = {
+    darwin = {
+      pkgs,
+      lib,
+      ...
+    }: {
       # TODO: trim
       environment.systemPackages = with pkgs; [
         # TODO: unavailable/supported on aarch64
@@ -41,7 +23,20 @@ with lib;
         # MacOS Appstore CLI
         mas
       ];
-
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+      };
+      nix.extraOptions = ''
+        auto-optimise-store = true
+        experimental-features = nix-command flakes
+      '';
+      nix.settings.trusted-users = [
+        "@admin"
+      ];
+      # Required or /run/current-system/sw isn't put on PATH
+      #TODO: pull config out from default-home?
+      programs.zsh.enable = true;
       # TODO: Investigate difference between defaults and custom user preferences
       # TODO: Check out all config options
       system =
@@ -93,9 +88,6 @@ with lib;
           };
         }
         // lib.optionalAttrs false {primaryUser = "arichtman";};
-      # lib.optionalAttrs (lib.strings.versionAtLeast lib.trivial.version "24.11") { primaryUser =  "arichtman"; };
-      nix.settings.trusted-users = [
-        "@admin"
-      ];
     };
-  }
+  };
+}
