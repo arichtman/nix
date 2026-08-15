@@ -19,9 +19,6 @@
       arichtman = {userSettings.stateVersion = "XXX";};
       "arichtman@bruce-banner" = {
         userSettings.stateVersion = "22.11";
-        # home.username = "arichtman";
-        # home.stateVersion = "XXX";
-        # includes = [den.aspects.home.myhome];
       };
     };
   };

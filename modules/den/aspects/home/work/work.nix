@@ -1,14 +1,44 @@
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
-  cfg = config.work-home;
-in
-  with lib; {
-    options.work-home.enabled = lib.mkEnableOption "Enable work home configuration";
-    config = mkIf cfg.enabled {
+  den.aspects.home.work = {
+    homeManager = {pkgs, ...}: {
+      home = {
+        # Annoyingly, the precedence order of git config means the default user still overrides
+        shellAliases = {
+          "set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
+          tfpla = "tf providers lock -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
+        };
+        file = {
+          ".config/git/personal".text = ''
+            [user]
+              email = "10679234+arichtman@users.noreply.github.com"
+              name = "Ariel Richtman"
+          '';
+        };
+        packages = with pkgs; [
+          git-remote-codecommit
+          k9s
+          awscli2
+          kubectl
+          terraform
+          terraform-docs
+          terragrunt
+          prek
+          # Ref: https://github.com/NixOS/nixpkgs/issues/291753
+          # mitmproxy
+          kubernetes-helm
+          docker-client
+          docker-buildx
+          docker-compose
+          docker-ls
+          docker-slim
+          docker-gc
+          dive
+          lazydocker
+          docker-credential-helpers
+          taplo
+          freerdp
+        ];
+      };
       programs = {
         ssh = {
           enable = true;
@@ -61,44 +91,6 @@ in
           };
         };
       };
-      home = {
-        # Annoyingly, the precedence order of git config means the default user still overrides
-        shellAliases = {
-          "set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
-          tfpla = "tf providers lock -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
-        };
-        file = {
-          ".config/git/personal".text = ''
-            [user]
-              email = "10679234+arichtman@users.noreply.github.com"
-              name = "Ariel Richtman"
-          '';
-        };
-        packages = with pkgs; [
-          git-remote-codecommit
-          k9s
-          awscli2
-          kubectl
-          terraform
-          terraform-docs
-          terragrunt
-          prek
-          # Ref: https://github.com/NixOS/nixpkgs/issues/291753
-          # mitmproxy
-          kubernetes-helm
-          docker-client
-          docker-buildx
-          docker-compose
-          docker-ls
-          docker-slim
-          docker-gc
-          dive
-          lazydocker
-          docker-credential-helpers
-          taplo
-          freerdp
-          # home-manager
-        ];
-      };
     };
-  }
+  };
+}
