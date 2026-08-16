@@ -1,5 +1,6 @@
-{
+{den, ...}: {
   den.aspects.k8s.kubelet = {
+    includes = [den.aspects.k8s];
     nixos = {
       config,
       lib,
@@ -224,6 +225,7 @@
           "kubelet-secrets" = {
             "${kubeletSecretsPath}" = {
               d = {
+                # TODO: Review those permissions :sus:
                 user = "root";
                 group = "root";
                 mode = "0755";

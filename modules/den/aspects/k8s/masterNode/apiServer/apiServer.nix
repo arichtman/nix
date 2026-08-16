@@ -1,5 +1,6 @@
-{
+{den, ...}: {
   den.aspects.k8s.masterNode.apiServer = {
+    includes = [den.aspects.k8s.masterNode.etcd];
     nixos = {
       pkgs,
       lib,
