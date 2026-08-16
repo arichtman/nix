@@ -10,8 +10,8 @@
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBxGxm6tCZlV3vJ6+yAkmQKcqVagfhgaf2aHzVQHvay+"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMSzoJ8/RDgYda2iQN1o8NmqbZnqQFnPLfuAYEaRIcGT"
         ];
-        # Not required due to den.batteries.primary-user
-        # extraGroups = ["wheel"];
+        # TODO: Supposedly not required due to den.batteries.primary-user??
+        extraGroups = ["wheel"];
       };
     };
   };
