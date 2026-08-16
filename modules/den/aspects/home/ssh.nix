@@ -1,13 +1,6 @@
 {
-  config,
-  lib,
-  ...
-}: let
-  cfg = config.personal-machine;
-in
-  with lib; {
-    options.personal-machine.enabled = lib.mkEnableOption "Configure as a personal use machine";
-    config = mkIf cfg.enabled {
+  den.aspects.home.ssh = {
+    nixos = {
       programs.ssh = {
         enable = true;
         enableDefaultConfig = false;
@@ -54,6 +47,7 @@ in
             hostname = "proxmox.internal";
           };
           # All the user repetition is dumb but it wasn't hitting the "*.systems.richtman.au" match on my MBP
+          # TODO: Revisit and tidy if no more MBP
           fc = {
             hostname = "fat-controller.systems.richtman.au";
             user = "nixos";
@@ -81,4 +75,5 @@ in
         };
       };
     };
-  }
+  };
+}

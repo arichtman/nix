@@ -13,6 +13,8 @@
           git.email = "git@richtman.au";
           homeManager.stateVersion = "22.11";
         };
+        # TODO: locate this properly
+        includes = [den.aspects.home.ssh];
       };
       # TODO: This merge reference is bit clunky but unsure how to reference quoted key directly
       "arichtman@bruce-banner" =
@@ -21,6 +23,7 @@
           includes = [
             den.aspects.home.nvidia
             den.aspects.home.bashWorkaround
+            den.aspects.home.ssh
           ];
         };
     };

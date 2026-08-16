@@ -41,14 +41,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
   outputs = inputs:
-  # let
-  # mkNixosConfiguration = name: {
-  #   hostname = "${builtins.toString name}.systems.richtman.au";
-  #   profiles.system = {
-  #     path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations."${builtins.toString name}";
-  #   };
-  #   };
-  # in
     inputs.flake-parts.lib.mkFlake {
       inherit inputs;
       # channels-config.allowUnfree = true;
@@ -56,28 +48,10 @@
       # systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
       # overlays = with inputs; [
       #   nixgl.overlays.default
-      #   snowfall-thaw.overlays.default
       #   nixocaine.overlays.default
       # ];
       # alias.shells = {
       #   default = "myshell";
       # };
-
-      # deploy = {
-      #   sshUser = "nixos";
-      #   user = "root";
-      #   remoteBuild = true;
-      #   # TODO: DRY this up
-      #   nodes = {
-      #     fat-controller = mkNixosConfiguration "fat-controller";
-      #     patient-zero = mkNixosConfiguration "patient-zero";
-      #     dr-singh = mkNixosConfiguration "dr-singh";
-      #     smol-bat = mkNixosConfiguration "smol-bat";
-      #     tweedledee = mkNixosConfiguration "tweedledee";
-      #     tweedledum = mkNixosConfiguration "tweedledum";
-      #   };
-      # };
-
-      # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
     } (inputs.import-tree ./modules);
 }
