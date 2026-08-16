@@ -1,9 +1,16 @@
 {
   den,
   lib,
+  host,
+  pkgs,
   ...
 }: {
   den.schema.host = rec {
+    systemSettings.stateVersion = lib.mkOption {
+      description = "System state version.";
+      type = lib.types.str;
+      example = "24.11";
+    };
     fetchGrafanaDashboard = arguments @ {
       id,
       revision,
@@ -68,6 +75,8 @@
       systemDomain = "systems.${primaryDomain}";
       controllerAddress = "fat-controller.${systemDomain}";
     };
+    nixos.system.stateVersion = host.systemSettings.stateVersion;
+    darwin.stateVersion = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin host.systemSettings.stateVersion;
     includes = [
       # TODO: check out other batteries
       den.batteries.hostname

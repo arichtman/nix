@@ -22,6 +22,19 @@
         wireguard-tools
         # MacOS Appstore CLI
         mas
+        # Containers
+        pkgs.colima
+        pkgs.lima
+        # Have to install widely for VScode
+        pkgs.kcl
+        # ...but this one's not Darwin-arm
+        # pkgs.kcl-language-server
+      ];
+      # only looks to be on unstable but in wiki?
+      # https://nixos.wiki/wiki/Fonts
+      # TODO: What's the difference here, activation?
+      fonts.packages = [
+        pkgs.nerd-fonts.fira-code
       ];
       home-manager = {
         useGlobalPkgs = true;
@@ -35,8 +48,10 @@
         "@admin"
       ];
       # Required or /run/current-system/sw isn't put on PATH
-      #TODO: pull config out from default-home?
+      # TODO: pull config out from default-home?
       programs.zsh.enable = true;
+      # Add ability to used TouchID for sudo authentication
+      security.pam.services.sudo_local.touchIdAuth = true;
       # TODO: Investigate difference between defaults and custom user preferences
       # TODO: Check out all config options
       system =
@@ -86,6 +101,7 @@
               Dragging = true;
             };
           };
+          stateVersion = 4;
         }
         // lib.optionalAttrs false {primaryUser = "arichtman";};
     };

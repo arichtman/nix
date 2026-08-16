@@ -11,7 +11,7 @@
       "arichtman@bluefin" = {
         userSettings = {
           git.email = "git@richtman.au";
-          stateVersion = "22.11";
+          homeManager.stateVersion = "22.11";
         };
       };
       # TODO: This merge reference is bit clunky but unsure how to reference quoted key directly

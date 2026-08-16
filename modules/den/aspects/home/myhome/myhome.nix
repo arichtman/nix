@@ -10,13 +10,16 @@
     ];
     userSettings = {
       git = {
-        user = lib.mkOption {
-          description = "Git username";
+        email = lib.mkOption {
+          description = "Git email";
           type = lib.types.str;
         };
       };
-      stateVersion = lib.mkOption {
-        type = lib.types.str;
+      homeManager = {
+        stateVersion = lib.mkOption {
+          description = "Home-manager state version";
+          type = lib.types.str;
+        };
       };
     };
 
@@ -32,7 +35,7 @@
       home = {
         enableNixpkgsReleaseCheck = true;
         shellAliases = aliases.myAliases // aliases.classicalAliases;
-        stateVersion = home.userSettings.stateVersion;
+        stateVersion = home.userSettings.homeManager.stateVersion;
       };
       nix.package = pkgs.nix;
       # Trying to fix desktop issues with untrusted user being disallowed --store argument
