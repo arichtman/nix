@@ -68,6 +68,10 @@
           # Ref: https://github.com/grafana/intro-to-mltp/blob/main/tempo/tempo.yaml
           # Ref: https://grafana.com/docs/tempo/latest/configuration/
           settings = {
+            live_store = {
+              wal.path = "/var/lib/tempo/live-store/wal";
+              shutdown_marker_dir = "/var/lib/tempo/live-store";
+            };
             stream_over_http_enabled = true;
             server = {
               # Otherwise this tries to bind to 80, which is taken of course.
@@ -116,7 +120,6 @@
                 service_graphs = {
                   dimensions = ["http.method" "http.target" "http.status_code" "service.version"];
                 };
-                local_blocks = {flush_to_storage = true;};
               };
               registry = {
                 collection_interval = "5s";
@@ -128,7 +131,6 @@
               storage = {
                 path = "/var/lib/tempo/generator/wal";
               };
-              traces_storage = {path = "/var/lib/tempo/generator/traces";};
             };
           };
         };
