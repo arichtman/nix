@@ -1,12 +1,11 @@
-rec {
-  den.hosts.x86_64-linux.bruce-banner.users.arichtman = den.hosts.x86_64-linux.bluefin.users.arichtman;
-  den.hosts.x86_64-linux.bluefin.users.arichtman = {
-    userSettings = {
-      git = {
-        user = "Ariel Richtman";
-        email = "";
-      };
-      stateVersion = "22.11";
+{den, ...}: {
+  den.hosts.aarch64-darwin.AU-AM-1820 = {
+    apple.users.arichtman = {
+      includes = [
+        den.aspects.home.myhome
+        den.aspects.home.work
+        den.aspects.darwin
+      ];
     };
   };
 }

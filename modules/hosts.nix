@@ -4,23 +4,25 @@
   den.hosts.x86_64-linux = {
     # bluefin.users.arichtman = {};
   };
-  den.hosts.aarch64-darwin.AU-AM-1820 = {
-    apple.users.arichtman = {
-      includes = [
-        den.aspects.home.myhome
-        den.aspects.home.work
-        den.aspects.darwin
-      ];
-    };
-  };
 
   # define an standalone home-manager for work
-  den.homes = {
+  den.homes = rec {
     x86_64-linux = {
-      arichtman = {userSettings.stateVersion = "XXX";};
-      "arichtman@bruce-banner" = {
-        userSettings.stateVersion = "22.11";
+      "arichtman@bluefin" = {
+        userSettings = {
+          git.email = "git@richtman.au";
+          stateVersion = "22.11";
+        };
       };
+      # TODO: This merge reference is bit clunky but unsure how to reference quoted key directly
+      "arichtman@bruce-banner" =
+        x86_64-linux.${"arichtman@bluefin"}
+        // {
+          includes = [
+            den.aspects.home.nvidia
+            den.aspects.home.bashWorkaround
+          ];
+        };
     };
   };
 

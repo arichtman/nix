@@ -4,18 +4,20 @@
       home = {
         # Annoyingly, the precedence order of git config means the default user still overrides
         shellAliases = {
-          "set-private-git-config" = "git config user.email '10679234+arichtman@users.noreply.github.com' ; git config user.name 'Ariel Richtman'";
           tfpla = "tf providers lock -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
         };
         file = {
-          ".config/git/personal".text = ''
+          # TODO: fill out the rest for work
+          ".config/git/work/github".text = ''
             [user]
-              email = "10679234+arichtman@users.noreply.github.com"
-              name = "Ariel Richtman"
+              email = "Ariel.Richtman@SilverRailTech.com"
+          '';
+          ".config/git/work/gitlab".text = ''
+            [user]
+              email = "Ariel.Richtman@SilverRailTech.com"
           '';
         };
         packages = with pkgs; [
-          git-remote-codecommit
           k9s
           awscli2
           kubectl
@@ -81,12 +83,17 @@
         git = {
           settings = {
             # Ref: https://chaos.social/@calisti/112190526505794575
-            includeIf = {
-              "hasConfig:remote.*.url:https://github.com/arichtman/**" = {path = "~/.config/git/personal";};
-              "hasConfig:remote.*.url:git@github.com:arichtman/**" = {path = "~/.config/git/personal";};
+            "hasconfig:remote.*.url:git@gitlab.com:arichtman-srt/**" = {
+              path = "~/.config/git/work/gitlab";
             };
-            "includeIf \"gitdir:~/repos/gh/arichtman/\"" = {
-              path = "~/.config/git/personal";
+            "hasconfig:remote.*.url:https://gitlab.com/arichtman-srt/**" = {
+              path = "~/.config/git/work/gitlab";
+            };
+            "hasconfig:remote.*.url:git@github.com:arichtman-srt/**" = {
+              path = "~/.config/git/work/github";
+            };
+            "hasconfig:remote.*.url:https://github.com/arichtman-srt/**" = {
+              path = "~/.config/git/work/github";
             };
           };
         };

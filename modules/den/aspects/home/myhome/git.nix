@@ -4,6 +4,21 @@
   ...
 }: {
   den.aspects.home.git = {pkgs, ...}: {
+    homeManager.
+        file = {
+      ".config/git/codeberg".text = ''
+        [user]
+          email = "arichtman@noreply.codeberg.org"
+      '';
+      ".config/git/gitlab".text = ''
+        [user]
+          email = "5745803-arichtman@users.noreply.gitlab.com"
+      '';
+      ".config/git/github".text = ''
+        [user]
+          email = "10679234+arichtman@users.noreply.github.com"
+      '';
+    };
     homeManager.programs = {
       git = let
         downloadGitignore = arguments @ {
@@ -60,9 +75,30 @@
           key = "~/.ssh/id_ed25519.pub";
         };
         settings = {
+          includeIf = {
+            # TODO: tidy
+            "hasconfig:remote.*.url:git@codeberg.org:*/**" = {
+              path = "~/.config/git/codeberg";
+            };
+            "hasconfig:remote.*.url:https://codeberg.org/**" = {
+              path = "~/.config/git/codeberg";
+            };
+            "hasconfig:remote.*.url:git@gitlab.com:arichtman/**" = {
+              path = "~/.config/git/gitlab";
+            };
+            "hasconfig:remote.*.url:https://gitlab.com/arichtman/**" = {
+              path = "~/.config/git/gitlab";
+            };
+            "hasconfig:remote.*.url:git@github.com:arichtman/**" = {
+              path = "~/.config/git/github";
+            };
+            "hasconfig:remote.*.url:https://github.com/arichtman/**" = {
+              path = "~/.config/git/github";
+            };
+          };
           user = {
             email = home.userSettings.git.email;
-            name = home.userSettings.git.username;
+            name = "Ariel Richtman";
           };
           alias = {
             c = "commit";
