@@ -21,8 +21,6 @@
           path = [
             pkgs.git
             pkgs.nix
-            # Note: won't be using the devShell version which is a bummer
-            # pkgs.zola
           ];
           serviceConfig = {
             Type = "oneshot";

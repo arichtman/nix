@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Required for Nix v3 CLI use
+export NIX_CONFIG="experimental-features = nix-command flakes"
 cd /var/lib/caddy/www.richtman.au
 echo "In $(pwd)"
 echo "Starting git fetch"

@@ -14,6 +14,8 @@
       den.aspects.networking
     ];
     nixos = {
+      # Enable our lil faves
+      nix.settings.experimental-features = ["nix-command" "flakes"];
       system.autoUpgrade.flake = "github:arichtman/nix";
       security.sudo.wheelNeedsPassword = false;
 
