@@ -16,7 +16,7 @@
             pam_allowed_login_groups = ["all_access"];
           };
           client.enable = true;
-          package = pkgs.kanidm_1_10;
+          package = pkgs.kanidm_1_11;
           server.enable = true;
           server.settings = rec {
             origin = "https://${domain}";
@@ -27,7 +27,8 @@
               x-forward-for = [host.net.ip6.routerGlobalUnicastAddress];
             };
             # Export spans to Tempo
-            otel_grpc_url = "http://localhost:4317";
+            # TODO: Figure out why it's not logging or CLI working locally with this on
+            # otel_grpc_endpoint = "http://localhost:4317";
             tls_chain = "/var/lib/kanidm/cert.pem";
             tls_key = "/var/lib/kanidm/key.pem";
           };
