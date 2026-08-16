@@ -26,6 +26,9 @@
     };
   };
 
-  # be sure to add nix-darwin input for this:
-  # den.hosts.aarch64-darwin.apple.users.arichtman = { };
+  den.hosts.aarch64-darwin.AU-AM-1820.users.arichtman = {
+    includes = [
+      den.aspects.home.work
+    ];
+  };
 }
