@@ -5,6 +5,8 @@
         # Annoyingly, the precedence order of git config means the default user still overrides
         shellAliases = {
           tfpla = "tf providers lock -platform linux_amd64 -platform windows_amd64 -platform darwin_arm64";
+          # Terragrunt init all found in subdirectories excluding Terragrunt caches
+          tgia = "find . -not -path '*/.*' -type f -name terragrunt.hcl -execdir terragrunt init \;";
         };
         file = {
           # TODO: fill out the rest for work
