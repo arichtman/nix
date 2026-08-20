@@ -93,6 +93,8 @@ in {
       kdp = "kd pod";
       kgnp = "kgp --all-namespaces --output wide --field-selector spec.nodeName=";
       kcns = "kc set-context --current --namespace";
+      # Ref: https://stackoverflow.com/questions/47691479/listing-all-resources-in-a-namespace#comment105095503_53016918
+      kgnsa = " kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found";
       kcgc = "kc get-contexts";
       kcc = "kc use-context";
       # Terraform + Terragrunt
