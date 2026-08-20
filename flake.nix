@@ -38,6 +38,10 @@
       url = "https://git.madhouse-project.org/iocaine/nixocaine/archive/main.tar.gz";
     };
 
+    # TODO: move to official channels
+    # Ref: https://chaos.social/@hexa/117111428896044773
+    # TODO: use multiverse packages
+    # Ref: https://fzakaria.com/2026/08/14/nixpkgs-multiverse-fast-mode
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
   outputs = inputs:
