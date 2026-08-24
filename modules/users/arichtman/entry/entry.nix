@@ -4,10 +4,14 @@
       includes = [
         den.aspects.home.myhome
         den.aspects.home.work
-        den.aspects.darwin
+        # TODO: Why does this not proc...
+        # TODO: is it all of them not procing?
+        # den.aspects.darwin
       ];
       # TODO: Double check path
-      homeManager.home.homeDirectory = "/Users/ArielRichtman";
+      # homeManager.home.homeDirectory = "/Users/arichtman";
+      # TODO: Why does this not proc...
+      # darwin.system.stateVersion = 4;
     };
   };
 }

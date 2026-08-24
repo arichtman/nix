@@ -32,6 +32,9 @@
   den.hosts.aarch64-darwin.AU-AM-1820.users.arichtman = {
     includes = [
       den.aspects.home.work
+      den.aspects.darwin.darwin
     ];
+    # TODO: Why does this not proc...
+    # darwin.system.stateVersion = 4;
   };
 }

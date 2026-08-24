@@ -1,10 +1,10 @@
 {
   den.aspects.darwin = {
+    pkgs,
+    lib,
+    ...
+  }: {
     darwin = {
-      pkgs,
-      lib,
-      ...
-    }: {
       # TODO: trim
       environment.systemPackages = with pkgs; [
         # TODO: unavailable/supported on aarch64
