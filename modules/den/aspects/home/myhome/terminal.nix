@@ -117,7 +117,7 @@
             rustup
             # Ref: https://terminaltrove.com
           ]
-          ++ lib.optionals (!pkgs.stdenv.isAarch64) [
+          ++ lib.optionals (!pkgs.stdenv.hostPlatform.isAarch64) [
             trippy
             rsync
             # dockutil

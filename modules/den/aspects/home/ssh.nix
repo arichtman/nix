@@ -1,9 +1,10 @@
 {
   den.aspects.home.ssh = {
-    nixos = {
+    homeManager = {
       programs.ssh = {
         enable = true;
         enableDefaultConfig = false;
+        # TODO: deprecated, refactor
         matchBlocks = {
           "*" = {};
           "proxmox.*" = {

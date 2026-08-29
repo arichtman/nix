@@ -37,8 +37,9 @@
         shellAliases = aliases.myAliases // aliases.classicalAliases;
         stateVersion = home.userSettings.homeManager.stateVersion;
       };
+      # TODO: Why?
       nix.package = pkgs.nix;
-      # Trying to fix desktop issues with untrusted user being disallowed --store argument
+      # TODO: Trying to fix desktop issues with untrusted user being disallowed --store argument
       # warning: ignoring the client-specified setting 'store', because it is a restricted setting and you are not a trusted user
       nix.settings = {
         allowed-users = ["@wheel"];
@@ -53,7 +54,7 @@
         store.cleanup = true;
       };
       # TODO: Remember what the f*** this fixes and update this comment
-      xdg.systemDirs = lib.mkIf pkgs.stdenv.isLinux {
+      xdg.systemDirs = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
         data = ["$HOME/.nix-profile/share"];
       };
     };
