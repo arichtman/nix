@@ -5,16 +5,20 @@
     # bluefin.users.arichtman = {};
   };
 
-  # define an standalone home-manager for work
+  # define an standalone home-manager for ublueOS machines
   den.homes = rec {
     x86_64-linux = {
+      # arichtman = {};
       "arichtman@bluefin" = {
+        # Is required
         userSettings = {
           git.email = "git@richtman.au";
           homeManager.stateVersion = "22.11";
         };
-        # TODO: locate this properly
-        includes = [den.aspects.home.ssh];
+        # includes = [
+        #   den.aspects.home.myhome
+        #   den.aspects.home.ssh
+        # ];
       };
       # TODO: This merge reference is bit clunky but unsure how to reference quoted key directly
       "arichtman@bruce-banner" =
@@ -29,11 +33,23 @@
     };
   };
 
+  den.hosts.x86_64-linux.bluefin.users.arichtman = {
+    # Does not affect
+    # userSettings = {
+    #   git.email = "git@richtman.au";
+    #   homeManager.stateVersion = "22.11";
+    # };
+    # homeManager.home.file.".foo".text = "";
+    # TODO: locate this properly
+    # includes = [
+    #   den.aspects.home.myhome
+    #   den.aspects.home.ssh
+    # ];
+  };
   den.hosts.aarch64-darwin.AU-AM-1820.users.arichtman = {
-    includes = [
-      den.aspects.home.work
-      den.aspects.darwin.darwin
-    ];
+    # includes = [
+    #   den.aspects.none
+    # ];
     # TODO: Why does this not proc...
     # darwin.system.stateVersion = 4;
   };
