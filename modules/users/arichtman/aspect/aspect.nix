@@ -27,9 +27,12 @@
   };
 
   den.aspects.arichtman.provides.AU-AM-1820 = {
+    # Includes go here
     includes = [
       den.aspects.darwin
+      den.aspects.home.myhome
     ];
+    # Needs stateVersion here
     darwin.system.stateVersion = 4;
   };
 }

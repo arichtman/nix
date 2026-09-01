@@ -1,10 +1,10 @@
-{
+{den, ...}:{
   den.aspects.darwin = {
+    darwin = {
     pkgs,
     lib,
     ...
   }: {
-    darwin = {
       # TODO: trim
       environment.systemPackages = with pkgs; [
         # TODO: unavailable/supported on aarch64
@@ -36,10 +36,6 @@
       fonts.packages = [
         pkgs.nerd-fonts.fira-code
       ];
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-      };
       nix.extraOptions = ''
         auto-optimise-store = true
         experimental-features = nix-command flakes
