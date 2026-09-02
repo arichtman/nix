@@ -879,6 +879,11 @@ References:
 Trust chain system install:
 `sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
 
+TODO:
+
+- Make derivation for Alacritty terminal information.
+  [installing support](https://github.com/alacritty/alacritty/issues/3962#issuecomment-862212371), and [Locating the resulting files](https://github.com/alacritty/alacritty/issues/3962#issuecomment-1014294301).
+
 #### MBP M2 setup
 
 1. Update everything `softwareupdate -ia`
