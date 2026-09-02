@@ -7,7 +7,7 @@
     homeManager = {
       home = {
         username = "arichtman";
-        homeDirectory = "/home/arichtman";
+        # homeDirectory = "/home/arichtman";
       };
     };
   };
@@ -27,12 +27,11 @@
   };
 
   den.aspects.arichtman.provides.AU-AM-1820 = {
-    # Includes go here
+    # provides.<hostname> routes to the HOST's own scope (darwin/nixos class
+    # content), not the user's homeManager scope — homeManager includes go
+    # on the host's `users.arichtman.includes` in entry.nix instead.
     includes = [
       den.aspects.darwin
-      den.aspects.home.myhome
     ];
-    # Needs stateVersion here
-    darwin.system.stateVersion = 4;
   };
 }

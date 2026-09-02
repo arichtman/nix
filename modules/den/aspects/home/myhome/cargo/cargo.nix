@@ -4,7 +4,7 @@
     pkgs,
     ...
   }: {
-    homeManager = {home, ...}: let
+    homeManager = let
       # Ref: https://github.com/phip1611/nixos-configs/blob/main/common/modules/user-env/env/cargo.nix
       # List of binaries to create a symlink to in `~/.cargo/bin`.
       # From my testing, adding "cargo" and "rustc" should be enough, but better
@@ -23,7 +23,7 @@
         builtins.foldl'
         (acc: bin:
           {
-            ".cargo/bin/${bin}".source = mkOutOfStoreSymlink "/etc/profiles/per-user/${home.username}/bin/${bin}";
+            ".cargo/bin/${bin}".source = mkOutOfStoreSymlink "/etc/profiles/per-user/${config.home.userName}/bin/${bin}";
           }
           // acc)
         {} # accumulator
@@ -45,7 +45,7 @@
             ".cargo/config.toml".source = ./config.toml;
             ".cargo/env".source = dummyCargoEnvFile;
           };
-        sessionPath = ["/home/${home.username}/.cargo/bin"];
+        sessionPath = ["/home/${config.home.username}/.cargo/bin"];
       };
     };
   };

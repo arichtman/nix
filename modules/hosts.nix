@@ -17,5 +17,12 @@
     };
   };
 
-  den.hosts.aarch64-darwin.AU-AM-1820.users.arichtman = {};
+  den.hosts.aarch64-darwin.AU-AM-1820.users.arichtman = {
+    # This shouldn't be necessary but here we are
+    classes = ["homeManager"];
+    userSettings = {
+      git.email = "Ariel.Richtman@SilverRailTech.com";
+      homeManager.stateVersion = "22.11";
+    };
+  };
 }

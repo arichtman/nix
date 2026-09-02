@@ -1,9 +1,19 @@
-{
+{den, ...}: {
   den.aspects.home.git = {
+    includes = [
+      # `programs.git.settings.user.email` is set from `userSettings.git`,
+      # gated on a different den context arg in each: `home` only exists
+      # for standalone `den.homes` entries, while host-managed users
+      # (`den.hosts.*.users.*`) never get one and set `userSettings`
+      # directly on the user entity instead. A class module that requests
+      # an entity arg that isn't in context is silently skipped, so
+      # exactly one of the two ever contributes.
+      den.aspects.home.git-email-fromHome
+      den.aspects.home.git-email-fromUser
+    ];
     homeManager = {
       pkgs,
       lib,
-      home,
       ...
     }: {
       home.file = {
@@ -98,7 +108,6 @@
               };
             };
             user = {
-              email = home.userSettings.git.email;
               name = "Ariel Richtman";
             };
             alias = {
@@ -185,5 +194,22 @@
         };
       };
     };
+  };
+
+  den.aspects.home.git-email-fromHome = {
+    homeManager = {home, ...}: {
+      programs.git.settings.user.email = home.userSettings.git.email;
+    };
+  };
+
+  den.aspects.home.git-email-fromUser = {
+    homeManager = {
+      user,
+      lib,
+      ...
+    }:
+      lib.mkIf (user ? userSettings) {
+        programs.git.settings.user.email = user.userSettings.git.email;
+      };
   };
 }
