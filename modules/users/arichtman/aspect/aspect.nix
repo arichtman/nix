@@ -27,11 +27,9 @@
   };
 
   den.aspects.arichtman.provides.AU-AM-1820 = {
-    # provides.<hostname> routes to the HOST's own scope (darwin/nixos class
-    # content), not the user's homeManager scope — homeManager includes go
-    # on the host's `users.arichtman.includes` in entry.nix instead.
     includes = [
       den.aspects.darwin
+      den.aspects.home.work
     ];
   };
 }

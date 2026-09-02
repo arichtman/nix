@@ -47,6 +47,7 @@
         ssh = {
           enable = true;
           enableDefaultConfig = false;
+          # TODO: matchBlocks deprecated
           matchBlocks = {
             "*" = {
               forwardAgent = false;
@@ -84,18 +85,21 @@
         };
         git = {
           settings = {
-            # Ref: https://chaos.social/@calisti/112190526505794575
-            "hasconfig:remote.*.url:git@gitlab.com:arichtman-srt/**" = {
-              path = "~/.config/git/work/gitlab";
-            };
-            "hasconfig:remote.*.url:https://gitlab.com/arichtman-srt/**" = {
-              path = "~/.config/git/work/gitlab";
-            };
-            "hasconfig:remote.*.url:git@github.com:arichtman-srt/**" = {
-              path = "~/.config/git/work/github";
-            };
-            "hasconfig:remote.*.url:https://github.com/arichtman-srt/**" = {
-              path = "~/.config/git/work/github";
+            includeIf = {
+              # TODO: tidy
+              # Ref: https://chaos.social/@calisti/112190526505794575
+              "hasconfig:remote.*.url:git@gitlab.com:arichtman-srt/**" = {
+                path = "~/.config/git/work/gitlab";
+              };
+              "hasconfig:remote.*.url:https://gitlab.com/arichtman-srt/**" = {
+                path = "~/.config/git/work/gitlab";
+              };
+              "hasconfig:remote.*.url:git@github.com:arichtman-srt/**" = {
+                path = "~/.config/git/work/github";
+              };
+              "hasconfig:remote.*.url:https://github.com/arichtman-srt/**" = {
+                path = "~/.config/git/work/github";
+              };
             };
           };
         };
