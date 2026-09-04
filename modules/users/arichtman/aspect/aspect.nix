@@ -14,12 +14,14 @@
   # Per-machine configuration
   den.aspects.arichtman.provides.bluefin = {
     includes = [
+      den.batteries.define-user
       den.aspects.home.ssh
     ];
   };
 
   den.aspects.arichtman.provides.bruce-banner = {
     includes = [
+      den.batteries.define-user
       den.aspects.home.nvidia
       den.aspects.home.bashWorkaround
       den.aspects.home.ssh
