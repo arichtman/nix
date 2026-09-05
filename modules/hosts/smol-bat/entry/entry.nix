@@ -2,8 +2,8 @@
   den.hosts.x86_64-linux = {
     smol-bat = {
       settings.volumes = {
-        bootUuid = "5B92-2D97";
-        rootUuid = "fcbe8c60-dcf1-41dd-8734-faf546c5cd78";
+        bootUuid = "D889-8B8F";
+        rootUuid = "a90aba65-55f5-4f3c-bfb8-1b19869a538e";
       };
     };
   };
