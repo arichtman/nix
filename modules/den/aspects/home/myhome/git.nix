@@ -196,6 +196,8 @@
     };
   };
 
+  # TODO: git config user block is placed after remote-conditional includeIf
+  #   which causes user.email to be overriden back to default.
   den.aspects.home.git-email-fromHome = {
     homeManager = {home, ...}: {
       programs.git.settings.user.email = home.userSettings.git.email;
