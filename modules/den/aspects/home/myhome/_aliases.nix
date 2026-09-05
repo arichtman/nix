@@ -1,0 +1,123 @@
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  darwinAliases = {
+    dr = "sudo darwin-rebuild";
+    drc = "dr check --flake .";
+    drs = "dr switch --flake .";
+    flushdns = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder";
+  };
+in {
+  classicalAliases = {
+    fuggit = "git add . && git commit --amend --no-edit && git push --force";
+    gcm = "git checkout main || git checkout master";
+  };
+  myAliases =
+    {
+      nfu = "nix flake update --commit-lock-file";
+      sci = "step certificate inspect";
+      # Linux
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      "...." = "cd ../../..";
+      "....." = "cd ../../../..";
+      j = "jobs";
+      shl = "echo $SHLVL";
+      ee = "exit 0";
+      sc = "sudo systemctl";
+      jc = "journalctl -xeu";
+      nm = "sudo nmcli";
+      rc = "sudo resolvectl";
+      ls = "eza";
+      ll = "eza -las new";
+      cls = "clear";
+      # Direnv
+      de = "direnv";
+      dea = "de allow";
+      der = "de reload";
+      # Editors
+      vi = "hx";
+      vim = "hx";
+      nano = "hx";
+      pico = "hx";
+      hxv = "hx --vsplit";
+      # Jujutsu
+      jgf = "jj git fetch";
+      jgP = "jj git push";
+      jl = "jj log";
+      js = "jj status";
+      jC = "jj commit";
+      jd = "jj describe";
+      # Git
+      g = "git";
+      gc = "g checkout";
+      gC = "g commit";
+      gs = "g status";
+      gS = "g switch";
+      gp = "g pull";
+      gP = "g push";
+      gPf = "gP --force-with-lease";
+      gb = "g branch";
+      gd = "g diff";
+      gf = "g fetch";
+      gR = "g rebase";
+      gRc = "gR --continue";
+      gRa = "gR --abort";
+      gcp = "g cherry-pick";
+      gcpc = "gcp --continue";
+      gcpa = "gcp --abort";
+      gr = "git remote";
+      grg = "gr get-url";
+      grs = "gr set-url";
+      gra = "gr add";
+      grpo = "gr prune origin";
+      gau = "g add --update";
+      gCnv = "gC --no-verify";
+      gCam = "gC --amend";
+      gCC = "gC --amend --no-verify";
+      gbl = "g blame -wCCC";
+      # Kubectl
+      #TODO: feels odd putting aliases in without installing the program but I like to keep the
+      #  environments separate between repos?
+      k = "kubectl";
+      kc = "k config";
+      kl = "k logs";
+      kg = "k get";
+      kd = "k describe";
+      kD = "k delete";
+      kgn = "kg node";
+      kgp = "kg pod";
+      kdn = "kd node";
+      kdp = "kd pod";
+      kgnp = "kgp --all-namespaces --output wide --field-selector spec.nodeName=";
+      kcns = "kc set-context --current --namespace";
+      # Ref: https://stackoverflow.com/questions/47691479/listing-all-resources-in-a-namespace#comment105095503_53016918
+      kgnsa = " kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found";
+      kcgc = "kc get-contexts";
+      kcc = "kc use-context";
+      # Terraform + Terragrunt
+      tg = "terragrunt";
+      tgv = "terragrunt validate";
+      tgi = "terragrunt init";
+      tgp = "terragrunt plan";
+      tga = "terragrunt apply";
+      tgaa = "terragrunt apply -auto-approve";
+      tf = "terraform";
+      tfv = "terraform validate";
+      tfi = "terraform init";
+      tfp = "terraform plan";
+      tfa = "terraform apply";
+      tfaa = "terraform apply -auto-approve";
+      phonesetup = ''        nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb tcpip 5555 \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell settings put global force_fsg_nav_bar 1 \
+                      && nix shell nixpkgs/release-25.11#android-tools --keep-going -c adb shell pm uninstall com.google.android.apps.bard
+      '';
+      # OpenGL issues on non-NixOS systems, apparently
+      alac = "nohup nixGLNvidia alacritty &";
+    }
+    # Have to put here as modules are Nix config and not home-manager (?)
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin darwinAliases;
+}

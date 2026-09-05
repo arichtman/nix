@@ -502,7 +502,7 @@ Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing re
 1. Generate new RNDC secret in CLI, save in GUI.
    `tsig-keygen -a hmac-sha512 rndc-key`
 1. Add script to export the Bind RNDC secret for DynDns to use,
-   [`/usr/local/etc/rc.syshook.d/config/99-bind-ddclient-key`](./99-bind-ddclient-key)
+   [`/usr/local/etc/rc.syshook.d/config/99-bind-ddclient-key`](./hack/99-bind-ddclient-key)
 1. Add Dynamic DNS account type `nsupdatev6`, with the password as `/usr/local/etc/namedb/rndc.conf.key`.
    Confirm at `/usr/local/etc/ddclient.json`.
 
@@ -557,7 +557,7 @@ Set tunable `kernel.ipc.maxsockbuf` to `33554432` (2 * 16777216 - the failing re
    - Type: `Renew DNS for WireGuard on stale connections`
    - Schedule: `0 * * * *`
 
-See [configuration file in repo](./wg0.conf) for example.
+See [configuration file in repo](./hack/wg0.conf) for example.
 
 ###### OpenWRT Site-to-Site Peering
 
@@ -585,7 +585,7 @@ cp ~/frr.conf /usr/local/etc/frr/frr.conf
 service frr restart
 ```
 
-[`~/frr.conf`](./frr.conf)
+[`~/frr.conf`](./hack/frr.conf)
 
 ##### Well-known IPv6 Addressing
 
@@ -878,6 +878,11 @@ References:
 
 Trust chain system install:
 `sudo security add-trusted-cert -r trustRoot -k /Library/Keychains/System.keychain -d ~/Downloads/root-ca.pem`
+
+TODO:
+
+- Make derivation for Alacritty terminal information.
+  [installing support](https://github.com/alacritty/alacritty/issues/3962#issuecomment-862212371), and [Locating the resulting files](https://github.com/alacritty/alacritty/issues/3962#issuecomment-1014294301).
 
 #### MBP M2 setup
 
