@@ -732,6 +732,12 @@ garage layout apply --version 1
 
 #### Kanidm setup
 
+Extend session expiry to 1 week: `kdm group account-policy auth-expiry idm_all_persons 604800`
+
+See blog posts for other apps.
+
+#### Grafana Kanidm setup
+
 ```bash
 export KANIDM_URL=https://id.richtman.au
 export GRAFANA_FQDN=grafana.services.richtman.au
