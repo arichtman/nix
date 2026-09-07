@@ -5,6 +5,7 @@
   secretsPath,
 }: let
   authConfigFile = import ./_authConfig.nix {inherit pkgs;};
+  tracingConfigFile = import ./_tracingConfig.nix {inherit pkgs;};
 in
   # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   lib.cli.toCommandLineShellGNU {} {
@@ -28,7 +29,9 @@ in
     external-hostname = host.name;
     # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
     # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
-    feature-gates = "kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true,kube:MutatingAdmissionPolicy=true";
+    # Ref: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
+    # TODO: Trust bundles stable and default 1.37
+    feature-gates = "kube:PodCertificateRequest=true,kube:ClusterTrustBundle=true,kube:ClusterTrustBundleProjection=true";
     runtime-config = "certificates.k8s.io/v1beta1=true,admissionregistration.k8s.io/v1beta1=true";
     # TODO: deduplicate/couple this
     kubelet-certificate-authority = "${secretsPath}/k8s-ca.pem";
@@ -47,5 +50,6 @@ in
     service-cluster-ip-range = "fda6:3c52:d12b::/64";
     tls-cert-file = "${secretsPath}/kube-apiserver-tls.pem";
     tls-private-key-file = "${secretsPath}/kube-apiserver-tls-key.pem";
+    tracing-config-file = tracingConfigFile;
     # v = 2; # TODO: remove when stabilized
   }
