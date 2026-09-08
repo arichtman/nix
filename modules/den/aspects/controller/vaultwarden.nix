@@ -51,21 +51,9 @@
                   targets = ["localhost:${lib.toString config.services.prometheus.exporters.blackbox.port}"];
                 }
               ];
-              relabel_configs = [
-                # Ref: https://github.com/prometheus/blackbox_exporter#prometheus-configuration
-                # {
-                #   source_labels = [ "__address__" ];
-                #   target_label = "__param_target";
-                # }
-                # {
-                #   source_labels = [ "__param_target" ];
-                #   target_label = "instance";
-                # }
-                # {
-                #   target_label = "__address__";
-                #   replacement = "localhost:8000";
-                # }
-              ];
+              relabel_configs = host.promLocalHostRelabelConfigs;
+              # TODO: Review
+              # Ref: https://github.com/prometheus/blackbox_exporter#prometheus-configuration
             }
           ];
           restic.backups.vaultwarden = let

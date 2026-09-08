@@ -29,14 +29,14 @@
       # Relabel localhost so we don't have to open metrics to the world
       {
         source_labels = ["__address__"];
-        regex = ".*localhost.*";
+        regex = ".*localhost:([0-9]+)";
         target_label = "instance";
-        replacement = net.controllerAddress;
+        replacement = "${net.controllerAddress}:\$1";
       }
       # Remove port numbers
       {
         source_labels = ["__address__"];
-        regex = "(.+):.*";
+        regex = "(.+):[0-9]+";
         target_label = "instance";
         replacement = "\${1}";
       }

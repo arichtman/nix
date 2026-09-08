@@ -63,6 +63,7 @@
             (host.mkLocalScrapeConfig "blackbox" config.services.prometheus.exporters.blackbox.port)
             {
               job_name = "containerd";
+              relabel_configs = host.promLocalHostRelabelConfigs;
               metrics_path = "v1/metrics";
               # This totally fucked my cardinality
               # Hindsight not sure why, should just be a counter
@@ -82,6 +83,7 @@
             }
             {
               job_name = "node_processes";
+              relabel_configs = host.promLocalHostRelabelConfigs;
               static_configs = [
                 {
                   targets = mkForAllMachinesScrapeAddress 9256;
@@ -90,6 +92,7 @@
             }
             {
               job_name = "node_stats";
+              relabel_configs = host.promLocalHostRelabelConfigs;
               static_configs = [
                 {
                   targets = mkForAllMachinesScrapeAddress 9102;
@@ -98,6 +101,7 @@
             }
             {
               job_name = "node_services";
+              relabel_configs = host.promLocalHostRelabelConfigs;
               static_configs = [
                 {
                   targets = mkForAllMachinesScrapeAddress 9558;
