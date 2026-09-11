@@ -25,10 +25,10 @@
           # TODO: Harden
           # Ref: https://codeberg.org/ppb1701/nixos-config/src/branch/main/modules/system.nix#L116
         };
-        journald.extraConfig = ''
-          SystemMaxUse=100M
-          MaxFileSec=7day
-        '';
+        journald.settings.Journal = {
+          SystemMaxUse = "100M";
+          MaxFileSec = "7day";
+        };
         # Ref: https://github.com/NixOS/nixpkgs/issues/408800
         # Ref: https://discourse.nixos.org/t/systemd-exporter-couldnt-get-dbus-connection-read-unix-run-dbus-system-bus-socket-recvmsg-connection-reset-by-peer/64367/4
         dbus.implementation = "broker";
