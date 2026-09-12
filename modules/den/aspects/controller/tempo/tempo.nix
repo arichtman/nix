@@ -136,6 +136,10 @@
         };
         prometheus.scrapeConfigs = [(host.mkLocalScrapeConfig "tempo" 3200)];
       };
+      # Open firewall for otel inbound
+      networking.firewall.extraInputRules = ''
+        ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 4317 accept comment "Allow IPv6 Otel"
+      '';
     };
   };
 }
