@@ -1,14 +1,14 @@
 {
-  den,
-  lib,
-  host,
-  ...
-}: {
-  den.aspects.k8s.masterNode.controller = {pkgs, ...}: {
+  den.aspects.k8s.masterNode.controller = {
     nixos = {
+      pkgs,
+      lib,
+      config,
+      ...
+    }: {
       systemd.services.k8s-controller = let
         controllerArgs = import ./_controllerArgs.nix {
-          inherit lib pkgs host;
+          inherit lib pkgs config;
           secretsPath = "/var/lib/kubernetes/secrets";
         };
       in {

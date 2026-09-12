@@ -2,7 +2,7 @@
   secretsPath,
   lib,
   pkgs,
-  host,
+  config,
 }: let
   controllerKubeconfig = {
     apiVersion = "v1";
@@ -21,7 +21,7 @@
         name = "default";
         cluster = {
           certificate-authority = "${secretsPath}/k8s-ca.pem";
-          server = "https://${host.networking.hostName}.systems.richtman.au:6443";
+          server = "https://${config.networking.hostName}.systems.richtman.au:6443";
         };
       }
     ];
