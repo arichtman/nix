@@ -49,6 +49,7 @@
       inherit inputs;
       # channels-config.allowUnfree = true;
 
+      # TODO: Figure out overlays under Den
       # systems.modules.nixos = [inputs.nixocaine.nixosModules.default];
       # overlays = with inputs; [
       #   nixgl.overlays.default
