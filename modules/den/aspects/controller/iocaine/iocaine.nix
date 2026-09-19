@@ -8,15 +8,16 @@
       iocaineMetricsPort = "42042";
     in
       {host}: {
-        imports = with inputs.nixocaine.nixosModules; [
-          default
-        ];
+        # TODO: Figure out Nixocaine overlay under Den
+        # imports = with inputs.nixocaine.nixosModules; [
+        #   default
+        # ];
 
         # Ref: https://iocaine.madhouse-project.org/documentation/3/getting-started/nixos/
         services = {
           iocaine = {
             enable = true;
-            config = {
+            settings = {
               server = {
                 default = {
                   bind = "[::1]:${iocainePort}";
@@ -31,7 +32,7 @@
                   persist-interval = "1h";
                 };
               };
-              handler.default.config = {
+              handler.default.settings = {
                 "ai-robots-txt-path" = "/etc/iocaine/data/ai.robots.txt-robots.json";
                 sources = {
                   "training-corpus" = [
