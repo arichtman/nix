@@ -37,6 +37,7 @@
               ripgrep
               jq
               yq
+              jsonschema-cli
               helix
               deploy-rs
               statix
@@ -52,7 +53,6 @@
               # SPIFFE
               spire
               # Certificates and secrets
-              xkcdpass
               step-cli
               openssl
               # Flake tooling
