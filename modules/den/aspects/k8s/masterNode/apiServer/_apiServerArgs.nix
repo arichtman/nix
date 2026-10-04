@@ -12,8 +12,6 @@ in
     # Need privileged for Cilium
     allow-privileged = true;
     authentication-config = authConfigFile;
-    # TODO: This seems sane
-    # anonymous-auth = false;
     authorization-mode = "RBAC,Node";
     bind-address = "::";
     # TODO: Apparently this *won't* make it search for certificates relative to this.
@@ -24,6 +22,7 @@ in
     etcd-certfile = "${secretsPath}/kube-apiserver-etcd-client.pem";
     etcd-keyfile = "${secretsPath}/kube-apiserver-etcd-client-key.pem";
     etcd-servers = "https://[::1]:2379";
+    # TODO: Normalize this to public address? Need mTLS kubectl plugin though and will depend on router.
     external-hostname = host.name;
     # Ref: https://kubernetes.io/docs/concepts/storage/projected-volumes/#clustertrustbundle
     # Ref: https://github.com/kubernetes/kubernetes/blob/810e9e212ec5372d16b655f57b9231d8654a2179/cmd/kube-controller-manager/app/certificates.go#L289
@@ -35,8 +34,11 @@ in
     kubelet-certificate-authority = "${secretsPath}/k8s-ca.pem";
     kubelet-client-certificate = "${secretsPath}/kube-apiserver-kubelet-client.pem";
     kubelet-client-key = "${secretsPath}/kube-apiserver-kubelet-client-key.pem";
-    api-audiences = "api,https://kubernetes.default.svc";
-    service-account-issuer = "https://kubernetes.default.svc";
+    # TODO: Delete if we don't need
+    # api-audiences = "api,https://kubernetes.default.svc";
+    # TODO: DRY
+    service-account-issuer = "https://k8s.${host.net.primaryDomain}";
+    service-account-jwks-uri = "https://k8s.${host.net.primaryDomain}";
     service-account-key-file = "${secretsPath}/service-account.pem";
     service-account-signing-key-file = "${secretsPath}/service-account-key.pem";
     # Note: 1.33+ has resources for this https://kubernetes.io/docs/tasks/network/reconfigure-default-service-ip-ranges/

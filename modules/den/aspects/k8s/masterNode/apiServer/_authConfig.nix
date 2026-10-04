@@ -62,10 +62,13 @@
     anonymous = {
       enabled = true;
       conditions = [
+        {path = "/metrics";} # Note: this still needs RBAC bindings else `system:anonymous` can't perform Get on it
         {path = "/livez";}
         {path = "/readyz";}
         {path = "/healthz";}
-        {path = "/metrics";} # Note: this still needs RBAC bindings else `system:anonymous` can't perform Get on it
+        # Required for OIDC discovery and using service account JWT tokens elsewhere
+        {path = "/.well-known/openid-configuration";}
+        {path = "/openid/v1/jwks";}
       ];
     };
   };
