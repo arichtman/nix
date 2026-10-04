@@ -1,0 +1,84 @@
+# Can add routes manually to skip going via the router
+# sudo route -6 add '2403:581e:ab78:2::/128' gw '2403:581e:ab78:0:4cd9:b20:700d:b2b3' dev wlo1
+# sudo route -6 del '2403:581e:ab78:2::/128' gw '2403:581e:ab78:0:4cd9:b20:700d:b2b3' dev wlo1
+# function get_bgp_pod_name () { kubectl get po -l app.kubernetes.io/name=cilium-agent -ocustom-columns=' NAME:.metadata.name,NODE:.spec.nodeName ' --no-headers | grep fat-controller | cut -d' ' -f1 ; }
+# cilium bgp routes available ipv6 unicast
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+  # Nodes only advertise their own network ranges,
+  #   so in order for VIPs and pod CIDRs to be advertised,
+  #   each node must peer.
+  # Notionally, there's no workloads to reach on the control node,
+  #   and leaning on standard labels is simple.
+  nodeSelector:
+    matchLabels:
+      node-role.kubernetes.io/worker: worker
+  bgpInstances:
+  - name: "k8s.richtman.au"
+    localASN: 64512
+    peers:
+    - name: opnsense
+      peerASN: 64512
+      # Not allowed DNS names on the CRD,
+      #   can't use link-local either
+      #   (probably due to ambiguity of interface),
+      #   which would have avoided public prefix dependency.
+      # Ref: https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-configuration/#bgp-cluster-configuration
+      peerAddress: 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
+      peerConfigRef:
+        name: opnsense
+---
+apiVersion: cilium.io/v2
+kind: CiliumBGPPeerConfig
+metadata:
+  name: opnsense
+spec:
+  gracefulRestart:
+    enabled: true
+  families:
+    - afi: ipv6
+      safi: unicast
+      advertisements:
+        matchLabels:
+          bgp.cilium.k8s.richtman.au/advertise: "true"
+---
+apiVersion: cilium.io/v2
+kind: CiliumBGPAdvertisement
+metadata:
+  name: cluster-external
+  labels:
+    bgp.cilium.k8s.richtman.au/advertise: "true"
+spec:
+  advertisements:
+    - advertisementType: "Service"
+      service:
+        addresses:
+          - LoadBalancerIP
+      # *** REQUIRED OR NOTHING GETS ADVERTISED ***
+      selector:
+        matchExpressions:
+        - {key: somekey, operator: NotIn, values: ['never-used-value']}
+---
+apiVersion: cilium.io/v2
+kind: CiliumBGPAdvertisement
+metadata:
+  name: cluster-internal
+  labels:
+    bgp.cilium.k8s.richtman.au/advertise: "true"
+spec:
+  advertisements:
+    - advertisementType: "PodCIDR"
+---
+# No private-only ULA services for now...
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: public-subnet
+spec:
+  # Plenty of space but also no reason not to use them.
+  # allowFirstLastIPs: "Yes"
+  blocks:
+    - cidr: 2403:581e:ab78:2::/64

@@ -1,0 +1,77 @@
+# Install gateway API
+# kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/standard-install.yaml
+# helm repo add cilium https://helm.cilium.io/
+# kubectl delete node $(kubectl get nodes --no-headers | grep NotReady | awk '{print $1;}')
+# k delete ciliumnodes --all
+# k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all -i=false
+# dog ../nodes.txt | xargs -I% ssh %.systems.richtman.au sudo systemctl restart k8s-kubelet
+# ../label.sh
+# function validate_values () { jsonschema-cli validate ~/Downloads/cilium/values.schema.json -i ./cilium-values.yaml ; } ; alias vv=validate_values
+# vv && helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-values.yaml --version 1.20.2
+# k apply -f ./cilium-bgp.yaml
+# kubectl -n kube-system exec ds/cilium -- cilium-dbg status --verbose
+# kubectl -n kube-system exec ds/cilium -- cilium-dbg service list
+
+cluster:
+  name: k8s-richtman-au
+# No kube-proxy
+kubeProxyReplacement: true
+# Enables healthz endpoint
+kubeProxyReplacementHealthzBindAddr: "[::]:10256"
+# Required to bypass the non-working default APIserver service without kube-proxy
+k8sServiceHost: fat-controller.systems.richtman.au
+k8sServicePort: 6443
+# Set our networking stack
+ipv4:
+  enabled: false
+ipv6:
+  enabled: true
+
+# Enable BGP to advertise our ranges and VIPs
+bgpControlPlane:
+  enabled: true
+
+# Enable gateway API
+gatewayAPI:
+  enabled: true
+# Trying to get rid of tunneling
+routingMode: native
+ipv6NativeRoutingCIDR: 2403:581e:ab78::/64
+# BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
+#   and since we're not peering *between* the nodes - this setting.
+autoDirectNodeRoutes: true
+# Probably don't need this as we're not using fd00::/whatever but that seems to capture the link-locals
+# time=2026-10-04T01:04:31.712971864Z level=warn source=/go/src/github.com/cilium/cilium/pkg/datapath/linux/node.go:275 msg="Unable to install direct node route" module=agent.datapath route="{Ifindex: 0 Dst: 2403:581e:ab78:1:5::/80 Src: <nil> Gw: fd00::602 Flags: [] Table: 0 Realm: 0}" error="route to destination fd00::602 contains gateway fe80::1ced:c0ff:fed0:dad, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes"
+directRoutingSkipUnreachable: true
+
+# I think this is for outside-of-cluster, local traffic to not have to go via the router.
+l2NeighDiscovery:
+  enabled: true
+
+bpf:
+  masquerade: true
+
+ipam:
+  operator:
+    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
+    # Ref: https://github.com/cilium/cilium/issues/20756
+    # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
+    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
+    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
+    clusterPoolIPv6MaskSize: 80
+
+# -- Roll out cilium agent pods automatically when configmap is updated.
+rollOutCiliumPods: true
+
+operator:
+  rollOutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
+  # Set to one for ease of log inspection
+  # TODO: set back to HA once working
+  replicas: 1
+
+debug:
+  enabled: true
+
+# This makes kubectl logs and execs default nicely
+podAnnotations:
+  kubectl.kubernetes.io/default-container: cilium-agent

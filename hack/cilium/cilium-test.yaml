@@ -1,0 +1,49 @@
+# Reset our test setup
+# k delete ns lb-test -i=false ; k create ns lb-test && k apply -f cilium-test.yaml && sed 's/6/7/g' cilium-test.yaml | k apply -f -
+# Convenience handles
+# alias kl='kubectl -n lb-test'
+# function get_pod_name () { kl get po -l app=ctest-$1 --no-headers -ocustom-columns='DUMMY:.metadata.name' | shuf | head -1 ; }
+# function get_pod_ip () { kl get po -l app=ctest-$1 --no-headers -ocustom-columns='DUMMY:.status.podIPs[0].ip' | shuf | head -1 ; }
+# One-shot test east-west
+# kl exec -it $(get_pod_name 6) -- nc -zvw 2 $(get_pod_ip 7) 80
+# kl scale deploy --replicas 2 ctest-6
+# Test N-S
+# curl -s "http://[$lbip]/" | jq ' .host.ip, .environment.MY_NODE_NAME '
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ctest-6
+  namespace: lb-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: ctest-6 }
+  template:
+    metadata:
+      labels: { app: ctest-6 }
+    spec:
+      containers:
+        - name: ctest
+          image: docker.io/ealen/echo-server:latest
+          ports: [{ containerPort: 80 }]
+          env:
+          - name: MY_NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ctest-6
+  namespace: lb-test
+spec:
+  type: LoadBalancer
+  # Need this or else every node will advertise the VIP over BGP, even when they have no local backend.
+  # You do *not* want to set internalTrafficPolicy also as it'll just dead-end when no local backend.
+  externalTrafficPolicy: Local
+  selector: { app: ctest-6 }
+  ports:
+    - port: 80
+      targetPort: 80

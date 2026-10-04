@@ -42,6 +42,7 @@ let
       # Ref: https://coredns.io/plugins/loop/#troubleshooting-loops-in-kubernetes-clusters
       resolvConf = "/run/systemd/resolve/resolv.conf";
       # Note: This must match the clusterIP given to CoreDNS
+      # TODO: Wire this from the API server argument
       clusterDNS = ["fda6:3c52:d12b::10"];
       imageMaximumGCAge = "604800s";
     };

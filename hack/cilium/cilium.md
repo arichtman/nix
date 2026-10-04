@@ -3,21 +3,47 @@
 To do:
 
 - Ensure in-cluster traffic doesn't traverse the router
-- Figure out a way to locally use either Helm or JSONschema to identify unused input values
 - Rename cluster
 - See about sending traces somewhere
-- Enable Gateway API or Load balancers
+- Get Gateway API working
+- `MutatingAdmissionPolicy` for Service type LoadBalancer `externalTrafficPolicy: Local`?
 - Look into pmtuDiscovery
 - Enable Grafana dashboard, prom metrics, serviceMonitors
-- Look into BPF datapath mode using netkit
-- Exclude labels from identity
+- Look into BPF datapath mode using netkit: `dataPathMode: "netkit-l2"`
+- See if disabling podCIDR advertisements, putting the range in the LAN /64, and enabling l2ND allows for native pod access.
+- See if enabling ClusterIP advertisements means in-cluster VIPs are accessible on LAN.
+- Remove hard-coding or public prefix dependency from `CiliumBGPClusterConfig` and `CiliumLoadBalancerIPPool`.
+  Either figure out autodiscovery (looks like default gateway on worker nodes is the router link-local address),
+  or make it dynamically updated, or well-known (link-local/ULA), or DNS or something.
+- See if bootstrapping the operator pod directly onto the control node means we can remove the Helm values dependency on public DNS (`k8sServiceHost`).
+- Remove or dynamic Helm values `ipv6NativeRoutingCIDR` input.
+- Revisit IPAM mode maybe to see about dynamic prefix usage.
+- Exclude labels from identity?
 - `defaultLBServiceIPAM`?
 - `externalIPs.enabled`?
-- ~~Re-enable default operator HA~~
+- Re-enable default operator HA
+- ~~Figure out a way to locally use either Helm or JSONschema to identify unused input values.~~
 - ~~Enable Hubble (relay seems to fail without CoreDNS/default k8s service)~~
 - ~~Fix in-cluster API server access by default service~~
 
 Notes:
+
+Seems that with Services type Loadbalancer:
+
+1. Multiple nodes implement the VIP, but even if they're all advertising the same VIP to the router over BGP the router's table only lands one route.
+   So it's sticky and a bit of a crapshoot.
+1. If you enter N-S on a node that does _not_ have a local pod, the source IP will appear as the entry node's IP.
+   _With_ local pods to the node, I've observed either the genuine client source IP, or the node's IP.
+   If no local routes, then it'll traverse the router, get stickied on the one node, and always show that source IP.
+
+Multipath:
+
+1. Check FRR has multipath:`vtysh -c 'show bgp ipv6 unicast'`
+1. Confirm Kernel has it as well: `netstat -rn`
+   (may need to `sysctl -w net.route.multipath=1`)
+   (may also need `net.route.hash_outbound`)
+
+Note that this will fuck with multi-WAN, which we may have wanted for availability.
 
 Gateway API needs l7 envoy configured.
 Would be cool if this supported TLS offload for workloads,
@@ -66,8 +92,8 @@ kd CiliumBGPClusterConfig cilium-bgp
 kd CiliumBGPPeerConfig primary-router
 kd CiliumBGPNodeConfig $n
 # Check operator and agent logs
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | cut -d' ' -f1) | grep "bgp"
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $n | cut -d' ' -f1) | grep "bgp"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | head -1 | cut -d' ' -f1) | grep "bgp"
+kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $node | cut -d' ' -f1) | grep "bgp"
 ```
 
 FRR config:
@@ -449,6 +475,16 @@ MountVolume.SetUp failed for volume "kube-api-access-r6z7b" : object "kube-syste
 Solution: Disabling automatic svc account token mounting removes the error.
 Manually mounting the token doesn't yield the error.
 [ref](https://stackoverflow.com/questions/69038012/mountvolume-setup-failed-for-volume-kube-api-access-fcz9j-object-default)
+
+#### Session flaps between active and idle
+
+FRR `bgpd` is rejecting the session due to AS.
+Either make `bgpd` set the AS itself on the peer group, or set the peer group to `remote-as internal` and ensure ASNs are same both sides.
+
+```
+time=2026-10-02T23:58:45.495439935Z level=debug source=/go/src/github.com/cilium/cilium/pkg/bgp/gobgp/server.go:175 msg="Peer state change" module=agent.controlplane.bgp-control-plane instance=richtman.au component=gobgp-server asn=64513 peer="&{Type:3 Peer:{Conf:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef NeighborInterface: PeerGroup:} State:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef SessionState:BGP_FSM_OPENCONFIRM AdminState:ADMIN_STATE_UP RouterID:invalid IP PeerGroup: RemoteCap:[] LocalCap:[0x51034e30c40 0x510383b9cc0 0x51034e30c60 0x51038c172c0 0x51038c17320 0x5103899f980] DisconnectReason:DISCONNECT_REASON_UNSPECIFIED DisconnectMessage:open-msg-received} Transport:{LocalAddress::: LocalPort:0 RemotePort:0}}}"
+time=2026-10-02T23:58:45.495578002Z level=debug source=/go/src/github.com/cilium/cilium/pkg/bgp/gobgp/server.go:175 msg="Peer state change" module=agent.controlplane.bgp-control-plane instance=richtman.au component=gobgp-server asn=64513 peer="&{Type:3 Peer:{Conf:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef NeighborInterface: PeerGroup:} State:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef SessionState:BGP_FSM_IDLE AdminState:ADMIN_STATE_UP RouterID:invalid IP PeerGroup: RemoteCap:[] LocalCap:[0x51034e30d00 0x510380d80f0 0x51034e30d20 0x51038c175f0 0x51038c17620 0x5103899fd00] DisconnectReason:DISCONNECT_REASON_INVALID_MSG DisconnectMessage:invalid-msg} Transport:{LocalAddress::: LocalPort:0 RemotePort:0}}}
+```
 
 #### Misc
 

@@ -9,8 +9,6 @@
 in
   # https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/
   lib.cli.toCommandLineShellGNU {} {
-    # "--advertise-address"
-    # "2001:db8:1234:5678::1"
     # Need privileged for Cilium
     allow-privileged = true;
     authentication-config = authConfigFile;
@@ -41,8 +39,6 @@ in
     service-account-issuer = "https://kubernetes.default.svc";
     service-account-key-file = "${secretsPath}/service-account.pem";
     service-account-signing-key-file = "${secretsPath}/service-account-key.pem";
-    # Set services top of the delegated prefix range
-    # Seems like Cilium cannot manage this
     # Note: 1.33+ has resources for this https://kubernetes.io/docs/tasks/network/reconfigure-default-service-ip-ranges/
     # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:ffff::0/64";
     # Ref: https://www.unique-local-ipv6.com/
