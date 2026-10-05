@@ -8,6 +8,12 @@
             extraConfig = ''
               handle_path /www* {
                 import iocaine
+                @atomFeeds {
+                  path *atom.xml
+                }
+                header @atomFeeds {
+                  Content-Type application/atom+xml
+                }
                 root * /var/lib/caddy/www
                 file_server
               }
