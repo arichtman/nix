@@ -4,40 +4,33 @@
       programs.ssh = {
         enable = true;
         enableDefaultConfig = false;
-        # TODO: deprecated, refactor
-        matchBlocks = {
-          "*" = {};
-          "proxmox.*" = {
-            user = "root";
-          };
-          "opnsense.*" = {
-            user = "root";
-          };
-          "*.local" = {
+        settings = {
+          "Host nixos *.systems.richtman.au *.local" = {
             user = "nixos";
           };
-          "*.systems.richtman.au" = {
+          "Host *.local" = {
             user = "nixos";
           };
-          github = {
+          "Host proxmox.*" = {
+            user = "root";
+          };
+          "Host opnsense.*" = {
+            user = "root";
+          };
+          "Host github" = {
             hostname = "github.com";
             user = "git";
           };
-          probics = {
-            user = "User";
-            hostname = "probics.ddns.net";
-            identityFile = "~/.ssh/probics-home";
-            port = 2222;
-            localForwards = [
-              {
-                bind.address = "";
-                bind.port = 5000;
-                host.address = "localhost";
-                host.port = 3389;
-              }
-            ];
-          };
-          ap = {
+          # No port forwarding at present on the router as site2site VPN is in place
+          # "Host probics" = {
+          #   user = "User";
+          #   hostname = "mm3756c.glddns.com";
+          #   identityFile = "~/.ssh/probics-home";
+          #   port = 2222;
+          #   # THe ports might be backwards here...
+          #   localForward = "5000 localhost:3389";
+          # };
+          "Host ap" = {
             user = "chanya";
             hostname = "ap.internal";
           };
@@ -46,32 +39,6 @@
           };
           pm = {
             hostname = "proxmox.internal";
-          };
-          # All the user repetition is dumb but it wasn't hitting the "*.systems.richtman.au" match on my MBP
-          # TODO: Revisit and tidy if no more MBP
-          fc = {
-            hostname = "fat-controller.systems.richtman.au";
-            user = "nixos";
-          };
-          pz = {
-            hostname = "patient-zero.systems.richtman.au";
-            user = "nixos";
-          };
-          ds = {
-            hostname = "dr-singh.systems.richtman.au";
-            user = "nixos";
-          };
-          sb = {
-            hostname = "smol-bat.systems.richtman.au";
-            user = "nixos";
-          };
-          tm = {
-            hostname = "tweedledum.systems.richtman.au";
-            user = "nixos";
-          };
-          te = {
-            hostname = "tweedledee.systems.richtman.au";
-            user = "nixos";
           };
         };
       };
