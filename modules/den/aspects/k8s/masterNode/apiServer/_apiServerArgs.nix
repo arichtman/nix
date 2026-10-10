@@ -34,11 +34,10 @@ in
     kubelet-certificate-authority = "${secretsPath}/k8s-ca.pem";
     kubelet-client-certificate = "${secretsPath}/kube-apiserver-kubelet-client.pem";
     kubelet-client-key = "${secretsPath}/kube-apiserver-kubelet-client-key.pem";
-    # TODO: Delete if we don't need
-    # api-audiences = "api,https://kubernetes.default.svc";
-    # TODO: DRY
-    service-account-issuer = "https://k8s.${host.net.primaryDomain}";
-    service-account-jwks-uri = "https://k8s.${host.net.primaryDomain}";
+    # For AWS IdP to recognize our service account JWTs, this apparently has to match or otherwise be the endpoint holding the openid-configuration
+    # TODO: DRY?
+    service-account-issuer = "https://discovery.k8s.${host.net.primaryDomain}";
+    service-account-jwks-uri = "https://discovery.k8s.${host.net.primaryDomain}/openid/v1/jwks";
     service-account-key-file = "${secretsPath}/service-account.pem";
     service-account-signing-key-file = "${secretsPath}/service-account-key.pem";
     # Note: 1.33+ has resources for this https://kubernetes.io/docs/tasks/network/reconfigure-default-service-ip-ranges/

@@ -1,0 +1,22 @@
+# Ref: https://outshift.cisco.com/blog/insights/kubernetes-oidc
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: kube-system
+spec:
+  serviceAccountName: external-dns
+  containers:
+    - image: docker.io/library/nginx:alpine
+      name: oidc
+      volumeMounts:
+        - mountPath: /var/run/secrets/tokens
+          name: oidc-token
+  volumes:
+    - name: oidc-token
+      projected:
+        sources:
+          - serviceAccountToken:
+              path: oidc-token
+              expirationSeconds: 7200
+              audience: sts.amazonaws.com

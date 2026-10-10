@@ -1,14 +1,12 @@
-# Install gateway API
-# kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/standard-install.yaml
 # helm repo add cilium https://helm.cilium.io/
-# kubectl delete node $(kubectl get nodes --no-headers | grep NotReady | awk '{print $1;}')
+# kubectl delete node $(kubectl get nodes --no-headers | awk '{print $1;}')
 # k delete ciliumnodes --all
 # k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all -i=false
 # dog ../nodes.txt | xargs -I% ssh %.systems.richtman.au sudo systemctl restart k8s-kubelet
 # ../label.sh
-# function validate_values () { jsonschema-cli validate ~/Downloads/cilium/values.schema.json -i ./cilium-values.yaml ; } ; alias vv=validate_values
-# vv && helm upgrade --install cilium cilium/cilium --namespace kube-system --values cilium-values.yaml --version 1.20.2
-# k apply -f ./cilium-bgp.yaml
+# function validate_values () { jsonschema-cli validate ~/Downloads/cilium/values.schema.json -i ./values.yaml ; } ; alias vv=validate_values
+# vv && helm upgrade --install cilium cilium/cilium --namespace kube-system --values values.yaml --version 1.20.2
+# k apply -f ./bgp.yaml
 # kubectl -n kube-system exec ds/cilium -- cilium-dbg status --verbose
 # kubectl -n kube-system exec ds/cilium -- cilium-dbg service list
 
@@ -50,13 +48,16 @@ l2NeighDiscovery:
 
 bpf:
   masquerade: true
+  # Note: netkit incompatible and in beta but required for gateway API
+  tproxy: true
 
 ipam:
   operator:
+    # Use native LAN CIDR
+    # TODO: Get secondary ULA CIDR advertised from router and use that
+    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
+    # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
-    # Ref: https://github.com/cilium/cilium/issues/20756
-    # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
-    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
 
@@ -68,6 +69,23 @@ operator:
   # Set to one for ease of log inspection
   # TODO: set back to HA once working
   replicas: 1
+
+hubble:
+  # Failed to create peer notify client for peers change notification
+  # Ref: https://github.com/cilium/cilium/issues/20130#issuecomment-1267605959
+  peerService:
+    clusterDomain: cluster.local
+  # This will allow use of user-namespaces for hubble components.
+  # Not all clusters support user-namespaces.
+  # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+  hostUsers: true
+  relay:
+    # enabled: true
+    rollOutPods: true
+    # tls: {}
+  ui:
+    # enabled: true
+    rollOutPods: true
 
 debug:
   enabled: true

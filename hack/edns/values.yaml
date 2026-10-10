@@ -1,0 +1,62 @@
+# alias vv='jsonschema-cli validate ~/Downloads/external-dns/values.schema.json -i ./values.yaml'
+# vv && helm upgrade --install external-dns edns/external-dns --version 1.23.0 -f values.yaml
+
+policy: "sync"
+provider:
+  name: aws
+
+# TODO: Swap to local DNS when we host authoritative
+# Set to much, much lower loop duration...
+interval: "10h"
+#   and hope it works event-driven like this.
+triggerLoopOnEvent: true
+
+# Recommended to be set, presumably tracability
+txtOwnerId: k8s.richtman.au
+
+# New Gateway API feature
+enableGatewayListenerSets: true
+
+# Have to override to allow gateway sources
+# Unfortunately, some gateway are bugged
+sources:
+  - service
+  - ingress
+  - gateway-httproute
+  - gateway-tlsroute
+  # - gateway-tcproute
+  # - gateway-udproute
+
+# TODO: ensure we don't try to publish anything not ours
+# domainFilters:
+#   - services.richtman.au
+labelFilter: external-dns.k8s.richman.au/public
+
+
+# extraArgs:
+#   fqdn-template: '{{ .Name }}.services.richtman.au'
+
+env:
+  # Required otherwise it resolves A record and fails to connect
+  # AWS golang SDK has no single-stack v6 flag
+  # Ref: https://github.com/kubernetes-sigs/external-dns/issues/5981#issuecomment-3621951267
+  # Ref: https://github.com/aws/aws-sdk-go-v2/issues/2952
+  - name: AWS_USE_DUALSTACK_ENDPOINT
+    value: 'true'
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::806676312179:role/k8s.richtman.au/external-dns@kube-system
+  - name: AWS_DEFAULT_REGION
+    value: ap-southeast-2
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/tokens/aws
+extraVolumeMounts:
+  - mountPath: /var/run/secrets/tokens
+    name: oidc-token
+extraVolumes:
+  - name: oidc-token
+    projected:
+      sources:
+        - serviceAccountToken:
+            path: aws
+            expirationSeconds: 7200
+            audience: sts.amazonaws.com

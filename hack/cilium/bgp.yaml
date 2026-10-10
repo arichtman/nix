@@ -9,8 +9,7 @@ metadata:
   name: cilium-bgp
 spec:
   # Nodes only advertise their own network ranges,
-  #   so in order for VIPs and pod CIDRs to be advertised,
-  #   each node must peer.
+  #   so in order for VIPs to be advertised, each node must peer.
   # Notionally, there's no workloads to reach on the control node,
   #   and leaning on standard labels is simple.
   nodeSelector:
@@ -62,16 +61,6 @@ spec:
         matchExpressions:
         - {key: somekey, operator: NotIn, values: ['never-used-value']}
 ---
-apiVersion: cilium.io/v2
-kind: CiliumBGPAdvertisement
-metadata:
-  name: cluster-internal
-  labels:
-    bgp.cilium.k8s.richtman.au/advertise: "true"
-spec:
-  advertisements:
-    - advertisementType: "PodCIDR"
----
 # No private-only ULA services for now...
 apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
@@ -79,6 +68,8 @@ metadata:
   name: public-subnet
 spec:
   # Plenty of space but also no reason not to use them.
-  # allowFirstLastIPs: "Yes"
+  allowFirstLastIPs: "Yes"
   blocks:
-    - cidr: 2403:581e:ab78:2::/64
+    # Need to avoid overlap cause IPAM is sequential
+    # If we can swap out the allocator for (pseudo)random we can maybe flatten it to the LAN subnet
+    - cidr: 2403:581e:ab78:ffff::/64

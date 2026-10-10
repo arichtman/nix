@@ -2,9 +2,13 @@
 
 To do:
 
-- Ensure in-cluster traffic doesn't traverse the router
+- Check VIP routing with BGP - seems there might be loops or something funky going on.
+  [GitHub issue solution](https://github.com/cilium/cilium/issues/34972#issuecomment-2993831467) of SNAT cluster range on the router to set gateway IP as source.
+- Ensure in-cluster traffic doesn't traverse the router.
 - Rename cluster
 - See about sending traces somewhere
+- Verify multipath from external.
+  Internally I seem stickied, both from desktop and router/gateway.
 - Get Gateway API working
 - `MutatingAdmissionPolicy` for Service type LoadBalancer `externalTrafficPolicy: Local`?
 - Look into pmtuDiscovery
