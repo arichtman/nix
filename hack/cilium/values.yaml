@@ -32,6 +32,11 @@ bgpControlPlane:
 # Enable gateway API
 gatewayAPI:
   enabled: true
+  # Seems like a modern protocol negotiation thing to do
+  #   Also HTTP/2 is good in this case.
+  enableAlpn: true
+  # Hopefully only route to node-local endpoints
+  externalTrafficPolicy: "Local"
 # Trying to get rid of tunneling
 routingMode: native
 ipv6NativeRoutingCIDR: 2403:581e:ab78::/64
