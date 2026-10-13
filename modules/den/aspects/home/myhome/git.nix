@@ -109,6 +109,9 @@
             };
             user = {
               name = "Ariel Richtman";
+              # Apparently stops leakage of system-derived "email" address
+              # Ref: https://github.com/anydigital/git-private-emails/blob/a030c5742e75fc46358dfc9344db0be847c37968/.gitconfig#L16-L17
+              useConfigOnly = true;
             };
             alias = {
               c = "commit";
