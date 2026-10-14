@@ -268,21 +268,32 @@
           enable = true;
           enableCompletion = true;
           autosuggestion.enable = true;
-          autocd = true;
           syntaxHighlighting.enable = true;
-          initContent = ''
+          initContent = lib.mkOrder 0 ''
+            # TODO: Move somewhere appropriate,
+            #   file-wise for git, and options-wise for nix
             function gedditdafuckouttahere () {
               git submodule deinit --force $1 ;
               rm -fr .git/modules/$1 ;
               git rm --force $1 ;
             }
-            function llog { journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p InvocationID --value $1) ; }
             if command -v nix-your-shell > /dev/null; then
               nix-your-shell zsh | source /dev/stdin
             fi
-            function rscleanup () {
-              kubectl delete rs $(kubectl get rs -l app.kubernetes.io/instance=$1 -o jsonpath='{ .items[?(@.spec.replicas==0)].metadata.name }') --interactive=false ;
-            }
+            # TODO: Make work/mac-only
+            if [ ! -t 0 -o $CLAUDECODE ] ; then
+              export ZELLIJ_AUTO_ATTACH="false"
+            fi
+          '';
+          envExtra = ''
+            # Enables direnv for Claude which should allow access to flake PATHs
+            # Ref: https://github.com/anthropics/claude-code/issues/2110#issuecomment-2996564886
+            if command -v direnv >/dev/null; then
+              if [[ ! -z "$CLAUDECODE" ]]; then
+                eval "$(direnv hook zsh)"
+                eval "$(DIRENV_LOG_FORMAT= direnv export zsh)"  # Need to trigger "hook" manually
+              fi
+            fi
           '';
         };
       };

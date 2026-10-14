@@ -97,6 +97,7 @@ in {
       kgnsa = " kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found";
       kcgc = "kc get-contexts";
       kcc = "kc use-context";
+      rscleanup = "kubectl delete rs $(kubectl get rs -l app.kubernetes.io/instance=$1 -o jsonpath='{ .items[?(@.spec.replicas==0)].metadata.name }') --interactive=false";
       # Terraform + Terragrunt
       tg = "terragrunt";
       tgv = "terragrunt validate";
@@ -117,6 +118,7 @@ in {
       '';
       # OpenGL issues on non-NixOS systems, apparently
       alac = "nohup nixGLNvidia alacritty &";
+      llog = " journalctl _SYSTEMD_INVOCATION_ID=$(systemctl show -p InvocationID --value $1)";
     }
     # Have to put here as modules are Nix config and not home-manager (?)
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin darwinAliases;
