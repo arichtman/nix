@@ -77,6 +77,19 @@ Networking stuff
 - [Post about ingress](https://hdev.im/@farcaller/113018985033564592)
 - [Offer to help](https://hachyderm.io/@jpetazzo/112371149239851518)
 
+## ClusterIP timouts
+
+- Can see some "Invalid source IP" and "Invalid L2 protocol" drops when running monitor and test.
+  Looks like `LLC` indicates Link-Local connection, and these should be working?
+  [issue](https://github.com/cilium/cilium/issues/47645)
+  Everything in the drop monitor produced during testing was either ICMP or LLC.
+  I can't see it dropping service packets.
+- Cilium CLI's connectivity test assumes DNS is working, so just dies without useful info.
+- `bpf_lxc` responsible for Pod -> ClusterIP load balancing.
+  [issue](https://github.com/cilium/cilium/issues/16197#issue-894144411).
+- Someone said the native routing CIDR had to include both service and pod IP ranges.
+  But that seemed to result in timeouts again.
+
 ## BGP troubleshooting
 
 OPNsense config file location `/usr/local/etc/frr/frr.conf`

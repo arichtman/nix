@@ -211,9 +211,12 @@ See also:
 
 ULA network ranges:
 
-Home: `fd2f:f92f:f268::/48`
-Remote: `fd94:d596:9a19::/48`
+Home LAN: `fd8c:3969:1494::/48`
+Home Wireguard: `fd2f:f92f:f268::/48`
+Remote Wireguard: `fd94:d596:9a19::/48`
 Wireguard tunnel: `fd60:f161:ae68::/48`
+
+- [OPNsense secondary prefix advertisment](https://docs.opnsense.org/manual/radvd.html#advertise-multiple-prefixes-on-lan)
 
 ### Substratum
 

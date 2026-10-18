@@ -26,7 +26,7 @@ spec:
       #   (probably due to ambiguity of interface),
       #   which would have avoided public prefix dependency.
       # Ref: https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-configuration/#bgp-cluster-configuration
-      peerAddress: 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
+      peerAddress: 'fd8c:3969:1494::'
       peerConfigRef:
         name: opnsense
 ---

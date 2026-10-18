@@ -73,8 +73,8 @@
           extraReversePathFilterRules = ''
           '';
           # Open kubelet port to local addresses
+          # TODO: Rip these out if Cilium can work without em
           extraInputRules = ''
-            ip saddr { ${host.net.ip4.subnetCIDR} } tcp dport 10250 accept comment "Allow IPv4 Kubelet"
             ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
             ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 4240 accept comment "Allow IPv6 Cilium-Agent health stuff"
             ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 9103 accept comment "Allow IPv6 Containerd monitoring"

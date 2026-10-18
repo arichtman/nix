@@ -1,0 +1,48 @@
+# k8s service working, coredns happy but packets for coredns were hitting the router instead
+autoDirectNodeRoutes: true
+bgpControlPlane:
+  enabled: true
+bpf:
+  masquerade: true
+  tproxy: true
+cleanState: true
+cluster:
+  name: k8s-richtman-au
+debug:
+  enabled: true
+directRoutingSkipUnreachable: true
+gatewayAPI:
+  enabled: true
+hubble:
+  hostUsers: true
+  peerService:
+    clusterDomain: cluster.local
+  relay:
+    rollOutPods: true
+  ui:
+    rollOutPods: true
+ipam:
+  operator:
+    clusterPoolIPv6MaskSize: 80
+    clusterPoolIPv6PodCIDRList:
+    - fd25:f7bd:72e1::/64
+ipv4:
+  enabled: false
+ipv6:
+  enabled: true
+ipv6NativeRoutingCIDR: fd8c:3969:1494::/64
+k8sServiceHost: fat-controller.systems.richtman.au
+k8sServicePort: 6443
+kubeProxyReplacement: true
+kubeProxyReplacementHealthzBindAddr: '[::]:10256'
+l2NeighDiscovery:
+  enabled: true
+monitor:
+  enabled: true
+operator:
+  replicas: 1
+  rollOutPods: true
+podAnnotations:
+  kubectl.kubernetes.io/default-container: cilium-agent
+rollOutCiliumPods: true
+routingMode: native

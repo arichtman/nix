@@ -9,6 +9,17 @@
 # k apply -f ./bgp.yaml
 # kubectl -n kube-system exec ds/cilium -- cilium-dbg status --verbose
 # kubectl -n kube-system exec ds/cilium -- cilium-dbg service list
+# function cdbg () { k exec -n kube-system -it $p -- cilium-dbg $@ }
+# cdbg bpf metrics list
+# cdbg bpf lb list
+# cdbg bpf nat list
+# cdbg monitor --type drop
+
+# function default_api_service_test () { kubectl run apiservertest --image=busybox:1.36 --rm -it --restart=Never -- nc -zvw 2 kubernetes.default.svc.cluster.local. 443; }
+# function e_t () { kubectl run dnstest --image=busybox:1.36 --rm -it --restart=Never -- nslookup -type=AAAA example.com; }
+# function i_t () { kubectl run dnstest --image=busybox:1.36 --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default; }
+# function fi_t () { kubectl run dnstest --image=busybox:1.36 --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default.svc.cluster.local. ; }
+
 
 cluster:
   name: k8s-richtman-au
@@ -34,7 +45,13 @@ gatewayAPI:
   enabled: true
 # Trying to get rid of tunneling
 routingMode: native
-ipv6NativeRoutingCIDR: 2403:581e:ab78::/64
+# Must cover *BOTH* pod *AND* service CIDRs
+# ipv6NativeRoutingCIDR: fda6:3c52:d12b::/48
+# ipv6NativeRoutingCIDR: fd8c:3969:1494::/64
+# Testing
+nativeRoutingCIDRFromClusterPool: true
+monitor:
+  enabled: true
 # BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
 #   and since we're not peering *between* the nodes - this setting.
 autoDirectNodeRoutes: true
@@ -46,6 +63,11 @@ directRoutingSkipUnreachable: true
 l2NeighDiscovery:
   enabled: true
 
+# Testing if this fixes ClusterIP
+# Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
+# endpointRoutes:
+#   enabled: true
+
 bpf:
   masquerade: true
   # Note: netkit incompatible and in beta but required for gateway API
@@ -53,9 +75,11 @@ bpf:
 
 ipam:
   operator:
-    # Use native LAN CIDR
-    # TODO: Get secondary ULA CIDR advertised from router and use that
-    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
+    # ~Use native LAN CIDR~
+    # ~TODO: Get secondary ULA CIDR advertised from router and use that~
+    # ~Testing: ULA not matching LAN secondary CIDR~
+    # Testing: contiguous range to service CIDR so native range can include both
+    clusterPoolIPv6PodCIDRList: ["fda6:3c52:d12b:1::/64"]
     # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
@@ -87,8 +111,12 @@ hubble:
     # enabled: true
     rollOutPods: true
 
+# TODO: remove when stable
+# Get us some verbose output
 debug:
   enabled: true
+# Ensure we have no hangovers
+cleanState: true
 
 # This makes kubectl logs and execs default nicely
 podAnnotations:
