@@ -13,6 +13,9 @@ ipv4:
 ipv6:
   enabled: true
 
+# Testing, want to make sure it's working as intended
+enableXTSocketFallback: false
+
 # Enable BGP to advertise our ranges and VIPs
 bgpControlPlane:
   enabled: true

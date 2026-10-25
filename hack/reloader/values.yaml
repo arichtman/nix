@@ -1,5 +1,5 @@
 # helm repo add stakater https://stakater.github.io/stakater-charts
-# helm upgrade --install reloader stakater/reloader --version 2.2.18 -f values.yaml
+# helm upgrade --install reloader stakater/reloader --version 2.2.18 -f values.yaml --namespace reloader --create-namespace
 # Ref: https://github.com/stakater/Reloader/blob/master/deployments/kubernetes/chart/reloader/README.md
 reloader:
   autoReloadAll: true

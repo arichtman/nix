@@ -12,4 +12,4 @@ service:
   clusterIP: fda6:3c52:d12b::10
 serviceAccount:
   create: true
-replicaCount: 1
+replicaCount: 2

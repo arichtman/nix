@@ -356,6 +356,11 @@ Setting this MAC will result in a tasteful link-local IP, `fe80::b00b:1eff:fee1:
 ```text
 iface vmbr0 inet static
         hwaddress ether b2:0b:1e:e1:90:0d
+
+iface vmbr0 inet6 static
+        address fd8c:3969:1494::11/64
+        accept_ra 1
+        privext 2
 ```
 
 #### Re-IDing a Proxmox VM

@@ -15,7 +15,9 @@
       serviceArgs = import ./_serviceArgs.nix {inherit lib kubeletConfigFile kubeletConfigDropinPath config kubeletKubeconfigFile;};
     in {
       boot = {
-        kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter"];
+        kernelModules = ["ip6table_mangle" "ip6table_raw" "ip6table_filter" "xt_socket"];
+        # TODO: figure out how necessary
+        # Probably a requirement for Cilium
         # May be required for IPv6 neighbor discovery?
         kernel.sysctl."net.ipv4.ip_forward" = 1;
         kernel.sysctl."net.ipv6.ip_forward" = 1;
@@ -74,6 +76,7 @@
           '';
           # Open kubelet port to local addresses
           # TODO: Rip these out if Cilium can work without em
+          # Ref: https://docs.cilium.io/en/stable/operations/system_requirements/#firewall-rules
           extraInputRules = ''
             ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 10250 accept comment "Allow IPv6 Kubelet"
             ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 9800-9999 accept comment "Allow IPv6 Cilium health"
