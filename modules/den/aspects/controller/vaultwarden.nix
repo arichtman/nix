@@ -87,6 +87,7 @@
           };
         };
         networking.firewall.extraInputRules = lib.concatStringsSep "\n" [
+          # TODO: use mkNetfilterRuleRouterOnly instead for HTTPS
           "ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 8000 accept comment \"Allow HTTP for Vaultwarden\""
         ];
       };

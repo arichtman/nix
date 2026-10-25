@@ -1,14 +1,21 @@
 # Reset our test setup
-# k delete ns lb-test -i=false ; k create ns lb-test && k apply -f test.yaml && sed 's/6/7/g' test.yaml | k apply -f -
+# k delete ns lb-test -i=false ; k create ns lb-test && k apply -f test.yaml && sed 's/6/7/g' test.yaml | k apply -f - && kl scale deploy --replicas 2 ctest-7
 # Convenience handles
 # alias kl='kubectl -n lb-test'
 # function get_pod_name () { kl get po -l app=ctest-$1 --no-headers -ocustom-columns='DUMMY:.metadata.name' | shuf | head -1 ; }
 # function get_pod_ip () { kl get po -l app=ctest-$1 --no-headers -ocustom-columns='DUMMY:.status.podIPs[0].ip' | shuf | head -1 ; }
-# One-shot test east-west
-# kl scale deploy --replicas 2 ctest-7
+# function get_cluster_ip () { kl get svc ctest-7-internal -ojson | jq -r ' .spec.clusterIP ' ; }
+# function get_lb_ip () { kl get svc ctest-7 -ojson | jq -r ' .status.loadBalancer.ingress[0].ip ' ; }
+# Test east-west pod-to-pod
 # kl exec -it $(get_pod_name 6) -- nc -zvw 2 $(get_pod_ip 7) 80
+# Test E-W Pod2ClusterIP
+# kl exec -it $(get_pod_name 6) -- nc -zvw 2 $(get_cluster_ip 7) 80
+# Test E-W Pod2LB
+# kl exec -it $(get_pod_name 6) -- nc -zvw 2 $(get_lb_ip 7) 80
 # Test N-S
-# curl -s "http://[$lbip]/" | jq ' .host.ip, .environment.MY_NODE_NAME '
+# curl -s "http://[$(get_lb_ip)]/" | jq ' .host.ip, .environment.MY_NODE_NAME '
+# Test N-S indirection from internal (shouldn't work)
+# curl -s "http://[$(get_cluster_ip)]/" | jq ' .host.ip, .environment.MY_NODE_NAME '
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,6 +39,15 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+      topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: kubernetes.io/hostname
+            whenUnsatisfiable: DoNotSchedule
+            labelSelector:
+              matchLabels:
+                app: ctest-6
+            # matchLabelKeys:
+            #   - app
 ---
 apiVersion: v1
 kind: Service
@@ -43,6 +59,18 @@ spec:
   # Need this or else every node will advertise the VIP over BGP, even when they have no local backend.
   # You do *not* want to set internalTrafficPolicy also as it'll just dead-end when no local backend.
   externalTrafficPolicy: Local
+  selector: { app: ctest-6 }
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ctest-6-internal
+  namespace: lb-test
+spec:
+  type: ClusterIP
   selector: { app: ctest-6 }
   ports:
     - port: 80

@@ -69,11 +69,6 @@
             "aarch64-darwin"
             "x86_64-linux"
           ];
-          shellHook = ''
-            prek install --install-hooks
-            source <(kubectl completion zsh)
-            echo "Entering the nix  Z O N E"
-          '';
         });
   };
 }

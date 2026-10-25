@@ -1,15 +1,3 @@
-# helm repo add cilium https://helm.cilium.io/
-# kubectl delete node $(kubectl get nodes --no-headers | awk '{print $1;}')
-# k delete ciliumnodes --all
-# k api-resources | grep -i cilium | cut -d' ' -f1 | xargs -I% kubectl delete % --all -i=false
-# dog ../nodes.txt | xargs -I% ssh %.systems.richtman.au sudo systemctl restart k8s-kubelet
-# ../label.sh
-# function validate_values () { jsonschema-cli validate ~/Downloads/cilium/values.schema.json -i ./values.yaml ; } ; alias vv=validate_values
-# vv && helm upgrade --install cilium cilium/cilium --namespace kube-system --values values.yaml --version 1.20.2
-# k apply -f ./bgp.yaml
-# kubectl -n kube-system exec ds/cilium -- cilium-dbg status --verbose
-# kubectl -n kube-system exec ds/cilium -- cilium-dbg service list
-
 cluster:
   name: k8s-richtman-au
 # No kube-proxy
@@ -34,17 +22,22 @@ gatewayAPI:
   enabled: true
 # Trying to get rid of tunneling
 routingMode: native
-ipv6NativeRoutingCIDR: 2403:581e:ab78::/64
+nativeRoutingCIDRFromClusterPool: true
+monitor:
+  enabled: true
 # BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
 #   and since we're not peering *between* the nodes - this setting.
 autoDirectNodeRoutes: true
-# Probably don't need this as we're not using fd00::/whatever but that seems to capture the link-locals
-# time=2026-10-04T01:04:31.712971864Z level=warn source=/go/src/github.com/cilium/cilium/pkg/datapath/linux/node.go:275 msg="Unable to install direct node route" module=agent.datapath route="{Ifindex: 0 Dst: 2403:581e:ab78:1:5::/80 Src: <nil> Gw: fd00::602 Flags: [] Table: 0 Realm: 0}" error="route to destination fd00::602 contains gateway fe80::1ced:c0ff:fed0:dad, must be directly reachable. Add `direct-routing-skip-unreachable` to skip unreachable routes"
-directRoutingSkipUnreachable: true
+directRoutingSkipUnreachable: true # Cannot have this without autoDirectNodeRoutes
 
 # I think this is for outside-of-cluster, local traffic to not have to go via the router.
 l2NeighDiscovery:
   enabled: true
+
+# Testing if this fixes ClusterIP
+# Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
+# endpointRoutes:
+#   enabled: true
 
 bpf:
   masquerade: true
@@ -53,10 +46,7 @@ bpf:
 
 ipam:
   operator:
-    # Use native LAN CIDR
-    # TODO: Get secondary ULA CIDR advertised from router and use that
-    clusterPoolIPv6PodCIDRList: ["2403:581e:ab78::/64"]
-    # clusterPoolIPv6PodCIDRList: ["2403:581e:ab78:1::/64"]
+    clusterPoolIPv6PodCIDRList: ["fda6:3c52:d12b:1::/64"]
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
@@ -67,8 +57,7 @@ rollOutCiliumPods: true
 operator:
   rollOutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
   # Set to one for ease of log inspection
-  # TODO: set back to HA once working
-  replicas: 1
+  replicas: 2
 
 hubble:
   # Failed to create peer notify client for peers change notification
@@ -80,15 +69,15 @@ hubble:
   # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
   hostUsers: true
   relay:
-    # enabled: true
+    enabled: true
     rollOutPods: true
     # tls: {}
   ui:
-    # enabled: true
+    enabled: true
     rollOutPods: true
 
-debug:
-  enabled: true
+# Ensure we have no hangovers when re-rolling the install
+cleanState: true
 
 # This makes kubectl logs and execs default nicely
 podAnnotations:

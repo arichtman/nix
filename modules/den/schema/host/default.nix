@@ -22,8 +22,6 @@
         name = name;
         sha256 = hash;
       };
-    # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
-    mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${net.ip6.routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
     promLocalHostRelabelConfigs = [
       # TODO: Work out why localhost relabel and label override aren't working
       # Relabel localhost so we don't have to open metrics to the world
@@ -64,10 +62,20 @@
       ip6 = rec {
         routerEUI64 = "aab8:e0ff:fe00:91ef";
         routerGlobalUnicastAddress = "${prefix}:0:${routerEUI64}";
+        k8s = rec {
+          ulaPrefix = "fda6:3c52:d12b";
+          serviceUlaCIDR = "${ulaPrefix}::/64";
+          podUlaCIDR = "${ulaPrefix}:1::/64";
+        };
+        ulaPrefix = "fd8c:3969:1494";
+        ulaCIDR = "${ulaPrefix}::/64";
+        # TODO: Switch to ULA LAN prefix
         prefix = "2403:581e:ab78";
         subnetCIDR = "${prefix}::/64";
         prefixCIDR = "${prefix}::/48";
         wireguardCIDR = "fd2f:f92f:f268::/48";
+        # TODO: Figure out dynamic NFT rules to match interface prefix with source address prefix
+        # Ref: https://michael.kjorling.se/blog/2024/prefix-agnostic-ipv6-address-filtering-in-linux-nftables/
         mkNetfilterRuleRouterOnly = service: port: "ip6 saddr & ::ffff:ffff:ffff:ffff == ::${routerEUI64} tcp dport ${lib.toString port} accept comment \"Allow router -> ${service}\"";
       };
       primaryDomain = "richtman.au";

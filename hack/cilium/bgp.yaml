@@ -1,8 +1,3 @@
-# Can add routes manually to skip going via the router
-# sudo route -6 add '2403:581e:ab78:2::/128' gw '2403:581e:ab78:0:4cd9:b20:700d:b2b3' dev wlo1
-# sudo route -6 del '2403:581e:ab78:2::/128' gw '2403:581e:ab78:0:4cd9:b20:700d:b2b3' dev wlo1
-# function get_bgp_pod_name () { kubectl get po -l app.kubernetes.io/name=cilium-agent -ocustom-columns=' NAME:.metadata.name,NODE:.spec.nodeName ' --no-headers | grep fat-controller | cut -d' ' -f1 ; }
-# cilium bgp routes available ipv6 unicast
 apiVersion: cilium.io/v2
 kind: CiliumBGPClusterConfig
 metadata:
@@ -25,8 +20,9 @@ spec:
       #   can't use link-local either
       #   (probably due to ambiguity of interface),
       #   which would have avoided public prefix dependency.
+      # So, LAN ULA address to indirect from public prefix.
       # Ref: https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-configuration/#bgp-cluster-configuration
-      peerAddress: 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
+      peerAddress: 'fd8c:3969:1494::1'
       peerConfigRef:
         name: opnsense
 ---
@@ -67,8 +63,6 @@ kind: CiliumLoadBalancerIPPool
 metadata:
   name: public-subnet
 spec:
-  # Plenty of space but also no reason not to use them.
-  allowFirstLastIPs: "Yes"
   blocks:
     # Need to avoid overlap cause IPAM is sequential
     # If we can swap out the allocator for (pseudo)random we can maybe flatten it to the LAN subnet
