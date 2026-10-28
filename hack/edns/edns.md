@@ -30,6 +30,8 @@ nix run nixpkgs#awscli2 -- sts assume-role-with-web-identity  \
 ## References
 
 - [Official docs](https://kubernetes-sigs.github.io/external-dns/latest/)
+- [eDNS Unbound webhook (good for testing without authoritative NS)](https://github.com/guillomep/external-dns-unbound-webhook)
+- [RFC2136](https://datatracker.ietf.org/doc/html/rfc2136)
 - [Serviceaccount token auth](https://blog.vitalvas.com/post/2025/11/01/using-kubernetes-serviceaccount-token-for-auth-between-microservices/)
 - [Hashicorp k8s OIDC docs](https://developer.hashicorp.com/vault/docs/auth/jwt/oidc-providers/kubernetes)
 - [Structured authentication config spec](https://kubernetes.io/docs/reference/config-api/apiserver-config.v1/#apiserver-config-k8s-io-v1-AnonymousAuthCondition)

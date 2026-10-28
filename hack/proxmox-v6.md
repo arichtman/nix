@@ -1,12 +1,11 @@
-# Proxmox IPv6
-
-Host interface enabling SLAAC.
-
-- Configure Proxmox IPv6 SLAAC.
+# Proxmox IPv6 SLAAC
 
 Dynamic v6 with static v4 might be bugged.
-
 Seems issues with SLAAC on bridges - makes sense since which EUI64 when many MAC.
+
+We may need `radvd`?
+
+** Note - not presently the config. Still working on this **
 
 `/etc/network/interfaces`
 

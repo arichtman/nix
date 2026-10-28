@@ -48,5 +48,8 @@ in
     tls-cert-file = "${secretsPath}/kube-apiserver-tls.pem";
     tls-private-key-file = "${secretsPath}/kube-apiserver-tls-key.pem";
     tracing-config-file = tracingConfigFile;
+    # Might be why it hangs and won't stop on shutdown.
+    # Ref: https://github.com/kubernetes/kubernetes/issues/131052
+    shutdown-watch-termination-grace-period = "20s";
     # v = 2; # TODO: remove when stabilized
   }

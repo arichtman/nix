@@ -40,7 +40,7 @@
           iproute2
           ethtool
           thin-provisioning-tools
-          iptables
+          iptables # TODO: this shouldn't be needed at some point. Pretty sure I saw we had iptables module blacklisted somewhere
           socat
         ];
       };

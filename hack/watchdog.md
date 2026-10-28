@@ -4,6 +4,28 @@
 
 ### BIOS
 
+---
+
+Pretty sure if BIOS has no timer options the hardware watchdog isn't available.
+Best course is to ensure no watchdog modules are blacklisted, and load all of em in `/etc/modules-load.d`.
+Then check for `/dev/watchdog*`, if nothing, you're out of luck. Maybe softdog will work.
+Once we have a watchdog device set `/etc/default/pve-ha-manager` to use the appropriate module.
+If hardware device is available, enabling hardlockup detector with `nmi_watchdog=1` in `/etc/default/grub` might be required.
+Don't forget `update-grub` and reboot.
+
+I think doing the emulated hardware watchdog is inferior to having Proxmox HA reboot the VM.
+So we'll remove the ancient emulated `i6300esb` from the VM definitions, and avoid having to configure _another_ watchdog kick daemon, as well as figure out FreeBSD watchdogging.
+
+1. Hardware watchdog enabled.
+   BIOS or emulation.
+1. Kernel module not blacklisted.
+1. Kernel module loaded.
+1. Kernel module configured.
+   Possible GRUB argument.
+1. Watchdog daemon configured.
+
+---
+
 BIOS has an option to enable TCO but no timer settings.
 This is an Intel board so kernel module `iTCO_wdt` is the correct one.
 
