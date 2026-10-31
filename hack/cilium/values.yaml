@@ -13,6 +13,8 @@ ipv4:
 ipv6:
   enabled: true
 
+preferIpv6: true
+
 # Testing, want to make sure it's working as intended
 enableXTSocketFallback: false
 

@@ -26,6 +26,7 @@
 - [SeaweedFS](https://seaweedfs.com/)
 - [AWS mountpoint S3 driver](https://github.com/awslabs/mountpoint-s3-csi-driver),
   possibly with [local CSI driver](https://github.com/Azure/local-csi-driver)
+  or [topoLVM](https://github.com/topolvm/topolvm)
   providing the caching volumes.
 
 ## References
