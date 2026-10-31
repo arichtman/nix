@@ -1,5 +1,5 @@
 # alias vv='jsonschema-cli validate ~/Downloads/external-dns/values.schema.json -i ./values.yaml'
-# vv && helm upgrade --install external-dns edns/external-dns --version 1.23.0 -f values.yaml
+# vv && helm upgrade --install external-dns edns/external-dns --version 1.23.0 -f values.yaml --namespace external-dns --create-namespace
 
 policy: "sync"
 provider:
@@ -44,7 +44,7 @@ env:
   - name: AWS_USE_DUALSTACK_ENDPOINT
     value: 'true'
   - name: AWS_ROLE_ARN
-    value: arn:aws:iam::806676312179:role/k8s.richtman.au/external-dns@kube-system
+    value: arn:aws:iam::806676312179:role/k8s.richtman.au/external-dns@external-dns
   - name: AWS_DEFAULT_REGION
     value: ap-southeast-2
   - name: AWS_WEB_IDENTITY_TOKEN_FILE

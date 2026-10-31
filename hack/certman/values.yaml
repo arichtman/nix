@@ -1,0 +1,65 @@
+# helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager --version v1.21.3 --namespace cert-manager --create-namespace -f values.yaml
+global:
+  logLevel: 4 # 0-6
+crds:
+  enabled: true
+# TODO: Up to 2 for HA
+# replicaCount: 2
+# podDisruptionBudget:
+#   enabled: true
+# webhook:
+#   replicaCount: 2
+#   podDisruptionBudget:
+#     enabled: true
+# cainjector:
+#   replicaCount: 2
+#   podDisruptionBudget:
+#     enabled: true
+
+config:
+   apiVersion: controller.config.cert-manager.io/v1alpha1
+   kind: ControllerConfiguration
+   logging:
+     verbosity: 4
+     format: text
+   gatewayAPI:
+     enabled: true
+   featureGates:
+     ServerSideApply: true
+extraEnv:
+  - name: AWS_EC2_METADATA_DISABLED
+    value: 'true'
+  - name: AWS_USE_DUALSTACK_ENDPOINT
+    value: 'true'
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::806676312179:role/k8s.richtman.au/cert-manager@cert-manager
+  - name: AWS_DEFAULT_REGION
+    value: ap-southeast-2
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/tokens/aws
+volumeMounts:
+  - mountPath: /var/run/secrets/tokens
+    name: oidc-token
+volumes:
+  - name: oidc-token
+    projected:
+      sources:
+        - serviceAccountToken:
+            path: aws
+            expirationSeconds: 7200
+            audience: sts.amazonaws.com
+extraObjects:
+  - |
+    apiVersion: cert-manager.io/v1
+    kind: ClusterIssuer
+    metadata:
+      name: letsencrypt-staging
+    spec:
+      acme:
+        email: "ariel@richtman.au"
+        server: https://acme-staging-v02.api.letsencrypt.org/directory
+        privateKeySecretRef:
+          name: letsencrypt-staging
+        solvers:
+        - dns01:
+            route53: {}
