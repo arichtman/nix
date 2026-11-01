@@ -1,6 +1,7 @@
 # helm repo add coredns https://coredns.github.io/helm
-# helm pull coredns/coredns --version 1.48.2
-# helm upgrade --namespace kube-system --install coredns coredns/coredns --version 1.48.2 --namespace kube-system --values values.yaml
+# helm pull coredns/coredns --version 1.49.0
+# helm upgrade --namespace kube-system --install coredns coredns/coredns --version 1.49.0 --namespace kube-system --values values.yaml
+# helm uninstall -n kube-system coredns
 # function external_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA example.com ; }
 # function internal_short_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default ; }
 # function internal_full_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default.svc.cluster.local. ; }
@@ -9,7 +10,7 @@
 # Ref: https://github.com/coredns/helm/tree/master/charts/coredns#configuration
 service:
   # Need a pre-shared/well-known IP since kubelet config has to have the DNS server IP
-  clusterIP: fda6:3c52:d12b::10
+  clusterIP: fd2f:f92f:f268:ffff::10
 serviceAccount:
   create: true
-replicaCount: 2
+# replicaCount: 2

@@ -31,9 +31,9 @@ step certificate create kube-apiserver-etcd-client kube-apiserver-etcd-client.pe
 step certificate create kube-apiserver kube-apiserver-tls.pem kube-apiserver-tls-key.pem --ca ../k8s-ca.pem --ca-key ../k8s-ca-key.pem \
   --insecure --no-password --template ../granular-dn-leaf.tpl --set-file ../dn-defaults.json --not-after 8760h --bundle \
   --san "${NODE_NAME}" --san "${NODE_FQDN}" --san "${NODE_LOCAL_FQDN}" --san localhost \
-  --san 127.0.0.1 --san ::1 --san "fda6:3c52:d12b::1"\
+  --san 127.0.0.1 --san ::1 --san "fd2f:f92f:f268:ffff::1"\
   --san kubernetes --san kubernetes.default --san kubernetes.default.svc \
-  --san kubernetes.default.svc.cluster --san "kubernetes.default.svc.cluster.local"
+  --san kubernetes.default.svc.cluster --san "kubernetes.default.svc.cluster.local" --san "kubernetes.default.svc.cluster.local."
 
 # service account token signing
 openssl req -new -x509 -days 365 -newkey rsa:4096 -keyout service-account-key.pem -sha256 \
@@ -92,11 +92,11 @@ ssh "${NODE_FQDN}" sudo chmod 444 "/var/lib/kubernetes/secrets/*.pem"
 ssh "${NODE_FQDN}" sudo chmod 400 "/var/lib/kubernetes/secrets/*key*.pem"
 # Set ownership of etcd stuff specifically
 ssh "${NODE_FQDN}" sudo chown etcd: "/var/lib/kubernetes/secrets/etcd*.pem"
-# Bounce all services
-ssh "${NODE_FQDN}" sudo systemctl restart k8s-scheduler k8s-controller k8s-apiserver etcd
-# Set our local int ca
-cp --force k8s-ca.pem ~/.kube
 # Wipe all service accounts since we've rolled the key for them
 # Ideally do it by label/annotation but they don't have the same autoupdate stuff written as clusterroles
 # kubectl delete serviceaccount --all
 kubectl delete serviceaccount --namespace kube-system --all
+# Bounce all services
+ssh "${NODE_FQDN}" sudo systemctl restart etcd k8s-scheduler k8s-controller k8s-apiserver
+# Set our local int ca
+cp --force k8s-ca.pem ~/.kube

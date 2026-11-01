@@ -10,6 +10,7 @@ spec:
   nodeSelector:
     matchLabels:
       node-role.kubernetes.io/worker: worker
+  # Testing applying to control nodes as well, in case the BGP subsystem is needed to apply routes
   bgpInstances:
   - name: "k8s.richtman.au"
     localASN: 64512
@@ -22,7 +23,7 @@ spec:
       #   which would have avoided public prefix dependency.
       # So, LAN ULA address to indirect from public prefix.
       # Ref: https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-configuration/#bgp-cluster-configuration
-      peerAddress: 'fd8c:3969:1494::1'
+      peerAddress: 'fd2f:f92f:f268::1'
       peerConfigRef:
         name: opnsense
 ---
@@ -52,6 +53,7 @@ spec:
       service:
         addresses:
           - LoadBalancerIP
+          - ClusterIP # Required so host-native networking of APIserver is able to route to webhooks in-cluster
       # *** REQUIRED OR NOTHING GETS ADVERTISED ***
       selector:
         matchExpressions:

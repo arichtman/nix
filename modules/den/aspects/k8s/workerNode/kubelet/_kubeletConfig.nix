@@ -43,7 +43,7 @@ let
       resolvConf = "/run/systemd/resolve/resolv.conf";
       # Note: This must match the clusterIP given to CoreDNS
       # TODO: Wire this from the API server argument
-      clusterDNS = ["fda6:3c52:d12b::10"];
+      clusterDNS = ["fd2f:f92f:f268:ffff::10"];
       imageMaximumGCAge = "604800s";
     };
 in

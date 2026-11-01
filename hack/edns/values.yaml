@@ -1,5 +1,7 @@
 # alias vv='jsonschema-cli validate ~/Downloads/external-dns/values.schema.json -i ./values.yaml'
 # vv && helm upgrade --install external-dns edns/external-dns --version 1.23.0 -f values.yaml --namespace external-dns --create-namespace
+# alias kce='k -n external-dns'
+# helm uninstall -n external-dns external-dns
 
 policy: "sync"
 provider:

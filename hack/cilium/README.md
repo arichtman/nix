@@ -530,18 +530,21 @@ ip -6 route show
 echo "Checking router v6 route"
 ip route get 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
 echo "Checking ApiServer route"
-ip route get fda6:3c52:d12b::1
+ip route get fd2f:f92f:f268:ffff::1
 echo "Checking ApiServer access"
-nc -zvw 2 fda6:3c52:d12b::1 443
+nc -zvw 2 fd2f:f92f:f268:ffff::1 443
 ```
 
 Debug pod networking:
 
 ```bash
 echo "Checking CoreDNS connection"
-nc -zvw 2 fda6:3c52:d12b::10 53
+nc -zvw 2 fd2f:f92f:f268:ffff::10 53
 echo "Checking v6 egress route"
 ip route get 2a0a:4580:103f:c0de::1
 echo "Checking v6 egress connection"
 nc -zvw 2 2a0a:4580:103f:c0de::1 443
 ```
+
+- [Cilium eBPF datapath](https://ttlab.hopto.org/blog/cilium/2026-06-13-cilium-ebpf-datapath-architecture-2026?lang=en)
+- [Cilium eBPF datapath 2](https://kkloudtarus.net/en/blog/case-study-a-packet-through-ciliums-ebpf-datapath)

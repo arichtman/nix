@@ -69,7 +69,6 @@
       networking.firewall.extraInputRules = ''
         ip6 saddr { ${host.net.ip6.k8s.podUlaCIDR} } tcp dport 6443 accept comment "Allow pod access to the APIserver via default service"
         ip6 saddr { ${host.net.ip6.prefixCIDR} } tcp dport 6443 accept comment "Allow LAN APIserver"
-        ip6 saddr { ${host.net.ip6.wireguardCIDR} } tcp dport 6443 accept comment "Allow VPN APIserver"
       '';
     };
   };

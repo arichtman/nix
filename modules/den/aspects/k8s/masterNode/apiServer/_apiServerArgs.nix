@@ -42,9 +42,8 @@ in
     service-account-signing-key-file = "${secretsPath}/service-account-key.pem";
     # Note: 1.33+ has resources for this https://kubernetes.io/docs/tasks/network/reconfigure-default-service-ip-ranges/
     # service-cluster-ip-range = "${lib.arichtman.net.ip6.prefix}:ffff::0/64";
-    # Ref: https://www.unique-local-ipv6.com/
     # Note: APIserver cannot create an IP Allocator for greater than /64 for whatever reason
-    service-cluster-ip-range = "fda6:3c52:d12b::/64";
+    service-cluster-ip-range = "fd2f:f92f:f268:ffff::/64";
     tls-cert-file = "${secretsPath}/kube-apiserver-tls.pem";
     tls-private-key-file = "${secretsPath}/kube-apiserver-tls-key.pem";
     tracing-config-file = tracingConfigFile;

@@ -15,9 +15,14 @@ ipv6:
 
 preferIpv6: true
 
-# Testing, want to make sure it's working as intended
-enableXTSocketFallback: false
+# ciliumEndpointSlice:
+#   enabled: true
 
+# Testing, want to make sure it's working as intended
+# enableXTSocketFallback: false
+
+# debug:
+#   enabled: true
 # Enable BGP to advertise our ranges and VIPs
 bgpControlPlane:
   enabled: true
@@ -25,33 +30,47 @@ bgpControlPlane:
 # Enable gateway API
 gatewayAPI:
   enabled: true
-# Trying to get rid of tunneling
+
+# No tunneling
 routingMode: native
 nativeRoutingCIDRFromClusterPool: true
-monitor:
-  enabled: true
+# Shut this shit up since it never works on first try
+envoy:
+  enabled: false
+
 # BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
 #   and since we're not peering *between* the nodes - this setting.
 autoDirectNodeRoutes: true
 directRoutingSkipUnreachable: true # Cannot have this without autoDirectNodeRoutes
 
+# Note: I think we *don't* want l2 announcements, as only one node at a time will respond, so we lose the multipath
+#   rather advertise using BGP.
+# Ref: https://docs.cilium.io/en/latest/network/l2-announcements/
 # I think this is for outside-of-cluster, local traffic to not have to go via the router.
-l2NeighDiscovery:
-  enabled: true
+# https://docs.cilium.io/en/latest/network/kubernetes/kubeproxy-free/#neighbor-discovery
+# l2NeighDiscovery:
+#   enabled: true
 
 # Testing if this fixes ClusterIP
 # Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
-# endpointRoutes:
-#   enabled: true
+endpointRoutes:
+  enabled: true
 
+# Before the agent defaults to iptables implementation of DNAT,
+#   arguably cilium is better tooling to inspect
+# cdbg bpf lb list
+# cdbg nat list
+# cdbg map get cilium_lb6_services_v2
+# cdbg map get cilium_lb6_backends_v3
 bpf:
+  # datapathMode: netkit-l2
   masquerade: true
   # Note: netkit incompatible and in beta but required for gateway API
-  tproxy: true
+  # tproxy: true
 
 ipam:
   operator:
-    clusterPoolIPv6PodCIDRList: ["fda6:3c52:d12b:1::/64"]
+    clusterPoolIPv6PodCIDRList: ["fd2f:f92f:f268::/64"]
     # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
     # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
     clusterPoolIPv6MaskSize: 80
@@ -62,24 +81,26 @@ rollOutCiliumPods: true
 operator:
   rollOutPods: true # Should update when configMap changes, not sure if they hot-reload anyway
   # Set to one for ease of log inspection
-  replicas: 2
+  replicas: 1
 
-hubble:
-  # Failed to create peer notify client for peers change notification
-  # Ref: https://github.com/cilium/cilium/issues/20130#issuecomment-1267605959
-  peerService:
-    clusterDomain: cluster.local
-  # This will allow use of user-namespaces for hubble components.
-  # Not all clusters support user-namespaces.
-  # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
-  hostUsers: true
-  relay:
-    enabled: true
-    rollOutPods: true
-    # tls: {}
-  ui:
-    enabled: true
-    rollOutPods: true
+# monitor:
+#   enabled: true
+# hubble:
+#   # Failed to create peer notify client for peers change notification
+#   # Ref: https://github.com/cilium/cilium/issues/20130#issuecomment-1267605959
+#   peerService:
+#     clusterDomain: cluster.local
+#   # This will allow use of user-namespaces for hubble components.
+#   # Not all clusters support user-namespaces.
+#   # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+#   hostUsers: true
+#   relay:
+#     enabled: true
+#     rollOutPods: true
+#     # tls: {}
+#   ui:
+#     enabled: true
+#     rollOutPods: true
 
 # Ensure we have no hangovers when re-rolling the install
 cleanState: true

@@ -4,6 +4,10 @@ We generally want CoreDNS since it'll reduce a pile of chatter hitting the Unbou
 
 ## Issues
 
+### Missing in-cluster setup??
+
+Saw this once: `plugin/kubernetes: unable to load in-cluster configuration, KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT must be defined`
+
 ### Untrusted API-server TLS
 
 CoreDNS's default configuration assumes the use of the default namespace Kubernetes service to locate the API server.
