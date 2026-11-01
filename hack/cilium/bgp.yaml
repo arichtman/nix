@@ -10,6 +10,7 @@ spec:
   nodeSelector:
     matchLabels:
       node-role.kubernetes.io/worker: worker
+  # Testing applying to control nodes as well, in case the BGP subsystem is needed to apply routes
   bgpInstances:
   - name: "k8s.richtman.au"
     localASN: 64512
@@ -52,6 +53,7 @@ spec:
       service:
         addresses:
           - LoadBalancerIP
+          # - ClusterIP # Required so host-native networking of APIserver is able to route to webhooks in-cluster
       # *** REQUIRED OR NOTHING GETS ADVERTISED ***
       selector:
         matchExpressions:

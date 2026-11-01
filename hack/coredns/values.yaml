@@ -1,6 +1,6 @@
 # helm repo add coredns https://coredns.github.io/helm
-# helm pull coredns/coredns --version 1.48.2
-# helm upgrade --namespace kube-system --install coredns coredns/coredns --version 1.48.2 --namespace kube-system --values values.yaml
+# helm pull coredns/coredns --version 1.49.0
+# helm upgrade --namespace kube-system --install coredns coredns/coredns --version 1.49.0 --namespace kube-system --values values.yaml
 # function external_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA example.com ; }
 # function internal_short_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default ; }
 # function internal_full_dns_resolve () { kubectl run dnstest --image=nicolaka/netshoot --rm -it --restart=Never -- nslookup -type=AAAA kubernetes.default.svc.cluster.local. ; }

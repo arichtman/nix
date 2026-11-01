@@ -1,4 +1,7 @@
+# helm -n cert-manager uninstall cert-manager
 # helm upgrade --install cert-manager oci://quay.io/jetstack/charts/cert-manager --version v1.21.3 --namespace cert-manager --create-namespace -f values.yaml
+# alias kcm='k -n cert-manager'
+# function webhook_test () { k -n default run webhooktest --image=nicolaka/netshoot -it --rm --restart=Never -- curl -k https://cert-manager-webhook.cert-manager.svc.cluster.local/validate ; }
 global:
   logLevel: 4 # 0-6
 crds:
@@ -29,6 +32,7 @@ config:
 extraEnv:
   - name: AWS_EC2_METADATA_DISABLED
     value: 'true'
+    # Required as the golang library has no v6 single-stack option and otherwise it'll die on IPv4
   - name: AWS_USE_DUALSTACK_ENDPOINT
     value: 'true'
   - name: AWS_ROLE_ARN

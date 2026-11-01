@@ -15,6 +15,9 @@ ipv6:
 
 preferIpv6: true
 
+ciliumEndpointSlice:
+  enabled: true
+
 # Testing, want to make sure it's working as intended
 enableXTSocketFallback: false
 
@@ -25,11 +28,11 @@ bgpControlPlane:
 # Enable gateway API
 gatewayAPI:
   enabled: true
-# Trying to get rid of tunneling
+
+# No tunneling
 routingMode: native
 nativeRoutingCIDRFromClusterPool: true
-monitor:
-  enabled: true
+
 # BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
 #   and since we're not peering *between* the nodes - this setting.
 autoDirectNodeRoutes: true
@@ -41,10 +44,11 @@ l2NeighDiscovery:
 
 # Testing if this fixes ClusterIP
 # Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
-# endpointRoutes:
-#   enabled: true
+endpointRoutes:
+  enabled: true
 
 bpf:
+  # datapathMode: netkit-l2
   masquerade: true
   # Note: netkit incompatible and in beta but required for gateway API
   tproxy: true
@@ -64,22 +68,24 @@ operator:
   # Set to one for ease of log inspection
   replicas: 2
 
-hubble:
-  # Failed to create peer notify client for peers change notification
-  # Ref: https://github.com/cilium/cilium/issues/20130#issuecomment-1267605959
-  peerService:
-    clusterDomain: cluster.local
-  # This will allow use of user-namespaces for hubble components.
-  # Not all clusters support user-namespaces.
-  # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
-  hostUsers: true
-  relay:
-    enabled: true
-    rollOutPods: true
-    # tls: {}
-  ui:
-    enabled: true
-    rollOutPods: true
+# monitor:
+#   enabled: true
+# hubble:
+#   # Failed to create peer notify client for peers change notification
+#   # Ref: https://github.com/cilium/cilium/issues/20130#issuecomment-1267605959
+#   peerService:
+#     clusterDomain: cluster.local
+#   # This will allow use of user-namespaces for hubble components.
+#   # Not all clusters support user-namespaces.
+#   # See: https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+#   hostUsers: true
+#   relay:
+#     enabled: true
+#     rollOutPods: true
+#     # tls: {}
+#   ui:
+#     enabled: true
+#     rollOutPods: true
 
 # Ensure we have no hangovers when re-rolling the install
 cleanState: true

@@ -8,7 +8,7 @@ function delete_all_cilium_resources () { kubectl api-resources | grep -i cilium
 function systemctl_all_nodes () { dog ../nodes.txt | xargs -I% ssh %.systems.richtman.au sudo systemctl $@ ; }
 function label_nodes () { ../label.sh ; }
 function validate_values () { jsonschema-cli validate ~/Downloads/cilium/values.schema.json -i ./values.yaml ; }
-function helm_install () { validate_values && helm upgrade --install cilium cilium/cilium --namespace kube-system --values values.yaml --version 1.20.2 ; }
+function helm_install () { validate_values && helm upgrade --install cilium cilium/cilium --namespace kube-system --values values.yaml --version 1.20.4 ; }
 function apply_bgp () { kubectl apply -f ./bgp.yaml ; }
 # Takes systemctl subcommand optionally so we can full reboot
 # Removes k8s service just in case it's borked or holding stale IPs
@@ -17,7 +17,6 @@ function full_reset () {
   k delete ns cilium-test-1 cilium-test-ccnp1 cilium-test-ccnp2 -i=false
   : Delete any of our own testing
   kubectl delete ns lb-test -i=false
-  helm uninstall coredns ;
   helm uninstall cilium ;
   kubectl -n default delete svc kubernetes -i=false
   delete_all_nodes ;
@@ -27,7 +26,7 @@ function full_reset () {
   sleep 180 ;
   label_nodes ;
   helm_install ;
-  sleep 15 ;
+  sleep 30 ;
   : For some reason it breaks first time
   kubectl rollout restart ds/cilium-envoy ;
   cilium status --wait ;
