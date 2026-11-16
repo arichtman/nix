@@ -110,7 +110,6 @@
             ruff
             # jj VCS
             jujutsu
-            gg-jj
             # TODO: use mamediff as a package actually not calling directly
             (callPackage ../../packages/mamediff/_package.nix {})
             # langs
