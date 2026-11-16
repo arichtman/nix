@@ -14,7 +14,7 @@
           # GARAGE_ADMIN_TOKEN=$(openssl rand -hex 32)
           settings = {
             replication_factor = 1;
-            # TODO: set rpc_public_addr, as logs suggest
+            rpc_public_addr_subnet = host.net.ip6.prefix;
             rpc_bind_addr = "[::]:3901";
             s3_api = {
               api_bind_addr = "[::]:3900";
@@ -28,8 +28,7 @@
               api_bind_addr = "[::]:3903";
             };
           };
-          # TODO: Upgrade to garage_2?
-          package = pkgs.garage;
+          package = pkgs.garage_2;
         };
         caddy = {
           virtualHosts = {
