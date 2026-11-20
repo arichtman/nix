@@ -39,6 +39,10 @@
         revision = 3;
         name = "Grafana_Internals";
       };
+      harmonia = builtins.fetchurl {
+        url = "https://github.com/nix-community/harmonia/raw/refs/heads/main/harmonia-cache/harmonia-grafana-dashboard.json";
+        hash = lib.fakeSha256;
+      };
       k8sApiServer = host.fetchGrafanaDashboard {
         id = 12006;
         revision = 1;
