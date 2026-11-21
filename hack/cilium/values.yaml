@@ -3,6 +3,7 @@ cluster:
 # No kube-proxy
 kubeProxyReplacement: true
 # Enables healthz endpoint
+# TODO: Remove?
 kubeProxyReplacementHealthzBindAddr: "[::]:10256"
 # Required to bypass the non-working default APIserver service without kube-proxy
 k8sServiceHost: fat-controller.systems.richtman.au
@@ -15,14 +16,22 @@ ipv6:
 
 preferIpv6: true
 
-# ciliumEndpointSlice:
-#   enabled: true
+# No tunneling
+routingMode: native
+nativeRoutingCIDRFromClusterPool: true
 
-# Testing, want to make sure it's working as intended
-# enableXTSocketFallback: false
+ipam:
+  operator:
+    clusterPoolIPv6PodCIDRList: ["fd2f:f92f:f268::/64"]
+    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
+    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
+    clusterPoolIPv6MaskSize: 80
 
-# debug:
-#   enabled: true
+# BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
+#   and since we're not peering *between* the nodes - this setting.
+autoDirectNodeRoutes: true
+directRoutingSkipUnreachable: true # Cannot have this without autoDirectNodeRoutes
+
 # Enable BGP to advertise our ranges and VIPs
 bgpControlPlane:
   enabled: true
@@ -31,49 +40,58 @@ bgpControlPlane:
 gatewayAPI:
   enabled: true
 
-# No tunneling
-routingMode: native
-nativeRoutingCIDRFromClusterPool: true
+# TODO: Remove?
+ciliumEndpointSlice:
+  enabled: true
+
+# Testing if this fixes ClusterIP
+# Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
+# TODO: Remove?
+endpointRoutes:
+  enabled: true
+
+# No idea why this is already mounted somewhere but this fixes... *something*
+# ...in-cluster East-West routing if ClusterIPs are allowed to be accessed from external, at the least
+cgroup:
+  hostRoot: "/sys/fs/cgroup"
+
+# TODO: Trial
+# loadBalancer:
+#   Consistent balancing at the cost of memory
+#   algorithm: maglev
+#   hashSeed: tfg0MCAroAlqlfd # head -c12 /dev/urandom | base64 -w0
+#   DSR on native
+#   mode: dsr
+#   dsrDispatch: opt
+
+# TODO: Trial
+# Testing, want to make sure it's working as intended
+# enableXTSocketFallback: false
+
 # Shut this shit up since it never works on first try
 envoy:
   enabled: false
 
-# BGP sends the routes up for N-S, but for E-W we still need routes for cluster traffic.
-#   and since we're not peering *between* the nodes - this setting.
-autoDirectNodeRoutes: true
-directRoutingSkipUnreachable: true # Cannot have this without autoDirectNodeRoutes
-
 # Note: I think we *don't* want l2 announcements, as only one node at a time will respond, so we lose the multipath
-#   rather advertise using BGP.
+#   and it uses east-west traffic from there, rather advertise using BGP and get multipath to only live nodes.
 # Ref: https://docs.cilium.io/en/latest/network/l2-announcements/
 # I think this is for outside-of-cluster, local traffic to not have to go via the router.
 # https://docs.cilium.io/en/latest/network/kubernetes/kubeproxy-free/#neighbor-discovery
 # l2NeighDiscovery:
 #   enabled: true
 
-# Testing if this fixes ClusterIP
-# Ref: https://github.com/cilium/cilium/issues/34543#issuecomment-2314871781
-endpointRoutes:
-  enabled: true
-
 # Before the agent defaults to iptables implementation of DNAT,
 #   arguably cilium is better tooling to inspect
-# cdbg bpf lb list
-# cdbg nat list
-# cdbg map get cilium_lb6_services_v2
-# cdbg map get cilium_lb6_backends_v3
 bpf:
+  # TODO: trial
   # datapathMode: netkit-l2
+  # **Required to allow API server to reach webhooks**
+  # TODO: confirm
+  lbExternalClusterIP: true
   masquerade: true
   # Note: netkit incompatible and in beta but required for gateway API
+  # TODO: trial
   # tproxy: true
-
-ipam:
-  operator:
-    clusterPoolIPv6PodCIDRList: ["fd2f:f92f:f268::/64"]
-    # Unable to init cluster-pool allocator" error="unable to initialize IPv6 allocator: New CIDR set failed; the node CIDR size is too big" subsys=cilium-operator-generic
-    # Ref: https://github.com/cilium/cilium/issues/20756#issuecomment-2450328186
-    clusterPoolIPv6MaskSize: 80
 
 # -- Roll out cilium agent pods automatically when configmap is updated.
 rollOutCiliumPods: true
@@ -102,8 +120,12 @@ operator:
 #     enabled: true
 #     rollOutPods: true
 
+# debug:
+#   enabled: true
+
 # Ensure we have no hangovers when re-rolling the install
 cleanState: true
+cleanBpfState: true
 
 # This makes kubectl logs and execs default nicely
 podAnnotations:

@@ -3,14 +3,13 @@ kind: CiliumBGPClusterConfig
 metadata:
   name: cilium-bgp
 spec:
-  # Nodes only advertise their own network ranges,
-  #   so in order for VIPs to be advertised, each node must peer.
-  # Notionally, there's no workloads to reach on the control node,
-  #   and leaning on standard labels is simple.
+  # Node pod ranges are automatically added to the routing table by autoDirectNodeRoutes,
+  #   so no need to peer every node.
+  # There's no workloads to reach on the control node, usually.
+  # TODO: Swap to nodeAffinity so we can use notIn and just exclude control
   nodeSelector:
     matchLabels:
       node-role.kubernetes.io/worker: worker
-  # Testing applying to control nodes as well, in case the BGP subsystem is needed to apply routes
   bgpInstances:
   - name: "k8s.richtman.au"
     localASN: 64512
@@ -53,7 +52,10 @@ spec:
       service:
         addresses:
           - LoadBalancerIP
-          - ClusterIP # Required so host-native networking of APIserver is able to route to webhooks in-cluster
+          # API server on host networking sends packets to default gateway,
+          #   which needs to know how to route something outside LAN to the nodes inside it.
+          # TODO: confirm
+          - ClusterIP
       # *** REQUIRED OR NOTHING GETS ADVERTISED ***
       selector:
         matchExpressions:
@@ -66,6 +68,6 @@ metadata:
   name: public-subnet
 spec:
   blocks:
-    # Need to avoid overlap cause IPAM is sequential
+    # Need to avoid overlap cause initial IPAM is well-known and sits in the bottom of the range
     # If we can swap out the allocator for (pseudo)random we can maybe flatten it to the LAN subnet
     - cidr: 2403:581e:ab78:ffff::/64

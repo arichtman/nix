@@ -1,38 +1,29 @@
 # Cilium
 
-To do:
+## Todo
 
+- See if we can return to only advertising `ClusterIP` from nodes with backends.
 - Check VIP routing with BGP - seems there might be loops or something funky going on.
   [GitHub issue solution](https://github.com/cilium/cilium/issues/34972#issuecomment-2993831467) of SNAT cluster range on the router to set gateway IP as source.
 - Ensure in-cluster traffic doesn't traverse the router.
-- Rename cluster
 - See about sending traces somewhere
-- Verify multipath from external.
-  Internally I seem stickied, both from desktop and router/gateway.
+- Verify multipath, internally I seem stickied, both from desktop and router/gateway.
 - Get Gateway API working
 - `MutatingAdmissionPolicy` for Service type LoadBalancer `externalTrafficPolicy: Local`?
-- Look into pmtuDiscovery
+- Look into `pmtuDiscovery`
 - Enable Grafana dashboard, prom metrics, serviceMonitors
-- Look into BPF datapath mode using netkit: `dataPathMode: "netkit-l2"`
 - See if disabling podCIDR advertisements, putting the range in the LAN /64, and enabling l2ND allows for native pod access.
-- See if enabling ClusterIP advertisements means in-cluster VIPs are accessible on LAN.
-- Remove hard-coding or public prefix dependency from `CiliumBGPClusterConfig` and `CiliumLoadBalancerIPPool`.
+- Find a way to make `ClusterIP` services internal-to-cluster only.
+- Remove hard-coding router IP from `CiliumBGPClusterConfig` and `CiliumLoadBalancerIPPool`.
   Either figure out autodiscovery (looks like default gateway on worker nodes is the router link-local address),
-  or make it dynamically updated, or well-known (link-local/ULA), or DNS or something.
-- See if bootstrapping the operator pod directly onto the control node means we can remove the Helm values dependency on public DNS (`k8sServiceHost`).
+  or make it dynamically updated.
 - Remove or dynamic Helm values `ipv6NativeRoutingCIDR` input.
 - Revisit IPAM mode maybe to see about dynamic prefix usage.
 - Exclude labels from identity?
 - `defaultLBServiceIPAM`?
 - `externalIPs.enabled`?
-- Re-enable default operator HA
-- ~~Figure out a way to locally use either Helm or JSONschema to identify unused input values.~~
-- ~~Enable Hubble (relay seems to fail without CoreDNS/default k8s service)~~
-- ~~Fix in-cluster API server access by default service~~
 
-Notes:
-
-Seems that with Services type Loadbalancer:
+## LoadBalancer Services
 
 1. Multiple nodes implement the VIP, but even if they're all advertising the same VIP to the router over BGP the router's table only lands one route.
    So it's sticky and a bit of a crapshoot.
@@ -40,7 +31,7 @@ Seems that with Services type Loadbalancer:
    _With_ local pods to the node, I've observed either the genuine client source IP, or the node's IP.
    If no local routes, then it'll traverse the router, get stickied on the one node, and always show that source IP.
 
-Multipath:
+## Multipath
 
 1. Check FRR has multipath:`vtysh -c 'show bgp ipv6 unicast'`
 1. Confirm Kernel has it as well: `netstat -rn`
@@ -53,72 +44,19 @@ Gateway API needs l7 envoy configured.
 Would be cool if this supported TLS offload for workloads,
 though we _could_ probably use an operator like cert-manager to do sidecars.
 
-- [Official CNI config spec](https://www.cni.dev/docs/spec/#configuration-format)
-- [Cilium docs: Helm values](https://docs.cilium.io/en/stable/helm-reference/)
-- [Cilium docs: k8s config](https://docs.cilium.io/en/stable/network/kubernetes/configuration/)
-- [Cilium docs: troubleshooting](https://docs.cilium.io/en/stable/operations/troubleshooting/)
-- [Giantswarm Cilium troubleshooting](https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/)
-- [k8s docs: CNI plugin troubleshooting](https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/)
-- [k8s docs: kubelet config file](https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/)
-- [k8s docs: dual stack networking](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
-- [Cilium connectivity test docs](https://docs.cilium.io/en/latest/cmdref/cilium_connectivity_test/)
-- [Some settings we might need for naked pods](https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/)
-- [More cilium v6 stuff](https://functional.cafe/@arianvp/112994181771306904)
-- [bpftool intro blog](https://thegraynode.io/posts/bpftool_introduction/)
-- [jsa4000's home lab notes](https://jsa4000.github.io/homelab-ops/layers/networking/cilium/)
+## BGP ClusterIP Services
 
-Networking stuff
-
-- https://social.treehouse.systems/@hugo/112371852060835506
-- https://social.treehouse.systems/@hugo/112370032832667163
-- https://social.treehouse.systems/@hugo/112370056983832054
-- https://techhub.social/@kubefred/112367921561319546
-- https://techhub.social/@kubefred/112366082388857564
-- [Post about ingress](https://hdev.im/@farcaller/113018985033564592)
-- [Offer to help](https://hachyderm.io/@jpetazzo/112371149239851518)
-
-## ClusterIP timouts
-
-- Can see some "Invalid source IP" and "Invalid L2 protocol" drops when running monitor and test.
-  Looks like `LLC` indicates Link-Local connection, and these should be working?
-  [issue](https://github.com/cilium/cilium/issues/47645)
-  Everything in the drop monitor produced during testing was either ICMP or LLC.
-  I can't see it dropping service packets.
-- Cilium CLI's connectivity test assumes DNS is working, so just dies without useful info.
-- `bpf_lxc` responsible for Pod -> ClusterIP load balancing.
-  [issue](https://github.com/cilium/cilium/issues/16197#issue-894144411).
-- Someone said the native routing CIDR had to include both service and pod IP ranges.
-  But that seemed to result in timeouts again.
+If we BGP advertise from all nodes, in-cluster rerouting/forwarding to backend doesn't work.
+So it dies unless the flow/multipath happens to land on a node with a backend.
+If we set internal trafficpolicy to local, it only advertises nodes that have it,
+so that works. However, pods trying to reach east-west are still fucked,
+as if there's no backend on their node they just get nothing.
 
 ## BGP troubleshooting
 
 OPNsense config file location `/usr/local/etc/frr/frr.conf`
 OPNsense run BGP commands `vtysh -c 'show bgp summary'`.
-Other commands include: `debug bgp updates`, `show ip bgp neighbor`
-
-Convenience commands:
-
-```
-# See what Cilium thinks should be peering
-cilium bgp peers
-# Obvs
-cilium bgp routes available ipv6 unicast
-cilium bgp routes advertised ipv6 unicast
-# Check CR statuses for errrors, general misconfig
-kd CiliumBGPClusterConfig cilium-bgp
-kd CiliumBGPPeerConfig primary-router
-kd CiliumBGPNodeConfig $n
-# Check operator and agent logs
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-operator --no-headers | head -1 | cut -d' ' -f1) | grep "bgp"
-kubectl -n kube-system logs $(kgp -l app.kubernetes.io/name=cilium-agent --no-headers -owide | grep -i $node | cut -d' ' -f1) | grep "bgp"
-```
-
-FRR config:
-
-```
-bgp listen range 2403:581e:ab78::/48 peer-group LAN
-bgp listen range 2403:581e:ab78::/64 peer-group LAN
-```
+Other `vtysh` commands include: `debug bgp updates`, `show ip bgp neighbor`
 
 ### AFI/SAFI overlap
 
@@ -131,37 +69,8 @@ Solution:
 - Indented `redistribute connected`
 - Added `neigbor LAN activate` to address-family ipv6 unicast block
 
-### References
-
-- [AFI/SAFI overlap thread](https://lists.frrouting.org/pipermail/frog/2019-June/000559.html)
-- [Cisco BGP basics troubleshooting](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/218027-troubleshoot-border-gateway-protocol-bas.html#toc-hId-1112382406)
-- [GH feature request issue (closed-stale)](https://github.com/opnsense/plugins/issues/4015)
-- [Useful MR to model after](https://github.com/opnsense/plugins/pull/4611/files)
-- [FRR docs](https://docs.frrouting.org/en/latest/bgp.html)
-- [FRR range config](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-listen-range-A.B.C.D-M-X-X-X-X-M-peer-group-PGNAME)
-- [VTYSH trick](https://book.konstantinsecurity.com/readme/architect/kubernetes/exposing-services/cilium-bgp)
-- [Dynamic BGP with FRR](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
-- Couple of OPNsense forum threads
-  [1](https://forum.opnsense.org/index.php?topic=41669.msg204870#msg204870)
-  [2](https://forum.opnsense.org/index.php?topic=42191.0)
-- [Blog with ranged FRR config](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
-- [Blog but using Bird](https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/)
-
-buncha static IP solutions
-
-- [Miraco blog on BGP and FRR ToR](https://blog.miraco.la/bgp-cilium-and-frr-top-of-rack-for-all)
-- [Blog on Cilium, Gateway API, and BGP](https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090)
-- [Blog on Cilium BGP](https://blog.mosibi.nl/all/2021/12/27/cilium-bpg.html)
-- [Blog on Cilium with Unifi](https://rajsingh.info/p/cilium-unifi/)
-- [Blog on Cilium v4 Gateway API integration](https://allanjohn909.medium.com/harnessing-the-power-of-cilium-a-guide-to-bgp-integration-with-gateway-api-on-ipv4-7b0d058a1c0d)
-- [Example Cilium BGP FRR config file](https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf)
-
 ## Documentation read-through thoughts
 
-- Loopback is required on linux by the CNI, is it possible we are missing something in `/etc/cni.d/` for that?
-  ...but the DS agents usually move that file in favor of their generated config.
-  ...is it possible to have more than one `.conf` used? Or is there perhaps a containerd setting?
-  Loopback missing would explain our health check failures...
 - There's an option for direct `etcd` usage which is more efficient.
   I'd like to do this but it may necessitate shipping client certificates to each node.
   To do this dynamically off of Spire could be tricky, we'll park it for now.
@@ -172,17 +81,10 @@ buncha static IP solutions
   If not directly using etcd it might manifest as CRDs, similar clearout required.
 - There's some kind of cross-node health check or other comms going on, I think this means opening TCP on 4240 or whatnot.
 - There's also mention of a heartbeat key being checked, which is set by the active operator.
-- There's some special and quite powerful stuff that can be run inside the agent pods for inspection and debugging - explore that.
-- Confirmed that tunneling is unsupported without IPv4 enabled on the cluster.
-  Took a look at enabling that and kubelet needs a cli launch argument with the node's IP(s).
-  It's unclear what providing _just_ IPv4 would do to the v6 stack, plus it'd need to be hard-coded somewhat.
-  The flag isn't in the kubelet configuration file spec yet, so we can't make it dynamic with a drop-in file generated on boot.
-  All this means DHCPv4 isn't acceptable or we'd have to hack around it + Nix.
-  I'm not keen to put that much effort into it when I don't actually want an overlay network anyways.
-- We definitely want native routing mode, which implies some other arguments:
+- Native routing mode implies some other arguments:
   ```
   routing-mode: native
-  ipv4-native-routing-cidr: x.x.x.x/y
+  ipv6-native-routing-cidr: ::/y
   direct-routing-skip-unreachable: true
   auto-direct-node-routes: true
   ```
@@ -228,12 +130,6 @@ buncha static IP solutions
 
 ## Issues
 
-### Dynamic router IDs
-
-In single-stack IPv6 Cilium can't (or won't) derive unique router IDs for the nodes.
-The router ID _has_ to be IPv4 format, `0.0.0.0` is disallowed, and they can't overlap/clash - each node's router ID has to be unique.
-Annotating the nodes manually kinda sucks.
-
 ### Unknown dynamic capability
 
 FRR logs show (on startup/establishment) _Unknown capability code - 75 - ignoring_ (or thereabouts).
@@ -242,44 +138,11 @@ Non-critical but annoying.
 
 Ref: https://www.iana.org/assignments/capability-codes/capability-codes.xhtml
 
-### Cilium not showing/initiating any BGP peers
-
-When you run `cilium bgp peers` it's empty.
-Checked `CiliumBGPNodeConfig` and all the nodes are selected so have a CR instance.
-Checked conditions on the `CiliumBGPNodeConfig`s and the checks are okay.
-Cilium-agent however is complaining it doesn't have a router ID.
-This was something you could YAML before but `CiliumBGPPeeringPolicy` which had it is deprecated.
-We _could_ set it on `CiliumBGPNodeConfigOverride`, but this seems like a hassle as each CR can only target one node (I think).
-
-Solution: manually add peers to OPNsense as `remote-as internal` with BFD enabled.
-Manually annotate nodes with router IDs.
-`kubectl annotate node $n cilium.io/bgp-virtual-router.65551="router-id=192.168.255.1"`
-
-PS: the BGP peer group feature on OPNsense doesn't quite have enough options to deduplicate the config well.
-
-Refs:
-
-- Cilium docs on setting router ID;
-  [old](https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-v1/#overriding-router-id)
-  [Current](https://docs.cilium.io/en/stable/network/bgp-control-plane/bgp-control-plane-v2/#bgp-configuration-override)
-- [FRR docs on router ID](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-router-id-A.B.C.D)
-
-### Pods unable to reach outside cluster
-
-Turns out return traffic is stuck.
-Router is sending Neighbor Solicitations for the pod IP but no response.
-Enabling promiscuous mode on the node interfaces, or assigning the pod IP to the node interface solves this.
-
-Promiscuous mode is not a good idea to leave on, will tax the CPU too much and be noisy.
-Assigning pod IPs to host interface _could_ be automated but smells.
-
-Solution: Attempt Cilium's native BGP advertising and l2 neighbor discovery features.
-
 ### Cyclic dependency with certificates
 
 Attempts to use the in-cluster default service `kubernetes` fail TLS checks because the IP and name don't match.
 Api server certificate needs IP SAN of well-known default service IP from cluster service IP pool.
-which is in 2 x config files, neither of which support drop-ins iirc.
+which is in 2 x config files, neither of which support drop-ins yet.
 
 Solution: For now, manually add the IP when signing the certificate.
 In future we'll try signing for DNS that would resolve in-cluster.
@@ -292,21 +155,11 @@ Tangentially, router ipv6 DNS trapping needs resolution.
 Solution: For now, allow the fallback/timeouts to v6.
 In future, possibly disable IPv4 DNS on the host machines.
 
-### Default Kubernetes service not working
-
-Default kubernetes service not working, unclear what the issue is.
-Could be east-west traffic, could be n-s.
-
-### BGP configuration is static
-
-BGP config CR needs router information which is not ideal static.
-[Issue](https://github.com/cilium/cilium/issues/37315) is open to fix this though.
-
-Solution: CIDR is already too hard-coded everywhere, just wait.
-
 ### Host name resolution
 
-Machines are DHCPv4 and SLAAC, which I've worked with by enabling mDNS and Neighbor Solicitation.
+Machines are DHCPv4 and SLAAC.
+DHCPv4 _used_ to be auto registered using Kea DHCP, but that's deprecated and ISC doesn't do it.
+SLAAC has no discovery or auto-registration mechanism.
 GoLang, and specifically `kubectl` uses it's own DNS resolution chain.
 This does not include mDNS.
 I have several possible resolutions to this.
@@ -316,25 +169,19 @@ I'm unsure how to write this rule so as not to also trap `resolved`'s outbound D
 I would like this eventually though.
 
 Have the machines register their own overrides with router DNS resolver.
-This means some custom code and service, since I think the OPNsense API does not implement a standard DNS update mechanism,
-nor does Unbound seem to have or expose an API.
+External-DNS operator might be able to watch for it, and has both RFC2136 and Unbound plugins.
 
-DHCPv4 leases auto registered to router DNS resolver.
-This used to be the case with ISC DHCPv4 server but that's deprecated and Kea DHCPv4 doesn't have it.
+Solution: For now I have manually added public AAAA records for the machines.
 
-Solution: For now I have manually added AAAA record overrides for the machines.
-
-### Log pulling
-
-#### No proxy
+### Log retrieval
 
 Without kube-proxy, `kubectl logs` wants to go directly to the node and reach `10250`.
 This is not open.
 I'm assuming that the absence of kube-proxy is causing this, and otherwise it'd go via the API server or kubelets or something.
 
-Solution: open port for ISP-delegated prefix which includes LAN and VPN CIDRs.
+Solution: open port for our ULA prefixes which includes LAN and VPN CIDRs.
 
-#### Permissions
+### Permissions
 
 Even when directly on the node with the pod, `kubectl logs` fails.
 `Error from server (Forbidden): Forbidden (user=system:node:fat-controller, verb=get, resource=nodes, subresource=proxy) ( pods/log cilium-envoy-w2hhk)`
@@ -344,6 +191,8 @@ Turns out the API server's client certificate was set to auth as a node, but it 
 
 Solution: Adjust DN on the certificate to `system:masters:${NODE_NAME}`
 (the node name is arbitrary but easier for auditing/traceability).
+
+TODO: ClusterRoleBinding or something for `system:node` to be able to do this.
 
 ### Versions
 
@@ -399,6 +248,8 @@ $sudo tail -f cilium-envoy-nfdbn_kube-system_cilium-envoy-08165263e156b0e0422df3
 
 ### Orphaned pods
 
+Dunno what we're doing about this one or if it's still happening or it's nominal.
+
 ```
 "Orphaned pod found, but volumes are not cleaned up" podUID="00fa5fc0-0b96-4090-b0a5-3e3b869b4e3b"
 ```
@@ -422,6 +273,8 @@ needs to be in GoLang entirely.
 Ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/
 Ref: https://github.com/kubernetes/cloud-provider/blob/master/cloud.go
 Ref: https://search.nixos.org/options?from=0&size=100&sort=relevance&query=macaddress
+
+Solution: disable Cilium IPv4
 
 ### Unable to launch pods
 
@@ -493,7 +346,7 @@ Solution: Disabling automatic svc account token mounting removes the error.
 Manually mounting the token doesn't yield the error.
 [ref](https://stackoverflow.com/questions/69038012/mountvolume-setup-failed-for-volume-kube-api-access-fcz9j-object-default)
 
-#### Session flaps between active and idle
+### BGP session flaps between active and idle
 
 FRR `bgpd` is rejecting the session due to AS.
 Either make `bgpd` set the AS itself on the peer group, or set the peer group to `remote-as internal` and ensure ASNs are same both sides.
@@ -503,48 +356,53 @@ time=2026-10-02T23:58:45.495439935Z level=debug source=/go/src/github.com/cilium
 time=2026-10-02T23:58:45.495578002Z level=debug source=/go/src/github.com/cilium/cilium/pkg/bgp/gobgp/server.go:175 msg="Peer state change" module=agent.controlplane.bgp-control-plane instance=richtman.au component=gobgp-server asn=64513 peer="&{Type:3 Peer:{Conf:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef NeighborInterface: PeerGroup:} State:{PeerASN:64512 LocalASN:64513 NeighborAddress:2403:581e:ab78:0:aab8:e0ff:fe00:91ef SessionState:BGP_FSM_IDLE AdminState:ADMIN_STATE_UP RouterID:invalid IP PeerGroup: RemoteCap:[] LocalCap:[0x51034e30d00 0x510380d80f0 0x51034e30d20 0x51038c175f0 0x51038c17620 0x5103899fd00] DisconnectReason:DISCONNECT_REASON_INVALID_MSG DisconnectMessage:invalid-msg} Transport:{LocalAddress::: LocalPort:0 RemotePort:0}}}
 ```
 
-#### Misc
-
-- Scheduler's client certificate wasn't granting permissions
-- No longer using AddonManager
-  ~~AddonManager has no manifests~~
-- No longer using AddonManager
-  ~~AddonManager has no kubeconfig so can't auth~~
-- Kubelet was thinking flannel was installed because the Kubelet module writes a CNI config file if certain conditions are met.
-  I think we finally worked it out by setting `services.*kubernetes*.flannel.enabled = false;`, as opposed to `services.flannel.enabled`.
-  Also had to clear out the `/etc/cni/net.d` from remainder CNI configuration.
-- serviceAccount `default` missing from at least nameSpace `kube-system`
-- Also I'm not sure if we want containerd or crio - looks like there's a nixos module for it...
-
-#### WIP
-
-Debug CoreDNS:
-
-```bash
-echo "Dumping netns addresses"
-ip a show dev eth0
-echo "Testing router DNS connection"
-nc -zvw 2 2403:581e:ab78:0:aab8:e0ff:fe00:91ef 53
-echo "Dumping all v6 routes"
-ip -6 route show
-echo "Checking router v6 route"
-ip route get 2403:581e:ab78:0:aab8:e0ff:fe00:91ef
-echo "Checking ApiServer route"
-ip route get fd2f:f92f:f268:ffff::1
-echo "Checking ApiServer access"
-nc -zvw 2 fd2f:f92f:f268:ffff::1 443
-```
-
-Debug pod networking:
-
-```bash
-echo "Checking CoreDNS connection"
-nc -zvw 2 fd2f:f92f:f268:ffff::10 53
-echo "Checking v6 egress route"
-ip route get 2a0a:4580:103f:c0de::1
-echo "Checking v6 egress connection"
-nc -zvw 2 2a0a:4580:103f:c0de::1 443
-```
+## References
 
 - [Cilium eBPF datapath](https://ttlab.hopto.org/blog/cilium/2026-06-13-cilium-ebpf-datapath-architecture-2026?lang=en)
 - [Cilium eBPF datapath 2](https://kkloudtarus.net/en/blog/case-study-a-packet-through-ciliums-ebpf-datapath)
+- [Official CNI config spec](https://www.cni.dev/docs/spec/#configuration-format)
+- [Cilium docs: Helm values](https://docs.cilium.io/en/stable/helm-reference/)
+- [Cilium docs: k8s config](https://docs.cilium.io/en/stable/network/kubernetes/configuration/)
+- [Cilium docs: troubleshooting](https://docs.cilium.io/en/stable/operations/troubleshooting/)
+- [Giantswarm Cilium troubleshooting](https://handbook.giantswarm.io/docs/support-and-ops/ops-recipes/cilium-troubleshooting/)
+- [k8s docs: CNI plugin troubleshooting](https://kubernetes.io/docs/tasks/administer-cluster/migrating-from-dockershim/troubleshooting-cni-plugin-related-errors/)
+- [k8s docs: kubelet config file](https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/)
+- [k8s docs: dual stack networking](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
+- [Cilium connectivity test docs](https://docs.cilium.io/en/latest/cmdref/cilium_connectivity_test/)
+- [Some settings we might need for naked pods](https://farcaller.net/2024/routing-outside-of-kubernetes-cni-or-how-to-send-some-pods-traffic-over-vpn/)
+- [More cilium v6 stuff](https://functional.cafe/@arianvp/112994181771306904)
+- [bpftool intro blog](https://thegraynode.io/posts/bpftool_introduction/)
+- [jsa4000's home lab notes](https://jsa4000.github.io/homelab-ops/layers/networking/cilium/)
+
+- [AFI/SAFI overlap thread](https://lists.frrouting.org/pipermail/frog/2019-June/000559.html)
+- [Cisco BGP basics troubleshooting](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/218027-troubleshoot-border-gateway-protocol-bas.html#toc-hId-1112382406)
+- [GH feature request issue (closed-stale)](https://github.com/opnsense/plugins/issues/4015)
+- [Useful MR to model after](https://github.com/opnsense/plugins/pull/4611/files)
+- [FRR docs](https://docs.frrouting.org/en/latest/bgp.html)
+- [FRR range config](https://docs.frrouting.org/en/latest/bgp.html#clicmd-bgp-listen-range-A.B.C.D-M-X-X-X-X-M-peer-group-PGNAME)
+- [VTYSH trick](https://book.konstantinsecurity.com/readme/architect/kubernetes/exposing-services/cilium-bgp)
+- [Dynamic BGP with FRR](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
+- Couple of OPNsense forum threads
+  [1](https://forum.opnsense.org/index.php?topic=41669.msg204870#msg204870)
+  [2](https://forum.opnsense.org/index.php?topic=42191.0)
+- [Blog with ranged FRR config](https://blog.cloudabc.eu/linux/networking/2024/10/03/configure-linux-server-as-dynamic-bgp-router-part2/)
+- [Blog but using Bird](https://farcaller.net/2024/making-cilium-bgp-work-with-ipv6/)
+
+buncha static IP solutions
+
+- [Miraco blog on BGP and FRR ToR](https://blog.miraco.la/bgp-cilium-and-frr-top-of-rack-for-all)
+- [Blog on Cilium, Gateway API, and BGP](https://allanjohn909.medium.com/integrating-cilium-with-gateway-api-ipv6-and-bgp-for-advanced-networking-solutions-5b41b0ca0090)
+- [Blog on Cilium BGP](https://blog.mosibi.nl/all/2021/12/27/cilium-bpg.html)
+- [Blog on Cilium with Unifi](https://rajsingh.info/p/cilium-unifi/)
+- [Blog on Cilium v4 Gateway API integration](https://allanjohn909.medium.com/harnessing-the-power-of-cilium-a-guide-to-bgp-integration-with-gateway-api-on-ipv4-7b0d058a1c0d)
+- [Example Cilium BGP FRR config file](https://github.com/inikolovski/cilium-bgp-example/blob/main/frr.conf)
+
+Networking stuff
+
+- https://social.treehouse.systems/@hugo/112371852060835506
+- https://social.treehouse.systems/@hugo/112370032832667163
+- https://social.treehouse.systems/@hugo/112370056983832054
+- https://techhub.social/@kubefred/112367921561319546
+- https://techhub.social/@kubefred/112366082388857564
+- [Post about ingress](https://hdev.im/@farcaller/113018985033564592)
+- [Offer to help](https://hachyderm.io/@jpetazzo/112371149239851518)
