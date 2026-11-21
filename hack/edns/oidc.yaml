@@ -12,6 +12,7 @@ subjects:
   name: system:unauthenticated
 ---
 # I think this is leftover from trying without nginx
+# TODO: Remove
 # apiVersion: v1
 # kind: Service
 # metadata:

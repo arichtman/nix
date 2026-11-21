@@ -32,8 +32,8 @@ It's fairly reliable at this point that the initial default kubernetes service w
 IP from the provided service IP CIDR. I have seen other algorithms though for at least I think pod IP selection.
 Short story, I don't like it but I'll deal for now.
 
-It seemse like CoreDNS was ignorting the hostname for the API server.
-I wasn't able to locate in the CoreDNS code how or why.
+It seemse like CoreDNS was ignoting the hostname for the API server.
+Looks like it _is_ configurable, but it's a faff with the Helm + Lists.
 I worked around it by adding the default kubernetes service IP to the SANs on the API server TLS cert.
 It's still weird but whatever ...for now.
 
@@ -52,8 +52,7 @@ TODO: Hard-code any IP that will hit the router
 
 ### DNS loop/circular dependency
 
-Kubernetes has a few `DNSPolicy` options, `Default`, which is not actually the default,
-is an escape hatch to bootstrap cluster DNS.
+Kubernetes has a few `DNSPolicy` options, `Default`, which is not actually the default, is an escape hatch to bootstrap cluster DNS.
 
 ### Dual/Single stack
 
